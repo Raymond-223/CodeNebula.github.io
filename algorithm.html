@@ -34,8 +34,8 @@
 
         /* 侧边栏目录 */
         .sidebar {
-            width: 320px;
-            background: rgba(0, 0, 0, 0.3);
+            width: 300px;
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             padding: 30px 20px;
@@ -64,43 +64,50 @@
             color: rgba(255, 255, 255, 0.6);
         }
 
-        /* 文件夹样式 */
-        .folder {
-            margin-bottom: 20px;
+        /* 目录树样式 */
+        .directory-tree {
+            list-style: none;
+            padding: 0;
         }
 
-        .folder-header {
+        .tree-item {
+            margin-bottom: 5px;
+        }
+
+        .tree-folder {
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            padding: 10px 15px;
-            background: rgba(106, 90, 249, 0.1);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(106, 90, 249, 0.2);
-            margin-bottom: 10px;
+            user-select: none;
         }
 
-        .folder-header:hover {
-            background: rgba(106, 90, 249, 0.15);
+        .tree-folder:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .folder-header i {
+        .tree-folder i {
             margin-right: 10px;
             font-size: 0.9rem;
             transition: transform 0.3s;
-            color: var(--secondary);
+            width: 16px;
+            text-align: center;
         }
 
-        .folder-header.collapsed i {
-            transform: rotate(-90deg);
+        .tree-folder.collapsed i.fa-folder {
+            transform: rotate(0deg);
         }
 
-        .folder-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
+        .tree-folder i.fa-folder-open {
+            transform: rotate(0deg);
+        }
+
+        .tree-folder .folder-name {
             flex: 1;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .file-count {
@@ -113,38 +120,37 @@
 
         .file-list {
             list-style: none;
-            padding-left: 20px;
-            max-height: 500px;
-            overflow-y: auto;
+            padding-left: 28px;
+            margin: 10px 0;
+            max-height: 1000px;
+            overflow: hidden;
             transition: max-height 0.3s ease;
         }
 
-        .folder.collapsed .file-list {
+        .tree-item.collapsed .file-list {
             max-height: 0;
-            overflow: hidden;
         }
 
         .file-item {
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .file-link {
-            display: block;
-            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 6px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s;
             border: 1px solid transparent;
             font-size: 0.9rem;
-            word-break: break-word;
         }
 
         .file-link:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(106, 90, 249, 0.3);
-            transform: translateX(5px);
             color: white;
         }
 
@@ -154,12 +160,18 @@
             color: white;
         }
 
+        .file-link i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
         /* 主内容区 */
         .main-content {
             flex: 1;
-            margin-left: 320px;
+            margin-left: 300px;
             padding: 40px;
-            max-width: calc(100% - 320px);
+            max-width: calc(100% - 300px);
         }
 
         .content-header {
@@ -187,7 +199,7 @@
 
         /* 笔记内容显示区 */
         .note-content {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
@@ -221,44 +233,48 @@
             line-height: 1.8;
         }
 
-        .markdown-content h1,
-        .markdown-content h2,
-        .markdown-content h3,
-        .markdown-content h4 {
-            color: white;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
         .markdown-content h1 {
             font-size: 2.5rem;
-            border-bottom: 2px solid var(--primary);
+            color: white;
+            margin-top: 0;
+            margin-bottom: 20px;
             padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
         }
 
         .markdown-content h2 {
             font-size: 2rem;
             color: var(--secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
         }
 
         .markdown-content h3 {
             font-size: 1.5rem;
+            color: white;
+            margin-top: 25px;
+            margin-bottom: 12px;
         }
 
         .markdown-content h4 {
             font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         .markdown-content p {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
+            line-height: 1.7;
         }
 
-        .markdown-content code {
+        .markdown-content code:not(pre code) {
             background: rgba(0, 0, 0, 0.5);
-            padding: 2px 6px;
+            padding: 3px 6px;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 0.9em;
+            color: #f8f9fa;
         }
 
         .markdown-content pre {
@@ -273,12 +289,14 @@
         .markdown-content pre code {
             background: none;
             padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
 
         .markdown-content ul,
         .markdown-content ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
+            margin-left: 25px;
+            margin-bottom: 16px;
         }
 
         .markdown-content li {
@@ -302,13 +320,33 @@
         .markdown-content table th,
         .markdown-content table td {
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px;
+            padding: 12px 15px;
             text-align: left;
         }
 
         .markdown-content table th {
             background: rgba(106, 90, 249, 0.2);
             color: white;
+            font-weight: 600;
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .markdown-content a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .markdown-content a:hover {
+            color: white;
+            border-bottom: 1px solid white;
         }
 
         /* 底部导航 */
@@ -319,7 +357,9 @@
         }
 
         .nav-button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 12px 30px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -344,6 +384,12 @@
         .loading i {
             font-size: 2rem;
             margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* 响应式设计 */
@@ -360,29 +406,40 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                max-height: 400px;
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                position: fixed;
+                width: 280px;
+                left: -280px;
+                transition: left 0.3s;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                left: 0;
             }
             
             .main-content {
                 margin-left: 0;
                 max-width: 100%;
+                padding: 20px;
             }
             
-            body {
-                flex-direction: column;
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 15px;
+                font-size: 1.2rem;
+                cursor: pointer;
             }
         }
 
         @media (max-width: 480px) {
-            .main-content {
-                padding: 20px;
-            }
-            
             .content-title {
                 font-size: 2.5rem;
             }
@@ -391,45 +448,61 @@
                 padding: 20px;
             }
             
-            .sidebar {
-                padding: 20px 15px;
+            .markdown-content h1 {
+                font-size: 2rem;
+            }
+            
+            .markdown-content h2 {
+                font-size: 1.7rem;
+            }
+            
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
     </style>
     <!-- Markdown解析库 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 代码高亮库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <!-- 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- 移动端菜单切换按钮 -->
+    <button class="menu-toggle" id="menu-toggle" style="display: none;">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <!-- 侧边栏目录 -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2 class="sidebar-title">Algorithm Notes</h2>
-            <p class="sidebar-subtitle">共 <span id="file-count">0</span> 个文件夹，<span id="note-count">0</span> 篇笔记</p>
+            <p class="sidebar-subtitle">共 <span id="folder-count">0</span> 个文件夹</p>
         </div>
-        <div id="folder-structure">
-            <!-- 文件夹结构将在这里动态生成 -->
+        <ul class="directory-tree" id="directory-tree">
             <div class="loading" id="loading-files">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>正在加载笔记列表...</p>
+                <i class="fas fa-spinner"></i>
+                <p>正在加载目录...</p>
             </div>
-        </div>
+        </ul>
     </div>
 
     <!-- 主内容区 -->
     <div class="main-content">
         <div class="content-header">
-            <h1 class="content-title">Algorithm Notes</h1>
-            <p class="content-desc">左侧目录会自动加载 algorithm 文件夹中的所有子文件夹和笔记文件。点击任意笔记即可在此处查看内容。</p>
+            <h1 class="content-title">算法笔记</h1>
+            <p class="content-desc">左侧目录显示所有子文件夹和笔记文件。点击任意笔记，内容将直接在右侧显示。</p>
         </div>
 
         <!-- 笔记内容显示区 -->
         <div class="note-content" id="note-content">
             <div class="note-placeholder" id="note-placeholder">
                 <i class="fas fa-file-alt"></i>
-                <h3>选择一篇笔记开始阅读</h3>
-                <p>点击左侧目录中的笔记文件，内容将显示在此处</p>
+                <h3>欢迎来到算法笔记</h3>
+                <p>点击左侧目录中的笔记文件开始阅读</p>
             </div>
         </div>
 
@@ -438,188 +511,218 @@
             <a href="index.html" class="nav-button">
                 <i class="fas fa-home"></i> 返回主页
             </a>
-            <a href="https://github.com/opencshonor/opencshonor.github.io/tree/main/algorithm" target="_blank" class="nav-button">
+            <a href="https://github.com/raymond-223/CodeNebula.github.io/tree/main/algorithm" target="_blank" class="nav-button">
                 <i class="fab fa-github"></i> 查看GitHub文件夹
             </a>
         </div>
     </div>
 
     <script>
-        // 定义算法文件夹路径
-        const algorithmFolder = 'algorithm/';
-        
-        // 存储文件夹和文件数据
-        let folderData = {};
-        
-        // 获取当前URL参数
+        // 配置信息
+        const CONFIG = {
+            github: {
+                username: 'raymond-223',
+                repo: 'CodeNebula.github.io',
+                branch: 'main'
+            },
+            paths: {
+                algorithm: 'algorithm'
+            }
+        };
+
+        // 状态管理
+        const state = {
+            folders: {},
+            currentFile: null,
+            currentFolder: null,
+            expandedFolders: new Set()
+        };
+
+        // 工具函数：获取当前URL参数
         function getUrlParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
 
-        // 加载文件夹和文件列表
-        async function loadFolderStructure() {
-            try {
-                // 获取所有子文件夹中的文件
-                // 由于GitHub Pages是静态的，我们需要知道所有可能的文件
-                // 这里我们使用一个简单的JSON文件来存储文件列表
-                // 您需要在algorithm文件夹中创建一个file-list.json文件
-                // 或者使用GitHub API动态获取（需要处理CORS）
-                
-                // 方法1：使用本地JSON文件（需要手动或自动生成）
-                const response = await fetch('algorithm/file-list.json');
-                
-                if (!response.ok) {
-                    // 如果JSON文件不存在，使用GitHub API
-                    await loadFromGitHubAPI();
-                    return;
-                }
-                
-                folderData = await response.json();
-                renderFolderStructure();
-                
-            } catch (error) {
-                console.error('Error loading folder structure:', error);
-                // 显示错误信息
-                document.getElementById('folder-structure').innerHTML = 
-                    '<div class="loading"><i class="fas fa-exclamation-circle"></i><p>加载失败，请检查网络连接</p></div>';
+        // 工具函数：设置URL参数
+        function setUrlParam(name, value) {
+            const url = new URL(window.location);
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
             }
+            history.pushState({}, '', url);
         }
 
-        // 使用GitHub API获取文件列表（需要处理CORS）
-        async function loadFromGitHubAPI() {
+        // 工具函数：防抖
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 1. 使用GitHub API获取文件列表
+        async function loadFolderStructure() {
+            const treeElement = document.getElementById('directory-tree');
+            
             try {
-                // GitHub API获取仓库内容
-                const username = 'opencshonor'; // 替换为您的GitHub用户名
-                const repo = 'opencshonor.github.io'; // 替换为您的仓库名
-                const branch = 'main'; // 或 'master'
+                // 显示加载状态
+                treeElement.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>正在扫描文件夹...</p></div>';
                 
-                const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/algorithm?ref=${branch}`;
-                
+                // 获取algorithm文件夹下的内容
+                const apiUrl = `https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}`;
                 const response = await fetch(apiUrl);
+                
                 if (!response.ok) {
-                    throw new Error('GitHub API请求失败');
+                    throw new Error(`GitHub API请求失败: ${response.status}`);
                 }
                 
                 const contents = await response.json();
-                folderData = await processGitHubContents(contents);
-                renderFolderStructure();
+                await processFolderContents(contents);
+                
+                // 渲染目录树
+                renderDirectoryTree();
+                
+                // 检查URL中是否有指定的文件
+                const fileParam = getUrlParam('file');
+                const folderParam = getUrlParam('folder');
+                
+                if (fileParam && folderParam) {
+                    // 尝试打开指定的文件
+                    openFile(folderParam, fileParam);
+                }
                 
             } catch (error) {
-                console.error('GitHub API错误:', error);
-                // 如果GitHub API也失败，使用模拟数据
-                useSampleData();
+                console.error('加载目录失败:', error);
+                treeElement.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>加载失败</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
+                    </div>
+                `;
             }
         }
 
-        // 处理GitHub API返回的内容
-        async function processGitHubContents(contents) {
-            const folders = {};
+        // 2. 处理文件夹内容
+        async function processFolderContents(contents) {
+            state.folders = {};
             
             for (const item of contents) {
                 if (item.type === 'dir') {
-                    // 获取子文件夹内容
-                    const subfolderUrl = item.url;
-                    const subfolderResponse = await fetch(subfolderUrl);
-                    const subfolderContents = await subfolderResponse.json();
+                    // 这是一个子文件夹
+                    const folderName = item.name;
+                    console.log(`发现文件夹: ${folderName}`);
                     
-                    const files = [];
-                    for (const file of subfolderContents) {
-                        if (file.type === 'file' && file.name.endsWith('.md')) {
-                            files.push({
+                    // 获取子文件夹中的文件
+                    try {
+                        const folderApiUrl = item.url;
+                        const folderResponse = await fetch(folderApiUrl);
+                        const folderContents = await folderResponse.json();
+                        
+                        // 筛选出Markdown文件
+                        const mdFiles = folderContents
+                            .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
+                            .map(file => ({
                                 name: file.name,
                                 path: file.path,
-                                url: file.download_url
-                            });
+                                url: file.download_url,
+                                size: file.size
+                            }));
+                        
+                        if (mdFiles.length > 0) {
+                            state.folders[folderName] = {
+                                name: folderName,
+                                files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
+                            };
+                            console.log(`文件夹 ${folderName} 中有 ${mdFiles.length} 个MD文件`);
                         }
-                    }
-                    
-                    if (files.length > 0) {
-                        folders[item.name] = {
-                            name: item.name,
-                            files: files
-                        };
+                    } catch (error) {
+                        console.error(`处理文件夹 ${folderName} 失败:`, error);
                     }
                 }
             }
             
-            return folders;
-        }
-
-        // 使用示例数据
-        function useSampleData() {
-            folderData = {
-                '数据结构': {
-                    name: '数据结构',
-                    files: [
-                        { name: '栈.md', path: 'algorithm/数据结构/栈.md', url: 'algorithm/数据结构/栈.md' },
-                        { name: '队列.md', path: 'algorithm/数据结构/队列.md', url: 'algorithm/数据结构/队列.md' },
-                        { name: '链表.md', path: 'algorithm/数据结构/链表.md', url: 'algorithm/数据结构/链表.md' }
-                    ]
-                },
-                '排序算法': {
-                    name: '排序算法',
-                    files: [
-                        { name: '快速排序.md', path: 'algorithm/排序算法/快速排序.md', url: 'algorithm/排序算法/快速排序.md' },
-                        { name: '归并排序.md', path: 'algorithm/排序算法/归并排序.md', url: 'algorithm/排序算法/归并排序.md' }
-                    ]
-                },
-                '动态规划': {
-                    name: '动态规划',
-                    files: [
-                        { name: '基础概念.md', path: 'algorithm/动态规划/基础概念.md', url: 'algorithm/动态规划/基础概念.md' },
-                        { name: '背包问题.md', path: 'algorithm/动态规划/背包问题.md', url: 'algorithm/动态规划/背包问题.md' }
-                    ]
+            // 如果没有找到任何文件夹，尝试直接查找MD文件
+            if (Object.keys(state.folders).length === 0) {
+                console.log('未发现子文件夹，尝试查找直接文件...');
+                const mdFiles = contents
+                    .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.md'))
+                    .map(file => ({
+                        name: file.name,
+                        path: file.path,
+                        url: file.download_url,
+                        size: file.size
+                    }));
+                
+                if (mdFiles.length > 0) {
+                    state.folders['笔记'] = {
+                        name: '笔记',
+                        files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
+                    };
+                    console.log(`找到 ${mdFiles.length} 个直接MD文件`);
                 }
-            };
+            }
             
-            renderFolderStructure();
-            
-            // 提示用户创建file-list.json
-            document.getElementById('folder-structure').insertAdjacentHTML('beforeend', 
-                '<div style="margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6);">' +
-                '提示：创建 <code>algorithm/file-list.json</code> 文件以自动同步目录</div>');
+            console.log('最终文件夹结构:', state.folders);
         }
 
-        // 渲染文件夹结构
-        function renderFolderStructure() {
-            const container = document.getElementById('folder-structure');
-            let totalNotes = 0;
+        // 3. 渲染目录树
+        function renderDirectoryTree() {
+            const treeElement = document.getElementById('directory-tree');
+            const folderCountElement = document.getElementById('folder-count');
             
-            if (Object.keys(folderData).length === 0) {
-                container.innerHTML = '<div class="loading"><i class="fas fa-folder-open"></i><p>暂无笔记文件</p></div>';
+            if (Object.keys(state.folders).length === 0) {
+                treeElement.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-folder-open"></i>
+                        <p>暂无笔记文件</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">
+                            请确保在 algorithm 文件夹中上传了 .md 文件
+                        </p>
+                    </div>
+                `;
+                folderCountElement.textContent = '0';
                 return;
             }
             
-            let html = '';
-            
             // 按文件夹名称排序
-            const sortedFolders = Object.keys(folderData).sort();
+            const sortedFolders = Object.keys(state.folders).sort();
             
+            let html = '';
             sortedFolders.forEach(folderName => {
-                const folder = folderData[folderName];
+                const folder = state.folders[folderName];
                 const fileCount = folder.files.length;
-                totalNotes += fileCount;
+                const isExpanded = state.expandedFolders.has(folderName);
                 
                 html += `
-                    <div class="folder">
-                        <div class="folder-header" onclick="toggleFolder(this)">
-                            <i class="fas fa-chevron-down"></i>
+                    <li class="tree-item ${isExpanded ? '' : 'collapsed'}">
+                        <div class="tree-folder" data-folder="${folderName}">
+                            <i class="fas ${isExpanded ? 'fa-folder-open' : 'fa-folder'}"></i>
                             <span class="folder-name">${folder.name}</span>
                             <span class="file-count">${fileCount}</span>
                         </div>
                         <ul class="file-list">
                 `;
                 
-                // 按文件名排序
-                folder.files.sort((a, b) => a.name.localeCompare(b.name));
-                
                 folder.files.forEach(file => {
-                    const displayName = file.name.replace('.md', '');
+                    const displayName = file.name.replace('.md', '').replace('.MD', '');
+                    const isActive = state.currentFile === file.name && state.currentFolder === folderName;
+                    
                     html += `
                         <li class="file-item">
-                            <a href="#" class="file-link" data-path="${file.path}" data-url="${file.url}">
-                                <i class="fas fa-file-alt" style="margin-right: 8px; font-size: 0.8rem;"></i>
+                            <a href="#" class="file-link ${isActive ? 'active' : ''}" 
+                               data-folder="${folderName}" 
+                               data-file="${file.name}"
+                               data-url="${file.url}">
+                                <i class="fas fa-file-alt"></i>
                                 ${displayName}
                             </a>
                         </li>
@@ -628,180 +731,242 @@
                 
                 html += `
                         </ul>
-                    </div>
+                    </li>
                 `;
             });
             
-            container.innerHTML = html;
+            treeElement.innerHTML = html;
+            folderCountElement.textContent = sortedFolders.length;
             
-            // 更新计数
-            document.getElementById('file-count').textContent = sortedFolders.length;
-            document.getElementById('note-count').textContent = totalNotes;
-            
-            // 添加点击事件
-            document.querySelectorAll('.file-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const path = this.getAttribute('data-path');
-                    const url = this.getAttribute('data-url');
-                    
-                    // 更新active状态
-                    document.querySelectorAll('.file-link').forEach(l => {
-                        l.classList.remove('active');
-                    });
-                    this.classList.add('active');
-                    
-                    // 加载文件内容
-                    loadFileContent(path, url);
-                    
-                    // 更新URL
-                    history.pushState({}, '', `?file=${encodeURIComponent(path)}`);
+            // 绑定文件夹点击事件
+            document.querySelectorAll('.tree-folder').forEach(folderElement => {
+                folderElement.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const folderName = this.getAttribute('data-folder');
+                    toggleFolder(folderName);
                 });
             });
             
-            // 获取URL参数并打开对应文件
-            const currentFile = getUrlParam('file');
-            if (currentFile) {
-                const link = document.querySelector(`.file-link[data-path="${currentFile}"]`);
-                if (link) {
-                    link.click();
+            // 绑定文件点击事件
+            document.querySelectorAll('.file-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const folderName = this.getAttribute('data-folder');
+                    const fileName = this.getAttribute('data-file');
+                    const fileUrl = this.getAttribute('data-url');
                     
-                    // 展开包含该文件的文件夹
-                    const folder = link.closest('.folder');
-                    const folderHeader = folder.querySelector('.folder-header');
-                    if (folderHeader && folderHeader.classList.contains('collapsed')) {
-                        toggleFolder(folderHeader);
-                    }
-                }
-            }
-            
-            // 默认展开第一个文件夹
-            const firstFolder = document.querySelector('.folder');
-            if (firstFolder) {
-                const firstFolderHeader = firstFolder.querySelector('.folder-header');
-                toggleFolder(firstFolderHeader);
-            }
-        }
-
-        // 切换文件夹展开/收起
-        function toggleFolder(header) {
-            const folder = header.parentElement;
-            const isCollapsed = header.classList.contains('collapsed');
-            
-            // 切换所有文件夹的状态
-            document.querySelectorAll('.folder-header').forEach(h => {
-                if (h !== header) {
-                    h.classList.add('collapsed');
-                    h.parentElement.classList.add('collapsed');
-                }
+                    openFile(folderName, fileName, fileUrl);
+                });
             });
             
-            // 切换当前文件夹
-            if (isCollapsed) {
-                header.classList.remove('collapsed');
-                folder.classList.remove('collapsed');
-            } else {
-                header.classList.add('collapsed');
-                folder.classList.add('collapsed');
+            // 默认展开第一个文件夹
+            if (sortedFolders.length > 0 && state.expandedFolders.size === 0) {
+                setTimeout(() => {
+                    toggleFolder(sortedFolders[0], false);
+                }, 100);
             }
         }
 
-        // 加载文件内容
-        async function loadFileContent(filePath, fileUrl) {
-            const noteContent = document.getElementById('note-content');
-            const notePlaceholder = document.getElementById('note-placeholder');
+        // 4. 切换文件夹展开/收起
+        function toggleFolder(folderName, saveState = true) {
+            const folderElement = document.querySelector(`.tree-folder[data-folder="${folderName}"]`).parentElement;
+            
+            if (folderElement.classList.contains('collapsed')) {
+                // 展开文件夹
+                folderElement.classList.remove('collapsed');
+                const icon = folderElement.querySelector('.tree-folder i');
+                icon.classList.remove('fa-folder');
+                icon.classList.add('fa-folder-open');
+                
+                if (saveState) {
+                    state.expandedFolders.add(folderName);
+                }
+            } else {
+                // 收起文件夹
+                folderElement.classList.add('collapsed');
+                const icon = folderElement.querySelector('.tree-folder i');
+                icon.classList.remove('fa-folder-open');
+                icon.classList.add('fa-folder');
+                
+                if (saveState) {
+                    state.expandedFolders.delete(folderName);
+                }
+            }
+        }
+
+        // 5. 打开文件
+        async function openFile(folderName, fileName, fileUrl = null) {
+            // 更新状态
+            state.currentFolder = folderName;
+            state.currentFile = fileName;
+            
+            // 更新URL
+            setUrlParam('folder', folderName);
+            setUrlParam('file', fileName);
+            
+            // 更新UI状态
+            document.querySelectorAll('.file-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const activeLink = document.querySelector(`.file-link[data-folder="${folderName}"][data-file="${fileName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                
+                // 确保文件夹展开
+                if (!state.expandedFolders.has(folderName)) {
+                    toggleFolder(folderName, false);
+                }
+            }
             
             // 显示加载状态
-            noteContent.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>正在加载笔记...</p></div>';
+            const noteContent = document.getElementById('note-content');
+            noteContent.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>正在加载 ${fileName}...</p>
+                </div>
+            `;
+            
+            // 获取文件URL
+            let downloadUrl = fileUrl;
+            if (!downloadUrl) {
+                // 构建下载URL
+                downloadUrl = `https://raw.githubusercontent.com/${CONFIG.github.username}/${CONFIG.github.repo}/${CONFIG.github.branch}/algorithm/${folderName}/${fileName}`;
+            }
+            
+            console.log('正在加载文件:', downloadUrl);
             
             try {
-                // 尝试直接加载文件
-                const response = await fetch(fileUrl);
+                // 加载文件内容
+                const response = await fetch(downloadUrl);
                 
                 if (!response.ok) {
-                    // 如果直接加载失败，尝试使用相对路径
-                    const altResponse = await fetch(filePath);
-                    if (!altResponse.ok) {
-                        throw new Error('文件加载失败');
-                    }
-                    const text = await altResponse.text();
-                    displayMarkdown(text, filePath);
-                } else {
-                    const text = await response.text();
-                    displayMarkdown(text, filePath);
+                    throw new Error(`文件加载失败: ${response.status}`);
                 }
                 
+                const markdownText = await response.text();
+                displayMarkdown(markdownText, fileName, folderName);
+                
             } catch (error) {
-                console.error('Error loading file:', error);
+                console.error('加载文件失败:', error);
                 noteContent.innerHTML = `
                     <div class="note-placeholder">
                         <i class="fas fa-exclamation-circle"></i>
                         <h3>加载失败</h3>
-                        <p>无法加载文件: ${filePath}</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">请确保文件存在且可访问</p>
+                        <p>无法加载文件: ${fileName}</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">错误: ${error.message}</p>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                            尝试访问: <a href="${downloadUrl}" target="_blank">${downloadUrl}</a>
+                        </p>
                     </div>
                 `;
             }
         }
 
-        // 显示Markdown内容
-        function displayMarkdown(markdownText, filePath) {
+        // 6. 显示Markdown内容
+        function displayMarkdown(markdownText, fileName, folderName) {
             const noteContent = document.getElementById('note-content');
             
-            // 使用marked.js解析Markdown
+            // 配置marked
             marked.setOptions({
                 highlight: function(code, lang) {
-                    if (lang && hljs) {
-                        return hljs.highlight(lang, code).value;
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            return hljs.highlight(code, { language: lang }).value;
+                        } catch (err) {
+                            console.warn(`代码高亮失败: ${err}`);
+                        }
                     }
                     return code;
-                }
+                },
+                gfm: true,
+                breaks: true,
+                sanitize: false
             });
             
+            // 解析Markdown
             const html = marked.parse(markdownText);
             
+            // 显示内容
             noteContent.innerHTML = `
                 <div class="markdown-content">
-                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <h2 style="margin-top: 0; color: var(--secondary);">${filePath.split('/').pop()}</h2>
-                        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
-                            <i class="fas fa-folder"></i> ${filePath.replace('algorithm/', '').replace(/\/[^\/]+$/, '')}
-                        </p>
+                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <h1>${fileName.replace('.md', '').replace('.MD', '')}</h1>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                                <i class="fas fa-folder"></i> ${folderName}
+                            </span>
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                                <i class="fas fa-file-alt"></i> ${fileName}
+                            </span>
+                        </div>
                     </div>
                     ${html}
                 </div>
             `;
+            
+            // 重新高亮代码块
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
         }
 
-        // 初始化
+        // 7. 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 加载文件夹结构
+            // 加载目录结构
             loadFolderStructure();
             
             // 处理浏览器前进/后退
             window.addEventListener('popstate', function() {
-                const currentFile = getUrlParam('file');
-                if (currentFile) {
-                    const link = document.querySelector(`.file-link[data-path="${currentFile}"]`);
-                    if (link) {
-                        link.click();
-                    }
+                const fileParam = getUrlParam('file');
+                const folderParam = getUrlParam('folder');
+                
+                if (fileParam && folderParam) {
+                    openFile(folderParam, fileParam);
                 } else {
                     // 显示占位符
                     document.getElementById('note-content').innerHTML = document.getElementById('note-placeholder').outerHTML;
                     
                     // 清除active状态
-                    document.querySelectorAll('.file-link').forEach(l => {
-                        l.classList.remove('active');
+                    document.querySelectorAll('.file-link').forEach(link => {
+                        link.classList.remove('active');
                     });
+                    
+                    state.currentFile = null;
+                    state.currentFolder = null;
                 }
             });
+            
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth <= 768) {
+                menuToggle.style.display = 'block';
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+                
+                // 点击内容区关闭菜单
+                document.querySelector('.main-content').addEventListener('click', function() {
+                    if (sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', debounce(function() {
+                if (window.innerWidth > 768) {
+                    menuToggle.style.display = 'none';
+                    sidebar.classList.remove('active');
+                } else {
+                    menuToggle.style.display = 'block';
+                }
+            }, 250));
         });
     </script>
-    
-    <!-- 代码高亮库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
 </body>
 </html>

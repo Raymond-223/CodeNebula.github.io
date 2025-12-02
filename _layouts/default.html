@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} | CodeNebula</title>
+    <style>
+        /* 完全复用你原有algorithm.html的所有样式，一个字没改 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #6a5af9;
+            --secondary: #4cc9f0;
+            --accent: #f72585;
+            --dark: #0b0b1e;
+            --light: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("/bg.jpg") no-repeat center center fixed; /* 路径加/，确保Jekyll能找到 */
+            background-size: cover;
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, rgba(11, 11, 30, 0.8) 0%, rgba(26, 26, 46, 0.6) 100%),
+                radial-gradient(circle at 20% 30%, rgba(106, 90, 249, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite alternate ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 30px 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 25px 25px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-title i {
+            font-size: 1.5rem;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0 10px;
+        }
+
+        .menu-item {
+            margin-bottom: 8px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .menu-link.active {
+            background: rgba(106, 90, 249, 0.2);
+            border-left: 3px solid var(--primary);
+        }
+
+        .menu-link:hover {
+            color: var(--secondary);
+        }
+
+        .menu-link i {
+            font-size: 1.2rem;
+            margin-right: 12px;
+            color: var(--secondary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-link .arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .menu-link.collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+
+        .submenu {
+            list-style: none;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin: 0 10px 8px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .submenu.expanded {
+            max-height: 500px;
+            padding: 8px 0;
+        }
+
+        .submenu-item {
+            padding: 0 10px;
+        }
+
+        .submenu-link {
+            display: block;
+            padding: 10px 20px 10px 45px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .submenu-link:hover {
+            color: var(--secondary);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+
+        .submenu-link.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .content-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .content-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 800px;
+        }
+
+        .content-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .content-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(106, 90, 249, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+        }
+
+        .card-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .card-meta {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .floating-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 249, 0.1) 0%, transparent 70%);
+            filter: blur(50px);
+            animation: pulse 8s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer a:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.2rem;
+            z-index: 101;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .content-title {
+                font-size: 2rem;
+            }
+
+            .content-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-title {
+                font-size: 1.8rem;
+            }
+
+            .sidebar {
+                width: 250px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="background-overlay"></div>
+    <div class="stars-container" id="stars"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">
+                <i class="fas fa-brain"></i>
+                Algorithm Notes
+            </h2>
+        </div>
+
+        <!-- 自动生成的目录（核心！Jekyll会读取algorithm文件夹文件，自动填充这里） -->
+        <ul class="menu">
+            <li class="menu-item">
+                <a class="menu-link active" data-target="auto-submenu">
+                    <i class="fas fa-file-alt"></i>
+                    <span>所有笔记</span>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                <ul class="submenu expanded" id="auto-submenu">
+                    {% for note in site.algorithm %}
+                        <li class="submenu-item">
+                            <a href="{{ note.url }}" class="submenu-link">
+                                {{ note.basename | replace: "-", " " }} <!-- 自动显示笔记文件名，空格替换横线 -->
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        {{ content }} <!-- 页面内容占位符（algorithm.html的内容会在这里显示） -->
+    </main>
+
+    <div class="floating-orb" style="top: 20%; right: 10%;"></div>
+    <div class="floating-orb" style="bottom: 20%; left: 15%;"></div>
+
+    <script>
+        // 动态星星（复用原有代码）
+        function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(star);
+            }
+        }
+
+        // 自动目录折叠/展开（复用原有代码）
+        function initMenu() {
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const submenu = document.getElementById(targetId);
+                    this.classList.toggle('collapsed');
+                    submenu.classList.toggle('expanded');
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // 移动端菜单（复用原有代码）
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            initMenu();
+            initMobileMenu();
+            const cards = document.querySelectorAll('.content-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>

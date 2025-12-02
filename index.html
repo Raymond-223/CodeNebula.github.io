@@ -2,22 +2,157 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>我的 CodeNebula 网站</title>
+    <title>CodeNebula</title>
     <style>
-        /* 简单美化，不用懂，复制就行 */
-        body { 
-            font-family: 微软雅黑, Arial; 
-            text-align: center; 
-            margin-top: 100px; 
-            background-color: #f5f5f5;
+        /* 全局样式：模拟Google深色风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Google Sans", Arial, sans-serif;
         }
-        h1 { color: #2c3e50; }
-        p { color: #34495e; font-size: 18px; }
+        body {
+            background: url("bg.jpg") no-repeat center center fixed; /* 星空背景 */
+            background-size: cover; /* 背景铺满屏幕 */
+            color: white; /* 文字白色 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* 页面占满屏幕高度 */
+            padding: 20px;
+        }
+
+        /* 标题样式（对应Google的Logo） */
+        .title {
+            font-size: 6rem; /* 大标题 */
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        /* 搜索框样式（和Google搜索框一致） */
+        .search-box {
+            width: 100%;
+            max-width: 600px; /* 搜索框最大宽度 */
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1); /* 半透明背景 */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* 浅边框 */
+            border-radius: 25px; /* 圆角 */
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px); /* 毛玻璃效果，增强科技感 */
+        }
+        .search-box input {
+            flex: 1;
+            height: 100%;
+            background: transparent; /* 透明输入框 */
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 1rem;
+            padding: 0 10px;
+        }
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7); /* 占位符浅白色 */
+        }
+        .search-box .icons {
+            display: flex;
+            gap: 15px;
+            font-size: 1.2rem;
+        }
+
+        /* 快捷方式卡片（对应Google的快捷方式） */
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 自动换行 */
+            gap: 20px;
+            max-width: 600px; /* 和搜索框对齐 */
+        }
+        .shortcut-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: background 0.3s; /*  hover动画 */
+        }
+        .shortcut-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .shortcut-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* 圆形图标 */
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #202124; /* 图标内文字颜色 */
+        }
+        .shortcut-name {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
     </style>
+    <!-- 引入图标库（快捷方式的图标用这个） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>🎉 CodeNebula.github.io 上线啦！</h1>
-    <p>这是我用 GitHub Pages 免费创建的网站～</p>
-    <p>零基础也能轻松搞定！</p>
+    <!-- 标题（替换成你的网站名） -->
+    <div class="title">CodeNebula</div>
+
+    <!-- 搜索框（可以做跳转/搜索，后面教你改功能） -->
+    <div class="search-box">
+        <input type="text" placeholder="搜索或输入网址...">
+        <div class="icons">
+            <i class="fa-solid fa-microphone"></i>
+            <i class="fa-solid fa-camera"></i>
+        </div>
+    </div>
+
+    <!-- 快捷方式卡片（替换成你的链接） -->
+    <div class="shortcuts">
+        <!-- 快捷方式1：示例（替换成你的项目/链接） -->
+        <a href="https://github.com/CodeNebula" target="_blank" style="text-decoration: none;">
+            <div class="shortcut-card">
+                <div class="shortcut-icon"><i class="fa-brands fa-github"></i></div>
+                <div class="shortcut-name">我的GitHub</div>
+            </div>
+        </a>
+
+        <!-- 快捷方式2：示例 -->
+        <a href="https://CodeNebula.github.io/projects" target="_blank" style="text-decoration: none;">
+            <div class="shortcut-card">
+                <div class="shortcut-icon"><i class="fa-solid fa-code"></i></div>
+                <div class="shortcut-name">我的项目</div>
+            </div>
+        </a>
+
+        <!-- 快捷方式3：示例 -->
+        <a href="https://CodeNebula.github.io/resume.pdf" target="_blank" style="text-decoration: none;">
+            <div class="shortcut-card">
+                <div class="shortcut-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="shortcut-name">我的简历</div>
+            </div>
+        </a>
+
+        <!-- 快捷方式4：示例 -->
+        <a href="mailto:你的邮箱@xxx.com" style="text-decoration: none;">
+            <div class="shortcut-card">
+                <div class="shortcut-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div class="shortcut-name">联系我</div>
+            </div>
+        </a>
+    </div>
 </body>
 </html>

@@ -3,9 +3,38 @@
     "name": "算法基础",
     "files": [
       {
-        "name": "hhh.md",
-        "path": "algorithm/算法基础/hhh.md",
-        "url": "algorithm/算法基础/hhh.md"
+        "name": "复杂度分析.md",
+        "display_name": "复杂度分析",
+        "path": "algorithm/算法基础/复杂度分析.md",
+        "url": "https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/algorithm/算法基础/复杂度分析.md"
+      }
+    ]
+  },
+  "数据结构": {
+    "name": "数据结构",
+    "files": [
+      {
+        "name": "栈和队列.md",
+        "display_name": "栈和队列",
+        "path": "algorithm/数据结构/栈和队列.md",
+        "url": "https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/algorithm/数据结构/栈和队列.md"
+      },
+      {
+        "name": "二叉树.md",
+        "display_name": "二叉树",
+        "path": "algorithm/数据结构/二叉树.md",
+        "url": "https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/algorithm/数据结构/二叉树.md"
+      }
+    ]
+  },
+  "动态规划": {
+    "name": "动态规划",
+    "files": [
+      {
+        "name": "基础概念.md",
+        "display_name": "基础概念",
+        "path": "algorithm/动态规划/基础概念.md",
+        "url": "https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/algorithm/动态规划/基础概念.md"
       }
     ]
   }

@@ -1,0 +1,66 @@
+---
+layout: default  # 关键：继承 _layouts/default.html 模板（自动加载样式和自动目录）
+title: Algorithm Notes  # 浏览器标签页标题
+---
+
+<!-- 页面主内容（和原有风格一致，仅保留核心说明，目录由模板自动生成） -->
+<div class="content-header">
+    <h1 class="content-title">算法学习笔记</h1>
+    <p class="content-desc">左侧目录会自动同步 <code>algorithm</code> 文件夹中的所有笔记（.md/.html 格式），上传/删除/重命名笔记后，目录将在 1-3 分钟内自动更新，无需手动修改代码。</p>
+</div>
+
+<div class="content-cards">
+    <!-- 笔记使用说明卡片 -->
+    <div class="content-card">
+        <h3 class="card-title">
+            <i class="fas fa-lightbulb"></i> 如何添加笔记？
+        </h3>
+        <div class="card-content">
+            1. 本地新建笔记文件（推荐 Markdown 格式：.md，支持代码高亮、公式、列表）<br>
+            2. 上传文件到 GitHub 仓库的 <code>algorithm</code> 文件夹（直接上传，无需分类子文件夹）<br>
+            3. 等待 1-3 分钟（GitHub 自动构建）<br>
+            4. 左侧目录将自动显示新笔记，点击即可访问
+        </div>
+        <div class="card-meta">
+            <span>支持格式：.md / .html</span>
+            <span>自动同步目录</span>
+        </div>
+    </div>
+
+    <!-- 注意事项卡片 -->
+    <div class="content-card">
+        <h3 class="card-title">
+            <i class="fas fa-exclamation-circle"></i> 注意事项
+        </h3>
+        <div class="card-content">
+            ✅ 笔记文件名不要含空格和特殊字符（示例：「排序算法.md」✅，「排序 算法.md」❌）<br>
+            ✅ Markdown 笔记支持代码高亮（用 ```语言名 包裹代码，如 ```cpp ```python）<br>
+            ✅ 删除笔记后，目录会自动移除对应选项<br>
+            ✅ 笔记中若有图片，建议放在 <code>algorithm/images</code> 文件夹，用相对路径引用（如 ![图1](images/xxx.png)）
+        </div>
+        <div class="card-meta">
+            <span>区分大小写</span>
+            <span>实时同步更新</span>
+        </div>
+    </div>
+
+    <!-- 快速导航卡片 -->
+    <div class="content-card">
+        <h3 class="card-title">
+            <i class="fas fa-link"></i> 快速导航
+        </h3>
+        <div class="card-content">
+            <a href="/" class="submenu-link" style="display: inline-block; margin: 5px 0;">🔙 返回主页</a><br>
+            <a href="https://github.com/opencshonor/opencshonor.github.io/tree/main/algorithm" target="_blank" class="submenu-link" style="display: inline-block; margin: 5px 0;">📁 查看 GitHub 上的笔记文件夹</a>
+        </div>
+        <div class="card-meta">
+            <span>便捷访问</span>
+            <span>外部链接</span>
+        </div>
+    </div>
+</div>
+
+<!-- 底部版权信息（和其他页面风格一致） -->
+<div class="footer">
+    <p>© 2025 CodeNebula | <a href="/">返回主页</a> | <a href="https://github.com/opencshonor" target="_blank">GitHub</a></p>
+</div>

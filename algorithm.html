@@ -3,10 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithm Notes | CodeNebula</title>
+    <title>算法笔记 | CodeNebula</title>
     <style>
-        /* 保持原有的所有CSS样式不变 */
-        /* ... 之前的CSS代码 ... */
+        /* 重置和基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #6a5af9;
+            --secondary: #4cc9f0;
+            --accent: #f72585;
+            --dark: #0b0b1e;
+            --light: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("../bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+        }
+
+        /* 侧边栏目录 */
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            margin-bottom: 30px;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 目录树样式 */
+        .directory-tree {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tree-item {
+            margin-bottom: 5px;
+        }
+
+        .tree-folder {
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            user-select: none;
+        }
+
+        .tree-folder:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tree-folder i {
+            margin-right: 10px;
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+            width: 16px;
+            text-align: center;
+        }
+
+        .tree-folder.collapsed i.fa-folder-open {
+            transform: rotate(0deg);
+        }
+
+        .tree-folder i.fa-folder {
+            transform: rotate(0deg);
+        }
+
+        .tree-folder .folder-name {
+            flex: 1;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .file-count {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .file-list {
+            list-style: none;
+            padding-left: 28px;
+            margin: 10px 0;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .tree-item.collapsed .file-list {
+            max-height: 0;
+        }
+
+        .file-item {
+            margin-bottom: 5px;
+        }
+
+        .file-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .file-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(106, 90, 249, 0.3);
+            color: white;
+        }
+
+        .file-link.active {
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.2), rgba(76, 201, 240, 0.2));
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .file-link i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 40px;
+            max-width: calc(100% - 300px);
+        }
+
+        .content-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .content-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .content-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 笔记内容显示区 */
+        .note-content {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            min-height: 500px;
+            margin-bottom: 40px;
+        }
+
+        .note-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .note-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            opacity: 0.5;
+        }
+
+        .note-placeholder h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Markdown内容样式 */
+        .markdown-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+        }
+
+        .markdown-content h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .markdown-content h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        .markdown-content h4 {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .markdown-content p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .markdown-content code:not(pre code) {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #f8f9fa;
+        }
+
+        .markdown-content pre {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 25px;
+            margin-bottom: 16px;
+        }
+
+        .markdown-content li {
+            margin-bottom: 8px;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .markdown-content table th,
+        .markdown-content table td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .markdown-content table th {
+            background: rgba(106, 90, 249, 0.2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .markdown-content a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--secondary);
+            transition: all 0.3s;
+        }
+
+        .markdown-content a:hover {
+            color: white;
+            border-bottom: 1px solid white;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(106, 90, 249, 0.3);
+        }
+
+        /* 加载指示器 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+                max-width: calc(100% - 280px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                width: 280px;
+                left: -280px;
+                transition: left 0.3s;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 20px;
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 15px;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-title {
+                font-size: 2.5rem;
+            }
+            
+            .note-content {
+                padding: 20px;
+            }
+            
+            .markdown-content h1 {
+                font-size: 2rem;
+            }
+            
+            .markdown-content h2 {
+                font-size: 1.7rem;
+            }
+            
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
     <!-- Markdown解析库 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -25,7 +479,7 @@
     <!-- 侧边栏目录 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 class="sidebar-title">Algorithm Notes</h2>
+            <h2 class="sidebar-title">算法笔记</h2>
             <p class="sidebar-subtitle">共 <span id="folder-count">0</span> 个文件夹</p>
         </div>
         <ul class="directory-tree" id="directory-tree">
@@ -64,12 +518,10 @@
     </div>
 
     <script>
-        // 配置信息
-        const CONFIG = {
-            fileListUrl: 'algorithm/file-list.json',  // 文件列表的路径
-            rawBaseUrl: 'https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/'
-        };
-
+        // 配置文件列表路径
+        const FILE_LIST_URL = 'algorithm/file-list.json';
+        const RAW_BASE_URL = 'https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/';
+        
         // 状态管理
         const state = {
             folders: {},
@@ -104,7 +556,7 @@
                 treeElement.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>正在加载目录...</p></div>';
                 
                 // 加载 file-list.json
-                const response = await fetch(CONFIG.fileListUrl);
+                const response = await fetch(FILE_LIST_URL);
                 
                 if (!response.ok) {
                     throw new Error(`无法加载文件列表: ${response.status}`);
@@ -128,7 +580,7 @@
             } catch (error) {
                 console.error('加载目录失败:', error);
                 
-                // 尝试使用备用方案：直接扫描文件夹
+                // 显示错误信息
                 treeElement.innerHTML = `
                     <div class="loading">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -148,6 +600,25 @@
                         ">
                             <i class="fas fa-redo"></i> 重试
                         </button>
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.6);">
+                            <p><strong>如何解决：</strong></p>
+                            <p>1. 创建 algorithm/file-list.json 文件</p>
+                            <p>2. 按照以下格式编写内容：</p>
+                            <pre style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; margin-top: 10px; overflow-x: auto;">
+{
+  "数据结构": {
+    "name": "数据结构",
+    "files": [
+      {
+        "name": "栈和队列.md",
+        "display_name": "栈和队列",
+        "path": "algorithm/数据结构/栈和队列.md",
+        "url": "https://raw.githubusercontent.com/raymond-223/CodeNebula.github.io/main/algorithm/数据结构/栈和队列.md"
+      }
+    ]
+  }
+}</pre>
+                        </div>
                     </div>
                 `;
             }
@@ -164,7 +635,7 @@
                         <i class="fas fa-folder-open"></i>
                         <p>暂无笔记文件</p>
                         <p style="font-size: 0.8rem; margin-top: 10px;">
-                            请运行 generate-list.py 生成文件列表
+                            请创建 algorithm/file-list.json 文件
                         </p>
                     </div>
                 `;
@@ -193,6 +664,7 @@
                 
                 folder.files.forEach(file => {
                     const isActive = state.currentFile === file.name && state.currentFolder === folderName;
+                    const displayName = file.display_name || file.name.replace('.md', '').replace('.MD', '');
                     
                     html += `
                         <li class="file-item">
@@ -201,7 +673,7 @@
                                data-file="${file.name}"
                                data-url="${file.url}">
                                 <i class="fas fa-file-alt"></i>
-                                ${file.display_name || file.name.replace('.md', '').replace('.MD', '')}
+                                ${displayName}
                             </a>
                         </li>
                     `;
@@ -310,7 +782,7 @@
             let downloadUrl = fileUrl;
             if (!downloadUrl) {
                 // 构建下载URL（备用方案）
-                downloadUrl = `${CONFIG.rawBaseUrl}algorithm/${folderName}/${fileName}`;
+                downloadUrl = `${RAW_BASE_URL}algorithm/${folderName}/${fileName}`;
             }
             
             try {
@@ -335,6 +807,12 @@
                         <p style="font-size: 0.9rem; margin-top: 5px;">
                             尝试访问: <a href="${downloadUrl}" target="_blank">${downloadUrl}</a>
                         </p>
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                            <p><strong>常见原因：</strong></p>
+                            <p>1. 文件不存在或路径错误</p>
+                            <p>2. 检查 file-list.json 中的 url 字段</p>
+                            <p>3. 确保文件已上传到 GitHub</p>
+                        </div>
                     </div>
                 `;
             }
@@ -376,9 +854,15 @@
                             <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
                                 <i class="fas fa-file-alt"></i> ${fileName}
                             </span>
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                                <i class="fas fa-clock"></i> ${new Date().toLocaleDateString()}
+                            </span>
                         </div>
                     </div>
                     ${html}
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-size: 0.9rem;">
+                        <p><i class="fas fa-info-circle"></i> 文档结束</p>
+                    </div>
                 </div>
             `;
             

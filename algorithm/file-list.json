@@ -1,0 +1,38 @@
+import os
+import json
+
+def generate_file_list():
+    base_dir = "algorithm"
+    result = {}
+    
+    # 遍历algorithm文件夹
+    for folder_name in os.listdir(base_dir):
+        folder_path = os.path.join(base_dir, folder_name)
+        
+        if os.path.isdir(folder_path):
+            files = []
+            
+            # 遍历子文件夹中的文件
+            for file_name in os.listdir(folder_path):
+                if file_name.endswith('.md'):
+                    file_path = os.path.join(folder_path, file_name)
+                    files.append({
+                        "name": file_name,
+                        "path": file_path.replace("\\", "/"),  # Windows路径转换
+                        "url": file_path.replace("\\", "/")   # 相对URL
+                    })
+            
+            if files:  # 只包含有文件的文件夹
+                result[folder_name] = {
+                    "name": folder_name,
+                    "files": files
+                }
+    
+    # 保存为JSON文件
+    with open(os.path.join(base_dir, "file-list.json"), "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+    
+    print(f"已生成 {len(result)} 个文件夹的文件列表")
+
+if __name__ == "__main__":
+    generate_file_list()

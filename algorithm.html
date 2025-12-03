@@ -24,7 +24,7 @@
 
         body {
             min-height: 100vh;
-            background: url("../bg.jpg") no-repeat center center fixed;
+            background: url("bg.jpg") no-repeat center center fixed;
             background-size: cover;
             color: var(--light);
             overflow-x: hidden;
@@ -32,7 +32,7 @@
             display: flex;
         }
 
-        /* 侧边栏目录（样式不变，仅保留原有逻辑） */
+        /* 侧边栏目录 */
         .sidebar {
             width: 300px;
             background: rgba(0, 0, 0, 0.4);
@@ -64,7 +64,7 @@
             color: rgba(255, 255, 255, 0.6);
         }
 
-        /* 目录树样式（完全不变） */
+        /* 目录树样式 */
         .directory-tree {
             list-style: none;
             padding: 0;
@@ -166,33 +166,31 @@
             color: var(--secondary);
         }
 
-        /* 主内容区：布局调整（核心修改点1）- 贴合 OI Wiki 铺满全屏风格 */
+        /* 主内容区 */
         .main-content {
             flex: 1;
             margin-left: 300px;
-            padding: 20px 5%; /* 减小边距，左右仅留5%，更贴近全屏 */
-            width: calc(100% - 300px); /* 去掉max-width限制，完全铺满剩余宽度 */
+            padding: 20px 5%;
+            width: calc(100% - 300px);
         }
 
-        /* 移除原有大标题区（OI Wiki 风格更简洁，突出笔记内容）- 核心修改点2 */
         .content-header {
             display: none;
         }
 
-        /* 笔记内容显示区：布局调整 - 核心修改点3 */
         .note-content {
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 30px; /* 减小内边距，内容更紧凑 */
-            min-height: calc(100vh - 100px); /* 高度贴近视口，减少空白 */
+            padding: 30px;
+            min-height: calc(100vh - 100px);
             margin-bottom: 30px;
         }
 
         .note-placeholder {
             text-align: center;
-            padding: 100px 20px; /* 增加占位符上下间距，更居中 */
+            padding: 100px 20px;
             color: rgba(255, 255, 255, 0.5);
         }
 
@@ -209,7 +207,7 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* Markdown内容样式（完全不变） */
+        /* Markdown内容样式 */
         .markdown-content {
             color: rgba(255, 255, 255, 0.9);
             line-height: 1.8;
@@ -259,7 +257,7 @@
             color: #f8f9fa;
         }
 
-        /* 折叠模块样式（新增：不影响原有样式）- 核心修改点4 */
+        /* 折叠模块样式 */
         .collapse-container {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -305,7 +303,7 @@
             max-height: 2000px;
         }
 
-        /* 代码块样式（保留原有，适配折叠容器） */
+        /* 代码块样式 */
         .markdown-content pre,
         .collapse-content pre {
             background: rgba(0, 0, 0, 0.7);
@@ -324,7 +322,7 @@
             line-height: 1.5;
         }
 
-        /* 证明/补充部分样式（新增） */
+        /* 证明/补充部分样式 */
         .proof-content, .supplement-content {
             line-height: 1.7;
             padding: 5px 0;
@@ -390,7 +388,7 @@
             border-bottom: 1px solid white;
         }
 
-        /* 底部导航（完全不变） */
+        /* 底部导航 */
         .footer-nav {
             display: flex;
             justify-content: space-between;
@@ -415,7 +413,7 @@
             box-shadow: 0 10px 30px rgba(106, 90, 249, 0.3);
         }
 
-        /* 加载指示器（完全不变） */
+        /* 加载指示器 */
         .loading {
             text-align: center;
             padding: 40px;
@@ -433,7 +431,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 响应式设计（完全不变） */
+        /* 响应式设计 */
         @media (max-width: 1024px) {
             .sidebar {
                 width: 280px;
@@ -499,12 +497,10 @@
             }
         }
     </style>
-    <!-- Markdown解析库 -->
+    <!-- 依赖库引入 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- 代码高亮库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <!-- 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -513,7 +509,7 @@
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- 侧边栏目录（完全不变） -->
+    <!-- 侧边栏目录 -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2 class="sidebar-title">Algorithm Notes</h2>
@@ -527,14 +523,13 @@
         </ul>
     </div>
 
-    <!-- 主内容区（布局调整，内容不变） -->
+    <!-- 主内容区 -->
     <div class="main-content">
         <div class="content-header">
             <h1 class="content-title">算法笔记</h1>
             <p class="content-desc">左侧目录显示所有子文件夹和笔记文件。点击任意笔记，内容将直接在右侧显示。</p>
         </div>
 
-        <!-- 笔记内容显示区 -->
         <div class="note-content" id="note-content">
             <div class="note-placeholder" id="note-placeholder">
                 <i class="fas fa-file-alt"></i>
@@ -543,7 +538,6 @@
             </div>
         </div>
 
-        <!-- 底部导航（完全不变） -->
         <div class="footer-nav">
             <a href="index.html" class="nav-button">
                 <i class="fas fa-home"></i> 返回主页
@@ -555,19 +549,19 @@
     </div>
 
     <script>
-        // 配置信息（完全不变）
+        // 配置信息（请确保替换为你的GitHub信息）
         const CONFIG = {
             github: {
-                username: 'raymond-223',
-                repo: 'CodeNebula.github.io',
-                branch: 'main'
+                username: 'raymond-223', // 你的GitHub用户名
+                repo: 'CodeNebula.github.io', // 你的仓库名
+                branch: 'main' // 主分支名称（默认main）
             },
             paths: {
-                algorithm: 'algorithm'
+                algorithm: 'algorithm' // 笔记文件夹名称（必须和仓库中一致）
             }
         };
 
-        // 状态管理（完全不变）
+        // 状态管理
         const state = {
             folders: {},
             currentFile: null,
@@ -575,13 +569,12 @@
             expandedFolders: new Set()
         };
 
-        // 工具函数：获取当前URL参数（完全不变）
+        // 工具函数
         function getUrlParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
 
-        // 工具函数：设置URL参数（完全不变）
         function setUrlParam(name, value) {
             const url = new URL(window.location);
             if (value) {
@@ -592,7 +585,6 @@
             history.pushState({}, '', url);
         }
 
-        // 工具函数：防抖（完全不变）
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -605,9 +597,9 @@
             };
         }
 
-        // 新增：包装折叠模块（代码块、证明、补充）- 不影响原有逻辑
+        // 折叠模块相关函数
         function wrapCollapsibleSections(markdown) {
-            // 1. 包装代码块（```开头结尾）
+            // 代码块折叠
             markdown = markdown.replace(
                 /```([\s\S]*?)```/g,
                 (match, code) => {
@@ -627,7 +619,7 @@
                 }
             );
 
-            // 2. 包装证明部分（以「证明：」开头的段落）
+            // 证明部分折叠
             markdown = markdown.replace(
                 /(证明：|证明：)([\s\S]*?)(?=\n#{1,3} |\n```|\n\n|$)/g,
                 (match, prefix, content) => {
@@ -638,14 +630,14 @@
         <i class="fas fa-chevron-right"></i>
     </div>
     <div class="collapse-content">
-        <div class="proof-content">${content}</div>
+        <div class="proof-content">${marked.parse(content)}</div>
     </div>
 </div>
                     `;
                 }
             );
 
-            // 3. 包装补充部分（以「补充：」开头的段落）
+            // 补充说明折叠
             markdown = markdown.replace(
                 /(补充：|补充：)([\s\S]*?)(?=\n#{1,3} |\n```|\n\n|$)/g,
                 (match, prefix, content) => {
@@ -656,7 +648,7 @@
         <i class="fas fa-chevron-right"></i>
     </div>
     <div class="collapse-content">
-        <div class="supplement-content">${content}</div>
+        <div class="supplement-content">${marked.parse(content)}</div>
     </div>
 </div>
                     `;
@@ -666,7 +658,6 @@
             return markdown;
         }
 
-        // 新增：绑定折叠/展开事件（不影响原有逻辑）
         function bindCollapseEvents() {
             document.querySelectorAll('.collapse-header').forEach(header => {
                 header.addEventListener('click', () => {
@@ -680,34 +671,38 @@
             });
         }
 
-        // 1. 使用GitHub API获取文件列表（完全不变）
+        // 1. 加载文件夹结构（修复403：添加请求头+分支参数）
         async function loadFolderStructure() {
             const treeElement = document.getElementById('directory-tree');
+            const folderCountElement = document.getElementById('folder-count');
             
             try {
-                // 显示加载状态
                 treeElement.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>正在扫描文件夹...</p></div>';
                 
-                // 获取algorithm文件夹下的内容
-                const apiUrl = `https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}`;
-                const response = await fetch(apiUrl);
+                // 核心修复：添加请求头和分支参数（ref=main）
+                const apiUrl = `https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}?ref=${CONFIG.github.branch}`;
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
                 
                 if (!response.ok) {
-                    throw new Error(`GitHub API请求失败: ${response.status}`);
+                    throw new Error(`GitHub API请求失败: ${response.status}（${response.statusText}）`);
                 }
                 
                 const contents = await response.json();
                 await processFolderContents(contents);
                 
-                // 渲染目录树
                 renderDirectoryTree();
+                folderCountElement.textContent = Object.keys(state.folders).length;
                 
-                // 检查URL中是否有指定的文件
+                // 从URL参数加载默认文件
                 const fileParam = getUrlParam('file');
                 const folderParam = getUrlParam('folder');
-                
                 if (fileParam && folderParam) {
-                    // 尝试打开指定的文件
                     openFile(folderParam, fileParam);
                 }
                 
@@ -718,28 +713,33 @@
                         <i class="fas fa-exclamation-triangle"></i>
                         <p>加载失败</p>
                         <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">请检查仓库是否公开，或稍后重试</p>
                     </div>
                 `;
             }
         }
 
-        // 2. 处理文件夹内容（完全不变）
+        // 2. 处理文件夹内容（修复403：子文件夹请求添加请求头）
         async function processFolderContents(contents) {
             state.folders = {};
             
             for (const item of contents) {
                 if (item.type === 'dir') {
-                    // 这是一个子文件夹
                     const folderName = item.name;
                     console.log(`发现文件夹: ${folderName}`);
                     
-                    // 获取子文件夹中的文件
                     try {
-                        const folderApiUrl = item.url;
-                        const folderResponse = await fetch(folderApiUrl);
+                        // 核心修复：子文件夹请求添加请求头
+                        const folderResponse = await fetch(item.url, {
+                            method: 'GET',
+                            headers: {
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
                         const folderContents = await folderResponse.json();
                         
-                        // 筛选出Markdown文件
+                        // 筛选MD文件并排序
                         const mdFiles = folderContents
                             .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
                             .map(file => ({
@@ -747,14 +747,15 @@
                                 path: file.path,
                                 url: file.download_url,
                                 size: file.size
-                            }));
+                            }))
+                            .sort((a, b) => a.name.localeCompare(b.name));
                         
                         if (mdFiles.length > 0) {
                             state.folders[folderName] = {
                                 name: folderName,
-                                files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
+                                files: mdFiles
                             };
-                            console.log(`文件夹 ${folderName} 中有 ${mdFiles.length} 个MD文件`);
+                            console.log(`文件夹 ${folderName} 加载完成：${mdFiles.length} 个笔记`);
                         }
                     } catch (error) {
                         console.error(`处理文件夹 ${folderName} 失败:`, error);
@@ -762,328 +763,218 @@
                 }
             }
             
-            // 如果没有找到任何文件夹，尝试直接查找MD文件
-            if (Object.keys(state.folders).length === 0) {
-                console.log('未发现子文件夹，尝试查找直接文件...');
-                const mdFiles = contents
-                    .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.md'))
-                    .map(file => ({
-                        name: file.name,
-                        path: file.path,
-                        url: file.download_url,
-                        size: file.size
-                    }));
-                
-                if (mdFiles.length > 0) {
-                    state.folders['笔记'] = {
-                        name: '笔记',
-                        files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
-                    };
-                    console.log(`找到 ${mdFiles.length} 个直接MD文件`);
-                }
-            }
+            // 处理直接放在algorithm文件夹下的MD文件（无子文件夹）
+            const rootMdFiles = contents
+                .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.md'))
+                .map(file => ({
+                    name: file.name,
+                    path: file.path,
+                    url: file.download_url,
+                    size: file.size
+                }))
+                .sort((a, b) => a.name.localeCompare(b.name));
             
-            console.log('最终文件夹结构:', state.folders);
+            if (rootMdFiles.length > 0) {
+                state.folders['根目录'] = {
+                    name: '根目录',
+                    files: rootMdFiles
+                };
+                console.log(`根目录加载完成：${rootMdFiles.length} 个笔记`);
+            }
         }
 
-        // 3. 渲染目录树（完全不变）
+        // 3. 渲染目录树
         function renderDirectoryTree() {
             const treeElement = document.getElementById('directory-tree');
-            const folderCountElement = document.getElementById('folder-count');
+            treeElement.innerHTML = '';
             
             if (Object.keys(state.folders).length === 0) {
                 treeElement.innerHTML = `
                     <div class="loading">
                         <i class="fas fa-folder-open"></i>
-                        <p>暂无笔记文件</p>
-                        <p style="font-size: 0.8rem; margin-top: 10px;">
-                            请确保在 algorithm 文件夹中上传了 .md 文件
-                        </p>
+                        <p>未发现笔记文件</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">请在 algorithm 文件夹中添加 .md 格式笔记</p>
                     </div>
                 `;
-                folderCountElement.textContent = '0';
                 return;
             }
             
-            // 按文件夹名称排序
-            const sortedFolders = Object.keys(state.folders).sort();
-            
-            let html = '';
-            sortedFolders.forEach(folderName => {
-                const folder = state.folders[folderName];
-                const fileCount = folder.files.length;
-                const isExpanded = state.expandedFolders.has(folderName);
-                
-                html += `
-                    <li class="tree-item ${isExpanded ? '' : 'collapsed'}">
-                        <div class="tree-folder" data-folder="${folderName}">
-                            <i class="fas ${isExpanded ? 'fa-folder-open' : 'fa-folder'}"></i>
-                            <span class="folder-name">${folder.name}</span>
-                            <span class="file-count">${fileCount}</span>
-                        </div>
-                        <ul class="file-list">
+            // 遍历文件夹渲染
+            Object.values(state.folders).forEach(folder => {
+                const isExpanded = state.expandedFolders.has(folder.name);
+                const treeItem = document.createElement('li');
+                treeItem.className = `tree-item ${isExpanded ? '' : 'collapsed'}`;
+                treeItem.innerHTML = `
+                    <div class="tree-folder ${isExpanded ? '' : 'collapsed'}" data-folder="${folder.name}">
+                        <i class="fas ${isExpanded ? 'fa-folder-open' : 'fa-folder'}" style="color: var(--secondary);"></i>
+                        <span class="folder-name">${folder.name}</span>
+                        <span class="file-count">${folder.files.length}</span>
+                    </div>
+                    <ul class="file-list">
+                        ${folder.files.map(file => `
+                            <li class="file-item">
+                                <a href="javascript:;" class="file-link ${state.currentFile?.name === file.name && state.currentFolder === folder.name ? 'active' : ''}"
+                                   data-folder="${folder.name}" data-file="${file.name}" data-url="${file.url}">
+                                    <i class="fas fa-file-markdown"></i>
+                                    <span>${file.name.replace('.md', '')}</span>
+                                </a>
+                            </li>
+                        `).join('')}
+                    </ul>
                 `;
-                
-                folder.files.forEach(file => {
-                    const displayName = file.name.replace('.md', '').replace('.MD', '');
-                    const isActive = state.currentFile === file.name && state.currentFolder === folderName;
-                    
-                    html += `
-                        <li class="file-item">
-                            <a href="#" class="file-link ${isActive ? 'active' : ''}" 
-                               data-folder="${folderName}" 
-                               data-file="${file.name}"
-                               data-url="${file.url}">
-                                <i class="fas fa-file-alt"></i>
-                                ${displayName}
-                            </a>
-                        </li>
-                    `;
-                });
-                
-                html += `
-                        </ul>
-                    </li>
-                `;
+                treeElement.appendChild(treeItem);
             });
             
-            treeElement.innerHTML = html;
-            folderCountElement.textContent = sortedFolders.length;
-            
-            // 绑定文件夹点击事件
-            document.querySelectorAll('.tree-folder').forEach(folderElement => {
-                folderElement.addEventListener('click', function(e) {
+            // 绑定文件夹折叠/展开事件
+            document.querySelectorAll('.tree-folder').forEach(folder => {
+                folder.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const folderName = this.getAttribute('data-folder');
-                    toggleFolder(folderName);
+                    const folderName = folder.dataset.folder;
+                    const treeItem = folder.parentElement;
+                    
+                    if (state.expandedFolders.has(folderName)) {
+                        state.expandedFolders.delete(folderName);
+                        treeItem.classList.add('collapsed');
+                        folder.classList.add('collapsed');
+                        folder.querySelector('i').classList.replace('fa-folder-open', 'fa-folder');
+                    } else {
+                        state.expandedFolders.add(folderName);
+                        treeItem.classList.remove('collapsed');
+                        folder.classList.remove('collapsed');
+                        folder.querySelector('i').classList.replace('fa-folder', 'fa-folder-open');
+                    }
                 });
             });
             
             // 绑定文件点击事件
             document.querySelectorAll('.file-link').forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const folderName = this.getAttribute('data-folder');
-                    const fileName = this.getAttribute('data-file');
-                    const fileUrl = this.getAttribute('data-url');
+                    const folderName = link.dataset.folder;
+                    const fileName = link.dataset.file;
+                    const fileUrl = link.dataset.url;
+                    
+                    // 更新激活状态
+                    document.querySelectorAll('.file-link').forEach(el => el.classList.remove('active'));
+                    link.classList.add('active');
                     
                     openFile(folderName, fileName, fileUrl);
                 });
             });
-            
-            // 默认展开第一个文件夹
-            if (sortedFolders.length > 0 && state.expandedFolders.size === 0) {
-                setTimeout(() => {
-                    toggleFolder(sortedFolders[0], false);
-                }, 100);
-            }
         }
 
-        // 4. 切换文件夹展开/收起（完全不变）
-        function toggleFolder(folderName, saveState = true) {
-            const folderElement = document.querySelector(`.tree-folder[data-folder="${folderName}"]`).parentElement;
+        // 4. 打开并渲染文件内容（修复403：文件请求添加请求头）
+        async function openFile(folderName, fileName, fileUrl) {
+            const noteContent = document.getElementById('note-content');
+            const notePlaceholder = document.getElementById('note-placeholder');
             
-            if (folderElement.classList.contains('collapsed')) {
-                // 展开文件夹
-                folderElement.classList.remove('collapsed');
-                const icon = folderElement.querySelector('.tree-folder i');
-                icon.classList.remove('fa-folder');
-                icon.classList.add('fa-folder-open');
-                
-                if (saveState) {
-                    state.expandedFolders.add(folderName);
-                }
-            } else {
-                // 收起文件夹
-                folderElement.classList.add('collapsed');
-                const icon = folderElement.querySelector('.tree-folder i');
-                icon.classList.remove('fa-folder-open');
-                icon.classList.add('fa-folder');
-                
-                if (saveState) {
-                    state.expandedFolders.delete(folderName);
-                }
-            }
-        }
-
-        // 5. 打开文件（完全不变，仅在调用displayMarkdown前新增折叠处理）
-        async function openFile(folderName, fileName, fileUrl = null) {
             // 更新状态
             state.currentFolder = folderName;
-            state.currentFile = fileName;
+            state.currentFile = state.folders[folderName].files.find(f => f.name === fileName);
+            if (!fileUrl) fileUrl = state.currentFile.url;
             
-            // 更新URL
+            // 更新URL参数
             setUrlParam('folder', folderName);
             setUrlParam('file', fileName);
             
-            // 更新UI状态
-            document.querySelectorAll('.file-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            const activeLink = document.querySelector(`.file-link[data-folder="${folderName}"][data-file="${fileName}"]`);
-            if (activeLink) {
-                activeLink.classList.add('active');
-                
-                // 确保文件夹展开
-                if (!state.expandedFolders.has(folderName)) {
-                    toggleFolder(folderName, false);
-                }
-            }
-            
-            // 显示加载状态
-            const noteContent = document.getElementById('note-content');
-            noteContent.innerHTML = `
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>正在加载 ${fileName}...</p>
-                </div>
-            `;
-            
-            // 获取文件URL
-            let downloadUrl = fileUrl;
-            if (!downloadUrl) {
-                // 构建下载URL
-                downloadUrl = `https://raw.githubusercontent.com/${CONFIG.github.username}/${CONFIG.github.repo}/${CONFIG.github.branch}/algorithm/${folderName}/${fileName}`;
-            }
-            
-            console.log('正在加载文件:', downloadUrl);
-            
             try {
-                // 加载文件内容
-                const response = await fetch(downloadUrl);
+                // 隐藏占位符，显示加载中
+                notePlaceholder.style.display = 'none';
+                noteContent.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>正在加载笔记：${fileName}</p>
+                    </div>
+                `;
+                
+                // 核心修复：文件内容请求添加请求头
+                const response = await fetch(fileUrl, {
+                    method: 'GET',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'text/plain'
+                    }
+                });
                 
                 if (!response.ok) {
-                    throw new Error(`文件加载失败: ${response.status}`);
+                    throw new Error(`加载文件失败: ${response.status}`);
                 }
                 
-                let markdownText = await response.text();
-                // 新增：处理折叠模块
-                markdownText = wrapCollapsibleSections(markdownText);
-                
-                displayMarkdown(markdownText, fileName, folderName);
+                const mdContent = await response.text();
+                renderFileContent(mdContent, fileName);
                 
             } catch (error) {
-                console.error('加载文件失败:', error);
+                console.error('打开文件失败:', error);
                 noteContent.innerHTML = `
-                    <div class="note-placeholder">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <h3>加载失败</h3>
-                        <p>无法加载文件: ${fileName}</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">错误: ${error.message}</p>
-                        <p style="font-size: 0.9rem; margin-top: 5px;">
-                            尝试访问: <a href="${downloadUrl}" target="_blank">${downloadUrl}</a>
-                        </p>
+                    <div class="loading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>笔记加载失败</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">请检查文件是否存在或网络连接</p>
                     </div>
                 `;
             }
         }
 
-        // 6. 显示Markdown内容（仅新增绑定折叠事件，其余不变）
-        function displayMarkdown(markdownText, fileName, folderName) {
+        // 5. 渲染Markdown内容
+        function renderFileContent(mdContent, fileName) {
             const noteContent = document.getElementById('note-content');
             
-            // 配置marked（完全不变）
-            marked.setOptions({
-                highlight: function(code, lang) {
-                    if (lang && hljs.getLanguage(lang)) {
-                        try {
-                            return hljs.highlight(code, { language: lang }).value;
-                        } catch (err) {
-                            console.warn(`代码高亮失败: ${err}`);
-                        }
-                    }
-                    return code;
-                },
-                gfm: true,
-                breaks: true,
-                sanitize: false
-            });
+            // 处理折叠模块
+            const processedMd = wrapCollapsibleSections(mdContent);
             
-            // 解析Markdown（完全不变）
-            const html = marked.parse(markdownText);
+            // 转换Markdown为HTML
+            const htmlContent = marked.parse(processedMd);
             
-            // 显示内容（完全不变）
-            noteContent.innerHTML = `
-                <div class="markdown-content">
-                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <h1>${fileName.replace('.md', '').replace('.MD', '')}</h1>
-                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
-                                <i class="fas fa-folder"></i> ${folderName}
-                            </span>
-                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
-                                <i class="fas fa-file-alt"></i> ${fileName}
-                            </span>
-                        </div>
-                    </div>
-                    ${html}
-                </div>
-            `;
+            // 渲染到页面
+            noteContent.innerHTML = `<div class="markdown-content">${htmlContent}</div>`;
             
-            // 重新高亮代码块（完全不变）
+            // 代码高亮
             document.querySelectorAll('pre code').forEach(block => {
                 hljs.highlightElement(block);
             });
             
-            // 新增：绑定折叠事件
+            // 绑定折叠事件
             bindCollapseEvents();
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            console.log(`笔记渲染完成：${fileName}`);
         }
 
-        // 7. 初始化（完全不变）
-        document.addEventListener('DOMContentLoaded', function() {
-            // 加载目录结构
-            loadFolderStructure();
-            
-            // 处理浏览器前进/后退
-            window.addEventListener('popstate', function() {
-                const fileParam = getUrlParam('file');
-                const folderParam = getUrlParam('folder');
-                
-                if (fileParam && folderParam) {
-                    openFile(folderParam, fileParam);
-                } else {
-                    // 显示占位符
-                    document.getElementById('note-content').innerHTML = document.getElementById('note-placeholder').outerHTML;
-                    
-                    // 清除active状态
-                    document.querySelectorAll('.file-link').forEach(link => {
-                        link.classList.remove('active');
-                    });
-                    
-                    state.currentFile = null;
-                    state.currentFolder = null;
-                }
-            });
-            
-            // 移动端菜单切换
+        // 6. 绑定响应式菜单事件
+        function bindResponsiveEvents() {
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar');
             
+            // 移动端显示菜单按钮
             if (window.innerWidth <= 768) {
                 menuToggle.style.display = 'block';
-                
-                menuToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                });
-                
-                // 点击内容区关闭菜单
-                document.querySelector('.main-content').addEventListener('click', function() {
-                    if (sidebar.classList.contains('active')) {
-                        sidebar.classList.remove('active');
-                    }
-                });
             }
             
-            // 监听窗口大小变化
-            window.addEventListener('resize', debounce(function() {
-                if (window.innerWidth > 768) {
-                    menuToggle.style.display = 'none';
+            // 窗口大小变化时调整
+            window.addEventListener('resize', debounce(() => {
+                if (window.innerWidth <= 768) {
+                    menuToggle.style.display = 'block';
                     sidebar.classList.remove('active');
                 } else {
-                    menuToggle.style.display = 'block';
+                    menuToggle.style.display = 'none';
+                    sidebar.classList.add('active');
                 }
-            }, 250));
+            }, 200));
+            
+            // 菜单按钮点击事件
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('初始化算法笔记页面...');
+            loadFolderStructure();
+            bindResponsiveEvents();
         });
     </script>
 </body>

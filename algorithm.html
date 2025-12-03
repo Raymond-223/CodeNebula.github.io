@@ -24,7 +24,7 @@
 
         body {
             min-height: 100vh;
-            background: url("bg.jpg") no-repeat center center fixed;
+            background: url("bg.jpg") no-repeat center center fixed; /* 确保bg.jpg在根目录 */
             background-size: cover;
             color: var(--light);
             overflow-x: hidden;
@@ -497,11 +497,11 @@
             }
         }
     </style>
-    <!-- 依赖库引入 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 依赖库引入（稳定CDN） -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/12.0.1/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 移动端菜单切换按钮 -->
@@ -549,16 +549,19 @@
     </div>
 
     <script>
-        // 配置信息（请确保替换为你的GitHub信息）
+        // ###########################
+        // 核心配置（必须确认正确！）
+        // ###########################
         const CONFIG = {
             github: {
-                username: 'raymond-223', // 你的GitHub用户名
-                repo: 'CodeNebula.github.io', // 你的仓库名
-                branch: 'main' // 主分支名称（默认main）
+                username: 'raymond-223', // 你的GitHub用户名（勿改，已匹配你的仓库）
+                repo: 'CodeNebula.github.io', // 你的仓库名（勿改）
+                branch: 'main' // 主分支（默认main，若你的是master则修改）
             },
             paths: {
-                algorithm: 'algorithm' // 笔记文件夹名称（必须和仓库中一致）
-            }
+                algorithm: 'algorithm' // 笔记文件夹名（必须和仓库中一致）
+            },
+            proxy: 'https://ghproxy.com/' // 国内访问代理（解决API访问失败）
         };
 
         // 状态管理
@@ -671,7 +674,7 @@
             });
         }
 
-        // 1. 加载文件夹结构（修复403：添加请求头+分支参数）
+        // 1. 加载文件夹结构（核心修复：代理+请求头）
         async function loadFolderStructure() {
             const treeElement = document.getElementById('directory-tree');
             const folderCountElement = document.getElementById('folder-count');
@@ -679,18 +682,19 @@
             try {
                 treeElement.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>正在扫描文件夹...</p></div>';
                 
-                // 核心修复：添加请求头和分支参数（ref=main）
-                const apiUrl = `https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}?ref=${CONFIG.github.branch}`;
+                // 关键修复：使用代理+明确分支+标准请求头
+                const apiUrl = `${CONFIG.proxy}https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}?ref=${CONFIG.github.branch}`;
                 const response = await fetch(apiUrl, {
                     method: 'GET',
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Cache-Control': 'no-cache' // 禁用缓存，避免旧数据
                     }
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`GitHub API请求失败: ${response.status}（${response.statusText}）`);
+                    throw new Error(`API请求失败: ${response.status}（${response.statusText}）`);
                 }
                 
                 const contents = await response.json();
@@ -711,15 +715,15 @@
                 treeElement.innerHTML = `
                     <div class="loading">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <p>加载失败</p>
+                        <p>目录加载失败</p>
                         <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
-                        <p style="font-size: 0.8rem; margin-top: 5px;">请检查仓库是否公开，或稍后重试</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">请确认：1.仓库已公开 2.algorithm文件夹有MD文件</p>
                     </div>
                 `;
             }
         }
 
-        // 2. 处理文件夹内容（修复403：子文件夹请求添加请求头）
+        // 2. 处理文件夹内容（核心修复：子文件夹请求代理）
         async function processFolderContents(contents) {
             state.folders = {};
             
@@ -729,8 +733,12 @@
                     console.log(`发现文件夹: ${folderName}`);
                     
                     try {
-                        // 核心修复：子文件夹请求添加请求头
-                        const folderResponse = await fetch(item.url, {
+                        // 关键修复：子文件夹请求添加代理
+                        const proxyUrl = item.url.startsWith('https://api.github.com/') 
+                            ? `${CONFIG.proxy}${item.url}` 
+                            : item.url;
+                        
+                        const folderResponse = await fetch(proxyUrl, {
                             method: 'GET',
                             headers: {
                                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -863,7 +871,7 @@
             });
         }
 
-        // 4. 打开并渲染文件内容（修复403：文件请求添加请求头）
+        // 4. 打开并渲染文件内容（核心修复：MD文件加载代理）
         async function openFile(folderName, fileName, fileUrl) {
             const noteContent = document.getElementById('note-content');
             const notePlaceholder = document.getElementById('note-placeholder');
@@ -887,8 +895,13 @@
                     </div>
                 `;
                 
-                // 核心修复：文件内容请求添加请求头
-                const response = await fetch(fileUrl, {
+                // 关键修复：MD文件加载添加代理
+                const proxyFileUrl = fileUrl.startsWith('https://raw.githubusercontent.com/')
+                    ? `${CONFIG.proxy}${fileUrl}`
+                    : fileUrl;
+                
+                // 加载MD文件内容
+                const response = await fetch(proxyFileUrl, {
                     method: 'GET',
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -897,7 +910,7 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`加载文件失败: ${response.status}`);
+                    throw new Error(`文件加载失败: ${response.status}`);
                 }
                 
                 const mdContent = await response.text();
@@ -970,9 +983,10 @@
             });
         }
 
-        // 初始化
+        // 初始化（确保DOM加载完成后执行）
         document.addEventListener('DOMContentLoaded', () => {
             console.log('初始化算法笔记页面...');
+            console.log('配置信息:', CONFIG);
             loadFolderStructure();
             bindResponsiveEvents();
         });

@@ -1,0 +1,31 @@
+{
+  "folders": [
+    {
+      "name": "hh",
+      "files": [
+        {
+          "name": "hh.md",
+          "path": "algorithm/hh/hh.md"
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "files": [
+        {
+          "name": "test.md",
+          "path": "algorithm/test/test.md"
+        }
+      ]
+    },
+    {
+      "name": "根目录",
+      "files": [
+        {
+          "name": "2025年12月1日分享.md",
+          "path": "algorithm/2025年12月1日分享.md"
+        }
+      ]
+    }
+  ]
+}

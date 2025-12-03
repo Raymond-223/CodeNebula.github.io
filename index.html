@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeNebula | Cosmic Code Exploration</title>
+    <style>
+        /* 重置和基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #6a5af9;
+            --secondary: #4cc9f0;
+            --accent: #f72585;
+            --dark: #0b0b1e;
+            --light: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            min-height: 100vh;
+            background: url("bg.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 增强背景图效果 */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, rgba(11, 11, 30, 0.7) 0%, rgba(26, 26, 46, 0.5) 100%),
+                radial-gradient(circle at 20% 30%, rgba(106, 90, 249, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        /* 动态星星 */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite alternate ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 主容器 */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* 标题样式 */
+        .title-container {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 5.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+            position: relative;
+            animation: titleGlow 3s infinite alternate;
+            text-shadow: 0 0 30px rgba(106, 90, 249, 0.3);
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(106, 90, 249, 0.3); }
+            100% { text-shadow: 0 0 40px rgba(106, 90, 249, 0.7), 0 0 60px rgba(76, 201, 240, 0.5); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            letter-spacing: 3px;
+            position: relative;
+            padding-left: 10px;
+        }
+
+        .subtitle::before {
+            content: '✦';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            animation: spin 10s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: translateY(-50%) rotate(0deg); }
+            to { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        /* 快捷方式网格 */
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .shortcut-item {
+            position: relative;
+            text-decoration: none;
+            perspective: 1000px;
+        }
+
+        .shortcut-card {
+            height: 180px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .shortcut-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .shortcut-card:hover {
+            transform: translateY(-15px) rotateX(10deg);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(106, 90, 249, 0.3),
+                0 0 50px rgba(106, 90, 249, 0.2);
+        }
+
+        .shortcut-card:hover::before {
+            left: 100%;
+        }
+
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.5s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .shortcut-card:hover .icon-wrapper {
+            transform: scale(1.15);
+            box-shadow: 0 0 40px rgba(106, 90, 249, 0.5);
+        }
+
+        .shortcut-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .shortcut-card:hover .shortcut-name {
+            color: var(--secondary);
+            transform: translateY(5px);
+        }
+
+        /* 浮动装饰 */
+        .floating-orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 249, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: pulse 8s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        /* 底部版权信息 */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1;
+        }
+
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer a:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3.5rem;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                max-width: 600px;
+            }
+            
+            .shortcut-card {
+                height: 160px;
+                padding: 20px;
+            }
+            
+            .icon-wrapper {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+            }
+        }
+    </style>
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 背景图增强层 -->
+    <div class="background-overlay"></div>
+    
+    <!-- 动态星星 -->
+    <div class="stars-container" id="stars"></div>
+    
+    <!-- 主要内容 -->
+    <div class="main-container">
+        <div class="title-container">
+            <h1 class="main-title">CodeNebula</h1>
+            <p class="subtitle">EXPLORE THE COSMIC CODE</p>
+        </div>
+        
+        <div class="shortcuts-grid">
+            <!-- Algorithm -->
+            <a href="https://github.com/CodeNebula/algorithms" target="_blank" class="shortcut-item">
+                <div class="shortcut-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <span class="shortcut-name">Algorithm</span>
+                </div>
+            </a>
+            
+            <!-- Web Development -->
+            <a href="https://github.com/CodeNebula/web-development" target="_blank" class="shortcut-item">
+                <div class="shortcut-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span class="shortcut-name">Web Development</span>
+                </div>
+            </a>
+            
+            <!-- PyTorch Learning -->
+            <a href="https://github.com/CodeNebula/pytorch-learning" target="_blank" class="shortcut-item">
+                <div class="shortcut-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <span class="shortcut-name">PyTorch Learning</span>
+                </div>
+            </a>
+            
+            <!-- AI Paper Interpretation -->
+            <a href="https://github.com/CodeNebula/ai-papers" target="_blank" class="shortcut-item">
+                <div class="shortcut-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <span class="shortcut-name">AI Paper Interpretation</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 浮动装饰 -->
+    <div class="floating-orb" style="top: 10%; right: 5%;"></div>
+    <div class="floating-orb" style="bottom: 15%; left: 5%;"></div>
+
+    <script>
+        // 创建动态星星
+        function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(star);
+            }
+        }
+
+        // 卡片悬停效果增强
+        document.querySelectorAll('.shortcut-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('.icon-wrapper i');
+                icon.style.transform = 'rotate(360deg)';
+                icon.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('.icon-wrapper i');
+                icon.style.transform = 'rotate(0deg)';
+            });
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            
+            // 添加初始动画
+            document.querySelector('.main-title').style.animation = 'titleGlow 3s infinite alternate';
+            document.querySelectorAll('.shortcut-card').forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100 + 500);
+            });
+        });
+    </script>
+</body>
+</html>

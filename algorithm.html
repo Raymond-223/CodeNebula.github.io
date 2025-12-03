@@ -1,15 +1,11 @@
----
-title: 算法笔记 | CodeNebula
----
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }}</title>
+    <title>Algorithm Notes | CodeNebula</title>
     <style>
-        /* 完全保留你原有风格的变量和基础样式 */
+        /* 重置和基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -24,106 +20,36 @@ title: 算法笔记 | CodeNebula
             --dark: #0b0b1e;
             --light: #f8f9fa;
             --glass: rgba(255, 255, 255, 0.1);
-            --glass-dark: rgba(11, 11, 30, 0.7);
-            --border: rgba(255, 255, 255, 0.15);
         }
 
         body {
             min-height: 100vh;
-            background: url("bg.jpg") no-repeat center center fixed;
+            background: url("../bg.jpg") no-repeat center center fixed;
             background-size: cover;
             color: var(--light);
+            overflow-x: hidden;
             position: relative;
             display: flex;
-            overflow-x: hidden;
         }
 
-        /* 原有背景增强层、星星、浮动装饰完全保留 */
-        .background-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(135deg, rgba(11, 11, 30, 0.8) 0%, rgba(26, 26, 46, 0.7) 100%),
-                radial-gradient(circle at 20% 30%, rgba(106, 90, 249, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.1) 0%, transparent 40%);
-            z-index: -1;
-        }
-
-        .stars-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) infinite alternate ease-in-out;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .floating-orb {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(106, 90, 249, 0.1) 0%, transparent 70%);
-            filter: blur(50px);
-            animation: pulse 8s infinite ease-in-out;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.5; }
-        }
-
-        /* ========== OI Wiki 风格布局核心调整 ========== */
-        /* 左侧目录：固定宽度，滚动，玻璃态不变 */
+        /* 侧边栏目录（样式不变，仅保留原有逻辑） */
         .sidebar {
-            width: 280px;
-            background: var(--glass);
+            width: 300px;
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
-            border-right: 1px solid var(--border);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             padding: 30px 20px;
-            overflow-y: auto; /* 目录超出可滚动 */
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
             z-index: 100;
-            transition: all 0.3s ease;
         }
 
-        /* 右侧内容区：铺满全屏，减少多余边距，突出内容 */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 30px 5%; /* 左右仅留5%边距，上下30px，更紧凑 */
-            min-height: 100vh;
-            max-width: calc(100% - 280px);
-            background: var(--glass-dark); /* 内容区轻微遮罩，提升文字可读性 */
-            backdrop-filter: blur(5px);
-        }
-
-        /* ========== 原有目录样式保留，适配自动生成 ========== */
         .sidebar-header {
             margin-bottom: 30px;
             text-align: center;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-title {
@@ -131,10 +57,6 @@ title: 算法笔记 | CodeNebula
             font-weight: 600;
             color: var(--secondary);
             margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
 
         .sidebar-subtitle {
@@ -142,22 +64,21 @@ title: 算法笔记 | CodeNebula
             color: rgba(255, 255, 255, 0.6);
         }
 
+        /* 目录树样式（完全不变） */
         .directory-tree {
             list-style: none;
             padding: 0;
-            margin-bottom: 30px;
         }
 
         .tree-item {
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .tree-folder {
             cursor: pointer;
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             user-select: none;
@@ -165,39 +86,49 @@ title: 算法笔记 | CodeNebula
 
         .tree-folder:hover {
             background: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid var(--secondary);
         }
 
         .tree-folder i {
             margin-right: 10px;
             font-size: 0.9rem;
-            color: var(--secondary);
+            transition: transform 0.3s;
+            width: 16px;
+            text-align: center;
         }
 
-        .folder-name {
+        .tree-folder.collapsed i.fa-folder {
+            transform: rotate(0deg);
+        }
+
+        .tree-folder i.fa-folder-open {
+            transform: rotate(0deg);
+        }
+
+        .tree-folder .folder-name {
             flex: 1;
             font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .file-count {
-            background: rgba(106, 90, 249, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             padding: 2px 8px;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 0.8rem;
-            color: var(--secondary);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .file-list {
             list-style: none;
-            padding-left: 25px;
-            margin: 5px 0;
-            max-height: 0;
+            padding-left: 28px;
+            margin: 10px 0;
+            max-height: 1000px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
 
-        .tree-item.expanded .file-list {
-            max-height: 800px; /* 展开时显示所有文件 */
+        .tree-item.collapsed .file-list {
+            max-height: 0;
         }
 
         .file-item {
@@ -207,19 +138,26 @@ title: 算法笔记 | CodeNebula
         .file-link {
             display: flex;
             align-items: center;
-            padding: 8px 15px;
-            background: transparent;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 6px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            border: 1px solid transparent;
             font-size: 0.9rem;
         }
 
-        .file-link:hover, .file-link.active {
-            background: rgba(106, 90, 249, 0.15);
-            color: var(--secondary);
-            transform: translateX(3px);
+        .file-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(106, 90, 249, 0.3);
+            color: white;
+        }
+
+        .file-link.active {
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.2), rgba(76, 201, 240, 0.2));
+            border-color: var(--primary);
+            color: white;
         }
 
         .file-link i {
@@ -228,75 +166,122 @@ title: 算法笔记 | CodeNebula
             color: var(--secondary);
         }
 
-        /* 页面内章节目录（新增：OI Wiki 风格章节导航） */
-        .toc-header {
-            font-size: 1rem;
-            font-weight: 600;
+        /* 主内容区：布局调整（核心修改点1）- 贴合 OI Wiki 铺满全屏风格 */
+        .main-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 20px 5%; /* 减小边距，左右仅留5%，更贴近全屏 */
+            width: calc(100% - 300px); /* 去掉max-width限制，完全铺满剩余宽度 */
+        }
+
+        /* 移除原有大标题区（OI Wiki 风格更简洁，突出笔记内容）- 核心修改点2 */
+        .content-header {
+            display: none;
+        }
+
+        /* 笔记内容显示区：布局调整 - 核心修改点3 */
+        .note-content {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px; /* 减小内边距，内容更紧凑 */
+            min-height: calc(100vh - 100px); /* 高度贴近视口，减少空白 */
+            margin-bottom: 30px;
+        }
+
+        .note-placeholder {
+            text-align: center;
+            padding: 100px 20px; /* 增加占位符上下间距，更居中 */
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .note-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
             color: var(--secondary);
-            margin: 20px 0 15px;
-            padding-left: 10px;
-            border-left: 3px solid var(--primary);
+            opacity: 0.5;
         }
 
-        .toc-list {
-            list-style: none;
-            padding: 0;
+        .note-placeholder h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        .toc-item {
-            margin-bottom: 8px;
-            padding-left: 10px;
+        /* Markdown内容样式（完全不变） */
+        .markdown-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
         }
 
-        .toc-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: block;
-            padding: 4px 0;
-        }
-
-        .toc-link:hover {
-            color: var(--secondary);
-            transform: translateX(5px);
-        }
-
-        /* ========== 内容区样式：保留风格，适配折叠功能 ========== */
-        /* 笔记标题：简化，突出内容 */
-        .note-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--light);
+        .markdown-content h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin-top: 0;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--primary);
         }
 
-        /* 折叠模块样式（核心：代码块、证明、补充） */
+        .markdown-content h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        .markdown-content h4 {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .markdown-content p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .markdown-content code:not(pre code) {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #f8f9fa;
+        }
+
+        /* 折叠模块样式（新增：不影响原有样式）- 核心修改点4 */
         .collapse-container {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             margin: 15px 0;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .collapse-header {
-            padding: 12px 20px;
+            padding: 10px 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(106, 90, 249, 0.05);
-            font-weight: 600;
+            background: rgba(106, 90, 249, 0.1);
+            font-weight: 500;
             color: var(--secondary);
         }
 
         .collapse-header:hover {
-            background: rgba(106, 90, 249, 0.1);
+            background: rgba(106, 90, 249, 0.2);
         }
 
         .collapse-header i {
@@ -316,324 +301,311 @@ title: 算法笔记 | CodeNebula
         }
 
         .collapse-container.expanded .collapse-content {
-            padding: 15px 20px;
-            max-height: 2000px; /* 足够容纳长内容 */
+            padding: 15px;
+            max-height: 2000px;
         }
 
-        /* 代码块样式（保留原有高亮，适配折叠容器） */
+        /* 代码块样式（保留原有，适配折叠容器） */
+        .markdown-content pre,
         .collapse-content pre {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
             border-radius: 8px;
-            padding: 15px;
             overflow-x: auto;
             margin: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .collapse-content code {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.95rem;
+        .markdown-content pre code,
+        .collapse-content pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
 
-        /* 证明/补充部分样式 */
+        /* 证明/补充部分样式（新增） */
         .proof-content, .supplement-content {
             line-height: 1.7;
-            color: rgba(255, 255, 255, 0.9);
+            padding: 5px 0;
         }
 
         .proof-content p, .supplement-content p {
             margin-bottom: 10px;
         }
 
-        .proof-content ul, .supplement-content ul {
-            margin-left: 20px;
-            margin-bottom: 10px;
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 25px;
+            margin-bottom: 16px;
         }
 
-        /* Markdown 基础样式（适配铺满布局） */
-        .markdown-content {
-            line-height: 1.8;
-            font-size: 1.05rem;
+        .markdown-content li {
+            margin-bottom: 8px;
         }
 
-        .markdown-content h2 {
-            font-size: 1.8rem;
-            color: var(--secondary);
-            margin: 30px 0 15px;
-            padding-left: 10px;
+        .markdown-content blockquote {
             border-left: 4px solid var(--primary);
+            padding-left: 20px;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
         }
 
-        .markdown-content h3 {
-            font-size: 1.4rem;
-            color: var(--light);
-            margin: 25px 0 12px;
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
         }
 
-        .markdown-content p {
-            margin: 15px 0;
+        .markdown-content table th,
+        .markdown-content table td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .markdown-content table th {
+            background: rgba(106, 90, 249, 0.2);
+            color: white;
+            font-weight: 600;
         }
 
         .markdown-content img {
             max-width: 100%;
+            height: auto;
             border-radius: 8px;
-            margin: 20px auto;
-            display: block;
-            border: 1px solid var(--border);
+            margin: 20px 0;
         }
 
-        .markdown-content blockquote {
-            border-left: 3px solid var(--secondary);
-            padding: 10px 15px;
-            margin: 15px 0;
-            background: rgba(76, 201, 240, 0.05);
-            color: rgba(255, 255, 255, 0.8);
+        .markdown-content a {
+            color: var(--secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--secondary);
+            transition: all 0.3s;
         }
 
-        /* 移动端适配（保留原有响应式，适配新布局） */
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 250px;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                max-width: 100%;
-                padding: 20px 3%;
-            }
-
-            .menu-toggle {
-                display: flex !important;
-            }
+        .markdown-content a:hover {
+            color: white;
+            border-bottom: 1px solid white;
         }
 
-        /* 移动端菜单按钮（保留原有样式） */
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 45px;
-            height: 45px;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            align-items: center;
-            justify-content: center;
-            color: var(--light);
-            font-size: 1.2rem;
-            z-index: 101;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        /* 底部导航（完全不变） */
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
 
-        /* 底部返回按钮（简化，不占用过多空间） */
-        .back-button {
+        .nav-button {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 20px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 30px 0;
+            transition: all 0.3s;
         }
 
-        .back-button:hover {
+        .nav-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(106, 90, 249, 0.3);
+            box-shadow: 0 10px 30px rgba(106, 90, 249, 0.3);
+        }
+
+        /* 加载指示器（完全不变） */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 响应式设计（完全不变） */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+                width: calc(100% - 280px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                width: 280px;
+                left: -280px;
+                transition: left 0.3s;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 15px;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .note-content {
+                padding: 15px;
+            }
+            
+            .markdown-content h1 {
+                font-size: 2rem;
+            }
+            
+            .markdown-content h2 {
+                font-size: 1.7rem;
+            }
+            
+            .nav-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
         }
     </style>
-    <!-- 保留原有依赖库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Markdown解析库 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 代码高亮库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- 保留原有背景元素 -->
-    <div class="background-overlay"></div>
-    <div class="stars-container" id="stars"></div>
-    <div class="floating-orb" style="top: 20%; right: 10%;"></div>
-    <div class="floating-orb" style="bottom: 20%; left: 15%;"></div>
-
-    <!-- 移动端菜单按钮 -->
-    <div class="menu-toggle" id="menuToggle">
+    <!-- 移动端菜单切换按钮 -->
+    <button class="menu-toggle" id="menu-toggle" style="display: none;">
         <i class="fas fa-bars"></i>
-    </div>
+    </button>
 
-    <!-- 左侧目录区（自动生成文件+章节目录） -->
+    <!-- 侧边栏目录（完全不变） -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 class="sidebar-title">
-                <i class="fas fa-brain"></i> 算法笔记
-            </h2>
-            <p class="sidebar-subtitle">共 <span id="file-count">0</span> 个笔记</p>
+            <h2 class="sidebar-title">Algorithm Notes</h2>
+            <p class="sidebar-subtitle">共 <span id="folder-count">0</span> 个文件夹</p>
         </div>
-
-        <!-- 1. 自动生成文件目录（无需手动维护） -->
-        <ul class="directory-tree" id="file-tree">
-            <li class="tree-item expanded">
-                <div class="tree-folder" data-folder="all">
-                    <i class="fas fa-folder-open"></i>
-                    <span class="folder-name">所有笔记</span>
-                    <span class="file-count" id="total-files">0</span>
-                </div>
-                <ul class="file-list" id="file-list-container">
-                    <!-- Jekyll 自动填充文件列表 -->
-                    {% assign algorithm_files = site.static_files | where_exp: "file", "file.path contains 'algorithm/' and (file.extname == '.md' or file.extname == '.html')" | sort: "path" %}
-                    {% for file in algorithm_files %}
-                        {% assign file_name = file.name | replace: ".md", "" | replace: ".html", "" %}
-                        {% assign file_path = file.path | remove_first: "/" %}
-                        <li class="file-item">
-                            <a href="#" class="file-link" data-file="{{ file.name }}" data-path="{{ file_path }}">
-                                <i class="fas fa-file-alt"></i>
-                                {{ file_name }}
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="file-item" style="padding: 8px 15px; color: rgba(255,255,255,0.5);">
-                            暂无笔记文件
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-
-        <!-- 2. 页面内章节目录（动态生成） -->
-        <h3 class="toc-header">页面章节</h3>
-        <ul class="toc-list" id="toc-list">
-            <li class="toc-item">
-                <a href="#" class="toc-link">请选择左侧笔记</a>
-            </li>
+        <ul class="directory-tree" id="directory-tree">
+            <div class="loading" id="loading-files">
+                <i class="fas fa-spinner"></i>
+                <p>正在加载目录...</p>
+            </div>
         </ul>
     </div>
 
-    <!-- 右侧内容区（铺满全屏） -->
+    <!-- 主内容区（布局调整，内容不变） -->
     <div class="main-content">
-        <!-- 笔记占位符 -->
-        <div id="note-placeholder" style="text-align: center; padding: 100px 0; color: rgba(255,255,255,0.6);">
-            <i class="fas fa-file-alt" style="font-size: 4rem; margin-bottom: 20px; color: var(--secondary); opacity: 0.7;"></i>
-            <h2 style="font-size: 2rem; margin-bottom: 15px; color: var(--light);">欢迎使用算法笔记</h2>
-            <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
-                左侧目录自动同步 algorithm 文件夹中的笔记，点击任意笔记开始阅读<br>
-                代码块、证明、补充部分可点击标题折叠/展开
-            </p>
-            <a href="index.html" class="back-button" style="margin-top: 30px;">
-                <i class="fas fa-home"></i> 返回主页
-            </a>
+        <div class="content-header">
+            <h1 class="content-title">算法笔记</h1>
+            <p class="content-desc">左侧目录显示所有子文件夹和笔记文件。点击任意笔记，内容将直接在右侧显示。</p>
         </div>
 
-        <!-- 笔记内容容器（动态填充） -->
-        <div id="note-content" style="display: none;">
-            <h1 class="note-title" id="note-title"></h1>
-            <div class="markdown-content" id="markdown-container"></div>
-            <a href="index.html" class="back-button">
+        <!-- 笔记内容显示区 -->
+        <div class="note-content" id="note-content">
+            <div class="note-placeholder" id="note-placeholder">
+                <i class="fas fa-file-alt"></i>
+                <h3>欢迎来到算法笔记</h3>
+                <p>点击左侧目录中的笔记文件开始阅读</p>
+            </div>
+        </div>
+
+        <!-- 底部导航（完全不变） -->
+        <div class="footer-nav">
+            <a href="index.html" class="nav-button">
                 <i class="fas fa-home"></i> 返回主页
+            </a>
+            <a href="https://github.com/raymond-223/CodeNebula.github.io/tree/main/algorithm" target="_blank" class="nav-button">
+                <i class="fab fa-github"></i> 查看GitHub文件夹
             </a>
         </div>
     </div>
 
     <script>
-        // 保留原有动态星星生成
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 3 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
-                star.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(star);
+        // 配置信息（完全不变）
+        const CONFIG = {
+            github: {
+                username: 'raymond-223',
+                repo: 'CodeNebula.github.io',
+                branch: 'main'
+            },
+            paths: {
+                algorithm: 'algorithm'
             }
+        };
+
+        // 状态管理（完全不变）
+        const state = {
+            folders: {},
+            currentFile: null,
+            currentFolder: null,
+            expandedFolders: new Set()
+        };
+
+        // 工具函数：获取当前URL参数（完全不变）
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
         }
 
-        // 初始化移动端菜单
-        function initMobileMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
-                const icon = menuToggle.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            });
-            // 点击内容区关闭侧边栏
-            document.querySelector('.main-content').addEventListener('click', () => {
-                if (sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                    menuToggle.querySelector('i').classList.remove('fa-times');
-                    menuToggle.querySelector('i').classList.add('fa-bars');
-                }
-            });
-        }
-
-        // 核心1：加载并解析 Markdown 文件
-        async function loadNote(filePath, fileName) {
-            // 显示内容区，隐藏占位符
-            document.getElementById('note-placeholder').style.display = 'none';
-            const noteContent = document.getElementById('note-content');
-            noteContent.style.display = 'block';
-
-            // 设置笔记标题
-            document.getElementById('note-title').textContent = fileName.replace('.md', '').replace('.html', '');
-
-            try {
-                // 加载文件内容
-                const response = await fetch(filePath);
-                if (!response.ok) throw new Error('文件加载失败');
-                let markdownText = await response.text();
-
-                // 解析 Markdown 前：给代码块、证明、补充添加折叠容器
-                markdownText = wrapCollapsibleSections(markdownText);
-
-                // 解析 Markdown
-                const html = marked.parse(markdownText);
-                document.getElementById('markdown-container').innerHTML = html;
-
-                // 代码高亮
-                document.querySelectorAll('pre code').forEach(block => {
-                    hljs.highlightElement(block);
-                });
-
-                // 生成页面内章节目录
-                generateToc();
-
-                // 绑定折叠事件
-                bindCollapseEvents();
-
-                // 高亮当前选中的文件
-                document.querySelectorAll('.file-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('data-file') === fileName) {
-                        link.classList.add('active');
-                    }
-                });
-
-            } catch (error) {
-                document.getElementById('markdown-container').innerHTML = `
-                    <div style="text-align: center; padding: 50px 0; color: rgba(255,255,255,0.6);">
-                        <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                        <p>笔记加载失败，请检查文件路径是否正确</p>
-                    </div>
-                `;
-                console.error(error);
+        // 工具函数：设置URL参数（完全不变）
+        function setUrlParam(name, value) {
+            const url = new URL(window.location);
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
             }
+            history.pushState({}, '', url);
         }
 
-        // 核心2：包装折叠模块（代码块、证明、补充）
+        // 工具函数：防抖（完全不变）
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 新增：包装折叠模块（代码块、证明、补充）- 不影响原有逻辑
         function wrapCollapsibleSections(markdown) {
             // 1. 包装代码块（```开头结尾）
             markdown = markdown.replace(
@@ -666,7 +638,7 @@ title: 算法笔记 | CodeNebula
         <i class="fas fa-chevron-right"></i>
     </div>
     <div class="collapse-content">
-        <div class="proof-content">${marked.parse(content)}</div>
+        <div class="proof-content">${content}</div>
     </div>
 </div>
                     `;
@@ -684,7 +656,7 @@ title: 算法笔记 | CodeNebula
         <i class="fas fa-chevron-right"></i>
     </div>
     <div class="collapse-content">
-        <div class="supplement-content">${marked.parse(content)}</div>
+        <div class="supplement-content">${content}</div>
     </div>
 </div>
                     `;
@@ -694,7 +666,7 @@ title: 算法笔记 | CodeNebula
             return markdown;
         }
 
-        // 核心3：绑定折叠/展开事件
+        // 新增：绑定折叠/展开事件（不影响原有逻辑）
         function bindCollapseEvents() {
             document.querySelectorAll('.collapse-header').forEach(header => {
                 header.addEventListener('click', () => {
@@ -708,77 +680,410 @@ title: 算法笔记 | CodeNebula
             });
         }
 
-        // 核心4：生成页面内章节目录（提取 h2/h3 标题）
-        function generateToc() {
-            const tocList = document.getElementById('toc-list');
-            const headings = document.querySelectorAll('.markdown-content h2, .markdown-content h3');
+        // 1. 使用GitHub API获取文件列表（完全不变）
+        async function loadFolderStructure() {
+            const treeElement = document.getElementById('directory-tree');
             
-            if (headings.length === 0) {
-                tocList.innerHTML = `
-                    <li class="toc-item">
-                        <a href="#" class="toc-link">无章节标题</a>
-                    </li>
+            try {
+                // 显示加载状态
+                treeElement.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>正在扫描文件夹...</p></div>';
+                
+                // 获取algorithm文件夹下的内容
+                const apiUrl = `https://api.github.com/repos/${CONFIG.github.username}/${CONFIG.github.repo}/contents/${CONFIG.paths.algorithm}`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API请求失败: ${response.status}`);
+                }
+                
+                const contents = await response.json();
+                await processFolderContents(contents);
+                
+                // 渲染目录树
+                renderDirectoryTree();
+                
+                // 检查URL中是否有指定的文件
+                const fileParam = getUrlParam('file');
+                const folderParam = getUrlParam('folder');
+                
+                if (fileParam && folderParam) {
+                    // 尝试打开指定的文件
+                    openFile(folderParam, fileParam);
+                }
+                
+            } catch (error) {
+                console.error('加载目录失败:', error);
+                treeElement.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>加载失败</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
+                    </div>
                 `;
+            }
+        }
+
+        // 2. 处理文件夹内容（完全不变）
+        async function processFolderContents(contents) {
+            state.folders = {};
+            
+            for (const item of contents) {
+                if (item.type === 'dir') {
+                    // 这是一个子文件夹
+                    const folderName = item.name;
+                    console.log(`发现文件夹: ${folderName}`);
+                    
+                    // 获取子文件夹中的文件
+                    try {
+                        const folderApiUrl = item.url;
+                        const folderResponse = await fetch(folderApiUrl);
+                        const folderContents = await folderResponse.json();
+                        
+                        // 筛选出Markdown文件
+                        const mdFiles = folderContents
+                            .filter(file => file.type === 'file' && file.name.toLowerCase().endsWith('.md'))
+                            .map(file => ({
+                                name: file.name,
+                                path: file.path,
+                                url: file.download_url,
+                                size: file.size
+                            }));
+                        
+                        if (mdFiles.length > 0) {
+                            state.folders[folderName] = {
+                                name: folderName,
+                                files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
+                            };
+                            console.log(`文件夹 ${folderName} 中有 ${mdFiles.length} 个MD文件`);
+                        }
+                    } catch (error) {
+                        console.error(`处理文件夹 ${folderName} 失败:`, error);
+                    }
+                }
+            }
+            
+            // 如果没有找到任何文件夹，尝试直接查找MD文件
+            if (Object.keys(state.folders).length === 0) {
+                console.log('未发现子文件夹，尝试查找直接文件...');
+                const mdFiles = contents
+                    .filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.md'))
+                    .map(file => ({
+                        name: file.name,
+                        path: file.path,
+                        url: file.download_url,
+                        size: file.size
+                    }));
+                
+                if (mdFiles.length > 0) {
+                    state.folders['笔记'] = {
+                        name: '笔记',
+                        files: mdFiles.sort((a, b) => a.name.localeCompare(b.name))
+                    };
+                    console.log(`找到 ${mdFiles.length} 个直接MD文件`);
+                }
+            }
+            
+            console.log('最终文件夹结构:', state.folders);
+        }
+
+        // 3. 渲染目录树（完全不变）
+        function renderDirectoryTree() {
+            const treeElement = document.getElementById('directory-tree');
+            const folderCountElement = document.getElementById('folder-count');
+            
+            if (Object.keys(state.folders).length === 0) {
+                treeElement.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-folder-open"></i>
+                        <p>暂无笔记文件</p>
+                        <p style="font-size: 0.8rem; margin-top: 10px;">
+                            请确保在 algorithm 文件夹中上传了 .md 文件
+                        </p>
+                    </div>
+                `;
+                folderCountElement.textContent = '0';
                 return;
             }
-
-            let tocHtml = '';
-            headings.forEach((heading, index) => {
-                const id = `heading-${index}`;
-                heading.id = id; // 给标题添加唯一ID
-                const level = heading.tagName === 'H2' ? 'toc-level-2' : 'toc-level-3';
-                const indent = heading.tagName === 'H3' ? 'padding-left: 15px;' : ''; // h3 缩进
-                tocHtml += `
-                    <li class="toc-item ${level}" style="${indent}">
-                        <a href="#${id}" class="toc-link" onclick="scrollToHeading('${id}'); return false;">
-                            ${heading.textContent}
-                        </a>
+            
+            // 按文件夹名称排序
+            const sortedFolders = Object.keys(state.folders).sort();
+            
+            let html = '';
+            sortedFolders.forEach(folderName => {
+                const folder = state.folders[folderName];
+                const fileCount = folder.files.length;
+                const isExpanded = state.expandedFolders.has(folderName);
+                
+                html += `
+                    <li class="tree-item ${isExpanded ? '' : 'collapsed'}">
+                        <div class="tree-folder" data-folder="${folderName}">
+                            <i class="fas ${isExpanded ? 'fa-folder-open' : 'fa-folder'}"></i>
+                            <span class="folder-name">${folder.name}</span>
+                            <span class="file-count">${fileCount}</span>
+                        </div>
+                        <ul class="file-list">
+                `;
+                
+                folder.files.forEach(file => {
+                    const displayName = file.name.replace('.md', '').replace('.MD', '');
+                    const isActive = state.currentFile === file.name && state.currentFolder === folderName;
+                    
+                    html += `
+                        <li class="file-item">
+                            <a href="#" class="file-link ${isActive ? 'active' : ''}" 
+                               data-folder="${folderName}" 
+                               data-file="${file.name}"
+                               data-url="${file.url}">
+                                <i class="fas fa-file-alt"></i>
+                                ${displayName}
+                            </a>
+                        </li>
+                    `;
+                });
+                
+                html += `
+                        </ul>
                     </li>
                 `;
             });
-
-            tocList.innerHTML = tocHtml;
-        }
-
-        // 章节目录点击滚动到对应标题
-        function scrollToHeading(id) {
-            const heading = document.getElementById(id);
-            if (heading) {
-                window.scrollTo({
-                    top: heading.offsetTop - 20,
-                    behavior: 'smooth'
+            
+            treeElement.innerHTML = html;
+            folderCountElement.textContent = sortedFolders.length;
+            
+            // 绑定文件夹点击事件
+            document.querySelectorAll('.tree-folder').forEach(folderElement => {
+                folderElement.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const folderName = this.getAttribute('data-folder');
+                    toggleFolder(folderName);
                 });
+            });
+            
+            // 绑定文件点击事件
+            document.querySelectorAll('.file-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const folderName = this.getAttribute('data-folder');
+                    const fileName = this.getAttribute('data-file');
+                    const fileUrl = this.getAttribute('data-url');
+                    
+                    openFile(folderName, fileName, fileUrl);
+                });
+            });
+            
+            // 默认展开第一个文件夹
+            if (sortedFolders.length > 0 && state.expandedFolders.size === 0) {
+                setTimeout(() => {
+                    toggleFolder(sortedFolders[0], false);
+                }, 100);
             }
         }
 
-        // 初始化文件目录点击事件
-        function initFileLinks() {
-            document.querySelectorAll('.file-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const filePath = link.getAttribute('data-path');
-                    const fileName = link.getAttribute('data-file');
-                    loadNote(filePath, fileName);
-                    // 移动端点击文件后关闭侧边栏
-                    if (window.innerWidth <= 992) {
-                        document.getElementById('sidebar').classList.remove('active');
-                        document.getElementById('menuToggle').querySelector('i').classList.remove('fa-times');
-                        document.getElementById('menuToggle').querySelector('i').classList.add('fa-bars');
-                    }
-                });
-            });
-
-            // 更新文件计数
-            const fileCount = document.querySelectorAll('.file-link').length;
-            document.getElementById('file-count').textContent = fileCount;
-            document.getElementById('total-files').textContent = fileCount;
+        // 4. 切换文件夹展开/收起（完全不变）
+        function toggleFolder(folderName, saveState = true) {
+            const folderElement = document.querySelector(`.tree-folder[data-folder="${folderName}"]`).parentElement;
+            
+            if (folderElement.classList.contains('collapsed')) {
+                // 展开文件夹
+                folderElement.classList.remove('collapsed');
+                const icon = folderElement.querySelector('.tree-folder i');
+                icon.classList.remove('fa-folder');
+                icon.classList.add('fa-folder-open');
+                
+                if (saveState) {
+                    state.expandedFolders.add(folderName);
+                }
+            } else {
+                // 收起文件夹
+                folderElement.classList.add('collapsed');
+                const icon = folderElement.querySelector('.tree-folder i');
+                icon.classList.remove('fa-folder-open');
+                icon.classList.add('fa-folder');
+                
+                if (saveState) {
+                    state.expandedFolders.delete(folderName);
+                }
+            }
         }
 
-        // 页面加载初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            initMobileMenu();
-            initFileLinks();
+        // 5. 打开文件（完全不变，仅在调用displayMarkdown前新增折叠处理）
+        async function openFile(folderName, fileName, fileUrl = null) {
+            // 更新状态
+            state.currentFolder = folderName;
+            state.currentFile = fileName;
+            
+            // 更新URL
+            setUrlParam('folder', folderName);
+            setUrlParam('file', fileName);
+            
+            // 更新UI状态
+            document.querySelectorAll('.file-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const activeLink = document.querySelector(`.file-link[data-folder="${folderName}"][data-file="${fileName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+                
+                // 确保文件夹展开
+                if (!state.expandedFolders.has(folderName)) {
+                    toggleFolder(folderName, false);
+                }
+            }
+            
+            // 显示加载状态
+            const noteContent = document.getElementById('note-content');
+            noteContent.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>正在加载 ${fileName}...</p>
+                </div>
+            `;
+            
+            // 获取文件URL
+            let downloadUrl = fileUrl;
+            if (!downloadUrl) {
+                // 构建下载URL
+                downloadUrl = `https://raw.githubusercontent.com/${CONFIG.github.username}/${CONFIG.github.repo}/${CONFIG.github.branch}/algorithm/${folderName}/${fileName}`;
+            }
+            
+            console.log('正在加载文件:', downloadUrl);
+            
+            try {
+                // 加载文件内容
+                const response = await fetch(downloadUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`文件加载失败: ${response.status}`);
+                }
+                
+                let markdownText = await response.text();
+                // 新增：处理折叠模块
+                markdownText = wrapCollapsibleSections(markdownText);
+                
+                displayMarkdown(markdownText, fileName, folderName);
+                
+            } catch (error) {
+                console.error('加载文件失败:', error);
+                noteContent.innerHTML = `
+                    <div class="note-placeholder">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>加载失败</h3>
+                        <p>无法加载文件: ${fileName}</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">错误: ${error.message}</p>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">
+                            尝试访问: <a href="${downloadUrl}" target="_blank">${downloadUrl}</a>
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // 6. 显示Markdown内容（仅新增绑定折叠事件，其余不变）
+        function displayMarkdown(markdownText, fileName, folderName) {
+            const noteContent = document.getElementById('note-content');
+            
+            // 配置marked（完全不变）
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            return hljs.highlight(code, { language: lang }).value;
+                        } catch (err) {
+                            console.warn(`代码高亮失败: ${err}`);
+                        }
+                    }
+                    return code;
+                },
+                gfm: true,
+                breaks: true,
+                sanitize: false
+            });
+            
+            // 解析Markdown（完全不变）
+            const html = marked.parse(markdownText);
+            
+            // 显示内容（完全不变）
+            noteContent.innerHTML = `
+                <div class="markdown-content">
+                    <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <h1>${fileName.replace('.md', '').replace('.MD', '')}</h1>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                                <i class="fas fa-folder"></i> ${folderName}
+                            </span>
+                            <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                                <i class="fas fa-file-alt"></i> ${fileName}
+                            </span>
+                        </div>
+                    </div>
+                    ${html}
+                </div>
+            `;
+            
+            // 重新高亮代码块（完全不变）
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+            
+            // 新增：绑定折叠事件
+            bindCollapseEvents();
+        }
+
+        // 7. 初始化（完全不变）
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载目录结构
+            loadFolderStructure();
+            
+            // 处理浏览器前进/后退
+            window.addEventListener('popstate', function() {
+                const fileParam = getUrlParam('file');
+                const folderParam = getUrlParam('folder');
+                
+                if (fileParam && folderParam) {
+                    openFile(folderParam, fileParam);
+                } else {
+                    // 显示占位符
+                    document.getElementById('note-content').innerHTML = document.getElementById('note-placeholder').outerHTML;
+                    
+                    // 清除active状态
+                    document.querySelectorAll('.file-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    state.currentFile = null;
+                    state.currentFolder = null;
+                }
+            });
+            
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth <= 768) {
+                menuToggle.style.display = 'block';
+                
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+                
+                // 点击内容区关闭菜单
+                document.querySelector('.main-content').addEventListener('click', function() {
+                    if (sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', debounce(function() {
+                if (window.innerWidth > 768) {
+                    menuToggle.style.display = 'none';
+                    sidebar.classList.remove('active');
+                } else {
+                    menuToggle.style.display = 'block';
+                }
+            }, 250));
         });
     </script>
 </body>

@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeNebula | Cosmic Code Exploration</title>
+    <title>CodeNebula | 算法笔记</title>
     <style>
-        /* 重置和基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -27,11 +26,13 @@
             background: url("bg.jpg") no-repeat center center fixed;
             background-size: cover;
             color: var(--light);
-            overflow-x: hidden;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        /* 增强背景图效果 */
         .background-overlay {
             position: fixed;
             top: 0;
@@ -39,13 +40,12 @@
             width: 100%;
             height: 100%;
             background: 
-                linear-gradient(135deg, rgba(11, 11, 30, 0.7) 0%, rgba(26, 26, 46, 0.5) 100%),
+                linear-gradient(135deg, rgba(11, 11, 30, 0.8) 0%, rgba(26, 26, 46, 0.7) 100%),
                 radial-gradient(circle at 20% 30%, rgba(106, 90, 249, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.1) 0%, transparent 40%);
             z-index: -1;
         }
 
-        /* 动态星星 */
         .stars-container {
             position: fixed;
             top: 0;
@@ -68,25 +68,32 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* 主容器 */
-        .main-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            position: relative;
+        .floating-orb {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 249, 0.1) 0%, transparent 70%);
+            filter: blur(50px);
+            animation: pulse 8s infinite ease-in-out;
+            z-index: -1;
         }
 
-        /* 标题样式 */
-        .title-container {
+        .orb1 { top: 20%; right: 15%; }
+        .orb2 { bottom: 20%; left: 15%; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        .container {
             text-align: center;
-            margin-bottom: 80px;
-            position: relative;
+            z-index: 1;
+            padding: 0 20px;
         }
 
-        .main-title {
+        .title {
             font-size: 5.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
@@ -95,9 +102,8 @@
             color: transparent;
             margin-bottom: 15px;
             letter-spacing: -2px;
-            position: relative;
+            text-shadow: 0 0 40px rgba(106, 90, 249, 0.3);
             animation: titleGlow 3s infinite alternate;
-            text-shadow: 0 0 30px rgba(106, 90, 249, 0.3);
         }
 
         @keyframes titleGlow {
@@ -110,263 +116,122 @@
             color: rgba(255, 255, 255, 0.8);
             font-weight: 300;
             letter-spacing: 3px;
-            position: relative;
-            padding-left: 10px;
+            margin-bottom: 40px;
         }
 
-        .subtitle::before {
-            content: '✦';
-            position: absolute;
-            left: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-            animation: spin 10s infinite linear;
-        }
-
-        @keyframes spin {
-            from { transform: translateY(-50%) rotate(0deg); }
-            to { transform: translateY(-50%) rotate(360deg); }
-        }
-
-        /* 快捷方式网格 */
-        .shortcuts-grid {
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
-            max-width: 900px;
-            width: 100%;
-            margin-top: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .shortcut-item {
-            position: relative;
-            text-decoration: none;
-            perspective: 1000px;
-        }
-
-        .shortcut-card {
-            height: 180px;
-            background: rgba(255, 255, 255, 0.08);
+        .card {
+            background: var(--glass);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 25px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            padding: 30px;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
-        .shortcut-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(106, 90, 249, 0.2);
+            border-color: var(--secondary);
         }
 
-        .shortcut-card:hover {
-            transform: translateY(-15px) rotateX(10deg);
-            background: rgba(255, 255, 255, 0.12);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(106, 90, 249, 0.3),
-                0 0 50px rgba(106, 90, 249, 0.2);
-        }
-
-        .shortcut-card:hover::before {
-            left: 100%;
-        }
-
-        .icon-wrapper {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            color: white;
-            transition: all 0.5s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .shortcut-card:hover .icon-wrapper {
-            transform: scale(1.15);
-            box-shadow: 0 0 40px rgba(106, 90, 249, 0.5);
-        }
-
-        .shortcut-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s;
-        }
-
-        .shortcut-card:hover .shortcut-name {
+        .card-icon {
+            font-size: 2.5rem;
             color: var(--secondary);
-            transform: translateY(5px);
+            margin-bottom: 20px;
         }
 
-        /* 浮动装饰 */
-        .floating-orb {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(106, 90, 249, 0.1) 0%, transparent 70%);
-            filter: blur(40px);
-            animation: pulse 8s infinite ease-in-out;
-            z-index: -1;
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--light);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.5; }
+        .card-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
-        /* 底部版权信息 */
         .footer {
-            position: absolute;
+            position: fixed;
             bottom: 30px;
             width: 100%;
             text-align: center;
-            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.5);
-            z-index: 1;
+            font-size: 0.9rem;
         }
 
-        .footer a {
-            color: var(--secondary);
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .footer a:hover {
-            color: white;
-            text-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
-        }
-
-        /* 响应式设计 */
         @media (max-width: 768px) {
-            .main-title {
+            .title {
                 font-size: 3.5rem;
             }
-            
-            .shortcuts-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .subtitle {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+            .card-grid {
                 gap: 20px;
-                max-width: 600px;
-            }
-            
-            .shortcut-card {
-                height: 160px;
-                padding: 20px;
-            }
-            
-            .icon-wrapper {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-                margin-bottom: 15px;
             }
         }
 
         @media (max-width: 480px) {
-            .main-title {
+            .title {
                 font-size: 2.8rem;
             }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .shortcuts-grid {
-                grid-template-columns: 1fr;
-                max-width: 300px;
+            .card {
+                padding: 25px;
             }
         }
     </style>
-    <!-- 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- 背景图增强层 -->
     <div class="background-overlay"></div>
-    
-    <!-- 动态星星 -->
     <div class="stars-container" id="stars"></div>
-    
-    <!-- 主要内容 -->
-    <div class="main-container">
-        <div class="title-container">
-            <h1 class="main-title">CodeNebula</h1>
-            <p class="subtitle">EXPLORE THE COSMIC CODE</p>
-        </div>
-        
-        <div class="shortcuts-grid">
-            <!-- Algorithm（第一个图标，链接到 algorithm.html） -->
-            <a href="algorithm.html" class="shortcut-item">
-                <div class="shortcut-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-brain"></i> <!-- 图标坚决不变 -->
+    <div class="floating-orb orb1"></div>
+    <div class="floating-orb orb2"></div>
+
+    <div class="container">
+        <h1 class="title">CodeNebula</h1>
+        <p class="subtitle">算法学习与实现</p>
+
+        <div class="card-grid">
+            <a href="algorithm.html" style="text-decoration: none;">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-brain"></i>
                     </div>
-                    <span class="shortcut-name">Algorithm</span>
+                    <h2 class="card-title">算法笔记</h2>
+                    <p class="card-desc">包含基础算法、数据结构、动态规划等知识点，支持代码块折叠、章节导航，学习效率翻倍。</p>
                 </div>
             </a>
-            
-            <!-- Web Development（链接到 coming-soon.html） -->
-            <a href="coming-soon.html" class="shortcut-item">
-                <div class="shortcut-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-code"></i> <!-- 图标坚决不变 -->
+
+            <a href="coming-soon.html" style="text-decoration: none;">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-code"></i>
                     </div>
-                    <span class="shortcut-name">Web Development</span>
-                </div>
-            </a>
-            
-            <!-- PyTorch Learning（链接到 coming-soon.html） -->
-            <a href="coming-soon.html" class="shortcut-item">
-                <div class="shortcut-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-fire"></i> <!-- 图标坚决不变 -->
-                    </div>
-                    <span class="shortcut-name">PyTorch Learning</span>
-                </div>
-            </a>
-            
-            <!-- AI Paper Interpretation（链接到 coming-soon.html） -->
-            <a href="coming-soon.html" class="shortcut-item">
-                <div class="shortcut-card">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-book"></i> <!-- 图标坚决不变 -->
-                    </div>
-                    <span class="shortcut-name">AI Paper Interpretation</span>
+                    <h2 class="card-title">编程题解</h2>
+                    <p class="card-desc">LeetCode、洛谷等平台经典题目解析，附详细思路和优化方案，持续更新中。</p>
                 </div>
             </a>
         </div>
     </div>
-    
-    <!-- 浮动装饰 -->
-    <div class="floating-orb" style="top: 10%; right: 5%;"></div>
-    <div class="floating-orb" style="bottom: 15%; left: 5%;"></div>
+
+    <div class="footer">
+        © 2025 CodeNebula | <a href="https://github.com/你的用户名" target="_blank" style="color: inherit; text-decoration: underline;">GitHub</a>
+    </div>
 
     <script>
-        // 创建动态星星
         function createStars() {
             const container = document.getElementById('stars');
             for (let i = 0; i < 150; i++) {
@@ -383,36 +248,7 @@
             }
         }
 
-        // 卡片悬停效果增强
-        document.querySelectorAll('.shortcut-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                const icon = this.querySelector('.icon-wrapper i');
-                icon.style.transform = 'rotate(360deg)';
-                icon.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                const icon = this.querySelector('.icon-wrapper i');
-                icon.style.transform = 'rotate(0deg)';
-            });
-        });
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            createStars();
-            
-            // 添加初始动画
-            document.querySelector('.main-title').style.animation = 'titleGlow 3s infinite alternate';
-            document.querySelectorAll('.shortcut-card').forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                setTimeout(() => {
-                    card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100 + 500);
-            });
-        });
+        document.addEventListener('DOMContentLoaded', createStars);
     </script>
 </body>
 </html>

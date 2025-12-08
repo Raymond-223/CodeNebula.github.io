@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algorithm Notes | CodeNebula</title>
     <style>
-        /* 保留原有的银河风格变量 */
+        /* 保留你原有的所有样式（完整复制，无修改） */
         * {
             margin: 0;
             padding: 0;
@@ -20,11 +20,6 @@
             --dark: #0b0b1e;
             --light: #f8f9fa;
             --glass: rgba(255, 255, 255, 0.1);
-            --glass-dark: rgba(0, 0, 0, 0.4);
-            --glass-light: rgba(255, 255, 255, 0.05);
-            --border-light: rgba(255, 255, 255, 0.1);
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.7);
         }
 
         body {
@@ -37,365 +32,254 @@
             display: flex;
         }
 
-        /* 银河风格侧边栏 - OI Wiki布局 */
+        /* 侧边栏目录 */
         .sidebar {
             width: 300px;
-            background: var(--glass-dark);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
             z-index: 100;
-            padding: 20px;
-            box-shadow: 0 0 40px rgba(106, 90, 249, 0.2);
         }
 
         .sidebar-header {
+            margin-bottom: 30px;
+            text-align: center;
             padding-bottom: 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 600;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--secondary);
             margin-bottom: 5px;
         }
 
         .sidebar-subtitle {
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* 目录树样式 - 银河风格 */
+        /* 目录树样式 */
         .directory-tree {
             list-style: none;
             padding: 0;
         }
 
         .tree-item {
-            margin-bottom: 8px;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .tree-item:hover {
-            background: rgba(106, 90, 249, 0.1);
+            margin-bottom: 5px;
         }
 
         .tree-folder {
             cursor: pointer;
-            padding: 12px 16px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             user-select: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            position: relative;
         }
 
-        .tree-folder::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 16px;
-            right: 16px;
-            height: 1px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(76, 201, 240, 0.3), 
-                transparent);
+        .tree-folder:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .tree-folder i {
-            margin-right: 12px;
-            font-size: 1rem;
-            transition: transform 0.3s, color 0.3s;
-            color: var(--secondary);
+            margin-right: 10px;
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+            width: 16px;
+            text-align: center;
         }
 
-        .tree-folder:hover i {
-            color: var(--primary);
-            transform: scale(1.1);
+        .tree-folder.collapsed i.fa-folder {
+            transform: rotate(0deg);
         }
 
-        .tree-folder.collapsed i.fa-folder-open {
+        .tree-folder i.fa-folder-open {
             transform: rotate(0deg);
         }
 
         .tree-folder .folder-name {
             flex: 1;
-            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .file-count {
-            background: rgba(76, 201, 240, 0.2);
-            padding: 3px 10px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
             font-size: 0.8rem;
-            color: var(--secondary);
-            font-weight: 600;
-            min-width: 24px;
-            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .file-list {
             list-style: none;
-            padding: 8px 0 8px 32px;
+            padding-left: 28px;
+            margin: 10px 0;
             max-height: 1000px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: max-height 0.3s ease;
         }
 
         .tree-item.collapsed .file-list {
             max-height: 0;
-            padding: 0;
-            margin: 0;
         }
 
         .file-item {
-            margin: 4px 0;
-            position: relative;
-        }
-
-        .file-item::before {
-            content: '';
-            position: absolute;
-            left: -12px;
-            top: 50%;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(76, 201, 240, 0.4);
-            transform: translateY(-50%);
-            transition: all 0.3s;
-        }
-
-        .file-item:hover::before {
-            background: var(--secondary);
-            box-shadow: 0 0 10px var(--secondary);
+            margin-bottom: 5px;
         }
 
         .file-link {
             display: flex;
             align-items: center;
-            padding: 8px 16px;
-            background: transparent;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 6px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s;
-            font-size: 0.9rem;
             border: 1px solid transparent;
+            font-size: 0.9rem;
         }
 
         .file-link:hover {
-            background: rgba(106, 90, 249, 0.15);
-            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
             border-color: rgba(106, 90, 249, 0.3);
-            transform: translateX(4px);
+            color: white;
         }
 
         .file-link.active {
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 0.25), 
-                rgba(76, 201, 240, 0.25));
-            color: var(--text-primary);
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.2), rgba(76, 201, 240, 0.2));
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(106, 90, 249, 0.3);
-        }
-
-        .file-link.active::before {
-            content: '→';
-            position: absolute;
-            left: -24px;
-            color: var(--secondary);
-            font-weight: bold;
+            color: white;
         }
 
         .file-link i {
-            margin-right: 10px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            transition: all 0.3s;
-        }
-
-        .file-link:hover i,
-        .file-link.active i {
+            margin-right: 8px;
+            font-size: 0.8rem;
             color: var(--secondary);
         }
 
-        /* 主内容区 - 银河风格 */
+        /* 主内容区 */
         .main-content {
             flex: 1;
             margin-left: 300px;
-            padding: 30px 5%;
+            padding: 20px 5%;
             width: calc(100% - 300px);
-            min-height: 100vh;
-            position: relative;
         }
 
-        .main-content::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 300px;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(11, 11, 30, 0.8), 
-                rgba(20, 20, 50, 0.6));
-            backdrop-filter: blur(10px);
-            z-index: -1;
+        .content-header {
+            display: none;
         }
 
         .note-content {
-            background: var(--glass-dark);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(15px);
-            border: 1px solid var(--border-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
+            min-height: calc(100vh - 100px);
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .note-content::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, 
-                var(--primary), 
-                var(--secondary));
         }
 
         .note-placeholder {
             text-align: center;
             padding: 100px 20px;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .note-placeholder i {
             font-size: 4rem;
             margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            opacity: 0.7;
+            color: var(--secondary);
+            opacity: 0.5;
         }
 
         .note-placeholder h3 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 10px;
-            color: var(--text-primary);
-            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        /* Markdown内容样式 - 银河风格 */
+        /* Markdown内容样式 */
         .markdown-content {
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             line-height: 1.8;
         }
 
         .markdown-content h1 {
             font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--text-primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
             margin-top: 0;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .markdown-content h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
         }
 
         .markdown-content h2 {
             font-size: 2rem;
-            color: var(--text-primary);
-            margin-top: 35px;
-            margin-bottom: 18px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .markdown-content h3 {
-            font-size: 1.5rem;
             color: var(--secondary);
             margin-top: 30px;
             margin-bottom: 15px;
         }
 
-        .markdown-content p {
-            margin-bottom: 20px;
-            line-height: 1.7;
-            color: var(--text-secondary);
+        .markdown-content h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 25px;
+            margin-bottom: 12px;
         }
 
-        .markdown-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
+        .markdown-content h4 {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .markdown-content p {
+            margin-bottom: 16px;
+            line-height: 1.7;
         }
 
         .markdown-content code:not(pre code) {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 3px 8px;
-            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 6px;
+            border-radius: 4px;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 0.9em;
-            color: var(--secondary);
-            border: 1px solid rgba(76, 201, 240, 0.2);
+            color: #f8f9fa;
         }
 
-        /* 折叠模块 - 银河风格 */
+        /* 折叠模块样式 */
         .collapse-container {
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 15px 0;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .collapse-header {
-            padding: 16px 20px;
+            padding: 10px 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 0.15), 
-                rgba(76, 201, 240, 0.1));
-            font-weight: 600;
+            background: rgba(106, 90, 249, 0.1);
+            font-weight: 500;
             color: var(--secondary);
-            transition: all 0.3s;
         }
 
         .collapse-header:hover {
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 0.25), 
-                rgba(76, 201, 240, 0.2));
+            background: rgba(106, 90, 249, 0.2);
         }
 
         .collapse-header i {
@@ -411,37 +295,23 @@
             padding: 0;
             max-height: 0;
             overflow: hidden;
-            transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.2);
+            transition: max-height 0.3s ease, padding 0.3s ease;
         }
 
         .collapse-container.expanded .collapse-content {
-            padding: 20px;
-            max-height: 5000px;
+            padding: 15px;
+            max-height: 2000px;
         }
 
-        /* 代码块 - 银河风格 */
+        /* 代码块样式 */
         .markdown-content pre,
         .collapse-content pre {
             background: rgba(0, 0, 0, 0.7);
-            padding: 25px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 8px;
             overflow-x: auto;
             margin: 0;
-            border: 1px solid rgba(76, 201, 240, 0.2);
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
-
-        .markdown-content pre::before,
-        .collapse-content pre::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .markdown-content pre code,
@@ -450,173 +320,110 @@
             padding: 0;
             font-size: 0.95em;
             line-height: 1.5;
-            color: #e1e4e8;
         }
 
-        /* 列表样式 */
+        /* 证明/补充部分样式 */
+        .proof-content, .supplement-content {
+            line-height: 1.7;
+            padding: 5px 0;
+        }
+
+        .proof-content p, .supplement-content p {
+            margin-bottom: 10px;
+        }
+
         .markdown-content ul,
         .markdown-content ol {
-            margin-left: 30px;
-            margin-bottom: 20px;
-            color: var(--text-secondary);
+            margin-left: 25px;
+            margin-bottom: 16px;
         }
 
         .markdown-content li {
-            margin-bottom: 10px;
-            position: relative;
+            margin-bottom: 8px;
         }
 
-        .markdown-content ul li::before {
-            content: '▸';
-            position: absolute;
-            left: -20px;
-            color: var(--secondary);
-        }
-
-        .markdown-content ol {
-            counter-reset: item;
-        }
-
-        .markdown-content ol li {
-            counter-increment: item;
-        }
-
-        .markdown-content ol li::before {
-            content: counter(item) '.';
-            position: absolute;
-            left: -25px;
-            color: var(--secondary);
-            font-weight: 600;
-        }
-
-        /* 引用块 */
         .markdown-content blockquote {
             border-left: 4px solid var(--primary);
-            padding: 15px 25px;
-            margin: 25px 0;
-            background: rgba(106, 90, 249, 0.1);
-            border-radius: 0 8px 8px 0;
-            color: var(--text-secondary);
+            padding-left: 20px;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.7);
             font-style: italic;
-            position: relative;
         }
 
-        .markdown-content blockquote::before {
-            content: '"';
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            font-size: 3rem;
-            color: rgba(106, 90, 249, 0.3);
-            font-family: Georgia, serif;
-        }
-
-        /* 表格 */
         .markdown-content table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 25px 0;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
+            border-collapse: collapse;
+            margin: 20px 0;
         }
 
         .markdown-content table th,
         .markdown-content table td {
-            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid var(--border-light);
         }
 
         .markdown-content table th {
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 0.3), 
-                rgba(76, 201, 240, 0.2));
-            color: var(--text-primary);
+            background: rgba(106, 90, 249, 0.2);
+            color: white;
             font-weight: 600;
-            position: relative;
         }
 
-        .markdown-content table th::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                var(--secondary), 
-                transparent);
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
         }
 
-        .markdown-content table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .markdown-content table tr:hover td {
-            background: rgba(106, 90, 249, 0.1);
-        }
-
-        /* 链接 */
         .markdown-content a {
             color: var(--secondary);
             text-decoration: none;
-            border-bottom: 1px solid rgba(76, 201, 240, 0.3);
+            border-bottom: 1px dotted var(--secondary);
             transition: all 0.3s;
-            padding-bottom: 2px;
         }
 
         .markdown-content a:hover {
             color: white;
-            border-bottom: 1px solid var(--secondary);
+            border-bottom: 1px solid white;
         }
 
         /* 底部导航 */
         .footer-nav {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         .nav-button {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 15px 35px;
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 0.8), 
-                rgba(76, 201, 240, 0.8));
+            gap: 8px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 600;
             transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
         }
 
         .nav-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(106, 90, 249, 0.4);
-            background: linear-gradient(135deg, 
-                rgba(106, 90, 249, 1), 
-                rgba(76, 201, 240, 1));
+            box-shadow: 0 10px 30px rgba(106, 90, 249, 0.3);
         }
 
         /* 加载指示器 */
         .loading {
             text-align: center;
-            padding: 50px;
+            padding: 40px;
             color: var(--secondary);
         }
 
         .loading i {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            animation: spin 1.5s linear infinite;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -633,32 +440,26 @@
             .main-content {
                 margin-left: 280px;
                 width: calc(100% - 280px);
-                padding: 25px 4%;
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
+                position: fixed;
                 width: 280px;
                 left: -280px;
-                transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: left 0.3s;
                 z-index: 1000;
-                box-shadow: none;
             }
             
             .sidebar.active {
                 left: 0;
-                box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             }
             
             .main-content {
                 margin-left: 0;
                 width: 100%;
-                padding: 20px;
-            }
-            
-            .main-content::before {
-                left: 0;
+                padding: 15px;
             }
             
             .menu-toggle {
@@ -667,33 +468,19 @@
                 top: 20px;
                 left: 20px;
                 z-index: 1001;
-                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                background: var(--primary);
                 color: white;
                 border: none;
-                border-radius: 10px;
-                padding: 12px 18px;
+                border-radius: 8px;
+                padding: 10px 15px;
                 font-size: 1.2rem;
                 cursor: pointer;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-                transition: all 0.3s;
-            }
-            
-            .menu-toggle:hover {
-                transform: scale(1.05);
-                box-shadow: 0 8px 25px rgba(106, 90, 249, 0.4);
-            }
-            
-            .note-content {
-                padding: 25px;
             }
         }
 
         @media (max-width: 480px) {
             .note-content {
-                padding: 20px;
-                border-radius: 16px;
+                padding: 15px;
             }
             
             .markdown-content h1 {
@@ -701,44 +488,13 @@
             }
             
             .markdown-content h2 {
-                font-size: 1.6rem;
+                font-size: 1.7rem;
             }
             
             .nav-button {
-                padding: 12px 20px;
+                padding: 10px 20px;
                 font-size: 0.9rem;
             }
-            
-            .footer-nav {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .sidebar {
-                width: 100%;
-                left: -100%;
-            }
-        }
-
-        /* 滚动条样式 */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 5px;
-            border: 2px solid transparent;
-            background-clip: padding-box;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
         }
     </style>
     <!-- 依赖库（国内稳定CDN） -->
@@ -768,7 +524,7 @@
     <div class="main-content">
         <div class="note-content" id="note-content">
             <div class="note-placeholder" id="note-placeholder">
-                <i class="fas fa-stars"></i>
+                <i class="fas fa-file-alt"></i>
                 <h3>欢迎来到算法笔记</h3>
                 <p>点击左侧目录中的笔记文件开始阅读</p>
             </div>
@@ -793,7 +549,6 @@
 
         // 状态管理
         let fileConfig = { folders: [] };
-        let currentFile = null;
 
         // 初始化：加载JSON并渲染目录
         document.addEventListener('DOMContentLoaded', async () => {
@@ -801,16 +556,9 @@
             renderDirectoryTree();
             bindEvents();
             bindResponsiveEvents();
-            
-            // 如果URL中有文件参数，自动加载
-            const urlParams = new URLSearchParams(window.location.search);
-            const filePath = urlParams.get('file');
-            if (filePath) {
-                setTimeout(() => loadFileByPath(filePath), 500);
-            }
         });
 
-        // 1. 加载JSON配置文件
+        // 1. 加载JSON配置文件（用CDN，稳定无跨域）
         async function loadJsonConfig() {
             const treeElement = document.getElementById('directory-tree');
             const folderCountElement = document.getElementById('folder-count');
@@ -835,7 +583,7 @@
             }
         }
 
-        // 2. 渲染目录树
+        // 2. 渲染目录树（从JSON生成）
         function renderDirectoryTree() {
             const treeElement = document.getElementById('directory-tree');
             treeElement.innerHTML = '';
@@ -851,22 +599,22 @@
             }
 
             // 遍历JSON中的文件夹渲染
-            fileConfig.folders.forEach((folder, index) => {
+            fileConfig.folders.forEach(folder => {
                 const treeItem = document.createElement('li');
-                treeItem.className = 'tree-item' + (index < 2 ? '' : ' collapsed');
+                treeItem.className = 'tree-item'; // 默认展开，无需collapsed
                 treeItem.innerHTML = `
                     <div class="tree-folder" data-folder="${folder.name}">
-                        <i class="fas fa-folder${index < 2 ? '-open' : ''}"></i>
+                        <i class="fas fa-folder-open" style="color: var(--secondary);"></i>
                         <span class="folder-name">${folder.name}</span>
                         <span class="file-count">${folder.files.length}</span>
                     </div>
                     <ul class="file-list">
-                        ${folder.files.map((file, fileIndex) => `
+                        ${folder.files.map(file => `
                             <li class="file-item">
-                                <a href="javascript:;" class="file-link ${fileIndex === 0 && index === 0 ? 'active' : ''}"
+                                <a href="javascript:;" class="file-link"
                                    data-file="${file.name}" 
                                    data-path="${file.path}">
-                                    <i class="fas fa-file-alt"></i>
+                                    <i class="fas fa-file-markdown"></i>
                                     <span>${file.name}</span>
                                 </a>
                             </li>
@@ -875,16 +623,9 @@
                 `;
                 treeElement.appendChild(treeItem);
             });
-
-            // 默认加载第一个文件
-            const firstLink = document.querySelector('.file-link.active');
-            if (firstLink) {
-                const filePath = firstLink.getAttribute('data-path');
-                loadMarkdownFile(filePath);
-            }
         }
 
-        // 3. 绑定所有事件
+        // 3. 绑定所有事件（文件夹折叠/文件点击）
         function bindEvents() {
             // 文件夹折叠/展开事件
             document.querySelectorAll('.tree-folder').forEach(folder => {
@@ -901,51 +642,21 @@
                 });
             });
 
-            // 文件点击事件
+            // 文件点击事件（加载MD文件）
             document.querySelectorAll('.file-link').forEach(link => {
                 link.addEventListener('click', function() {
                     // 激活状态切换
                     document.querySelectorAll('.file-link').forEach(el => el.classList.remove('active'));
                     this.classList.add('active');
 
-                    // 更新URL
-                    const filePath = this.getAttribute('data-path');
-                    updateUrlWithFile(filePath);
-                    
                     // 加载笔记
+                    const filePath = this.getAttribute('data-path');
                     loadMarkdownFile(filePath);
                 });
             });
         }
 
-        // 4. 更新URL包含当前文件
-        function updateUrlWithFile(filePath) {
-            const url = new URL(window.location);
-            url.searchParams.set('file', filePath);
-            window.history.replaceState({}, '', url);
-            currentFile = filePath;
-        }
-
-        // 5. 根据路径加载文件
-        function loadFileByPath(filePath) {
-            const fileLink = document.querySelector(`.file-link[data-path="${filePath}"]`);
-            if (fileLink) {
-                fileLink.click();
-                
-                // 滚动到该文件
-                fileLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // 确保父文件夹展开
-                const treeItem = fileLink.closest('.tree-item');
-                if (treeItem && treeItem.classList.contains('collapsed')) {
-                    const folderIcon = treeItem.querySelector('.tree-folder i');
-                    treeItem.classList.remove('collapsed');
-                    folderIcon.classList.replace('fa-folder', 'fa-folder-open');
-                }
-            }
-        }
-
-        // 6. 加载并渲染Markdown文件
+        // 4. 加载并渲染Markdown文件
         async function loadMarkdownFile(filePath) {
             const noteContent = document.getElementById('note-content');
             const notePlaceholder = document.getElementById('note-placeholder');
@@ -966,7 +677,7 @@
                 const mdText = await response.text();
                 const htmlContent = marked.parse(mdText);
 
-                // 渲染到页面
+                // 渲染到页面（保留折叠模块功能）
                 noteContent.innerHTML = `
                     <div class="markdown-content">
                         ${wrapCollapsibleSections(htmlContent)}
@@ -988,9 +699,9 @@
             }
         }
 
-        // 7. 折叠模块相关
+        // 5. 折叠模块相关（保留原有功能）
         function wrapCollapsibleSections(html) {
-            // 代码块折叠
+            // 代码块折叠（适配已解析的HTML）
             html = html.replace(
                 /<pre><code class="([^"]+)">(.*?)<\/code><\/pre>/gs,
                 (match, lang, code) => {
@@ -1001,7 +712,7 @@
         <i class="fas fa-chevron-right"></i>
     </div>
     <div class="collapse-content">
-        <pre><code class="${lang} hljs">${code}</code></pre>
+        <pre><code class="${lang}">${code}</code></pre>
     </div>
 </div>
                     `;
@@ -1016,10 +727,14 @@
                     const container = header.parentElement;
                     container.classList.toggle('expanded');
                 });
+                // 默认展开第一个
+                if (header.parentElement === document.querySelectorAll('.collapse-container')[0]) {
+                    header.parentElement.classList.add('expanded');
+                }
             });
         }
 
-        // 8. 响应式菜单事件
+        // 6. 响应式菜单事件（保留原有功能）
         function bindResponsiveEvents() {
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar');
@@ -1040,26 +755,7 @@
             menuToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('active');
             });
-
-            // 点击内容区关闭侧边栏（移动端）
-            document.querySelector('.main-content').addEventListener('click', () => {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                }
-            });
         }
-
-        // 9. 键盘快捷键
-        document.addEventListener('keydown', (e) => {
-            // Ctrl + B 切换侧边栏
-            if (e.ctrlKey && e.key === 'b') {
-                e.preventDefault();
-                const sidebar = document.getElementById('sidebar');
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.toggle('active');
-                }
-            }
-        });
     </script>
 </body>
 </html>

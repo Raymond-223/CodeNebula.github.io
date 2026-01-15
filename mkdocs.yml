@@ -1,0 +1,66 @@
+site_name: My Docs
+site_url: https://Raymond-223.github.io/
+extra:
+  base_url: /docs/
+  alternate:
+    - name: English
+      link: /en/
+      lang: en 
+    
+    - name: Chinese
+      link: /zh/
+      lang: zh
+
+nav:
+  - Home: index.md
+  - Algorithm: inex.md
+  - Paper Interpretion: idex.md
+  - Machine Learning: indx.md
+  - Mathematics: inex.md
+  - Electronic Materials: i.md
+  
+theme: 
+  name: material
+
+  palette:
+    
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to the dark mode
+      primary: indigo
+      accent: indigo
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+      primary: indigo
+      accent: indigo
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch 
+    - navigation.instant.progress 
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes 
+    - toc.follow
+    - toc.integrate
+    - navigation.top 
+    - search.suggest 
+    - search.highlight
+  
+
+
+
+

@@ -1,0 +1,838 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codenebula - Explore the Cosmic Code</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8b5cf6',
+                        secondary: '#06b6d4',
+                        accent: '#ec4899',
+                        dark: '#0f172a',
+                        darker: '#0c1322',
+                        light: '#f8fafc',
+                        'glass-dark': 'rgba(15, 23, 42, 0.85)',
+                        'glass-light': 'rgba(255, 255, 255, 0.03)',
+                        'glass-hover': 'rgba(255, 255, 255, 0.06)',
+                        'gradient-1': '#8b5cf6',
+                        'gradient-2': '#06b6d4',
+                        'gradient-3': '#ec4899',
+                        'mountain-dark': '#1e293b',
+                        'sky-blue': '#3b82f6',
+                        'cosmic-purple': '#a855f7'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        heading: ['Orbitron', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'pulse-fast': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 3s ease-in-out infinite alternate',
+                        'shimmer-fast': 'shimmer 2s ease-in-out infinite alternate',
+                        'neon-glow': 'neon-glow 2s ease-in-out infinite alternate',
+                        'gradient-shift': 'gradient-shift 8s ease infinite',
+                        'float-bounce': 'float-bounce 3s ease-in-out infinite',
+                        'scale-hover': 'scale-hover 0.3s ease-out forwards'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '50%': { opacity: '0.8' },
+                            '100%': { transform: 'translateX(100%)', opacity: '0' }
+                        },
+                        'neon-glow': {
+                            '0%': { 
+                                'text-shadow': '0 0 10px rgba(106, 90, 249, 0.7), 0 0 20px rgba(106, 90, 249, 0.5), 0 0 30px rgba(106, 90, 249, 0.3)'
+                            },
+                            '100%': { 
+                                'text-shadow': '0 0 20px rgba(106, 90, 249, 0.9), 0 0 40px rgba(76, 201, 240, 0.7), 0 0 60px rgba(247, 37, 133, 0.5)'
+                            }
+                        },
+                        'gradient-shift': {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' }
+                        },
+                        'float-bounce': {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-15px) scale(1.05)' }
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-glow {
+                text-shadow: 0 0 30px rgba(106, 90, 249, 0.5);
+            }
+            .bg-glass {
+                background: rgba(15, 23, 42, 0.7);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .bg-glass-light {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .gradient-border {
+                position: relative;
+                border-radius: 1rem;
+            }
+            .gradient-border::before {
+                content: '';
+                position: absolute;
+                top: -1px;
+                left: -1px;
+                right: -1px;
+                bottom: -1px;
+                background: linear-gradient(45deg, #6a5af9, #4cc9f0, #f72585, #6a5af9);
+                background-size: 400% 400%;
+                border-radius: inherit;
+                z-index: -1;
+                opacity: 0.5;
+                animation: gradient-shift 8s ease infinite;
+            }
+            .star {
+                position: absolute;
+                background-color: white;
+                border-radius: 50%;
+                animation: twinkle var(--duration) ease-in-out infinite;
+            }
+            @keyframes twinkle {
+                0%, 100% { opacity: 0.2; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.1); }
+            }
+            .grid-pattern {
+                background-image: 
+                    radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), 
+                    radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.05) 2%, transparent 0%);
+                background-size: 100px 100px;
+            }
+        }
+    </style>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #0b0b1e;
+            color: #f8f9fa;
+            scroll-behavior: smooth;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #6a5af9, #4cc9f0);
+            border-radius: 5px;
+        }
+        
+        .hero-bg {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 30%),
+                url('https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/08d323f18d694a8bafe4614fa019e71b.jpg~tplv-a9rns2rl98-24:720:720.image?lk3s=8e244e95&rcl=20260115160641B0415661684E4EA85F75&rrcfp=8a172a1a&x-expires=1769069201&x-signature=mJuGoNqr1WVSzxdDYBqfOC0zCKs%3D');
+            background-size: cover, cover, cover, cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+        
+
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #4cc9f0 100%);
+            background-size: 200% 200%;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(106, 90, 249, 0.3);
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(106, 90, 249, 0.4), 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-position: right center;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106, 90, 249, 0.4);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: rgba(106, 90, 249, 0.3);
+        }
+        
+        .card-hover:hover::before {
+            left: 100%;
+        }
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.2), rgba(76, 201, 240, 0.2));
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .feature-icon i {
+            font-size: 1.5rem;
+            color: #4cc9f0;
+        }
+        
+        .feature-item:hover .feature-icon {
+            transform: scale(1.15) rotate(5deg);
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.3), rgba(76, 201, 240, 0.3));
+            box-shadow: 0 10px 25px rgba(106, 90, 249, 0.3);
+        }
+        
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.1), rgba(76, 201, 240, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: rgba(106, 90, 249, 0.2);
+            transform: translateY(-6px) scale(1.1);
+            color: #6a5af9;
+            border-color: rgba(106, 90, 249, 0.3);
+            box-shadow: 0 8px 20px rgba(106, 90, 249, 0.2);
+        }
+        
+        .social-icon:hover::before {
+            opacity: 1;
+        }
+        
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #6a5af9, #4cc9f0);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, #6a5af9, #4cc9f0);
+            border-radius: 2px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-bg {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full bg-glass z-50 border-b border-gray-800/50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold font-heading text-white flex items-center">
+                <span class="text-primary mr-2"><i class="fas fa-code"></i></span>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">CodeNebula</span>
+            </a>
+            
+            <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+    </nav>
+
+    <!-- Hero Section -->
+<section id="home" class="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="hero-content container mx-auto px-4 py-20 text-center">
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-[900] mb-8 leading-tight animate-float">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent animate-gradient-shift bg-[length:200%_auto] relative inline-block">
+                CodeNebula
+                <span class="absolute inset-0 bg-clip-text text-transparent bg-gradient-to-r from-accent via-primary to-secondary opacity-70 animate-shimmer-fast"></span>
+            </span>
+        </h1>
+        
+        <div class="mb-8">
+            <!-- 为标题添加进入动画 -->
+            <h2 class="text-lg md:text-xl font-medium text-white uppercase tracking-widest mb-2 animate-fade-in-up" 
+                style="font-size: 16px; font-weight: normal; animation-delay: 0.3s;">
+                EXPLORE THE COSMIC CODE
+            </h2>
+        </div>
+        
+        <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-white font-light leading-relaxed">
+            Where <span class="text-primary font-medium">code</span> meets <span class="text-secondary font-medium">creativity</span> in a digital universe of endless possibilities. 
+            Unlock the secrets of cosmic programming.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mt-12">
+            <a href="https://CodeNebula.github.io" target="_blank" class="btn-primary px-12 py-5 rounded-full text-white font-bold text-lg w-full sm:w-auto group">
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-rocket mr-3 group-hover:scale-110 transition-transform duration-300"></i>
+                    Launch Your Journey
+                </span>
+            </a>
+            <!-- 为Explore More按钮添加悬停放大效果 -->
+            <a href="#about" class="px-12 py-5 rounded-full bg-glass-light text-white font-medium text-lg border border-gray-700 hover:border-primary hover:bg-glass-hover transition-all duration-400 w-full sm:w-auto group hover:scale-105">
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-compass mr-3 group-hover:rotate-12 transition-transform duration-300"></i>
+                    Explore More
+                </span>
+            </a>
+        </div>
+        
+        <div class="mt-20 flex justify-center">
+            <a href="#about" class="text-gray-400 hover:text-primary transition-colors animate-bounce">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+/* 添加淡入上升动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0; /* 初始状态隐藏 */
+}
+</style>
+        
+        <!-- Animated Stars -->
+        <div id="stars-container" class="absolute top-0 left-0 w-full h-full pointer-events-none"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-1/4 left-10 w-16 h-16 rounded-full bg-primary/10 animate-pulse-slow blur-2xl"></div>
+        <div class="absolute top-1/3 right-20 w-24 h-24 rounded-full bg-secondary/08 animate-pulse-slow blur-3xl"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-20 h-20 rounded-full bg-accent/10 animate-pulse-slow blur-2xl"></div>
+        <div class="absolute top-2/3 right-1/4 w-12 h-12 rounded-full bg-primary/08 animate-pulse-fast blur-xl"></div>
+        <div class="absolute bottom-1/3 left-1/3 w-16 h-16 rounded-full bg-secondary/05 animate-pulse-slow blur-2xl"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-cosmic-purple/03 animate-pulse-slow blur-3xl"></div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 grid-pattern opacity-10"></div>
+        <div class="container mx-auto px-4 relative">
+            <h2 class="section-title text-3xl md:text-4xl font-bold text-center">
+                About <span class="text-primary">Code</span><span class="text-secondary">Nebula</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div class="card-hover bg-glass p-8 rounded-2xl border border-gray-800/50 group">
+                    <div class="feature-icon mx-auto group-hover:scale-115 transition-transform duration-400">
+                        <i class="fas fa-code-branch group-hover:rotate-12 transition-transform duration-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center group-hover:text-primary transition-colors duration-300">Algorithm Adventures</h3>
+                    <p class="text-gray-400 text-center group-hover:text-gray-300 transition-colors duration-300">
+                        Unleash your problem-solving superpowers! 
+                        Journey through data structures, optimization techniques, and clever algorithmic tricks that make computers dance to your code's rhythm.
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block w-12 h-1 bg-gradient-to-r from-primary to-secondary rounded-full group-hover:w-24 transition-all duration-400"></span>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-glass p-8 rounded-2xl border border-gray-800/50 gradient-border group">
+                    <div class="feature-icon mx-auto group-hover:scale-115 transition-transform duration-400">
+                        <i class="fas fa-file-alt group-hover:rotate-12 transition-transform duration-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center group-hover:text-primary transition-colors duration-300">Paper Decoded</h3>
+                    <p class="text-gray-400 text-center group-hover:text-gray-300 transition-colors duration-300">
+                        No more academic jargon headaches! 
+                        We translate cutting-edge AI research into exciting stories – discover how the latest breakthroughs work and why they're changing the game.
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block w-12 h-1 bg-gradient-to-r from-primary to-secondary rounded-full group-hover:w-24 transition-all duration-400"></span>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-glass p-8 rounded-2xl border border-gray-800/50 group">
+                    <div class="feature-icon mx-auto group-hover:scale-115 transition-transform duration-400">
+                        <i class="fas fa-square-root-alt group-hover:rotate-12 transition-transform duration-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center group-hover:text-primary transition-colors duration-300">Math Magic for ML</h3>
+                    <p class="text-gray-400 text-center group-hover:text-gray-300 transition-colors duration-300">
+                        Watch abstract equations come alive! 
+                        Discover how linear algebra dances with neural networks and probability theory whispers secrets to algorithms – making math your secret AI weapon!
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block w-12 h-1 bg-gradient-to-r from-primary to-secondary rounded-full group-hover:w-24 transition-all duration-400"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-gradient-to-b from-dark to-darker relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent"></div>
+        <div class="container mx-auto px-4 relative">
+            <h2 class="section-title text-3xl md:text-4xl font-bold text-center">
+                Cosmic <span class="text-primary">Features</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-16">
+                <div class="feature-item flex items-start space-x-6 bg-glass-light p-8 rounded-2xl">
+                    <div class="feature-icon flex-shrink-0">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Code Cosmos Playground</h3>
+                        <p class="text-gray-400 mb-6">
+                            Experiment with cosmic code! 
+                            A collection of ready-to-run examples and projects that let you apply algorithms, test AI concepts, and see mathematical theories in action.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="feature-item flex items-start space-x-6 bg-glass-light p-8 rounded-2xl">
+                    <div class="feature-icon flex-shrink-0">
+                        <i class="fas fa-space-shuttle"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Algorithm Launchpad</h3>
+                        <p class="text-gray-400 mb-6">
+                            Master data structures and algorithms through cosmic quests!
+                            Visualizations that make learning feel like navigating through a galaxy of computational wonders.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="feature-item flex items-start space-x-6 bg-glass-light p-8 rounded-2xl">
+                    <div class="feature-icon flex-shrink-0">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Paper Nebula Archive</h3>
+                        <p class="text-gray-400 mb-6">
+                            Your curated collection of AI research gems! 
+                            Interasting summaries, visual explanations, and practical implications of seminal papers, organized like a cosmic library of groundbreaking ideas.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="feature-item flex items-start space-x-6 bg-glass-light p-8 rounded-2xl">
+                    <div class="feature-icon flex-shrink-0">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Math Cosmos Lab</h3>
+                        <p class="text-gray-400 mb-6">
+                            Discover the mathematical beauty behind AI! 
+                            Interactive explorations of linear algebra, calculus, and statistics concepts that power machine learning – visualized like celestial phenomena.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-30"></div>
+        <div class="container mx-auto px-4 text-center relative">
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">
+                Ready to Explore the <span class="text-primary">Cosmic Code</span>?
+            </h2>
+            <p class="text-xl max-w-2xl mx-auto mb-10 text-gray-300">
+                Join thousands of developers already navigating the digital universe with CodeNebula.
+                Your cosmic coding adventure awaits!
+            </p>
+            <a href="https://CodeNebula.github.io" target="_blank" class="btn-primary inline-block px-12 py-5 rounded-full text-white font-bold text-lg">
+                <i class="fas fa-rocket mr-3"></i>
+                Launch Your Journey Now
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="py-16 bg-darker border-t border-gray-800/50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <a href="#home" class="text-2xl font-bold font-heading text-white flex items-center mb-8 md:mb-0">
+                    <span class="text-primary mr-2"><i class="fas fa-code"></i></span>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">CodeNebula</span>
+                </a>
+                
+                <div class="flex space-x-4">
+                    <a href="https://github.com/Raymond-223" class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="mailto:2246111707_lxz@stu.xjtu.edu.cn" class="social-icon">
+                        <i class="far fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+             
+                    
+            <div class="border-t border-gray-800/50 mt-12 pt-8 text-center">
+                <p class="text-gray-500">
+                    © 2026 CodeNebula. All rights reserved. | 
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">Privacy Policy</a> | 
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuButton = document.getElementById('mobile-menu-button');
+            
+            if (!mobileMenu.contains(event.target) && !menuButton.contains(event.target) && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+        
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // Create Animated Stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars-container');
+            const starsCount = 200;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 3;
+                
+                // Random twinkle duration
+                const duration = 2 + Math.random() * 4;
+                
+                // Random color variation
+                const colorVariation = Math.random();
+                let starColor = 'white';
+                if (colorVariation < 0.3) starColor = '#6a5af9';
+                else if (colorVariation < 0.6) starColor = '#4cc9f0';
+                else if (colorVariation < 0.8) starColor = '#f72585';
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = starColor;
+                star.style.setProperty('--duration', `${duration}s`);
+                
+                // Random delay to stagger animations
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Navbar scroll effect
+        let lastScroll = 0;
+        const navbar = document.querySelector('nav');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll <= 0) {
+                navbar.classList.remove('bg-glass');
+                navbar.classList.add('bg-glass');
+                return;
+            }
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                // Scrolling down
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // Initialize GSAP Animations
+        function initAnimations() {
+            // Hero Section Animations
+            gsap.from('.hero-content > div:first-child', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: 0.2
+            });
+            
+            gsap.from('.hero-content h1', {
+                opacity: 0,
+                y: 50,
+                duration: 1.2,
+                delay: 0.5
+            });
+            
+            gsap.from('.hero-content p', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: 0.8
+            });
+            
+            gsap.from('.hero-content .flex', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: 1.1
+            });
+            
+            // ScrollTrigger Animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // About Section Animations
+            gsap.utils.toArray('.card-hover').forEach((card, i) => {
+                gsap.fromTo(card, 
+                    {
+                        opacity: 0,
+                        y: 50
+                    },
+                    {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 85%',
+                            end: 'bottom 10%',
+                            toggleActions: 'play none none reverse'
+                        },
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        delay: i * 0.3,
+                        ease: "power3.out"
+                    }
+                );
+            });
+            
+            // Features Section Animations
+            gsap.utils.toArray('.feature-item').forEach((feature, i) => {
+                gsap.fromTo(feature, 
+                    {
+                        opacity: 0,
+                        x: i % 2 === 0 ? -30 : 30
+                    },
+                    {
+                        scrollTrigger: {
+                            trigger: feature,
+                            start: 'top 85%',
+                            end: 'bottom 10%',
+                            toggleActions: 'play none none reverse'
+                        },
+                        opacity: 1,
+                        x: 0,
+                        duration: 0.8,
+                        delay: i * 0.1,
+                        ease: "power3.out"
+                    }
+                );
+            });
+            
+            // Stats counter animation
+            gsap.utils.toArray('#stats .text-4xl').forEach(stat => {
+                const target = parseInt(stat.textContent);
+                const obj = { value: 0 };
+                
+                gsap.to(obj, {
+                    value: target,
+                    duration: 2,
+                    scrollTrigger: {
+                        trigger: stat,
+                        start: 'top 80%',
+                        toggleActions: 'play none none play'
+                    },
+                    onUpdate: () => {
+                        stat.textContent = Math.floor(obj.value);
+                    }
+                });
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            initAnimations();
+        });
+    </script>
+
+</body></html>

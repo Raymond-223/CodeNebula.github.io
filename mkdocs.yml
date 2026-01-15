@@ -1,5 +1,7 @@
 site_name: My Docs
-site_url: https://mydomain.org/mysite
+site_url: https://Raymond-223.github.io/
+extra:
+  base_url: /docs/
 nav:
   - Home: index.md
   - Algorithm: inex.md
@@ -60,4 +62,5 @@ extra:
     - name: Chinese
       link: /zh/
       lang: zh
+
 

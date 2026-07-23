@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/software-development/01-frontend/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>前端开发 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Algorithm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../idex.md" class="nav-link">Paper Interpretion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../indx.md" class="nav-link">Machine Learning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Mathematics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../i.md" class="nav-link">Electronic Materials</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../02-backend/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">前端开发</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#html5" class="nav-link">一、HTML5 核心</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#css3" class="nav-link">二、CSS3 深入</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#javascript" class="nav-link">三、JavaScript 深入</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#typescript" class="nav-link">四、TypeScript</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#react" class="nav-link">五、React</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#vue" class="nav-link">六、Vue</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#angular" class="nav-link">七、Angular</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">八、构建工具</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">九、性能优化</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">总结</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="_1">前端开发</h1>
+<p>前端开发是软件工程中最贴近用户的领域之一，涵盖了从页面结构、视觉呈现到交互逻辑的完整链路。本章从 HTML5 语义化、CSS3 布局与动画、JavaScript 核心进阶、TypeScript 静态类型系统，到 React、Vue、Angular 三大主流框架及构建工具链、性能优化策略，进行系统性、高密度的讲解。读者可将其作为日常开发的手册式参考。</p>
+<hr />
+<h2 id="html5">一、HTML5 核心</h2>
+<h3 id="11-html">1.1 语义化 HTML</h3>
+<p>语义化标签不仅提升代码可读性，对 SEO 和无障碍访问有直接影响。HTML5 引入了一套描述页面区域的标准标签：</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;header&gt;
+    &lt;nav&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href=&quot;/&quot;&gt;首页&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;/blog&quot;&gt;博客&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;h1&gt;文章标题&lt;/h1&gt;
+      &lt;section&gt;
+        &lt;h2&gt;章节一&lt;/h2&gt;
+        &lt;p&gt;内容…&lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/article&gt;
+    &lt;aside&gt;
+      &lt;h3&gt;相关阅读&lt;/h3&gt;
+      &lt;ul&gt;…&lt;/ul&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 CodeNebula&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>作用</th>
+<th>SEO 影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;header&gt;</code></td>
+<td>页眉或区块头部</td>
+<td>提升标题权重</td>
+</tr>
+<tr>
+<td><code>&lt;nav&gt;</code></td>
+<td>导航区域</td>
+<td>搜索引擎优先抓取</td>
+</tr>
+<tr>
+<td><code>&lt;main&gt;</code></td>
+<td>页面主体（唯一）</td>
+<td>核心内容权重提升</td>
+</tr>
+<tr>
+<td><code>&lt;article&gt;</code></td>
+<td>独立内容单元</td>
+<td>利于摘要展示</td>
+</tr>
+<tr>
+<td><code>&lt;section&gt;</code></td>
+<td>主题分组</td>
+<td>结构化评分加分</td>
+</tr>
+<tr>
+<td><code>&lt;aside&gt;</code></td>
+<td>侧边或补充内容</td>
+<td>辅助内容标记</td>
+</tr>
+<tr>
+<td><code>&lt;footer&gt;</code></td>
+<td>页脚或区块尾部</td>
+<td>版权/元信息</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12">1.2 表单与验证</h3>
+<p>现代 HTML 表单内置了丰富的输入类型和验证属性，减少对 JavaScript 的依赖：</p>
+<pre><code class="language-html">&lt;form novalidate&gt;
+  &lt;label for=&quot;email&quot;&gt;邮箱&lt;/label&gt;
+  &lt;input
+    type=&quot;email&quot;
+    id=&quot;email&quot;
+    name=&quot;email&quot;
+    required
+    pattern=&quot;[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$&quot;
+    autocomplete=&quot;email&quot;
+  /&gt;
+
+  &lt;label for=&quot;tel&quot;&gt;电话&lt;/label&gt;
+  &lt;input type=&quot;tel&quot; id=&quot;tel&quot; name=&quot;tel&quot; pattern=&quot;[0-9]{11}&quot; /&gt;
+
+  &lt;label for=&quot;age&quot;&gt;年龄&lt;/label&gt;
+  &lt;input type=&quot;number&quot; id=&quot;age&quot; name=&quot;age&quot; min=&quot;1&quot; max=&quot;150&quot; step=&quot;1&quot; /&gt;
+
+  &lt;label for=&quot;color&quot;&gt;偏好颜色&lt;/label&gt;
+  &lt;input type=&quot;color&quot; id=&quot;color&quot; name=&quot;color&quot; /&gt;
+
+  &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<p><strong>Constraint Validation API</strong> 可自定义校验消息：</p>
+<pre><code class="language-javascript">const input = document.getElementById('email');
+input.addEventListener('invalid', (e) =&gt; {
+  e.preventDefault();
+  input.setCustomValidity('请输入有效的邮箱地址');
+});
+</code></pre>
+<h3 id="13-aria">1.3 无障碍访问（ARIA）</h3>
+<p>ARIA（Accessible Rich Internet Applications）为辅助技术提供语义补充。优先使用原生语义标签，仅在无法满足时使用 ARIA：</p>
+<pre><code class="language-html">&lt;!-- 错误：重复语义 --&gt;
+&lt;nav role=&quot;navigation&quot;&gt;…&lt;/nav&gt;
+
+&lt;!-- 正确：自定义组件使用 ARIA --&gt;
+&lt;div
+  role=&quot;tablist&quot;
+  aria-label=&quot;文档选项卡&quot;
+&gt;
+  &lt;button role=&quot;tab&quot; aria-selected=&quot;true&quot; tabindex=&quot;0&quot;&gt;HTML&lt;/button&gt;
+  &lt;button role=&quot;tab&quot; aria-selected=&quot;false&quot; tabindex=&quot;-1&quot;&gt;CSS&lt;/button&gt;
+&lt;/div&gt;
+&lt;div role=&quot;tabpanel&quot; aria-labelledby=&quot;tab-1&quot;&gt;
+  HTML 内容…
+&lt;/div&gt;
+</code></pre>
+<p><strong>关键 ARIA 属性速查：</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>用途</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aria-label</code></td>
+<td>元素标签</td>
+<td><code>"关闭对话框"</code></td>
+</tr>
+<tr>
+<td><code>aria-labelledby</code></td>
+<td>引用标签元素 ID</td>
+<td><code>"heading-id"</code></td>
+</tr>
+<tr>
+<td><code>aria-describedby</code></td>
+<td>详细描述</td>
+<td><code>"desc-id"</code></td>
+</tr>
+<tr>
+<td><code>aria-expanded</code></td>
+<td>展开状态</td>
+<td><code>true</code> / <code>false</code></td>
+</tr>
+<tr>
+<td><code>aria-hidden</code></td>
+<td>从无障碍树隐藏</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>aria-live</code></td>
+<td>动态区域通知</td>
+<td><code>polite</code> / <code>assertive</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-seo">1.4 SEO 基础</h3>
+<p><strong>Meta 标签：</strong></p>
+<pre><code class="language-html">&lt;meta charset=&quot;UTF-8&quot; /&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+&lt;meta name=&quot;description&quot; content=&quot;CodeNebula 软件开发知识库&quot; /&gt;
+&lt;meta name=&quot;keywords&quot; content=&quot;前端, React, Vue, TypeScript&quot; /&gt;
+</code></pre>
+<p><strong>Open Graph（社交媒体分享）：</strong></p>
+<pre><code class="language-html">&lt;meta property=&quot;og:title&quot; content=&quot;前端开发完全指南&quot; /&gt;
+&lt;meta property=&quot;og:description&quot; content=&quot;覆盖 HTML/CSS/JS/TS/框架的全链路知识体系&quot; /&gt;
+&lt;meta property=&quot;og:image&quot; content=&quot;https://example.com/og-image.png&quot; /&gt;
+&lt;meta property=&quot;og:url&quot; content=&quot;https://example.com/frontend&quot; /&gt;
+&lt;meta property=&quot;og:type&quot; content=&quot;article&quot; /&gt;
+</code></pre>
+<p><strong>结构化数据（Schema.org / JSON-LD）：</strong></p>
+<pre><code class="language-html">&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;TechArticle&quot;,
+  &quot;headline&quot;: &quot;前端开发完全指南&quot;,
+  &quot;author&quot;: { &quot;@type&quot;: &quot;Person&quot;, &quot;name&quot;: &quot;CodeNebula&quot; },
+  &quot;datePublished&quot;: &quot;2026-07-23&quot;,
+  &quot;description&quot;: &quot;覆盖 HTML/CSS/JS/TS/框架的全链路知识体系&quot;
+}
+&lt;/script&gt;
+</code></pre>
+<hr />
+<h2 id="css3">二、CSS3 深入</h2>
+<h3 id="21">2.1 选择器详解</h3>
+<p><strong>伪类（Pseudo-classes）</strong> 描述元素的特殊状态：</p>
+<pre><code class="language-css">/* 结构性伪类 */
+li:first-child { }
+li:last-child { }
+li:nth-child(2n+1) { }   /* 奇数行 */
+li:nth-last-child(3) { } /* 倒数第三个 */
+
+/* 状态伪类 */
+input:focus { }
+input:disabled { }
+input:checked + label { }
+button:hover { }
+
+/* 否定伪类 */
+div:not(.excluded) { }
+
+/* 空值/范围 */
+input:required { }
+input:in-range { }
+input:out-of-range { }
+</code></pre>
+<p><strong>伪元素（Pseudo-elements）</strong> 创建 DOM 树之外的虚拟元素：</p>
+<pre><code class="language-css">/* 双冒号是标准写法，兼容旧浏览器可用单冒号 */
+h2::before {
+  content: &quot;📌 &quot;;
+}
+blockquote::after {
+  content: &quot; — 引自 CodeNebula&quot;;
+}
+input::placeholder {
+  color: #999;
+}
+/* 选中文本样式 */
+::selection {
+  background: #3390ff;
+  color: white;
+}
+</code></pre>
+<p><strong>属性选择器</strong> 按 HTML 属性精准匹配：</p>
+<table>
+<thead>
+<tr>
+<th>选择器</th>
+<th>匹配规则</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[attr]</code></td>
+<td>存在该属性</td>
+<td><code>[disabled]</code></td>
+</tr>
+<tr>
+<td><code>[attr="val"]</code></td>
+<td>精确等于</td>
+<td><code>[type="email"]</code></td>
+</tr>
+<tr>
+<td><code>[attr^="val"]</code></td>
+<td>以 val 开头</td>
+<td><code>[href^="https"]</code></td>
+</tr>
+<tr>
+<td><code>[attr$="val"]</code></td>
+<td>以 val 结尾</td>
+<td><code>[src$=".webp"]</code></td>
+</tr>
+<tr>
+<td><code>[attr*="val"]</code></td>
+<td>包含 val</td>
+<td><code>[class*="icon"]</code></td>
+</tr>
+<tr>
+<td><code>[attr|="val"]</code></td>
+<td>以 val- 开头</td>
+<td><code>[lang|="zh"]</code></td>
+</tr>
+<tr>
+<td><code>[attr~="val"]</code></td>
+<td>空格分隔包含</td>
+<td><code>[rel~="noopener"]</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22">2.2 盒模型</h3>
+<p>CSS 盒模型由 <code>content → padding → border → margin</code> 构成。<code>box-sizing</code> 决定 width/height 的计算范围：</p>
+<pre><code class="language-css">/* 默认：标准盒模型 */
+.box-content {
+  box-sizing: content-box;
+  width: 200px;      /* 仅内容区宽度 */
+  padding: 20px;
+  border: 2px solid;
+  /* 实际渲染宽度：200 + 20*2 + 2*2 = 244px */
+}
+
+/* 常用：IE/怪异盒模型 */
+.box-border {
+  box-sizing: border-box;
+  width: 200px;      /* 包含 padding 和 border */
+  padding: 20px;
+  border: 2px solid;
+  /* 实际渲染宽度：200px，内容宽度自动缩为 156px */
+}
+</code></pre>
+<p><strong>外边距折叠（Margin Collapsing）</strong> 发生在垂直方向上相邻的块级元素之间，取两者中较大的外边距：</p>
+<pre><code class="language-css">/* 两个相邻 div，一个 margin-bottom: 30px，一个 margin-top: 20px */
+/* 最终间距为 30px（取大值）而非 50px */
+</code></pre>
+<p>解决方法：使用 BFC（Block Formatting Context）、flex 容器、或单边 margin。</p>
+<h3 id="23-flexbox">2.3 Flexbox</h3>
+<p>一维布局模型，适用于导航、居中、等分等场景。</p>
+<p><strong>容器属性：</strong></p>
+<pre><code class="language-css">.container {
+  display: flex;
+  flex-direction: row;         /* row | column | row-reverse | column-reverse */
+  flex-wrap: wrap;             /* nowrap | wrap | wrap-reverse */
+  justify-content: center;     /* flex-start | flex-end | center | space-between | space-around | space-evenly */
+  align-items: center;         /* stretch | flex-start | flex-end | center | baseline */
+  align-content: space-around; /* 多行时的交叉轴对齐 */
+  gap: 16px;                   /* row-gap + column-gap 简写 */
+}
+</code></pre>
+<p><strong>项目属性：</strong></p>
+<pre><code class="language-css">.item {
+  flex: 1 1 200px;            /* grow shrink basis */
+  align-self: flex-end;       /* 单独覆盖 align-items */
+  order: -1;                  /* 排序，默认 0 */
+}
+</code></pre>
+<p><strong>常见布局模式：</strong></p>
+<pre><code class="language-css">/* 圣杯布局 — 中间自适应，两侧固定 */
+.holy-grail {
+  display: flex;
+}
+.holy-grail &gt; .sidebar {
+  flex: 0 0 250px;
+}
+.holy-grail &gt; .main {
+  flex: 1 1 auto;
+}
+
+/* 水平垂直居中 */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 粘性页脚 */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.page &gt; .content {
+  flex: 1;
+}
+</code></pre>
+<h3 id="24-grid">2.4 Grid</h3>
+<p>二维布局系统，适合页面整体结构或复杂网格场景。</p>
+<pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: 250px 1fr 1fr;     /* 三列：固定 + 等比 */
+  grid-template-rows: auto 1fr auto;         /* 三行 */
+  grid-template-areas:
+    &quot;header header header&quot;
+    &quot;sidebar main main&quot;
+    &quot;footer footer footer&quot;;
+  gap: 16px;
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.footer { grid-area: footer; }
+</code></pre>
+<p><strong>高级技术：</strong></p>
+<pre><code class="language-css">/* 自动响应列，无需媒体查询 */
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* fr 单位与固定值混用 */
+.dashboard {
+  display: grid;
+  grid-template-columns: 2fr 1fr 300px;
+}
+
+/* 显式放置项目 */
+.card:first-child {
+  grid-column: span 2;   /* 跨两列 */
+  grid-row: 1 / 3;       /* 从行线1到行线3 */
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>适用场景</th>
+<th>优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flexbox</td>
+<td>导航、居中、一维排列</td>
+<td>灵活、内容驱动</td>
+</tr>
+<tr>
+<td>Grid</td>
+<td>页面骨架、二维布局</td>
+<td>精准控制行列、区域命名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25">2.5 响应式设计</h3>
+<p><strong>移动优先（Mobile First）原则：</strong> 先写移动端样式，再通过 <code>min-width</code> 媒体查询渐进增强：</p>
+<pre><code class="language-css">/* 基础样式 — 移动端 */
+.container {
+  padding: 1rem;
+  font-size: 16px;
+}
+
+/* 平板 ≥768px */
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* 桌面 ≥1200px */
+@media (min-width: 1200px) {
+  .container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+</code></pre>
+<p><strong>常见断点参考：</strong></p>
+<table>
+<thead>
+<tr>
+<th>断点</th>
+<th>范围</th>
+<th>设备</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>320px</code></td>
+<td>小屏手机</td>
+<td>iPhone SE</td>
+</tr>
+<tr>
+<td><code>375px</code></td>
+<td>主流手机</td>
+<td>iPhone 12/13/14</td>
+</tr>
+<tr>
+<td><code>768px</code></td>
+<td>平板</td>
+<td>iPad</td>
+</tr>
+<tr>
+<td><code>1024px</code></td>
+<td>小屏笔记本</td>
+<td>iPad Pro 横屏</td>
+</tr>
+<tr>
+<td><code>1200px</code></td>
+<td>桌面</td>
+<td>标准显示器</td>
+</tr>
+<tr>
+<td><code>1440px+</code></td>
+<td>大屏</td>
+<td>2K/4K 显示器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="26">2.6 动画与过渡</h3>
+<p><strong>Transitions（过渡）：</strong></p>
+<pre><code class="language-css">.button {
+  background: #3390ff;
+  color: white;
+  transition: background 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.button:hover {
+  background: #1a6fd0;
+  transform: translateY(-2px);
+}
+</code></pre>
+<p><strong>Keyframes（关键帧动画）：</strong></p>
+<pre><code class="language-css">@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animated {
+  animation: fadeInUp 0.6s ease-out forwards;
+  /* animation: name duration timing-function delay iteration-count direction fill-mode */
+}
+</code></pre>
+<p><strong>Transforms（变换）性能优化：</strong> 优先使用 <code>transform</code> 和 <code>opacity</code> 做动画，它们仅触发合成（Composite），不触发重排（Reflow）或重绘（Repaint）：</p>
+<pre><code class="language-css">/* 高效 — 仅合成层 */
+.box {
+  transform: translateX(100px);
+  opacity: 0.5;
+}
+
+/* 低效 — 触发重排 */
+.box {
+  left: 100px;
+}
+</code></pre>
+<h3 id="27-scss">2.7 SCSS 预处理器</h3>
+<p>SCSS 通过编译生成 CSS，提供变量、嵌套、混合、函数等能力：</p>
+<pre><code class="language-scss">// 变量
+$primary: #3390ff;
+$spacing-unit: 8px;
+$breakpoint-md: 768px;
+
+// 混合
+@mixin card($radius: 8px, $shadow: true) {
+  border-radius: $radius;
+  padding: $spacing-unit * 2;
+  @if $shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// 嵌套 + 父选择器引用
+.card {
+  @include card(12px);
+
+  &amp;__title {
+    font-size: 1.25rem;
+    color: darken($primary, 20%);
+  }
+
+  &amp;--featured {
+    border: 2px solid $primary;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-unit;
+  }
+}
+
+// 函数
+@function px-to-rem($px, $base: 16px) {
+  @return calc($px / $base) * 1rem;
+}
+
+.title {
+  font-size: px-to-rem(24px); // 1.5rem
+}
+</code></pre>
+<h3 id="28-css-css-variables">2.8 CSS 自定义属性（CSS Variables）</h3>
+<p>与 SCSS 变量不同，CSS 自定义属性是运行时的、可级联的、可在 JavaScript 中读写：</p>
+<pre><code class="language-css">:root {
+  --color-primary: #3390ff;
+  --color-text: #1a1a2e;
+  --spacing-md: 16px;
+  --border-radius: 8px;
+}
+
+.card {
+  background: var(--color-primary);
+  color: var(--color-text);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+}
+
+/* 通过作用域覆盖 */
+.dark-mode {
+  --color-text: #eee;
+  --color-primary: #66b0ff;
+}
+</code></pre>
+<p><strong>JavaScript 读写自定义属性：</strong></p>
+<pre><code class="language-javascript">const root = document.documentElement;
+// 读取
+const primary = getComputedStyle(root).getPropertyValue('--color-primary').trim();
+// 写入
+root.style.setProperty('--color-primary', '#ff6633');
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>SCSS 变量</th>
+<th>CSS 自定义属性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作用域</td>
+<td>编译时</td>
+<td>运行时、DOM 级联</td>
+</tr>
+<tr>
+<td>动态性</td>
+<td>不可变</td>
+<td>可 JS 动态修改</td>
+</tr>
+<tr>
+<td>媒体查询</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>计算</td>
+<td>编译时计算</td>
+<td>运行时计算</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="javascript">三、JavaScript 深入</h2>
+<h3 id="31-es6">3.1 ES6+ 核心特性</h3>
+<p><strong>let / const 与块级作用域：</strong></p>
+<pre><code class="language-javascript">// var 函数作用域，存在变量提升
+console.log(x); // undefined（提升但未初始化）
+var x = 1;
+
+// let/const 块级作用域，TDZ（暂时性死区）
+console.log(y); // ReferenceError
+let y = 1;
+
+const PI = 3.14; // 必须初始化，不可重新赋值
+// PI = 3;      // TypeError
+const obj = { a: 1 };
+obj.a = 2;       // ✅ 对象属性可修改
+</code></pre>
+<p><strong>解构赋值：</strong></p>
+<pre><code class="language-javascript">// 数组解构
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+// first=1, second=2, rest=[3,4,5]
+
+// 对象解构 + 重命名 + 默认值
+const { name: userName = '匿名', age = 18 } = { name: 'Alice' };
+// userName='Alice', age=18
+
+// 嵌套解构
+const { address: { city, zip } } = { address: { city: '北京', zip: '100000' } };
+
+// 函数参数解构
+function createUser({ name, role = 'user' }) { … }
+</code></pre>
+<p><strong>展开运算符与 Rest 参数：</strong></p>
+<pre><code class="language-javascript">// 数组展开
+const arr1 = [1, 2], arr2 = [3, 4];
+const merged = [...arr1, ...arr2]; // [1,2,3,4]
+
+// 对象展开（浅拷贝）
+const base = { a: 1, b: 2 };
+const extended = { ...base, c: 3 }; // {a:1, b:2, c:3}
+
+// Rest 参数
+function sum(...nums) {
+  return nums.reduce((a, b) =&gt; a + b, 0);
+}
+</code></pre>
+<p><strong>可选链（Optional Chaining）与空值合并（Nullish Coalescing）：</strong></p>
+<pre><code class="language-javascript">const user = { profile: { name: 'Bob' } };
+
+// 传统深访问 — 易报错
+// const city = user.address.city; // TypeError
+
+// 可选链 — 短路返回 undefined
+const city = user?.address?.city; // undefined
+
+// 空值合并 — 仅对 null/undefined 生效
+const count = user?.count ?? 0;   // 0（而非空字符串或 0 被替换）
+const name = user?.name || '默认'; // 传统写法：空字符串''也会被替换
+</code></pre>
+<p><strong>模板字面量：</strong></p>
+<pre><code class="language-javascript">const name = 'CodeNebula';
+const year = 2026;
+const html = `
+  &lt;div class=&quot;card&quot;&gt;
+    &lt;h2&gt;${name}&lt;/h2&gt;
+    &lt;p&gt;成立于 ${year} 年&lt;/p&gt;
+    ${isActive ? '&lt;span class=&quot;badge&quot;&gt;活跃中&lt;/span&gt;' : ''}
+  &lt;/div&gt;
+`;
+</code></pre>
+<h3 id="32">3.2 函数进阶</h3>
+<p><strong>箭头函数：</strong></p>
+<pre><code class="language-javascript">// 简洁语法
+const double = (x) =&gt; x * 2;
+
+// 无参数时需写空括号
+const now = () =&gt; Date.now();
+
+// 返回对象字面量需加括号
+const create = (id) =&gt; ({ id, timestamp: Date.now() });
+
+// 关键区别：箭头函数无自己的 this
+const obj = {
+  name: 'Alice',
+  greet: function() {
+    setTimeout(() =&gt; {
+      console.log(`Hello, ${this.name}`); // this 指向 obj
+    }, 100);
+  },
+  badGreet: function() {
+    setTimeout(function() {
+      console.log(`Hello, ${this.name}`); // this 指向 window/undefined
+    }, 100);
+  }
+};
+</code></pre>
+<p><strong>闭包（Closure）：</strong></p>
+<pre><code class="language-javascript">function createCounter() {
+  let count = 0;          // 私有变量
+  return {
+    increment: () =&gt; ++count,
+    decrement: () =&gt; --count,
+    getCount: () =&gt; count,
+  };
+}
+
+const counter = createCounter();
+counter.increment();      // 1
+counter.increment();      // 2
+console.log(counter.count); // undefined — 无法直接访问
+</code></pre>
+<p><strong>IIFE（Immediately Invoked Function Expression）：</strong></p>
+<pre><code class="language-javascript">// 传统模块模式
+const Module = (() =&gt; {
+  const privateVar = 'secret';
+  const privateMethod = () =&gt; console.log(privateVar);
+  return {
+    publicMethod: () =&gt; {
+      privateMethod();
+    }
+  };
+})();
+</code></pre>
+<p><strong>高阶函数与柯里化：</strong></p>
+<pre><code class="language-javascript">// 高阶函数：接收或返回函数
+const withLogging = (fn) =&gt; (...args) =&gt; {
+  console.log(`调用 ${fn.name}，参数:`, args);
+  return fn(...args);
+};
+
+const add = (a, b) =&gt; a + b;
+const loggedAdd = withLogging(add);
+loggedAdd(2, 3); // 日志输出后返回 5
+
+// 柯里化：多参转单参链式
+const curry = (fn) =&gt; {
+  return function curried(...args) {
+    if (args.length &gt;= fn.length) {
+      return fn(...args);
+    }
+    return (...next) =&gt; curried(...args, ...next);
+  };
+};
+
+const curriedAdd = curry((a, b, c) =&gt; a + b + c);
+curriedAdd(1)(2)(3); // 6
+</code></pre>
+<h3 id="33">3.3 异步编程</h3>
+<p><strong>事件循环机制：</strong></p>
+<p>JavaScript 是单线程语言，依赖事件循环（Event Loop）实现异步。</p>
+<pre><code>执行栈 (Call Stack)
+  ↓
+Web APIs (setTimeout, fetch, DOM events)
+  ↓
+任务队列:
+  ┌──────────────────────┐
+  │ 微任务 (Microtask)   │ ← Promise.then, queueMicrotask, MutationObserver
+  ├──────────────────────┤
+  │ 宏任务 (Macrotask)   │ ← setTimeout, setInterval, I/O, UI render
+  └──────────────────────┘
+</code></pre>
+<pre><code class="language-javascript">console.log('1');                      // 同步
+setTimeout(() =&gt; console.log('2'), 0); // 宏任务
+Promise.resolve().then(() =&gt; {         // 微任务
+  console.log('3');
+  queueMicrotask(() =&gt; console.log('4')); // 微任务内嵌套微任务
+});
+console.log('5');                      // 同步
+// 输出顺序：1, 5, 3, 4, 2
+</code></pre>
+<p><strong>Promise 链式调用：</strong></p>
+<pre><code class="language-javascript">fetch('/api/user')
+  .then(res =&gt; {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  })
+  .then(user =&gt; fetch(`/api/posts?userId=${user.id}`))
+  .then(res =&gt; res.json())
+  .then(posts =&gt; console.log(posts))
+  .catch(err =&gt; console.error('请求失败:', err))
+  .finally(() =&gt; console.log('完成'));
+
+// 并行请求
+const [user, posts] = await Promise.all([
+  fetch('/api/user').then(r =&gt; r.json()),
+  fetch('/api/posts').then(r =&gt; r.json()),
+]);
+
+// 竞赛 — 取最先完成的
+const result = await Promise.race([
+  fetch('/api/data').then(r =&gt; r.json()),
+  new Promise((_, reject) =&gt; setTimeout(() =&gt; reject(new Error('超时')), 5000)),
+]);
+</code></pre>
+<p><strong>async/await：</strong></p>
+<pre><code class="language-javascript">async function loadUserDashboard(userId) {
+  try {
+    const user = await fetch(`/api/user/${userId}`).then(r =&gt; r.json());
+    const [posts, notifications] = await Promise.all([
+      fetch(`/api/posts?userId=${userId}`).then(r =&gt; r.json()),
+      fetch(`/api/notifications?userId=${userId}`).then(r =&gt; r.json()),
+    ]);
+    return { user, posts, notifications };
+  } catch (error) {
+    console.error('加载仪表盘失败:', error);
+    throw error; // 或返回兜底数据
+  }
+}
+
+// 顶层 await（ES2022、模块环境）
+const config = await fetch('/config.json').then(r =&gt; r.json());
+</code></pre>
+<h3 id="34">3.4 原型与类</h3>
+<p>JavaScript 通过原型链（Prototype Chain）实现继承：</p>
+<pre><code class="language-javascript">// 原型继承本质
+const parent = { type: 'parent' };
+const child = Object.create(parent);
+child.name = 'child';
+console.log(child.name); // 'child'（自有属性）
+console.log(child.type); // 'parent'（原型链向上查找）
+console.log(child.toString); // 继续沿原型链找到 Object.prototype
+</code></pre>
+<p><strong>ES6 Class 语法糖：</strong></p>
+<pre><code class="language-javascript">class Animal {
+  // 私有字段（ES2022）
+  #id = crypto.randomUUID();
+
+  constructor(name) {
+    this.name = name;
+  }
+
+  // 实例方法
+  speak() {
+    console.log(`${this.name} 发出了声音`);
+  }
+
+  // 静态方法
+  static isAnimal(obj) {
+    return obj instanceof Animal;
+  }
+
+  // Getter/Setter
+  get id() {
+    return this.#id;
+  }
+}
+
+class Dog extends Animal {
+  #breed;
+
+  constructor(name, breed) {
+    super(name); // 必须先调用 super
+    this.#breed = breed;
+  }
+
+  speak() {
+    console.log(`${this.name} 汪汪！`);
+  }
+
+  get breed() {
+    return this.#breed;
+  }
+
+  static isDog(obj) {
+    return obj instanceof Dog;
+  }
+}
+</code></pre>
+<h3 id="35">3.5 模块系统</h3>
+<p><strong>ES Modules（ESM）：</strong></p>
+<pre><code class="language-javascript">// 📁 math.js
+export const PI = 3.14159;
+export function add(a, b) { return a + b; }
+export default class Calculator { … }
+
+// 📁 app.js
+import Calculator, { PI, add as sum } from './math.js';
+import * as MathUtils from './math.js'; // 命名空间导入
+
+// 动态导入
+const module = await import('./math.js');
+console.log(module.PI);
+</code></pre>
+<p><strong>CommonJS vs ESM：</strong></p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>CommonJS (Node.js)</th>
+<th>ESM (浏览器/现代 Node)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>语法</td>
+<td><code>require()</code> / <code>module.exports</code></td>
+<td><code>import</code> / <code>export</code></td>
+</tr>
+<tr>
+<td>加载</td>
+<td>同步（运行时）</td>
+<td>异步（编译时静态分析）</td>
+</tr>
+<tr>
+<td>值绑定</td>
+<td>值拷贝</td>
+<td>动态绑定（只读引用）</td>
+</tr>
+<tr>
+<td>循环依赖</td>
+<td>可处理（返回未完成对象）</td>
+<td>需谨慎处理</td>
+</tr>
+<tr>
+<td>Tree Shaking</td>
+<td>不支持</td>
+<td>原生支持</td>
+</tr>
+<tr>
+<td>顶层 await</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+</tbody>
+</table>
+<h3 id="36">3.6 数据结构</h3>
+<pre><code class="language-javascript">// Map — 键可为任意类型
+const userMap = new Map();
+userMap.set('alice', { role: 'admin' });
+userMap.set(42, 'answer');
+console.log(userMap.size); // 2
+
+// Set — 值唯一
+const uniqueIds = new Set([1, 2, 2, 3, 3, 3]);
+console.log([...uniqueIds]); // [1, 2, 3]
+
+// WeakMap — 键为对象且弱引用，适合内存敏感缓存
+const cache = new WeakMap();
+function process(obj) {
+  if (!cache.has(obj)) {
+    cache.set(obj, expensiveComputation(obj));
+  }
+  return cache.get(obj);
+}
+
+// WeakSet — 类似 WeakMap，值唯一且弱引用
+const activeElements = new WeakSet();
+</code></pre>
+<h3 id="37">3.7 错误处理</h3>
+<pre><code class="language-javascript">class ValidationError extends Error {
+  constructor(field, message) {
+    super(message);
+    this.name = 'ValidationError';
+    this.field = field;
+  }
+}
+
+function validateUser(data) {
+  if (!data.email) {
+    throw new ValidationError('email', '邮箱不能为空');
+  }
+  if (!data.email.includes('@')) {
+    throw new ValidationError('email', '邮箱格式无效');
+  }
+}
+
+try {
+  validateUser({ email: 'invalid' });
+} catch (err) {
+  if (err instanceof ValidationError) {
+    console.error(`字段 ${err.field}: ${err.message}`);
+  } else {
+    console.error('未知错误:', err);
+  }
+} finally {
+  console.log('验证完成');
+}
+</code></pre>
+<h3 id="38">3.8 设计模式</h3>
+<pre><code class="language-javascript">// 单例模式 (Singleton)
+class Database {
+  static #instance;
+  constructor() {
+    if (Database.#instance) return Database.#instance;
+    Database.#instance = this;
+  }
+}
+
+// 观察者模式 (Observer)
+class EventBus {
+  #listeners = new Map();
+  on(event, fn) {
+    if (!this.#listeners.has(event)) this.#listeners.set(event, []);
+    this.#listeners.get(event).push(fn);
+    return () =&gt; this.off(event, fn);
+  }
+  off(event, fn) {
+    const listeners = this.#listeners.get(event);
+    if (listeners) this.#listeners.set(event, listeners.filter(l =&gt; l !== fn));
+  }
+  emit(event, ...args) {
+    this.#listeners.get(event)?.forEach(fn =&gt; fn(...args));
+  }
+}
+
+// 工厂模式 (Factory)
+class UserFactory {
+  static create(type, data) {
+    switch (type) {
+      case 'admin': return new AdminUser(data);
+      case 'editor': return new EditorUser(data);
+      default: return new RegularUser(data);
+    }
+  }
+}
+</code></pre>
+<hr />
+<h2 id="typescript">四、TypeScript</h2>
+<h3 id="41">4.1 类型系统基础</h3>
+<pre><code class="language-typescript">// 基础类型
+let isDone: boolean = false;
+let count: number = 42;
+let name: string = 'TypeScript';
+let list: number[] = [1, 2, 3];
+let tuple: [string, number] = ['hello', 42];
+let nullable: string | null = null;
+let anything: any = '可以是任何类型'; // 慎用
+
+// 联合类型 + 类型字面量
+type Status = 'idle' | 'loading' | 'success' | 'error';
+let currentStatus: Status = 'idle'; // 只能取这四个值
+
+// 交叉类型
+type WithName = { name: string };
+type WithAge = { age: number };
+type Person = WithName &amp; WithAge; // 同时包含 name 和 age
+
+// 枚举
+enum Direction {
+  Up = 'UP',
+  Down = 'DOWN',
+  Left = 'LEFT',
+  Right = 'RIGHT',
+}
+</code></pre>
+<h3 id="42-interfaces-types">4.2 Interfaces 与 Types</h3>
+<pre><code class="language-typescript">// Interface — 可声明合并，可扩展
+interface User {
+  readonly id: string;  // 只读
+  name: string;
+  email?: string;       // 可选
+  role: 'admin' | 'user';
+}
+
+// 同名 interface 自动合并
+interface User {
+  createdAt: Date;
+}
+
+// Type — 不可合并，但更灵活
+type Animal = {
+  species: string;
+  sound: string;
+};
+
+// 联合类型只能用 type
+type Result&lt;T&gt; = { ok: true; data: T } | { ok: false; error: string };
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>interface</code></th>
+<th><code>type</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>声明合并</td>
+<td>✅ 支持</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td>联合类型</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>交集/交叉</td>
+<td><code>extends</code></td>
+<td><code>&amp;</code></td>
+</tr>
+<tr>
+<td>映射类型</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>类实现</td>
+<td>✅ <code>implements</code></td>
+<td>✅ <code>implements</code></td>
+</tr>
+<tr>
+<td>推荐场景</td>
+<td>对象结构、API 定义</td>
+<td>联合类型、工具类型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43">4.3 泛型</h3>
+<pre><code class="language-typescript">// 泛型函数
+function first&lt;T&gt;(arr: T[]): T | undefined {
+  return arr[0];
+}
+
+const num = first([1, 2, 3]);  // number
+const str = first(['a', 'b']); // string
+
+// 泛型约束
+interface HasLength {
+  length: number;
+}
+function logLength&lt;T extends HasLength&gt;(arg: T): T {
+  console.log(arg.length);
+  return arg;
+}
+logLength('hello');  // ✅ 字符串有 length
+logLength([1, 2]);   // ✅ 数组有 length
+// logLength(42);    // ❌ 数字无 length
+
+// 条件类型
+type IsString&lt;T&gt; = T extends string ? 'yes' : 'no';
+type A = IsString&lt;string&gt;; // 'yes'
+type B = IsString&lt;number&gt;; // 'no'
+
+// infer 关键字 — 提取类型
+type ReturnTypeOf&lt;T&gt; = T extends (...args: any[]) =&gt; infer R ? R : never;
+type Fn = (x: number) =&gt; string;
+type R = ReturnTypeOf&lt;Fn&gt;; // string
+</code></pre>
+<h3 id="44-utility-types">4.4 实用工具类型（Utility Types）</h3>
+<pre><code class="language-typescript">interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: Date;
+}
+
+// 全部可选
+type PartialUser = Partial&lt;User&gt;;
+
+// 全部必填
+type RequiredUser = Required&lt;PartialUser&gt;;
+
+// 选子集
+type UserBasic = Pick&lt;User, 'id' | 'name' | 'email'&gt;;
+
+// 排除属性
+type UserWithoutTimestamps = Omit&lt;User, 'createdAt'&gt;;
+
+// 记录类型
+type UserRoles = Record&lt;string, 'admin' | 'user' | 'guest'&gt;;
+const roles: UserRoles = { alice: 'admin', bob: 'user' };
+
+// 提取函数返回类型
+function createUser() { return { id: '1', name: 'Alice' }; }
+type CreatedUser = ReturnType&lt;typeof createUser&gt;;
+
+// 提取参数类型
+type CreateUserParams = Parameters&lt;typeof createUser&gt;;
+</code></pre>
+<h3 id="45">4.5 装饰器</h3>
+<p>TypeScript 装饰器是实验性特性（需在 <code>tsconfig.json</code> 中启用 <code>experimentalDecorators</code>）：</p>
+<pre><code class="language-typescript">// 类装饰器
+function sealed(constructor: Function) {
+  Object.seal(constructor);
+  Object.seal(constructor.prototype);
+}
+
+@sealed
+class Logger { }
+
+// 方法装饰器
+function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const original = descriptor.value;
+  descriptor.value = function (...args: any[]) {
+    console.log(`调用 ${propertyKey}，参数:`, args);
+    return original.apply(this, args);
+  };
+}
+
+class Calculator {
+  @log
+  add(a: number, b: number) { return a + b; }
+}
+</code></pre>
+<h3 id="46">4.6 类型收窄与类型守卫</h3>
+<pre><code class="language-typescript">// typeof 收窄
+function printValue(val: string | number) {
+  if (typeof val === 'string') {
+    console.log(val.toUpperCase()); // 此处 val 为 string
+  } else {
+    console.log(val.toFixed(2));    // 此处 val 为 number
+  }
+}
+
+// instanceof 收窄
+class Dog { bark() {} }
+class Cat { meow() {} }
+function makeSound(animal: Dog | Cat) {
+  if (animal instanceof Dog) {
+    animal.bark();
+  } else {
+    animal.meow();
+  }
+}
+
+// 自定义类型守卫
+interface Fish { swim(): void; }
+interface Bird { fly(): void; }
+
+function isFish(pet: Fish | Bird): pet is Fish {
+  return (pet as Fish).swim !== undefined;
+}
+
+function move(pet: Fish | Bird) {
+  if (isFish(pet)) {
+    pet.swim(); // TypeScript 知道此为 Fish
+  } else {
+    pet.fly();
+  }
+}
+</code></pre>
+<h3 id="47-dts">4.7 声明文件（*.d.ts）</h3>
+<pre><code class="language-typescript">// 📁 types.d.ts — 为无类型 JS 库编写声明
+declare module 'legacy-lib' {
+  export function doSomething(input: string): number;
+  export const VERSION: string;
+}
+
+// 为全局变量声明
+declare const API_BASE_URL: string;
+
+// 增强已有模块
+import 'react';
+declare module 'react' {
+  interface CSSProperties {
+    '--custom-prop'?: string;
+  }
+}
+</code></pre>
+<hr />
+<h2 id="react">五、React</h2>
+<h3 id="51">5.1 组件</h3>
+<pre><code class="language-jsx">// 函数组件（推荐）
+function UserCard({ name, email, onDelete }) {
+  return (
+    &lt;div className=&quot;user-card&quot;&gt;
+      &lt;h3&gt;{name}&lt;/h3&gt;
+      &lt;p&gt;{email}&lt;/p&gt;
+      &lt;button onClick={() =&gt; onDelete(name)}&gt;删除&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+// 类组件（旧式）
+class UserCard extends React.Component {
+  render() {
+    const { name, email, onDelete } = this.props;
+    return (
+      &lt;div className=&quot;user-card&quot;&gt;
+        &lt;h3&gt;{name}&lt;/h3&gt;
+        &lt;p&gt;{email}&lt;/p&gt;
+        &lt;button onClick={() =&gt; onDelete(name)}&gt;删除&lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+</code></pre>
+<h3 id="52-hooks">5.2 Hooks</h3>
+<pre><code class="language-jsx">// useState — 状态管理
+const [count, setCount] = useState(0);
+const [user, setUser] = useState(null);
+
+// useEffect — 副作用
+useEffect(() =&gt; {
+  fetch('/api/user').then(r =&gt; r.json()).then(setUser);
+  return () =&gt; console.log('清理副作用'); // 组件卸载时执行
+}, []); // 空依赖：仅挂载时执行
+
+// useRef — 引用 DOM 或存储可变值（不触发重渲染）
+const inputRef = useRef(null);
+useEffect(() =&gt; { inputRef.current?.focus(); }, []);
+
+// useContext — 上下文消费
+const ThemeContext = createContext('light');
+const theme = useContext(ThemeContext);
+
+// useReducer — 复杂状态逻辑
+const [state, dispatch] = useReducer(
+  (state, action) =&gt; {
+    switch (action.type) {
+      case 'increment': return { count: state.count + 1 };
+      case 'decrement': return { count: state.count - 1 };
+      default: return state;
+    }
+  },
+  { count: 0 }
+);
+
+// useMemo — 缓存计算结果
+const sortedList = useMemo(
+  () =&gt; items.sort((a, b) =&gt; a.name.localeCompare(b.name)),
+  [items]
+);
+
+// useCallback — 缓存函数引用
+const handleClick = useCallback(
+  (id) =&gt; { console.log('点击:', id); },
+  []
+);
+</code></pre>
+<p><strong>自定义 Hooks：</strong></p>
+<pre><code class="language-javascript">function useDebounce(value, delay = 300) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() =&gt; {
+    const timer = setTimeout(() =&gt; setDebounced(value), delay);
+    return () =&gt; clearTimeout(timer);
+  }, [value, delay]);
+
+  return debounced;
+}
+
+// 使用
+const searchTerm = useDebounce(inputValue, 500);
+</code></pre>
+<h3 id="53">5.3 状态管理</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>适用场景</th>
+<th>优势</th>
+<th>劣势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>useState / useReducer</strong></td>
+<td>组件内状态</td>
+<td>零依赖</td>
+<td>跨组件需 prop drilling</td>
+</tr>
+<tr>
+<td><strong>Context API</strong></td>
+<td>低频更新的全局状态（主题、语言）</td>
+<td>内置</td>
+<td>更新时所有消费者重渲染</td>
+</tr>
+<tr>
+<td><strong>Redux Toolkit</strong></td>
+<td>大型应用、复杂交互</td>
+<td>DevTools、中间件</td>
+<td>样板代码多</td>
+</tr>
+<tr>
+<td><strong>Zustand</strong></td>
+<td>中小型应用</td>
+<td>简洁、TypeScript 友好</td>
+<td>生态较小</td>
+</tr>
+<tr>
+<td><strong>Jotai</strong></td>
+<td>原子化状态</td>
+<td>细粒度更新</td>
+<td>学习曲线</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Zustand 示例：</strong></p>
+<pre><code class="language-javascript">import { create } from 'zustand';
+
+const useStore = create((set) =&gt; ({
+  count: 0,
+  increment: () =&gt; set((state) =&gt; ({ count: state.count + 1 })),
+  reset: () =&gt; set({ count: 0 }),
+}));
+
+// 组件中使用
+function Counter() {
+  const { count, increment } = useStore();
+  return &lt;button onClick={increment}&gt;{count}&lt;/button&gt;;
+}
+</code></pre>
+<h3 id="54">5.4 性能优化</h3>
+<pre><code class="language-jsx">// React.memo — 阻止不必要的重渲染
+const ExpensiveList = React.memo(({ items }) =&gt; {
+  return items.map(item =&gt; &lt;li key={item.id}&gt;{item.name}&lt;/li&gt;);
+});
+
+// 代码分割 + 懒加载
+const LazyComponent = React.lazy(() =&gt; import('./HeavyComponent'));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;div&gt;加载中...&lt;/div&gt;}&gt;
+      &lt;LazyComponent /&gt;
+    &lt;/Suspense&gt;
+  );
+}
+
+// 虚拟列表 — 只渲染可视区域
+// 推荐库：react-window、react-virtuoso
+</code></pre>
+<h3 id="55">5.5 测试</h3>
+<pre><code class="language-jsx">import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+test('用户点击计数器', async () =&gt; {
+  render(&lt;Counter /&gt;);
+  const button = screen.getByRole('button', { name: /点击/i });
+
+  await userEvent.click(button);
+  expect(screen.getByText('1')).toBeInTheDocument();
+});
+</code></pre>
+<h3 id="56-nextjs">5.6 Next.js</h3>
+<pre><code class="language-typescript">// App Router (app/page.tsx)
+// SSR — 默认
+async function Page() {
+  const data = await fetch('https://api.example.com/posts');
+  const posts = await data.json();
+  return &lt;PostList posts={posts} /&gt;;
+}
+
+// ISR — 增量静态生成
+export const revalidate = 3600; // 每小时重新生成
+
+// 静态生成 (SSG)
+export async function generateStaticParams() {
+  const posts = await fetch('https://api.example.com/posts').then(r =&gt; r.json());
+  return posts.map(post =&gt; ({ id: post.id }));
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>渲染模式</th>
+<th>数据更新时机</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSR (Server-Side)</td>
+<td>每次请求</td>
+<td>个性化内容、实时数据</td>
+</tr>
+<tr>
+<td>SSG (Static)</td>
+<td>构建时</td>
+<td>博客、文档、营销页</td>
+</tr>
+<tr>
+<td>ISR (Incremental)</td>
+<td>构建时 + 按需</td>
+<td>内容频繁更新的站点</td>
+</tr>
+<tr>
+<td>CSR (Client-Side)</td>
+<td>客户端渲染</td>
+<td>仪表盘、管理后台</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vue">六、Vue</h2>
+<h3 id="61-options-api-vs-composition-api">6.1 Options API vs Composition API</h3>
+<pre><code class="language-vue">&lt;!-- Options API --&gt;
+&lt;script&gt;
+export default {
+  data() { return { count: 0 }; },
+  computed: { doubled() { return this.count * 2; } },
+  methods: { increment() { this.count++; } },
+  watch: { count(newVal) { console.log('变化:', newVal); } },
+};
+&lt;/script&gt;
+</code></pre>
+<pre><code class="language-vue">&lt;!-- Composition API（推荐） --&gt;
+&lt;script setup&gt;
+import { ref, computed, watch } from 'vue';
+
+const count = ref(0);
+const doubled = computed(() =&gt; count.value * 2);
+const increment = () =&gt; count.value++;
+watch(count, (newVal) =&gt; console.log('变化:', newVal));
+&lt;/script&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Options API</th>
+<th>Composition API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>组织方式</td>
+<td>按选项类型分组</td>
+<td>按逻辑功能分组</td>
+</tr>
+<tr>
+<td>逻辑复用</td>
+<td>Mixins（命名冲突）</td>
+<td>Composables（组合函数）</td>
+</tr>
+<tr>
+<td>TypeScript 支持</td>
+<td>一般</td>
+<td>优秀</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>低</td>
+<td>中</td>
+</tr>
+<tr>
+<td>推荐</td>
+<td>简单组件</td>
+<td>复杂组件、大型项目</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62">6.2 响应式系统</h3>
+<pre><code class="language-javascript">import { ref, reactive, computed, watch } from 'vue';
+
+// ref — 基本类型响应式
+const name = ref('Alice');
+console.log(name.value); // 模板中自动解包，无需 .value
+
+// reactive — 对象深度响应式
+const user = reactive({ name: 'Bob', profile: { age: 30 } });
+console.log(user.profile.age); // 直接访问
+
+// computed — 自动追踪依赖
+const fullName = computed(() =&gt; `${firstName.value} ${lastName.value}`);
+
+// watch — 监听变化
+watch(
+  () =&gt; user.profile.age,
+  (newVal, oldVal) =&gt; console.log(`年龄 ${oldVal} -&gt; ${newVal}`),
+  { deep: true, immediate: true }
+);
+
+// watchEffect — 自动追踪所有依赖
+watchEffect(() =&gt; {
+  console.log(`用户 ${user.name} 年龄 ${user.profile.age}`);
+});
+</code></pre>
+<h3 id="63-vue-router">6.3 Vue Router</h3>
+<pre><code class="language-javascript">// router/index.js
+import { createRouter, createWebHistory } from 'vue-router';
+
+const routes = [
+  {
+    path: '/',
+    component: () =&gt; import('../views/Home.vue'), // 懒加载
+  },
+  {
+    path: '/user/:id',
+    component: () =&gt; import('../views/User.vue'),
+    children: [
+      { path: 'profile', component: Profile },
+      { path: 'settings', component: Settings },
+    ],
+  },
+  {
+    path: '/admin',
+    meta: { requiresAuth: true },
+    beforeEnter: (to, from) =&gt; {
+      if (!isAuthenticated()) return '/login';
+    },
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+// 全局导航守卫
+router.beforeEach((to, from) =&gt; {
+  console.log(`${from.path} → ${to.path}`);
+});
+</code></pre>
+<h3 id="64-pinia">6.4 Pinia</h3>
+<pre><code class="language-javascript">// stores/user.js
+import { defineStore } from 'pinia';
+
+export const useUserStore = defineStore('user', () =&gt; {
+  // state
+  const user = ref(null);
+  const token = ref(localStorage.getItem('token'));
+
+  // getters
+  const isLoggedIn = computed(() =&gt; !!token.value);
+
+  // actions
+  async function login(email, password) {
+    const res = await fetch('/api/login', { method: 'POST', body: { email, password } });
+    const data = await res.json();
+    token.value = data.token;
+    user.value = data.user;
+    localStorage.setItem('token', data.token);
+  }
+
+  function logout() {
+    token.value = null;
+    user.value = null;
+    localStorage.removeItem('token');
+  }
+
+  return { user, token, isLoggedIn, login, logout };
+});
+</code></pre>
+<h3 id="65-nuxtjs">6.5 Nuxt.js</h3>
+<pre><code class="language-vue">&lt;!-- app.vue — Nuxt 3 App Router --&gt;
+&lt;template&gt;
+  &lt;NuxtLayout&gt;
+    &lt;NuxtPage /&gt;
+  &lt;/NuxtLayout&gt;
+&lt;/template&gt;
+
+&lt;!-- pages/index.vue — 自动路由 --&gt;
+&lt;script setup&gt;
+// SSR 数据获取
+const { data: posts } = await useFetch('/api/posts');
+&lt;/script&gt;
+</code></pre>
+<hr />
+<h2 id="angular">七、Angular</h2>
+<h3 id="71">7.1 组件与模板</h3>
+<pre><code class="language-typescript">// 📁 user-card.component.ts
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-user-card',
+  standalone: true,
+  template: `
+    &lt;div class=&quot;card&quot;&gt;
+      &lt;h3&gt;{{ user.name }}&lt;/h3&gt;
+      &lt;p&gt;{{ user.email }}&lt;/p&gt;
+      &lt;button (click)=&quot;delete.emit(user.id)&quot;&gt;删除&lt;/button&gt;
+    &lt;/div&gt;
+  `,
+  styles: [`.card { padding: 1rem; border: 1px solid #ccc; }`],
+})
+export class UserCardComponent {
+  @Input({ required: true }) user!: User;
+  @Output() delete = new EventEmitter&lt;string&gt;();
+}
+</code></pre>
+<h3 id="72">7.2 依赖注入与服务</h3>
+<pre><code class="language-typescript">// 📁 user.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({ providedIn: 'root' }) // 单例
+export class UserService {
+  constructor(private http: HttpClient) {}
+
+  getUsers(): Observable&lt;User[]&gt; {
+    return this.http.get&lt;User[]&gt;('/api/users');
+  }
+
+  deleteUser(id: string): Observable&lt;void&gt; {
+    return this.http.delete&lt;void&gt;(`/api/users/${id}`);
+  }
+}
+</code></pre>
+<h3 id="73-rxjs">7.3 RxJS</h3>
+<pre><code class="language-typescript">import { Observable, from, Subject, BehaviorSubject } from 'rxjs';
+import { map, filter, debounceTime, switchMap, catchError } from 'rxjs/operators';
+
+// Subject — 多播
+const subject = new Subject&lt;number&gt;();
+subject.subscribe(v =&gt; console.log('A:', v));
+subject.subscribe(v =&gt; console.log('B:', v));
+subject.next(1); // A:1, B:1
+
+// BehaviorSubject — 带初始值
+const state = new BehaviorSubject&lt;string&gt;('idle');
+state.subscribe(v =&gt; console.log('state:', v)); // 立即收到 'idle'
+
+// switchMap — 防抖+取消前一个请求
+this.searchInput.valueChanges.pipe(
+  debounceTime(300),
+  switchMap(term =&gt; this.api.search(term)),
+  catchError(err =&gt; of([]))
+).subscribe(results =&gt; this.results = results);
+</code></pre>
+<h3 id="74-standalone-components">7.4 Standalone Components</h3>
+<p>Angular 15+ 推荐使用 Standalone 模式替代 NgModules：</p>
+<pre><code class="language-typescript">// app.config.ts — 应用配置
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter([
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: 'home', loadComponent: () =&gt; import('./home.component') },
+    ]),
+    provideHttpClient(),
+  ],
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>NgModules</th>
+<th>Standalone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模块声明</td>
+<td>需要 NgModule</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>惰性加载</td>
+<td>通过模块</td>
+<td>通过 <code>loadComponent</code></td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>陡峭</td>
+<td>平缓</td>
+</tr>
+<tr>
+<td>推荐</td>
+<td>遗留项目</td>
+<td>新项目</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_2">八、构建工具</h2>
+<h3 id="81-vite">8.1 Vite</h3>
+<pre><code class="language-bash"># 创建项目
+npm create vite@latest my-project -- --template react-ts
+cd my-project &amp;&amp; npm install
+npm run dev    # 开发服务器（HMR 极快）
+npm run build  # 生产构建（Rollup）
+npm run preview # 预览构建结果
+</code></pre>
+<p><strong>核心优势：</strong></p>
+<ul>
+<li>开发阶段使用 ESBuild（Go 编写），比 Webpack 快 10-100x</li>
+<li>原生 ESM + HMR，无需打包即可热更新</li>
+<li>生产构建使用 Rollup，Tree Shaking 极佳</li>
+<li>TypeScript 天然支持（仅编译，不校验）</li>
+</ul>
+<h3 id="82-webpack">8.2 Webpack</h3>
+<pre><code class="language-javascript">// webpack.config.js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  mode: 'production',
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    clean: true,
+  },
+  module: {
+    rules: [
+      { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
+      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
+      { test: /\.(png|svg|jpg|webp)$/, type: 'asset/resource' },
+    ],
+  },
+  plugins: [new HtmlWebpackPlugin({ template: './public/index.html' })],
+  optimization: {
+    splitChunks: { chunks: 'all' },   // 代码分割
+    usedExports: true,                // Tree Shaking
+  },
+};
+</code></pre>
+<h3 id="83-babel">8.3 Babel</h3>
+<pre><code class="language-json">// babel.config.json
+{
+  &quot;presets&quot;: [
+    [&quot;@babel/preset-env&quot;, {
+      &quot;targets&quot;: &quot;&gt; 0.5%, not dead&quot;,
+      &quot;useBuiltIns&quot;: &quot;usage&quot;,
+      &quot;corejs&quot;: 3
+    }],
+    &quot;@babel/preset-react&quot;,
+    &quot;@babel/preset-typescript&quot;
+  ],
+  &quot;plugins&quot;: [
+    &quot;@babel/plugin-transform-runtime&quot;
+  ]
+}
+</code></pre>
+<h3 id="84">8.4 包管理器对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>npm</th>
+<th>yarn</th>
+<th>pnpm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安装速度</td>
+<td>慢</td>
+<td>中</td>
+<td>快（硬链接 + 全局存储）</td>
+</tr>
+<tr>
+<td>磁盘占用</td>
+<td>高（每个项目重复）</td>
+<td>高</td>
+<td>低（去重）</td>
+</tr>
+<tr>
+<td>Workspaces</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ （原生支持最好）</td>
+</tr>
+<tr>
+<td>锁文件</td>
+<td><code>package-lock.json</code></td>
+<td><code>yarn.lock</code></td>
+<td><code>pnpm-lock.yaml</code></td>
+</tr>
+<tr>
+<td>严格模式</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅（不可访问未声明的依赖）</td>
+</tr>
+<tr>
+<td>推荐场景</td>
+<td>通用</td>
+<td>兼容性要求</td>
+<td>新项目、Monorepo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">九、性能优化</h2>
+<h3 id="91-core-web-vitals">9.1 Core Web Vitals</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>全称</th>
+<th>衡量</th>
+<th>良好</th>
+<th>需改善</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LCP</strong></td>
+<td>Largest Contentful Paint</td>
+<td>最大内容加载时间</td>
+<td>≤2.5s</td>
+<td>≤4.0s</td>
+<td>&gt;4.0s</td>
+</tr>
+<tr>
+<td><strong>FID</strong></td>
+<td>First Input Delay</td>
+<td>首次输入延迟</td>
+<td>≤100ms</td>
+<td>≤300ms</td>
+<td>&gt;300ms</td>
+</tr>
+<tr>
+<td><strong>CLS</strong></td>
+<td>Cumulative Layout Shift</td>
+<td>累计布局偏移</td>
+<td>≤0.1</td>
+<td>≤0.25</td>
+<td>&gt;0.25</td>
+</tr>
+</tbody>
+</table>
+<p><strong>优化策略：</strong></p>
+<pre><code class="language-html">&lt;!-- LCP：预加载关键资源 --&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/fonts/Inter.woff2&quot; as=&quot;font&quot; crossorigin /&gt;
+&lt;link rel=&quot;preload&quot; href=&quot;/images/hero.webp&quot; as=&quot;image&quot; /&gt;
+
+&lt;!-- CLS：为图片预留空间 --&gt;
+&lt;img src=&quot;hero.webp&quot; width=&quot;1200&quot; height=&quot;600&quot; alt=&quot;&quot; /&gt;
+</code></pre>
+<h3 id="92">9.2 懒加载与代码分割</h3>
+<pre><code class="language-javascript">// 路由级代码分割（React）
+const Dashboard = React.lazy(() =&gt; import('./Dashboard'));
+const Settings = React.lazy(() =&gt; import('./Settings'));
+
+// 图片懒加载
+&lt;img loading=&quot;lazy&quot; src=&quot;large-image.webp&quot; alt=&quot;&quot; /&gt;
+
+// 组件懒加载（Intersection Observer）
+function LazyImage({ src, alt }) {
+  const imgRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() =&gt; {
+    const observer = new IntersectionObserver(([entry]) =&gt; {
+      if (entry.isIntersecting) {
+        setLoaded(true);
+        observer.disconnect();
+      }
+    });
+    if (imgRef.current) observer.observe(imgRef.current);
+    return () =&gt; observer.disconnect();
+  }, []);
+
+  return &lt;div ref={imgRef}&gt;{loaded &amp;&amp; &lt;img src={src} alt={alt} /&gt;}&lt;/div&gt;;
+}
+</code></pre>
+<h3 id="93">9.3 图片优化</h3>
+<pre><code class="language-html">&lt;!-- 响应式图片 + WebP --&gt;
+&lt;picture&gt;
+  &lt;source srcset=&quot;hero-1920.webp 1920w, hero-1280.webp 1280w, hero-640.webp 640w&quot;
+          sizes=&quot;(max-width: 768px) 100vw, 80vw&quot;
+          type=&quot;image/webp&quot; /&gt;
+  &lt;img src=&quot;hero-1280.jpg&quot;
+       srcset=&quot;hero-1920.jpg 1920w, hero-1280.jpg 1280w, hero-640.jpg 640w&quot;
+       sizes=&quot;(max-width: 768px) 100vw, 80vw&quot;
+       alt=&quot;横幅&quot; width=&quot;1200&quot; height=&quot;600&quot; /&gt;
+&lt;/picture&gt;
+
+&lt;!-- 渐进式加载（低质量占位图） --&gt;
+&lt;style&gt;
+.blur-up {
+  filter: blur(10px);
+  transition: filter 0.4s;
+}
+.blur-up.loaded {
+  filter: blur(0);
+}
+&lt;/style&gt;
+</code></pre>
+<h3 id="94">9.4 打包分析</h3>
+<pre><code class="language-bash"># Vite 分析
+npm run build &amp;&amp; npx vite-bundle-analyzer
+
+# Webpack 分析
+npm run build -- --profile --json &gt; stats.json
+npx webpack-bundle-analyzer stats.json
+
+# Rollup 分析
+npm run build
+npx rollup-plugin-visualizer ./dist/stats.html
+</code></pre>
+<p><strong>Tree Shaking 条件：</strong></p>
+<ul>
+<li>使用 ESM 模块语法（<code>import</code> / <code>export</code>）</li>
+<li>避免导入整个库（<code>import { debounce } from 'lodash-es'</code> 而非 <code>import _ from 'lodash'</code>）</li>
+<li>副作用标记：<code>package.json</code> 中 <code>"sideEffects": false</code></li>
+</ul>
+<h3 id="95">9.5 缓存策略</h3>
+<p><strong>Service Worker（Workbox）：</strong></p>
+<pre><code class="language-javascript">// service-worker.js
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+
+// 预缓存静态资源
+precacheAndRoute(self.__WB_MANIFEST);
+
+// 运行时缓存 — 图片优先使用缓存
+registerRoute(
+  ({ request }) =&gt; request.destination === 'image',
+  new CacheFirst({ cacheName: 'images', plugins: [] })
+);
+
+// API 请求 — 缓存后更新
+registerRoute(
+  ({ url }) =&gt; url.pathname.startsWith('/api/'),
+  new StaleWhileRevalidate({ cacheName: 'api-cache' })
+);
+</code></pre>
+<p><strong>HTTP 缓存：</strong></p>
+<pre><code class="language-nginx"># Nginx 配置
+location /static/ {
+  expires 1y;
+  add_header Cache-Control &quot;public, immutable&quot;;
+}
+
+location /api/ {
+  add_header Cache-Control &quot;no-cache&quot;;  # 需验证
+}
+</code></pre>
+<hr />
+<h2 id="_4">总结</h2>
+<p>前端开发是一个多技术栈、高迭代的领域。扎实掌握 HTML 语义化、CSS 布局与动画、JavaScript 异步与原型机制，是进阶框架学习的基石。TypeScript 提供了类型安全保障，React/Vue/Angular 各有适用场景。现代构建工具 Vite 正在取代 Webpack 成为主流选择。性能优化应贯穿开发全过程，从 Core Web Vitals 到资源加载策略，每一层都对用户体验产生直接影响。</p>
+<p>建议学习路径：<strong>HTML+CSS → JavaScript 核心 → TypeScript → 框架（选一深入学习） → 构建工具 → 性能优化</strong>。保持代码整洁、重视测试、持续跟进 ECMAScript 和框架生态的演进，是前端工程师长期成长的关键。</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

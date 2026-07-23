@@ -1,0 +1,2342 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/software-development/05-devops/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>DevOps与部署 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Algorithm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../idex.md" class="nav-link">Paper Interpretion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../indx.md" class="nav-link">Machine Learning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Mathematics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../i.md" class="nav-link">Electronic Materials</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../04-version-control/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../06-architecture/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#devops" class="nav-link">DevOps 与部署</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#devops_1" class="nav-link">一、DevOps 文化</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#docker" class="nav-link">二、容器化：Docker</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#kubernetes" class="nav-link">三、容器编排：Kubernetes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cicd" class="nav-link">四、CI/CD 流水线</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_1" class="nav-link">五、云服务</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">六、监控与告警</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">七、数据库部署</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">总结</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="devops">DevOps 与部署</h1>
+<blockquote>
+<p>DevOps 不只是工具链，更是一种文化变革——打破开发与运维之间的壁垒，让软件从提交到生产的过程变得快速、可靠、可重复。本文从文化理念到工程实践，覆盖容器化、编排、CI/CD、云服务、监控等核心领域。</p>
+</blockquote>
+<hr />
+<h2 id="devops_1">一、DevOps 文化</h2>
+<h3 id="11-devops">1.1 什么是 DevOps</h3>
+<p>DevOps 是 Development（开发）与 Operations（运维）的融合，核心目标是通过<strong>文化、自动化、精益、测量和共享</strong>（CALMS）来缩短交付周期、提高部署频率、保证系统可靠性。</p>
+<p><strong>CALMS 框架</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>英文</th>
+<th>含义</th>
+<th>实践</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>文化</strong></td>
+<td>Culture</td>
+<td>协作而非对立，共享目标与责任</td>
+<td>打破 Silos，开发与运维共同 On-Call</td>
+</tr>
+<tr>
+<td><strong>自动化</strong></td>
+<td>Automation</td>
+<td>一切重复性工作由工具完成</td>
+<td>CI/CD、基础设施即代码、自动化测试</td>
+</tr>
+<tr>
+<td><strong>精益</strong></td>
+<td>Lean</td>
+<td>消除浪费，专注价值流</td>
+<td>限制 WIP、小批量交付、持续改进</td>
+</tr>
+<tr>
+<td><strong>测量</strong></td>
+<td>Measurement</td>
+<td>用数据驱动决策</td>
+<td>DORA 指标、监控仪表盘、SLO 追踪</td>
+</tr>
+<tr>
+<td><strong>共享</strong></td>
+<td>Sharing</td>
+<td>知识、工具、责任的共享</td>
+<td>共享 Runbook、事后复盘、内部分享</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心转变</strong>：传统模式中，开发"扔过墙"把代码交给运维；DevOps 模式下，开发参与部署和运维，运维参与设计和测试。</p>
+</blockquote>
+<h3 id="12-devops-vs">1.2 DevOps vs 传统运维</h3>
+<pre><code>传统模式：
+开发: 写代码 → 构建 → 交给运维
+运维: 收到包 → 手动配置 → 部署 → 祈祷别出事
+                                    ↑
+                          沟通效率低、部署慢、易出错
+
+DevOps 模式：
+开发 + 运维 (同一团队)
+  ├── 代码提交 → 自动构建 → 自动测试 → 自动部署
+  ├── 基础设施代码化 (IaC)
+  ├── 监控告警 → 自动修复 / 快速回滚
+  └── 事后复盘 → 持续改进
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>传统运维</th>
+<th>DevOps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>部署频率</strong></td>
+<td>每月/每季度一次</td>
+<td>每天多次甚至每次提交</td>
+</tr>
+<tr>
+<td><strong>团队关系</strong></td>
+<td>开发与运维分离，互相指责</td>
+<td>同一团队或紧密协作</td>
+</tr>
+<tr>
+<td><strong>部署方式</strong></td>
+<td>手动操作，变更管理工单</td>
+<td>自动化流水线，自助部署</td>
+</tr>
+<tr>
+<td><strong>故障处理</strong></td>
+<td>开发帮查日志，运维重启</td>
+<td>开发 On-Call，可自愈系统</td>
+</tr>
+<tr>
+<td><strong>基础设施</strong></td>
+<td>物理服务器，手动配置</td>
+<td>云资源，基础设施即代码</td>
+</tr>
+<tr>
+<td><strong>文档</strong></td>
+<td>静态 Word 文档，过期快</td>
+<td>Runbook + 代码注释，随代码更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-dora">1.3 DORA 指标</h3>
+<p>Google DORA 团队通过多年研究，定义了四个关键指标来衡量 DevOps 效能：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>高水平（Elite）</th>
+<th>低水平（Low）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>部署频率</strong></td>
+<td>多久部署一次代码到生产</td>
+<td>每天多次</td>
+<td>每月一次到每季度一次</td>
+</tr>
+<tr>
+<td><strong>变更前置时间</strong></td>
+<td>从代码提交到成功部署的时间</td>
+<td>小于1小时</td>
+<td>1周到1个月</td>
+</tr>
+<tr>
+<td><strong>变更失败率</strong></td>
+<td>部署导致服务退化或故障的比例</td>
+<td>&lt;5%</td>
+<td>46-60%</td>
+</tr>
+<tr>
+<td><strong>故障恢复时间 (MTTR)</strong></td>
+<td>从服务故障到恢复的时间</td>
+<td>&lt;1小时</td>
+<td>1周到1个月</td>
+</tr>
+</tbody>
+</table>
+<p><strong>如何测量</strong>：</p>
+<pre><code class="language-bash"># 部署频率：统计 git log 中的部署 tag
+git log --oneline --since=&quot;2024-01-01&quot; --grep=&quot;deploy&quot; | wc -l
+
+# 前置时间：commit 到 deploy 的时间差
+# 可在 CI/CD 中记录两个时间戳，计算差值
+</code></pre>
+<blockquote>
+<p><strong>不要追求指标而忘了目标</strong>：高部署频率不等于高价值交付。指标是改进的工具，不是考核的枷锁。</p>
+</blockquote>
+<hr />
+<h2 id="docker">二、容器化：Docker</h2>
+<h3 id="21-image-vs-container">2.1 Image vs Container</h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│                    Docker                     │
+│                                               │
+│  Image (镜像)         Container (容器)          │
+│  ┌──────────┐        ┌──────────┐             │
+│  │ 只读模板  │        │ Image 的 │             │
+│  │ OS + 环境 │ ──运行→│ 运行实例  │             │
+│  │ + 代码    │        │ + 可写层  │             │
+│  └──────────┘        └──────────┘             │
+│                                               │
+│ 类比：Class/对象     类比：进程实例              │
+└──────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>Image</strong>：不可变的只读模板，包含操作系统层、依赖、代码和配置</li>
+<li><strong>Container</strong>：Image 的运行实例，拥有自己的文件系统、网络和进程空间，上层有可写层</li>
+</ul>
+<h3 id="22-dockerfile">2.2 Dockerfile 编写</h3>
+<p><strong>多阶段构建（Multi-stage Build）</strong>：在一个 Dockerfile 中使用多个 FROM 语句，构建阶段包含编译工具，运行阶段只保留产物。</p>
+<pre><code class="language-dockerfile"># ===== 构建阶段 =====
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server .
+
+# ===== 运行阶段 =====
+FROM alpine:3.19
+RUN apk --no-cache add ca-certificates tzdata
+COPY --from=builder /app/server /server
+COPY --from=builder /app/config /config
+EXPOSE 8080
+USER 1001
+ENTRYPOINT [&quot;/server&quot;]
+</code></pre>
+<p><strong>最佳实践</strong>：</p>
+<pre><code class="language-dockerfile"># 1. 减少层数：合并 RUN 命令
+RUN apt-get update &amp;&amp; \
+    apt-get install -y --no-install-recommends \
+        curl \
+        git \
+        ca-certificates &amp;&amp; \
+    rm -rf /var/lib/apt/lists/*
+
+# 2. .dockerignore 排除无关文件
+# .dockerignore 内容：
+# node_modules
+# .git
+# .env
+# *.md
+# Dockerfile
+
+# 3. 使用非 root 用户运行
+RUN groupadd -r app &amp;&amp; useradd -r -g app app
+USER app
+
+# 4. 指定精确的基础镜像版本，不用 latest
+FROM python:3.12-slim-bookworm
+
+# 5. 利用构建缓存：不常变动的先 COPY
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+</code></pre>
+<h3 id="23-docker-compose">2.3 Docker Compose</h3>
+<p>Docker Compose 用 YAML 定义多容器应用，适合开发环境和中小型部署。</p>
+<pre><code class="language-yaml"># docker-compose.yml
+services:
+  app:
+    build: .
+    ports:
+      - &quot;8080:8080&quot;
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - APP_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - app_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost:8080/health&quot;]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U app&quot;]
+      interval: 5s
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - &quot;80:80&quot;
+      - &quot;443:443&quot;
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  app_data:
+  pg_data:
+  redis_data:
+
+networks:
+  default:
+    driver: bridge
+</code></pre>
+<p><strong>常用命令</strong>：</p>
+<pre><code class="language-bash"># 启动所有服务（后台）
+docker compose up -d
+
+# 查看日志
+docker compose logs -f app
+
+# 重新构建并启动
+docker compose up -d --build
+
+# 查看服务状态
+docker compose ps
+
+# 停止并删除
+docker compose down -v  # -v 会删除卷
+</code></pre>
+<h3 id="24">2.4 镜像仓库</h3>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Docker Hub</strong></td>
+<td>公共/私有</td>
+<td>最大生态，免费公共仓库</td>
+<td>开源项目、个人测试</td>
+</tr>
+<tr>
+<td><strong>Harbor</strong></td>
+<td>私有（开源）</td>
+<td>安全扫描、RBAC、复制策略、漏洞扫描</td>
+<td>企业级私有仓库</td>
+</tr>
+<tr>
+<td><strong>AWS ECR</strong></td>
+<td>云托管</td>
+<td>与 IAM 集成，自动镜像扫描</td>
+<td>AWS 原生部署</td>
+</tr>
+<tr>
+<td><strong>GitHub Container Registry</strong></td>
+<td>云托管</td>
+<td>与 GitHub Actions 集成</td>
+<td>GitHub 生态</td>
+</tr>
+<tr>
+<td><strong>GitLab Container Registry</strong></td>
+<td>云托管/自托管</td>
+<td>与 GitLab CI 集成</td>
+<td>GitLab 生态</td>
+</tr>
+</tbody>
+</table>
+<p><strong>拉取与推送</strong>：</p>
+<pre><code class="language-bash"># 登录
+docker login registry.example.com
+
+# 打标签
+docker tag my-app:latest registry.example.com/my-app:v1.2.3
+
+# 推送
+docker push registry.example.com/my-app:v1.2.3
+
+# 拉取
+docker pull registry.example.com/my-app:v1.2.3
+</code></pre>
+<h3 id="25">2.5 安全实践</h3>
+<pre><code class="language-bash"># 1. Rootless 模式运行 Docker 守护进程
+dockerd-rootless-setuptool.sh install
+
+# 2. 运行时限制权限
+docker run --security-opt seccomp=seccomp-profile.json \
+           --cap-drop=ALL \
+           --cap-add=NET_BIND_SERVICE \
+           --read-only \
+           my-app
+
+# 3. 镜像漏洞扫描
+docker scout cves my-app:latest
+trivy image my-app:latest
+
+# 4. 不要将敏感信息写入镜像
+# ❌ 错误：密码写在 Dockerfile
+ENV DB_PASSWORD=supersecret
+
+# ✅ 正确：运行时注入
+docker run -e DB_PASSWORD=$DB_PASSWORD my-app
+# 或使用 Docker Secrets（Swarm 模式）
+</code></pre>
+<hr />
+<h2 id="kubernetes">三、容器编排：Kubernetes</h2>
+<h3 id="31">3.1 核心概念</h3>
+<pre><code>┌───────────────────────────────────────────────────┐
+│                   Kubernetes Cluster              │
+│                                                   │
+│  ┌──── Control Plane ────┐                        │
+│  │  API Server  etcd     │                        │
+│  │  Scheduler  Controller│                        │
+│  └───────────────────────┘                        │
+│                                                   │
+│  ┌──── Node 1 ────┐    ┌──── Node 2 ────┐        │
+│  │  ┌─Pod─┐ ┌─Pod─┐│    │  ┌─Pod─┐ ┌─Pod─┐│       │
+│  │  │Ctr 1│ │Ctr 1││    │  │Ctr 1│ │Ctr 1││       │
+│  │  └─────┘ └─────┘│    │  └─────┘ └─────┘│       │
+│  │  ┌─Pod───┐       │    │  ┌─Pod───┐      │       │
+│  │  │Ctr 1  │       │    │  │Ctr 1  │      │       │
+│  │  │Ctr 2  │       │    │  │Ctr 2  │      │       │
+│  │  └───────┘       │    │  └───────┘      │       │
+│  └──────────────────┘    └──────────────────┘       │
+└───────────────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>作用</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pod</strong></td>
+<td>最小的部署单元，一个或多个容器共享网络和存储</td>
+<td>Pod 是"逻辑主机"</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>管理 Pod 副本数和滚动更新</td>
+<td>无状态应用的标准方式</td>
+</tr>
+<tr>
+<td><strong>Service</strong></td>
+<td>提供稳定的网络端点访问一组 Pod</td>
+<td>解耦 Pod 变化与客户端</td>
+</tr>
+<tr>
+<td><strong>ConfigMap</strong></td>
+<td>将配置与镜像分离</td>
+<td>存储非敏感配置</td>
+</tr>
+<tr>
+<td><strong>Secret</strong></td>
+<td>存储敏感数据（base64 编码 + 加密）</td>
+<td>密码、Token、证书</td>
+</tr>
+<tr>
+<td><strong>Ingress</strong></td>
+<td>七层负载均衡，HTTP/HTTPS 路由</td>
+<td>域名 + 路径转发</td>
+</tr>
+<tr>
+<td><strong>PersistentVolume (PV) / PersistentVolumeClaim (PVC)</strong></td>
+<td>持久化存储供给与消费</td>
+<td>数据库等有状态应用</td>
+</tr>
+<tr>
+<td><strong>Namespace</strong></td>
+<td>逻辑隔离不同环境或团队</td>
+<td>多租户管理</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-kubectl">3.2 kubectl 常用命令</h3>
+<pre><code class="language-bash"># Pod 操作
+kubectl get pods -n my-namespace
+kubectl describe pod my-pod
+kubectl logs -f deployment/my-app
+kubectl exec -it my-pod -- /bin/sh
+
+# Deployment 操作
+kubectl get deployments
+kubectl scale deployment my-app --replicas=5
+kubectl rollout status deployment/my-app
+kubectl rollout undo deployment/my-app
+
+# Service 操作
+kubectl get svc
+kubectl port-forward svc/my-app 8080:80
+
+# 调试与排查
+kubectl top nodes                    # 节点资源使用
+kubectl top pods                     # Pod 资源使用
+kubectl get events --sort-by='.lastTimestamp'
+kubectl auth can-i create deployments  # RBAC 检查
+
+# 上下文切换
+kubectl config get-contexts
+kubectl config use-context my-cluster
+</code></pre>
+<h3 id="33-service">3.3 Service 类型</h3>
+<pre><code class="language-yaml"># ClusterIP：集群内部访问（默认）
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+# NodePort：外部可通过节点 IP + 端口访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080
+---
+# LoadBalancer：云厂商提供外部负载均衡器
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+# ExternalName：映射到外部 DNS 名称
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-db
+spec:
+  type: ExternalName
+  externalName: mydb.example.com
+</code></pre>
+<h3 id="34">3.4 滚动更新与回滚</h3>
+<pre><code class="language-yaml"># Deployment 配置更新策略
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # 最多可以多启动几个 Pod
+      maxUnavailable: 0  # 最多可以有多少 Pod 不可用
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: app
+          image: registry.example.com/my-app:v1.2.3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+</code></pre>
+<pre><code class="language-bash"># 更新镜像
+kubectl set image deployment/my-app app=registry.example.com/my-app:v1.2.4
+
+# 查看更新状态
+kubectl rollout status deployment/my-app
+
+# 回滚到上一个版本
+kubectl rollout undo deployment/my-app
+
+# 回滚到指定版本
+kubectl rollout undo deployment/my-app --to-revision=3
+
+# 查看历史版本
+kubectl rollout history deployment/my-app
+</code></pre>
+<h3 id="35-helm-charts">3.5 Helm Charts</h3>
+<p>Helm 是 Kubernetes 的包管理器，将 K8s YAML 打包为可复用、可配置的 Chart。</p>
+<p><strong>Chart 目录结构</strong>：</p>
+<pre><code>my-app/
+├── Chart.yaml          # 元数据：名称、版本、依赖
+├── values.yaml         # 默认配置值
+├── values-production.yaml  # 不同环境的覆盖
+├── templates/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── configmap.yaml
+│   ├── _helpers.tpl    # 可复用模板函数
+│   └── NOTES.txt       # 安装后提示信息
+└── charts/             # 子 Chart（依赖）
+</code></pre>
+<p><strong>模板示例</strong>：</p>
+<pre><code class="language-yaml"># templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include &quot;my-app.fullname&quot; . }}
+  labels:
+    {{- include &quot;my-app.labels&quot; . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+  selector:
+    matchLabels:
+      {{- include &quot;my-app.selectorLabels&quot; . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include &quot;my-app.selectorLabels&quot; . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}&quot;
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: DB_HOST
+              value: {{ .Values.db.host }}
+            - name: DB_PORT
+              value: &quot;{{ .Values.db.port }}&quot;
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+</code></pre>
+<pre><code class="language-yaml"># values.yaml
+replicaCount: 3
+strategy:
+  type: RollingUpdate
+image:
+  repository: registry.example.com/my-app
+  tag: &quot;&quot;
+service:
+  type: ClusterIP
+  port: 8080
+db:
+  host: postgres-cluster
+  port: 5432
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+ingress:
+  enabled: false
+</code></pre>
+<p><strong>常用命令</strong>：</p>
+<pre><code class="language-bash"># 安装 Chart
+helm install my-app ./my-app -f values-production.yaml
+
+# 升级
+helm upgrade my-app ./my-app --set image.tag=v1.2.4
+
+# 回滚
+helm rollback my-app 2
+
+# 查看历史
+helm history my-app
+
+# 模板渲染预览（不安装）
+helm template ./my-app --debug
+</code></pre>
+<h3 id="36">3.6 可观测性</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>工具</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>资源指标</strong></td>
+<td>Metrics Server + Prometheus</td>
+<td>CPU、内存、网络、存储</td>
+</tr>
+<tr>
+<td><strong>日志</strong></td>
+<td>Loki / ELK + Fluentd/Fluent Bit</td>
+<td>集中日志采集与查询</td>
+</tr>
+<tr>
+<td><strong>链路追踪</strong></td>
+<td>Jaeger / OpenTelemetry</td>
+<td>请求在服务间的完整路径</td>
+</tr>
+<tr>
+<td><strong>事件</strong></td>
+<td>Kubernetes Events</td>
+<td>Pod 调度、拉取失败等事件</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># 部署 Metrics Server（必须，否则 kubectl top 不可用）
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# 使用 Prometheus Operator 一键部署监控栈
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install prometheus prometheus-community/kube-prometheus-stack
+</code></pre>
+<hr />
+<h2 id="cicd">四、CI/CD 流水线</h2>
+<h3 id="41-ci-cd">4.1 CI 与 CD 的区别</h3>
+<pre><code>代码提交
+  │
+  ▼
+┌─────────────────────────────────────────────────────┐
+│  CI (持续集成)                                       │
+│  ├── 代码检查（Lint）                                 │
+│  ├── 单元测试                                        │
+│  ├── 构建（编译/打包）                                │
+│  ├── 镜像构建                                        │
+│  └── 推送镜像到仓库                                   │
+└─────────────────────────────────────────────────────┘
+  │
+  ▼（触发部署）
+┌─────────────────────────────────────────────────────┐
+│  CD (持续交付/持续部署)                              │
+│  ├── 部署到测试环境 → 集成测试 → 验收测试              │
+│  ├── 部署到预发布环境 → 冒烟测试                       │
+│  └── 部署到生产环境（持续部署是自动的，持续交付需手动审批） │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+<th>人工介入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>持续集成 (CI)</strong></td>
+<td>频繁将代码合并到主干，每次合并自动构建和测试</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>持续交付 (CD)</strong></td>
+<td>CI + 自动部署到类生产环境，但部署到生产需人工审批</td>
+<td>生产部署需审批</td>
+</tr>
+<tr>
+<td><strong>持续部署 (CD)</strong></td>
+<td>CI + 完全自动化部署到生产环境</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-github-actions">4.2 GitHub Actions</h3>
+<p><strong>核心概念</strong>：</p>
+<pre><code>Workflow (.github/workflows/*.yml)
+  └── Job (运行在同一个 Runner 上，共享文件系统)
+       ├── Step 1: actions/checkout@v4
+       ├── Step 2: 运行脚本
+       └── Step 3: actions/upload-artifact@v4
+</code></pre>
+<p><strong>完整示例</strong>：</p>
+<pre><code class="language-yaml"># .github/workflows/deploy.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  build-and-push:
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to K8s
+        run: |
+          echo &quot;Connecting to cluster...&quot;
+          # 实际部署命令（使用 kubectl 或 helm）
+          kubectl set image deployment/my-app \
+            app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+</code></pre>
+<p><strong>Events 与 Runners</strong>：</p>
+<pre><code class="language-yaml"># 常用事件
+on:
+  push:                         # 代码推送
+  pull_request:                 # PR 创建/更新
+  schedule:                     # 定时任务
+    - cron: '0 2 * * *'        # 每天凌晨2点
+  workflow_dispatch:            # 手动触发
+  release:                      # 发布 Release
+
+# 自托管 Runner 标签
+runs-on: [self-hosted, linux, gpu]
+</code></pre>
+<p><strong>部署环境与审批</strong>：</p>
+<pre><code class="language-yaml">jobs:
+  deploy-production:
+    environment:
+      name: production
+      url: https://myapp.com
+    # 此环境配置了&quot;必需的审阅者&quot;
+    # 只有审阅者批准后才执行
+    steps:
+      - run: ./deploy.sh
+</code></pre>
+<h3 id="43-gitlab-ci">4.3 GitLab CI</h3>
+<pre><code class="language-yaml"># .gitlab-ci.yml
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  DOCKER_DRIVER: overlay2
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/
+
+lint:
+  stage: lint
+  image: node:20-alpine
+  script:
+    - npm ci
+    - npm run lint
+
+test:
+  stage: test
+  image: node:20-alpine
+  services:
+    - postgres:16-alpine
+  variables:
+    DATABASE_URL: postgres://postgres:password@postgres/test
+  script:
+    - npm ci
+    - npm run test
+  coverage: '/Lines: (\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
+build:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  script:
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+
+.deploy_template: &amp;deploy_job
+  stage: deploy
+  image: alpine/helm:3.14
+  script:
+    - helm upgrade --install my-app ./charts/my-app
+      --set image.repository=$CI_REGISTRY_IMAGE
+      --set image.tag=$CI_COMMIT_SHA
+  environment:
+    name: $CI_ENVIRONMENT_NAME
+    url: https://$CI_ENVIRONMENT_NAME.myapp.com
+
+deploy-staging:
+  &lt;&lt;: *deploy_job
+  variables:
+    CI_ENVIRONMENT_NAME: staging
+  only:
+    - main
+
+deploy-production:
+  &lt;&lt;: *deploy_job
+  variables:
+    CI_ENVIRONMENT_NAME: production
+  only:
+    - tags
+  when: manual
+</code></pre>
+<h3 id="44-jenkins">4.4 Jenkins</h3>
+<p><strong>Jenkinsfile（声明式流水线）</strong>：</p>
+<pre><code class="language-groovy">pipeline {
+    agent any
+
+    environment {
+        REGISTRY = 'registry.example.com'
+        IMAGE_TAG = &quot;${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(8)}&quot;
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Lint &amp; Test') {
+            parallel {
+                stage('Lint') {
+                    steps {
+                        sh 'npm run lint'
+                    }
+                }
+                stage('Unit Test') {
+                    steps {
+                        sh 'npm run test:ci'
+                    }
+                    post {
+                        success {
+                            junit 'reports/*.xml'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh &quot;&quot;&quot;
+                    docker build -t ${REGISTRY}/my-app:${IMAGE_TAG} .
+                    docker tag ${REGISTRY}/my-app:${IMAGE_TAG} ${REGISTRY}/my-app:latest
+                &quot;&quot;&quot;
+            }
+        }
+
+        stage('Push') {
+            steps {
+                withCredentials([string(credentialsId: 'registry-password', variable: 'PASS')]) {
+                    sh &quot;&quot;&quot;
+                        echo ${PASS} | docker login ${REGISTRY} -u admin --password-stdin
+                        docker push ${REGISTRY}/my-app:${IMAGE_TAG}
+                        docker push ${REGISTRY}/my-app:latest
+                    &quot;&quot;&quot;
+                }
+            }
+        }
+
+        stage('Deploy') {
+            input {
+                message &quot;确认部署到生产环境？&quot;
+                ok &quot;确认&quot;
+            }
+            steps {
+                sh &quot;kubectl set image deployment/my-app app=${REGISTRY}/my-app:${IMAGE_TAG}&quot;
+            }
+        }
+    }
+
+    post {
+        failure {
+            slackSend(
+                channel: '#deploy-alerts',
+                message: &quot;❌ 部署失败: ${env.BUILD_URL}&quot;
+            )
+        }
+        success {
+            slackSend(
+                channel: '#deploy-alerts',
+                message: &quot;✅ 部署成功: ${env.BUILD_URL}&quot;
+            )
+        }
+    }
+}
+</code></pre>
+<p><strong>共享库（Shared Libraries）</strong>：</p>
+<pre><code class="language-groovy">// vars/deployToK8s.groovy
+def call(String image, String namespace = 'default') {
+    sh &quot;&quot;&quot;
+        kubectl set image deployment/my-app \
+            app=${image} \
+            -n ${namespace}
+        kubectl rollout status deployment/my-app \
+            -n ${namespace}
+    &quot;&quot;&quot;
+}
+</code></pre>
+<h3 id="45-cicd">4.5 CI/CD 平台对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>GitHub Actions</th>
+<th>GitLab CI</th>
+<th>Jenkins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>托管方式</strong></td>
+<td>SaaS</td>
+<td>SaaS / 自托管</td>
+<td>自托管为主</td>
+</tr>
+<tr>
+<td><strong>配置语法</strong></td>
+<td>YAML</td>
+<td>YAML</td>
+<td>Groovy (DSL)</td>
+</tr>
+<tr>
+<td><strong>并发限制</strong></td>
+<td>免费额度有限</td>
+<td>免费额度有限</td>
+<td>取决于自有资源</td>
+</tr>
+<tr>
+<td><strong>插件生态</strong></td>
+<td>✦ Actions 市场</td>
+<td>✦ 集成度高</td>
+<td>✦✦✦✦✦ 最丰富</td>
+</tr>
+<tr>
+<td><strong>自托管 Runner</strong></td>
+<td>✅ 支持</td>
+<td>✅ 支持</td>
+<td>✅ 原生支持</td>
+</tr>
+<tr>
+<td><strong>矩阵构建</strong></td>
+<td>✅ 原生支持</td>
+<td>✅ parallel</td>
+<td>✅ parallel</td>
+</tr>
+<tr>
+<td><strong>环境管理</strong></td>
+<td>✅ Environments</td>
+<td>✅ Environments</td>
+<td>✦ 插件实现</td>
+</tr>
+<tr>
+<td><strong>Pipeline 即代码</strong></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>学习曲线</strong></td>
+<td>⭐ 低</td>
+<td>⭐⭐ 中</td>
+<td>⭐⭐⭐⭐ 高</td>
+</tr>
+<tr>
+<td><strong>UI 体验</strong></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>GitHub 开源/私有项目</td>
+<td>GitLab 全生命周期</td>
+<td>复杂流水线/合规要求</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_1">五、云服务</h2>
+<h3 id="51">5.1 云服务模型</h3>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  ┌── On-Premises ──────────────────────────────────┐    │
+│  │  自己管理: 硬件 + OS + 网络 + 中间件 + 应用         │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── IaaS ──────────────────────────────────────────┐    │
+│  │  你管理: OS + 中间件 + 应用                       │    │
+│  │  云管: 计算 + 存储 + 网络                          │    │
+│  │  e.g. AWS EC2, 阿里云 ECS                         │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── PaaS ──────────────────────────────────────────┐    │
+│  │  你管理: 应用代码                                  │    │
+│  │  云管: OS + 运行时 + 中间件 + 扩展                   │    │
+│  │  e.g. Heroku, AWS Elastic Beanstalk               │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── FaaS ──────────────────────────────────────────┐    │
+│  │  你管理: 函数代码                                  │    │
+│  │  云管: 一切服务器细节                               │    │
+│  │  e.g. AWS Lambda, Cloudflare Workers              │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── SaaS ──────────────────────────────────────────┐    │
+│  │  开箱即用, 无需管理任何东西                         │    │
+│  │  e.g. GitHub, Slack, Notion                       │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>控制力</th>
+<th>运维负担</th>
+<th>弹性伸缩</th>
+<th>典型示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IaaS</strong></td>
+<td>高（可配置 OS）</td>
+<td>高（需自己维护）</td>
+<td>手动/自动扩展组</td>
+<td>EC2, GCE, ECS</td>
+</tr>
+<tr>
+<td><strong>PaaS</strong></td>
+<td>中（仅应用层）</td>
+<td>中（平台管理 OS）</td>
+<td>自动</td>
+<td>Heroku, App Engine</td>
+</tr>
+<tr>
+<td><strong>FaaS</strong></td>
+<td>低（仅函数）</td>
+<td>低（事件驱动）</td>
+<td>原生弹性</td>
+<td>Lambda, Cloud Functions</td>
+</tr>
+<tr>
+<td><strong>SaaS</strong></td>
+<td>最低（仅配置）</td>
+<td>无</td>
+<td>完全托管</td>
+<td>Gmail, Notion</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-aws">5.2 AWS 核心服务</h3>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>类别</th>
+<th>作用</th>
+<th>替代品</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2</strong></td>
+<td>计算 (IaaS)</td>
+<td>虚拟服务器，完全可控</td>
+<td>GCE, 阿里云 ECS</td>
+</tr>
+<tr>
+<td><strong>S3</strong></td>
+<td>存储</td>
+<td>对象存储，无限容量</td>
+<td>GCS, MinIO</td>
+</tr>
+<tr>
+<td><strong>RDS</strong></td>
+<td>数据库 (PaaS)</td>
+<td>托管关系数据库</td>
+<td>Cloud SQL, Aurora</td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td>计算 (FaaS)</td>
+<td>无服务器函数计算</td>
+<td>Cloud Functions</td>
+</tr>
+<tr>
+<td><strong>ECS/EKS</strong></td>
+<td>容器编排</td>
+<td>托管 Docker/K8s</td>
+<td>GKE, AKS</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td>CDN</td>
+<td>全球内容分发</td>
+<td>Cloudflare, Akamai</td>
+</tr>
+<tr>
+<td><strong>Route53</strong></td>
+<td>DNS</td>
+<td>DNS 解析 + 流量路由</td>
+<td>Cloudflare DNS</td>
+</tr>
+<tr>
+<td><strong>ELB/ALB</strong></td>
+<td>负载均衡</td>
+<td>HTTP/TCP 负载均衡</td>
+<td>GCLB, Nginx</td>
+</tr>
+<tr>
+<td><strong>CloudWatch</strong></td>
+<td>监控</td>
+<td>指标 + 日志 + 告警</td>
+<td>Datadog, Grafana</td>
+</tr>
+<tr>
+<td><strong>IAM</strong></td>
+<td>安全</td>
+<td>用户 + 角色 + 权限</td>
+<td>GCP IAM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53">5.3 部署策略</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[当前版本 V1] --&gt; B{选择部署策略}
+    B --&gt; C[滚动更新]
+    B --&gt; D[蓝绿部署]
+    B --&gt; E[金丝雀发布]
+    B --&gt; F[特性开关]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>原理</th>
+<th>优势</th>
+<th>风险</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>滚动更新</strong></td>
+<td>逐个替换实例</td>
+<td>无需额外资源</td>
+<td>回滚慢</td>
+<td>无状态服务</td>
+</tr>
+<tr>
+<td><strong>蓝绿部署</strong></td>
+<td>维护两套完整环境，切换流量</td>
+<td>瞬间切换/回滚</td>
+<td>成本翻倍</td>
+<td>关键业务</td>
+</tr>
+<tr>
+<td><strong>金丝雀发布</strong></td>
+<td>先升级一小部分实例，逐步扩大</td>
+<td>风险最小，可回退</td>
+<td>时间长</td>
+<td>重大变更</td>
+</tr>
+<tr>
+<td><strong>特性开关</strong></td>
+<td>代码已部署，通过开关控制功能可见性</td>
+<td>细粒度控制</td>
+<td>技术债务</td>
+<td>功能灰度测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>蓝绿部署示例</strong>：</p>
+<pre><code class="language-yaml"># Kubernetes + 蓝绿部署
+# 当前活跃: service-prod → deployment-blue
+# 准备就绪: deployment-green
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app
+spec:
+  selector:
+    app: my-app
+    version: blue   # 切换为 green 即可切换流量
+  ports:
+    - port: 80
+</code></pre>
+<p><strong>金丝雀部署（Istio）</strong>：</p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-app
+spec:
+  hosts:
+    - my-app
+  http:
+    - route:
+        - destination:
+            host: my-app
+            subset: stable
+          weight: 90
+        - destination:
+            host: my-app
+            subset: canary
+          weight: 10
+</code></pre>
+<h3 id="54-iac">5.4 基础设施即代码 (IaC)</h3>
+<p>IaC 的核心思想：用代码管理基础设施，而非手动点击控制台。</p>
+<pre><code class="language-hcl"># Terraform：声明式 IaC
+terraform {
+  required_providers {
+    aws = {
+      source  = &quot;hashicorp/aws&quot;
+      version = &quot;~&gt; 5.0&quot;
+    }
+  }
+}
+
+provider &quot;aws&quot; {
+  region = &quot;ap-northeast-1&quot;
+}
+
+variable &quot;app_name&quot; {
+  description = &quot;应用名称&quot;
+  type        = string
+  default     = &quot;my-app&quot;
+}
+
+resource &quot;aws_vpc&quot; &quot;main&quot; {
+  cidr_block           = &quot;10.0.0.0/16&quot;
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = &quot;${var.app_name}-vpc&quot;
+  }
+}
+
+resource &quot;aws_subnet&quot; &quot;public&quot; {
+  count             = 2
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = &quot;10.0.${count.index}.0/24&quot;
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+}
+
+resource &quot;aws_ecs_cluster&quot; &quot;main&quot; {
+  name = var.app_name
+}
+
+resource &quot;aws_ecs_service&quot; &quot;app&quot; {
+  name            = var.app_name
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.app.arn
+  desired_count   = 3
+  launch_type     = &quot;FARGATE&quot;
+
+  network_configuration {
+    subnets         = aws_subnet.public[*].id
+    security_groups = [aws_security_group.app.id]
+  }
+}
+</code></pre>
+<p><strong>IaC 工具对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>语言</th>
+<th>状态管理</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Terraform</strong></td>
+<td>HCL</td>
+<td>有状态（state 文件）</td>
+<td>跨云资源编排</td>
+</tr>
+<tr>
+<td><strong>OpenTofu</strong></td>
+<td>HCL</td>
+<td>有状态</td>
+<td>Terraform 开源分支</td>
+</tr>
+<tr>
+<td><strong>Pulumi</strong></td>
+<td>Python/TS/Go/...</td>
+<td>有状态</td>
+<td>开发者友好，代码而非 DSL</td>
+</tr>
+<tr>
+<td><strong>AWS CDK</strong></td>
+<td>TypeScript/Python/...</td>
+<td>CloudFormation</td>
+<td>AWS 生态</td>
+</tr>
+<tr>
+<td><strong>Ansible</strong></td>
+<td>YAML</td>
+<td>无状态（幂等）</td>
+<td>配置管理 + 临时任务</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55">5.5 配置管理</h3>
+<pre><code class="language-yaml"># Ansible Playbook: 安装 Nginx 并部署应用
+---
+- name: Deploy Web Application
+  hosts: webservers
+  become: yes
+  vars:
+    app_version: &quot;1.2.3&quot;
+    nginx_port: 80
+
+  tasks:
+    - name: Ensure Nginx is installed
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copy Nginx configuration
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/myapp
+      notify: restart nginx
+
+    - name: Create application directory
+      file:
+        path: /opt/myapp
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Deploy application binary
+      get_url:
+        url: &quot;https://artifacts.example.com/myapp/{{ app_version }}/myapp&quot;
+        dest: /opt/myapp/myapp
+        mode: '0755'
+
+    - name: Start application service
+      systemd:
+        name: myapp
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+</code></pre>
+<hr />
+<h2 id="_2">六、监控与告警</h2>
+<h3 id="61">6.1 可观测性三大支柱</h3>
+<pre><code>                            ┌─────────┐
+                            │  Metrics │
+                            │  (指标)   │
+                            │  CPU/内存 │
+                            │  请求量   │
+                            │  错误率   │
+                            └────┬────┘
+                                 │
+            &quot;什么出了问题？&quot;      │
+                                 │
+      ┌──────────┐               │              ┌──────────┐
+      │  Logging  │◄─────────────┼──────────────►│ Tracing  │
+      │  (日志)   │   &quot;为什么？&quot;  │    &quot;谁导致？&quot;  │  (追踪)   │
+      │  error.log│               │              │  请求链路  │
+      │  access   │               │              │  Span 树  │
+      └──────────┘                              └──────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>作用</th>
+<th>问什么</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Metrics</strong></td>
+<td>聚合的时序数据</td>
+<td>系统当前状态？</td>
+<td>CPU 90%, QPS 5000</td>
+</tr>
+<tr>
+<td><strong>Logs</strong></td>
+<td>离散的事件记录</td>
+<td>具体发生了什么？</td>
+<td>"Connection timeout"</td>
+</tr>
+<tr>
+<td><strong>Traces</strong></td>
+<td>请求在分布式系统中的完整路径</td>
+<td>哪个环节慢了？</td>
+<td>SQL 查询耗时 2s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-prometheus-grafana">6.2 Prometheus + Grafana</h3>
+<pre><code class="language-yaml"># prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - &quot;/etc/prometheus/alert-rules.yml&quot;
+</code></pre>
+<p><strong>告警规则</strong>：</p>
+<pre><code class="language-yaml"># alert-rules.yml
+groups:
+  - name: instance-down
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;Instance {{ $labels.instance }} down&quot;
+          description: &quot;{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.&quot;
+
+  - name: high-cpu
+    rules:
+      - alert: HighCPUUsage
+        expr: (100 - (avg by(instance)(rate(node_cpu_seconds_total{mode=&quot;idle&quot;}[5m])) * 100)) &gt; 80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;CPU usage &gt; 80% on {{ $labels.instance }}&quot;
+</code></pre>
+<p><strong>Grafana 面板示例</strong>：</p>
+<pre><code>┌────────────────────────────────────────────────────┐
+│  [CPU 使用率]  [内存]   [磁盘IO]  [网络流量]         │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                      │
+│  │ 65│ │ 4.2│ │ 45│ │120│                      │
+│  │ %  │ │ GB │ │ MB│ │Mbps│                      │
+│  └────┘ └────┘ └────┘ └────┘                      │
+├────────────────────────────────────────────────────┤
+│  QPS 趋势图                                         │
+│  ╱╲    ╱╲    ╱╲    ╱╲                              │
+│ ╱  ╲  ╱  ╲  ╱  ╲  ╱  ╲                             │
+├────────────────────────────────────────────────────┤
+│  各接口 P99 延迟                                     │
+│  /api/users  ━━━━━━━━━━━━━━━━━── 120ms             │
+│  /api/orders ━━━━━━━━━━━━━━━━━━━━ 350ms            │
+│  /api/pay    ━━━━━━━━━━━━━━━━━━━━━━━━━ 890ms       │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<h3 id="63-elk-stack">6.3 ELK Stack（日志管理）</h3>
+<pre><code>Application
+  │
+  ├── Filebeat / Fluent Bit (日志采集器)
+  │     └── 发送到 Logstash
+  │
+  ├── Logstash (日志处理管道)
+  │     ├── 解析 (Grok 正则、JSON 解析)
+  │     ├── 过滤 (移除敏感信息、增加字段)
+  │     └── 输出到 Elasticsearch
+  │
+  ├── Elasticsearch (存储 + 搜索)
+  │     └── 倒排索引，全文搜索
+  │
+  └── Kibana (可视化 + 探索)
+        └── 日志搜索、仪表盘、告警
+</code></pre>
+<p><strong>Logstash 配置示例</strong>：</p>
+<pre><code class="language-ruby">input {
+  beats {
+    port =&gt; 5044
+  }
+}
+
+filter {
+  # 解析 Nginx 访问日志
+  if [service] == &quot;nginx&quot; {
+    grok {
+      match =&gt; { &quot;message&quot; =&gt; &quot;%{COMBINEDAPACHELOG}&quot; }
+    }
+    date {
+      match =&gt; [&quot;timestamp&quot;, &quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+    }
+  }
+
+  # 解析 JSON 格式的应用日志
+  if [service] == &quot;app&quot; {
+    json {
+      source =&gt; &quot;message&quot;
+    }
+  }
+
+  # 移除敏感字段
+  mutate {
+    remove_field =&gt; [&quot;password&quot;, &quot;credit_card&quot;]
+  }
+}
+
+output {
+  elasticsearch {
+    hosts =&gt; [&quot;http://elasticsearch:9200&quot;]
+    index =&gt; &quot;%{[@metadata][beat]}-%{+YYYY.MM.dd}&quot;
+  }
+}
+</code></pre>
+<p><strong>结构化日志（应用侧）</strong>：</p>
+<pre><code class="language-python"># Python 结构化日志示例
+import structlog
+
+logger = structlog.get_logger()
+logger.info(&quot;user_login&quot;, 
+    user_id=123, 
+    ip=&quot;192.168.1.1&quot;, 
+    device=&quot;mobile&quot;,
+    duration_ms=45
+)
+# 输出: {&quot;event&quot;: &quot;user_login&quot;, &quot;user_id&quot;: 123, &quot;ip&quot;: &quot;192.168.1.1&quot;, ...}
+</code></pre>
+<h3 id="64">6.4 分布式追踪</h3>
+<p><strong>OpenTelemetry 是 CNCF 的追踪标准</strong>，统一了数据采集和上报协议。</p>
+<pre><code class="language-python"># Python + OpenTelemetry 示例
+from opentelemetry import trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+provider = TracerProvider()
+processor = BatchSpanProcessor(OTLPSpanExporter(
+    endpoint=&quot;http://jaeger-collector:4317&quot;
+))
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
+
+tracer = trace.get_tracer(__name__)
+
+with tracer.start_as_current_span(&quot;process_order&quot;) as span:
+    span.set_attribute(&quot;order_id&quot;, 12345)
+    span.add_event(&quot;payment_initiated&quot;)
+
+    with tracer.start_as_current_span(&quot;check_inventory&quot;):
+        # 库存检查逻辑
+        pass
+
+    with tracer.start_as_current_span(&quot;charge_payment&quot;):
+        # 支付逻辑
+        pass
+</code></pre>
+<p><strong>Jaeger UI 中的 Trace 视图</strong>：</p>
+<pre><code>Trace: 8a3f2b1c (257ms)
+  ├── frontend: GET /checkout        (257ms)
+  │   ├── auth: verify_token         (12ms)
+  │   ├── cart: get_cart_items       (45ms)
+  │   │   └── redis: hgetall         (8ms)
+  │   ├── order: create_order        (180ms)  ← 瓶颈在这里
+  │   │   ├── payment: charge        (120ms)
+  │   │   ├── inventory: reserve     (35ms)
+  │   │   └── db: insert             (25ms)
+  │   └── notification: send_email   (20ms)
+</code></pre>
+<h3 id="65">6.5 告警最佳实践</h3>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>说明</th>
+<th>坏例子</th>
+<th>好例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>减少噪音</strong></td>
+<td>告警要少而精</td>
+<td>每个 CPU 尖峰都告警</td>
+<td>持续 5 分钟 CPU &gt; 90% 才告警</td>
+</tr>
+<tr>
+<td><strong>可操作</strong></td>
+<td>收到告警能采取行动</td>
+<td>"CPU 高"</td>
+<td>"CPU 持续 10 分钟 &gt; 90%，请扩容或排查死循环"</td>
+</tr>
+<tr>
+<td><strong>分级</strong></td>
+<td>根据影响程度分级</td>
+<td>所有告警都 P0</td>
+<td>P0(核心业务中断)、P1(部分功能受损)、P2(非关键告警)</td>
+</tr>
+<tr>
+<td><strong>Runbook</strong></td>
+<td>每个告警有明确处理流程</td>
+<td>收到告警不知怎么办</td>
+<td>告警消息附带排障步骤链接</td>
+</tr>
+<tr>
+<td><strong>On-Call</strong></td>
+<td>轮值制度 + 升级机制</td>
+<td>长期无人响应</td>
+<td>15min 未确认升级到二级 On-Call</td>
+</tr>
+<tr>
+<td><strong>事后复盘</strong></td>
+<td>从故障中学习，不问责</td>
+<td>追究责任人</td>
+<td>整改 Runbook 和系统</td>
+</tr>
+</tbody>
+</table>
+<p><strong>告警分级示例</strong>：</p>
+<pre><code class="language-yaml"># PagerDuty / Opsgenie 告警规则
+Critical (P0):
+  - 服务完全不可用
+  - 数据库连接数耗尽
+  - 支付失败率 &gt; 5%
+  响应时间: 15分钟内确认，1小时内修复
+
+Warning (P1):
+  - API P99 延迟 &gt; 500ms
+  - 错误率 &gt; 1%
+  - 磁盘使用率 &gt; 85%
+  响应时间: 30分钟内确认，4小时内修复
+
+Info (P2):
+  - CPU &gt; 80%（持续30分钟）
+  - 证书即将过期（30天内）
+  响应时间: 下一个工作日处理
+</code></pre>
+<hr />
+<h2 id="_3">七、数据库部署</h2>
+<h3 id="71">7.1 数据库迁移自动化</h3>
+<pre><code class="language-bash"># 使用 golang-migrate 管理迁移
+# 迁移文件命名：{version}_{description}.{up|down}.sql
+
+# 创建迁移文件
+migrate create -ext sql -dir migrations -seq create_users_table
+
+# 生成的文件：
+# migrations/
+# ├── 000001_create_users_table.up.sql
+# └── 000001_create_users_table.down.sql
+</code></pre>
+<p><strong>迁移文件示例</strong>：</p>
+<pre><code class="language-sql">-- 000001_create_users_table.up.sql
+CREATE TABLE users (
+    id         BIGSERIAL PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    email      VARCHAR(255) NOT NULL UNIQUE,
+    password   VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_email ON users(email);
+
+-- 000001_create_users_table.down.sql
+DROP TABLE IF EXISTS users;
+</code></pre>
+<p><strong>CI/CD 中的迁移执行</strong>：</p>
+<pre><code class="language-yaml"># GitHub Actions 中的数据库迁移
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run migrations
+        run: |
+          migrate -path migrations \
+                  -database &quot;${{ secrets.DATABASE_URL }}&quot; \
+                  up
+      - name: Verify schema
+        run: |
+          migrate -path migrations \
+                  -database &quot;${{ secrets.DATABASE_URL }}&quot; \
+                  version
+</code></pre>
+<h3 id="72">7.2 备份策略</h3>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>方法</th>
+<th>RPO (数据丢失)</th>
+<th>RTO (恢复时间)</th>
+<th>存储成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>每日全量</strong></td>
+<td>pg_dump 每天一次</td>
+<td>24小时</td>
+<td>中（数小时）</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>WAL 归档</strong></td>
+<td>持续归档 WAL 日志</td>
+<td>&lt; 1秒</td>
+<td>低（分钟级）</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>快照备份</strong></td>
+<td>存储层面快照（EBS 快照）</td>
+<td>秒级</td>
+<td>低（分钟级）</td>
+<td>中</td>
+</tr>
+<tr>
+<td><strong>物理复制</strong></td>
+<td>流复制搭建从库</td>
+<td>零（同步模式）</td>
+<td>即时</td>
+<td>中</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash">#!/bin/bash
+# 数据库备份脚本 (PostgreSQL)
+
+BACKUP_DIR=&quot;/backups/$(date +%Y-%m-%d)&quot;
+mkdir -p &quot;$BACKUP_DIR&quot;
+
+# 全量备份
+pg_dump -h $DB_HOST -U $DB_USER \
+    --format=custom \
+    --compress=9 \
+    --file=&quot;$BACKUP_DIR/db_$(date +%H%M).dump&quot; \
+    $DB_NAME
+
+# 保留最近 7 天，删除更早的
+find /backups -type d -mtime +7 -exec rm -rf {} \;
+
+# 上传到 S3（异地备份）
+aws s3 sync /backups s3://myapp-db-backups/
+</code></pre>
+<h3 id="73">7.3 读写分离（读副本）</h3>
+<pre><code>Application
+  │
+  ├── 写入 → Primary (主库)
+  │              │
+  │              ├── 流复制 → Replica 1 (只读 + 报表查询)
+  │              ├── 流复制 → Replica 2 (只读 + 分析查询)
+  │              └── 流复制 → Replica 3 (灾备)
+  │
+  └── 读取 → Load Balancer → Replicas (轮询/权重)
+</code></pre>
+<pre><code class="language-python"># 应用层读写分离（Django ORM 示例）
+DATABASES = {
+    'default': {           # 写库
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'myapp',
+        'HOST': 'primary.cluster.example.com',
+    },
+    'replica': {           # 读库
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'myapp',
+        'HOST': 'replica.cluster.example.com',
+    }
+}
+
+DATABASE_ROUTERS = ['myapp.db_router.PrimaryReplicaRouter']
+
+# db_router.py
+class PrimaryReplicaRouter:
+    def db_for_read(self, model, **hints):
+        return 'replica'
+
+    def db_for_write(self, model, **hints):
+        return 'default'
+
+    def allow_relation(self, obj1, obj2, **hints):
+        return True
+</code></pre>
+<h3 id="74">7.4 连接池</h3>
+<p>数据库连接池是应用层与数据库之间的中间层，复用连接以减少创建开销。</p>
+<pre><code class="language-bash"># PgBouncer 配置
+# pgbouncer.ini
+[databases]
+myapp = host=primary.cluster.example.com port=5432 dbname=myapp
+
+[pgbouncer]
+listen_addr = 0.0.0.0
+listen_port = 6432
+auth_type = md5
+auth_file = /etc/pgbouncer/userlist.txt
+
+# 连接池模式
+# session: 每个会话一个连接（默认）
+# transaction: 每个事务一个连接（推荐用于 Web 应用）
+# statement: 每个语句一个连接
+pool_mode = transaction
+
+# 池大小
+default_pool_size = 50
+max_client_conn = 500
+reserve_pool_size = 10
+reserve_pool_timeout = 5
+
+# 超时
+server_idle_timeout = 300
+client_idle_timeout = 600
+query_timeout = 30
+</code></pre>
+<pre><code class="language-python"># 应用层连接池（SQLAlchemy 示例）
+from sqlalchemy import create_engine
+from sqlalchemy.pool import QueuePool
+
+engine = create_engine(
+    'postgresql://user:pass@pgbouncer:6432/myapp',
+    poolclass=QueuePool,
+    pool_size=20,           # 连接池大小
+    max_overflow=10,        # 超过 pool_size 时最多创建多少额外连接
+    pool_pre_ping=True,     # 每次使用前检查连接是否有效
+    pool_recycle=3600,      # 连接超过1小时重新连接
+)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>连接池工具</th>
+<th>部署位置</th>
+<th>特点</th>
+<th>适用数据库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PgBouncer</strong></td>
+<td>独立服务（Sidecar/Proxy）</td>
+<td>轻量、事务池模式</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><strong>ProxySQL</strong></td>
+<td>独立服务</td>
+<td>SQL 路由、查询重写、读写分离</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td><strong>HikariCP</strong></td>
+<td>应用内库</td>
+<td>Java 生态最快</td>
+<td>通用（JDBC）</td>
+</tr>
+<tr>
+<td><strong>Druid</strong></td>
+<td>应用内库</td>
+<td>监控完善、慢查询日志</td>
+<td>通用（JDBC）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>关键要点</strong>：连接池的大小不是越大越好。每个连接消耗内存和 CPU，超过数据库的 max_connections 反而会降低性能。通常 CPU 核心数 × 2~4 是合理的起始点。</p>
+</blockquote>
+<hr />
+<h2 id="_4">总结</h2>
+<p>DevOps 是一套理念、实践和工具的结合体，核心目标是将软件从构思到交付的周期缩到最短，同时保证质量与可靠性。</p>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>核心思想</th>
+<th>关键工具</th>
+<th>进阶方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>文化</strong></td>
+<td>协作、自动化、持续改进</td>
+<td>CALMS 框架、DORA 指标</td>
+<td>平台工程、开发者体验</td>
+</tr>
+<tr>
+<td><strong>容器</strong></td>
+<td>不可变基础设施、环境一致</td>
+<td>Docker、Docker Compose</td>
+<td>containerd、WASM</td>
+</tr>
+<tr>
+<td><strong>编排</strong></td>
+<td>声明式管理、自愈、弹性</td>
+<td>Kubernetes、Helm</td>
+<td>服务网格 (Istio/Linkerd)</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>自动化流水线、快速反馈</td>
+<td>GitHub Actions、GitLab CI</td>
+<td>ArgoCD、Flux (GitOps)</td>
+</tr>
+<tr>
+<td><strong>云服务</strong></td>
+<td>按需付费、弹性伸缩</td>
+<td>AWS、Terraform</td>
+<td>Multi-Cloud、FinOps</td>
+</tr>
+<tr>
+<td><strong>监控</strong></td>
+<td>可观测性、数据驱动决策</td>
+<td>Prometheus、Grafana、ELK</td>
+<td>eBPF、OpenTelemetry</td>
+</tr>
+<tr>
+<td><strong>数据库部署</strong></td>
+<td>高可用、数据安全</td>
+<td>PgBouncer、ProxySQL</td>
+<td>分布式数据库 (TiDB/CockroachDB)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>DevOps 的最终目标是让开发者能专注于<strong>交付业务价值</strong>，而不是被部署流程和运维杂事拖慢。工具和流程只是手段，文化和持续改进才是核心。</p>
+</blockquote></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

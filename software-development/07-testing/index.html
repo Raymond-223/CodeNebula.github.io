@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/software-development/07-testing/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>测试与质量 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Algorithm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../idex.md" class="nav-link">Paper Interpretion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../indx.md" class="nav-link">Machine Learning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Mathematics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../i.md" class="nav-link">Electronic Materials</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../06-architecture/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../08-security/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">测试与质量保障</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">一、测试金字塔</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">二、单元测试</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">三、集成测试</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_5" class="nav-link">四、端到端测试</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#bdd" class="nav-link">五、行为驱动开发（BDD）</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#linting" class="nav-link">六、静态分析 &amp; Linting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_6" class="nav-link">七、代码审查</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_7" class="nav-link">八、重构</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_8" class="nav-link">九、性能测试</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_9" class="nav-link">十、软件质量度量</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_10" class="nav-link">综合测试策略模板</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_11" class="nav-link">扩展阅读</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="_1">测试与质量保障</h1>
+<blockquote>
+<p>软件测试不是发现 Bug 的手段，而是建立信心的过程。没有测试的代码不是重构，是重写。</p>
+</blockquote>
+<hr />
+<h2 id="_2">一、测试金字塔</h2>
+<h3 id="11">1.1 经典金字塔模型</h3>
+<p>测试金字塔由 Mike Cohn 在《Succeeding with Agile》中提出，定义了三个层级的比例关系：</p>
+<pre><code>        ┌──────┐
+       /│ E2E  │\       少量端到端测试
+      / │      │ \
+     /├────────┤ \      ──────────────
+    / │ 集成测试 │  \   适量集成测试
+   /  │        │   \
+  /├──────────────┤\   ──────────────
+ / │               │ \
+/  │   单元测试     │  \  大量单元测试
+│  │               │   │
+└──┴───────────────┴───┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>比例</th>
+<th>执行速度</th>
+<th>定位能力</th>
+<th>维护成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元测试</td>
+<td>70%</td>
+<td>毫秒级</td>
+<td>精确到函数</td>
+<td>低</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>20%</td>
+<td>秒级</td>
+<td>模块间</td>
+<td>中</td>
+</tr>
+<tr>
+<td>E2E 测试</td>
+<td>10%</td>
+<td>分钟级</td>
+<td>全链路</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心原则</strong>：下层覆盖足够充分，上层只需验证关键路径。</p>
+<h3 id="12">1.2 反模式</h3>
+<p><strong>冰激凌甜筒（Ice Cream Cone）</strong>：大量 E2E 测试，少量单元测试。常见于缺乏设计、依赖 Selenium 做全量回归的项目。症状：CI 跑一次要数小时，测试不稳定（flaky），失败后难以定位。</p>
+<p><strong>倒金字塔（Inverted Pyramid）</strong>：集成测试过多，单元测试不足。虽然比冰激凌甜筒好一些，但依然导致测试套件脆弱——任何底层改动都会引发大量失败。</p>
+<h3 id="13-test-trophy">1.3 测试奖杯（Test Trophy）</h3>
+<p>Kent C. Dodds 针对前端应用提出测试奖杯模型：</p>
+<pre><code>      ┌──────────┐
+      │  E2E  │  少量
+      ├──────────┤
+     /│ 集成测试  │\ 重点
+    / │(组件/服务)│ \
+   ├──────────────┤
+   │   静态分析    │  大量（TypeScript/ESLint）
+   ├──────────────┤
+   │   单元测试    │  适量（纯逻辑、工具函数）
+   └──────────────┘
+</code></pre>
+<p>核心观点：<strong>前端测试的重点应该是集成测试</strong>，因为前端最常出 Bug 的地方不在于某个纯函数的逻辑，而在于<strong>组件之间的交互和状态同步</strong>。静态分析（TypeScript、ESLint）能拦截大量低级错误，性价比极高。</p>
+<hr />
+<h2 id="_3">二、单元测试</h2>
+<h3 id="21">2.1 测什么</h3>
+<p>单元测试测试的是<strong>最小可测试单元</strong>的行为：</p>
+<ul>
+<li><strong>纯函数</strong>：给定输入，断言输出。无副作用，最易测试。</li>
+<li><strong>边界条件</strong>：空值、越界、特殊字符、并发竞争。</li>
+<li><strong>错误路径</strong>：异常抛出、错误码返回、降级逻辑。</li>
+<li><strong>业务规则</strong>：折扣计算、权限校验、状态转换。</li>
+</ul>
+<p><strong>不测</strong>：框架行为（Django ORM、React 渲染）、第三方 SDK、配置加载——这些交给集成测试。</p>
+<h3 id="22-pytestpython">2.2 pytest（Python）</h3>
+<h4 id="fixture">Fixture</h4>
+<pre><code class="language-python">import pytest
+from myapp.models import Order
+
+@pytest.fixture
+def sample_order():
+    &quot;&quot;&quot;创建测试用的订单对象&quot;&quot;&quot;
+    return Order(user_id=1, total=100.0, items=[{&quot;sku&quot;: &quot;A&quot;, &quot;qty&quot;: 2}])
+
+@pytest.fixture
+def db_session(tmp_path):
+    &quot;&quot;&quot;使用内存数据库，测试间隔离&quot;&quot;&quot;
+    from myapp.database import create_test_db
+    session = create_test_db(tmp_path)
+    yield session
+    session.rollback()
+
+def test_order_discount(sample_order, db_session):
+    db_session.add(sample_order)
+    result = sample_order.apply_discount(code=&quot;NEW_USER10&quot;)
+    assert result.discounted_total == 90.0
+    assert result.discount_applied == 10.0
+</code></pre>
+<h4 id="parametrize">Parametrize</h4>
+<pre><code class="language-python">@pytest.mark.parametrize(&quot;input,expected&quot;, [
+    (&quot;&quot;, 0),
+    (&quot;42&quot;, 42),
+    (&quot;-5&quot;, -5),
+    (&quot;3.14&quot;, 3.14),
+    (&quot;not_a_number&quot;, None),
+])
+def test_safe_parse(input, expected):
+    from myapp.utils import safe_parse
+    assert safe_parse(input) == expected
+</code></pre>
+<h4 id="mock">Mock</h4>
+<pre><code class="language-python">def test_send_welcome_email(mocker):
+    mock_smtp = mocker.patch(&quot;myapp.services.smtplib.SMTP&quot;)
+    from myapp.services import send_email
+    send_email(&quot;user@example.com&quot;, &quot;Welcome!&quot;)
+    mock_smtp.return_value.__enter__.return_value.sendmail.assert_called_once()
+    mock_smtp.return_value.__enter__.return_value.quit.assert_called_once()
+</code></pre>
+<h4 id="conftest">Conftest</h4>
+<p><code>conftest.py</code> 可以跨模块共享 fixture，是 pytest 组织测试的核心机制。将 <code>db_session</code>、<code>client</code>、<code>auth_headers</code> 等高频 fixture 放在 conftest 中，避免重复定义。</p>
+<h3 id="23-jestjavascripttypescript">2.3 Jest（JavaScript/TypeScript）</h3>
+<pre><code class="language-typescript">// math.test.ts
+import { calculateTax, formatPrice } from &quot;./math&quot;;
+
+describe(&quot;calculateTax&quot;, () =&gt; {
+  it(&quot;计算含税价 - 标准税率&quot;, () =&gt; {
+    expect(calculateTax(100)).toBe(113);
+  });
+
+  it(&quot;计算含税价 - 零税率&quot;, () =&gt; {
+    expect(calculateTax(100, 0)).toBe(100);
+  });
+
+  it(&quot;边界 - 负值返回 0&quot;, () =&gt; {
+    expect(calculateTax(-10)).toBe(0);
+  });
+});
+
+describe(&quot;formatPrice&quot;, () =&gt; {
+  it(&quot;格式化价格带货币符号&quot;, () =&gt; {
+    const result = formatPrice(1234.5, &quot;USD&quot;);
+    expect(result).toBe(&quot;$1,234.50&quot;);
+  });
+});
+</code></pre>
+<h4 id="mock_1">Mock 类型</h4>
+<pre><code class="language-typescript">// Stub — 返回固定值
+jest.spyOn(paymentApi, &quot;getRate&quot;).mockReturnValue(7.2);
+
+// Spy — 记录调用
+const logger = jest.spyOn(console, &quot;log&quot;);
+// ... 执行操作
+expect(logger).toHaveBeenCalledWith(&quot;Payment completed&quot;);
+
+// Mock 模块
+jest.mock(&quot;../services/payment&quot;, () =&gt; ({
+  charge: jest.fn().mockResolvedValue({ status: &quot;success&quot; }),
+}));
+</code></pre>
+<h4 id="snapshot">Snapshot 测试</h4>
+<pre><code class="language-typescript">it(&quot;渲染用户卡片&quot;, () =&gt; {
+  const tree = renderer.create(&lt;UserCard user={mockUser} /&gt;).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+</code></pre>
+<p>Snapshot 适合 UI 防回归。更新时运行 <code>jest --updateSnapshot</code>，但要仔细审查 diff，避免盲目接受。</p>
+<h3 id="24-mockstubfakespydummy">2.4 Mock、Stub、Fake、Spy、Dummy 辨析</h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dummy</strong></td>
+<td>传递但从不使用的对象</td>
+<td>填补参数列表</td>
+</tr>
+<tr>
+<td><strong>Stub</strong></td>
+<td>返回预设值</td>
+<td>替代外部 API 调用</td>
+</tr>
+<tr>
+<td><strong>Spy</strong></td>
+<td>记录调用信息</td>
+<td>验证日志是否写入</td>
+</tr>
+<tr>
+<td><strong>Mock</strong></td>
+<td>预设期望并验证交互</td>
+<td>确保支付接口被调用一次</td>
+</tr>
+<tr>
+<td><strong>Fake</strong></td>
+<td>轻量级实现</td>
+<td>内存数据库替代真实 DB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>原则</strong>：能用 Stub 不用 Mock。过度 Mock 导致测试与实现耦合——重构实现时测试不必要地失败。</p>
+<h3 id="25-tdd">2.5 测试驱动开发（TDD）</h3>
+<p><strong>红-绿-重构（Red-Green-Refactor）</strong>：</p>
+<ol>
+<li><strong>红</strong>：先写一个会失败的测试，定义期望行为。</li>
+<li><strong>绿</strong>：用最简实现让测试通过（可以 hardcode）。</li>
+<li><strong>重构</strong>：在测试保护下优化代码质量。</li>
+</ol>
+<pre><code class="language-python"># Step 1: RED — 测试先写
+def test_is_prime():
+    assert is_prime(2) is True
+    assert is_prime(4) is False
+
+# Step 2: GREEN — 最简实现
+def is_prime(n: int) -&gt; bool:
+    return n == 2  # 暂时只通过一个 case
+
+# Step 3: REFACTOR — 正确实现
+def is_prime(n: int) -&gt; bool:
+    if n &lt; 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+</code></pre>
+<p><strong>何时用 TDD</strong>：
+- 业务逻辑复杂（权限、计算、状态机）
+- 需求明确且稳定
+- 修复 Bug（先写复现测试）</p>
+<p><strong>何时不用</strong>：
+- UI 原型阶段（需求频繁变更）
+- 探索性研究（算法或架构尚不确定）</p>
+<h3 id="26">2.6 代码覆盖率</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>行覆盖率</td>
+<td>执行过的代码行数占比</td>
+<td>coverage.py, istanbul</td>
+</tr>
+<tr>
+<td>分支覆盖率</td>
+<td><code>if/else</code> 所有分支是否覆盖</td>
+<td>pytest-cov, c8</td>
+</tr>
+<tr>
+<td>函数覆盖率</td>
+<td>被调用过的函数占比</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>变异测试</td>
+<td>修改代码逻辑，看测试能否捕获</td>
+<td>mutmut, Stryker</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Python 覆盖率阈值
+# pytest.ini
+[pytest]
+addopts = --cov=myapp --cov-report=term-missing --cov-fail-under=80
+
+# 包含分支覆盖
+addopts = --cov-branch --cov-fail-under=75
+</code></pre>
+<p><strong>阈值建议</strong>：
+- 新项目：行覆盖率 ≥ 80%，分支覆盖率 ≥ 70%
+- 核心业务模块：行覆盖率 ≥ 90%
+- 遗留代码：逐步提升，不设硬性门槛</p>
+<p><strong>注意</strong>：100% 覆盖率不代表无 Bug——没有断言的测试、遗漏的边界场景、错误的条件判断都可能在 100% 覆盖下存在。覆盖率是<strong>下限指标</strong>，不是<strong>质量目标</strong>。</p>
+<hr />
+<h2 id="_4">三、集成测试</h2>
+<h3 id="31">3.1 数据库交互测试</h3>
+<pre><code class="language-python"># pytest + SQLAlchemy
+@pytest.fixture
+def db_session():
+    engine = create_engine(&quot;sqlite:///:memory:&quot;)
+    Base.metadata.create_all(engine)
+    session = Session(engine)
+    yield session
+    session.rollback()
+
+def test_create_order_item(db_session):
+    order = Order(user_id=1, total=100)
+    db_session.add(order)
+    db_session.flush()
+
+    item = OrderItem(order_id=order.id, sku=&quot;ABC&quot;, qty=2)
+    db_session.add(item)
+    db_session.commit()
+
+    assert db_session.query(OrderItem).count() == 1
+    assert order.items[0].sku == &quot;ABC&quot;
+</code></pre>
+<p><strong>回滚策略</strong>：每个测试用例运行在事务中，测试结束后回滚，保证测试间隔离。这种方式比每次重建数据库快 100 倍以上。</p>
+<h3 id="32-api">3.2 API 端点测试</h3>
+<p>Python（使用 <code>requests</code> 和 Flask/FastAPI test client）：</p>
+<pre><code class="language-python">def test_create_user(client):
+    response = client.post(&quot;/api/users&quot;, json={
+        &quot;name&quot;: &quot;张三&quot;,
+        &quot;email&quot;: &quot;zhangsan@example.com&quot;,
+    })
+    assert response.status_code == 201
+    data = response.json()
+    assert data[&quot;name&quot;] == &quot;张三&quot;
+    assert &quot;id&quot; in data
+
+def test_get_nonexistent_user(client):
+    response = client.get(&quot;/api/users/9999&quot;)
+    assert response.status_code == 404
+    assert response.json()[&quot;error&quot;] == &quot;User not found&quot;
+</code></pre>
+<p>Node.js（使用 Supertest）：</p>
+<pre><code class="language-typescript">import request from &quot;supertest&quot;;
+import app from &quot;../app&quot;;
+
+describe(&quot;POST /api/users&quot;, () =&gt; {
+  it(&quot;创建用户成功&quot;, async () =&gt; {
+    const res = await request(app)
+      .post(&quot;/api/users&quot;)
+      .send({ name: &quot;李四&quot;, email: &quot;lisi@example.com&quot; })
+      .expect(201);
+
+    expect(res.body.name).toBe(&quot;李四&quot;);
+  });
+
+  it(&quot;邮箱重复返回 409&quot;, async () =&gt; {
+    await request(app)
+      .post(&quot;/api/users&quot;)
+      .send({ name: &quot;重复&quot;, email: &quot;dup@example.com&quot; })
+      .expect(409);
+  });
+});
+</code></pre>
+<h3 id="33">3.3 外部服务模拟</h3>
+<pre><code class="language-python"># 使用 WireMock (Java) 或 responses (Python)
+import responses
+
+@responses.activate
+def test_weather_service():
+    responses.add(
+        responses.GET,
+        &quot;https://api.weather.com/v1/current?city=Beijing&quot;,
+        json={&quot;temp&quot;: 22, &quot;condition&quot;: &quot;Sunny&quot;},
+        status=200,
+    )
+    from myapp.services import get_weather
+    result = get_weather(&quot;Beijing&quot;)
+    assert result.temperature == 22
+</code></pre>
+<pre><code class="language-python"># 使用 Testcontainers（真实 Docker 容器）
+# pip install testcontainers
+from testcontainers.postgres import PostgresContainer
+
+def test_with_real_postgres():
+    with PostgresContainer(&quot;postgres:16-alpine&quot;) as postgres:
+        conn_url = postgres.get_connection_url()
+        # 使用真实 PostgreSQL 运行测试
+        # 比 mock 更可靠，但速度较慢
+</code></pre>
+<p>Testcontainers 相比 Mock 方案更接近生产环境，适合对数据一致性要求高的场景（如事务隔离级别、索引行为验证）。</p>
+<h3 id="34">3.4 异步代码测试</h3>
+<pre><code class="language-python">import pytest
+
+@pytest.mark.asyncio
+async def test_async_fetch():
+    from myapp.services import fetch_data
+    result = await fetch_data(&quot;https://api.example.com/data&quot;)
+    assert result[&quot;status&quot;] == &quot;ok&quot;
+
+@pytest.mark.asyncio
+async def test_concurrent_requests():
+    import asyncio
+    from myapp.services import fetch_data
+    urls = [f&quot;https://api.example.com/page/{i}&quot; for i in range(5)]
+    results = await asyncio.gather(*[fetch_data(u) for u in urls])
+    assert all(r[&quot;status&quot;] == &quot;ok&quot; for r in results)
+</code></pre>
+<pre><code class="language-typescript">// Jest 原生支持 async
+it(&quot;异步获取用户信息&quot;, async () =&gt; {
+  const user = await userService.getUser(1);
+  expect(user.name).toBeDefined();
+});
+
+it(&quot;并发请求限流&quot;, async () =&gt; {
+  const promises = Array(100)
+    .fill(null)
+    .map(() =&gt; userService.getUser(1));
+
+  const results = await Promise.all(promises);
+  // 即使并发 100，服务也不应崩溃
+  expect(results.length).toBe(100);
+});
+</code></pre>
+<hr />
+<h2 id="_5">四、端到端测试</h2>
+<h3 id="41-playwright">4.1 Playwright</h3>
+<p>Playwright 是当前最推荐的 E2E 框架，支持多浏览器、多语言，内置自动等待。</p>
+<pre><code class="language-typescript">import { test, expect } from &quot;@playwright/test&quot;;
+
+test(&quot;用户登录流程&quot;, async ({ page }) =&gt; {
+  await page.goto(&quot;https://example.com/login&quot;);
+
+  // data-testid 选择器（推荐）
+  await page.getByTestId(&quot;username&quot;).fill(&quot;admin&quot;);
+  await page.getByTestId(&quot;password&quot;).fill(&quot;password123&quot;);
+  await page.getByTestId(&quot;login-btn&quot;).click();
+
+  // 等待跳转完成
+  await expect(page).toHaveURL(/dashboard/);
+
+  // 断言页面元素
+  await expect(page.getByTestId(&quot;welcome-msg&quot;)).toHaveText(&quot;欢迎回来, admin&quot;);
+
+  // 截图调试
+  await page.screenshot({ path: &quot;login-result.png&quot; });
+});
+</code></pre>
+<p><strong>核心特性</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trace Viewer</td>
+<td><code>playwright show-trace trace.zip</code> — 回放整个测试过程</td>
+</tr>
+<tr>
+<td>Codegen</td>
+<td><code>npx playwright codegen</code> — 录制操作生成代码</td>
+</tr>
+<tr>
+<td>Auto-wait</td>
+<td>元素可交互前自动等待，无需显式 <code>sleep</code></td>
+</tr>
+<tr>
+<td>多浏览器</td>
+<td>Chromium / Firefox / WebKit 同 API</td>
+</tr>
+<tr>
+<td>API 测试</td>
+<td><code>request.post()</code> 可直接测试接口</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># 安装与运行
+npm init playwright@latest
+npx playwright test --headed    # 可见模式调试
+npx playwright test --ui        # UI 模式
+npx playwright test --project=chromium  # 指定浏览器
+</code></pre>
+<h3 id="42-cypress">4.2 Cypress</h3>
+<p>Cypress 架构与 Playwright 不同——它直接运行在浏览器中（与应用程序同进程）。</p>
+<pre><code class="language-typescript">describe(&quot;购物车流程&quot;, () =&gt; {
+  beforeEach(() =&gt; {
+    cy.visit(&quot;/products&quot;);
+  });
+
+  it(&quot;添加商品到购物车&quot;, () =&gt; {
+    cy.get(&quot;[data-testid=product-1]&quot;).click();
+    cy.get(&quot;[data-testid=add-to-cart]&quot;).click();
+    cy.get(&quot;[data-testid=cart-count]&quot;).should(&quot;have.text&quot;, &quot;1&quot;);
+  });
+
+  it(&quot;拦截 API 模拟网络&quot;, () =&gt; {
+    cy.intercept(&quot;GET&quot;, &quot;/api/products&quot;, { fixture: &quot;products.json&quot; });
+    cy.visit(&quot;/products&quot;);
+    cy.get(&quot;[data-testid=product-card]&quot;).should(&quot;have.length&quot;, 10);
+  });
+});
+</code></pre>
+<p><strong>Cypress vs Playwright</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Playwright</th>
+<th>Cypress</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>浏览器支持</td>
+<td>Chromium/Firefox/WebKit</td>
+<td>仅 Chromium 系</td>
+</tr>
+<tr>
+<td>语言</td>
+<td>TS/JS/Python/Java/.NET</td>
+<td>仅 TS/JS</td>
+</tr>
+<tr>
+<td>多标签页</td>
+<td>原生支持</td>
+<td>有限支持</td>
+</tr>
+<tr>
+<td>网络拦截</td>
+<td>完整 API</td>
+<td>内置 <code>cy.intercept</code></td>
+</tr>
+<tr>
+<td>组件测试</td>
+<td>支持</td>
+<td>支持 (Cypress CT)</td>
+</tr>
+<tr>
+<td>调试工具</td>
+<td>Trace Viewer</td>
+<td>时间旅行调试器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-selenium">4.3 Selenium</h3>
+<p>Selenium 仍然在以下场景中有价值：</p>
+<ul>
+<li><strong>WebDriver 兼容性要求</strong>：需要对接 Cloud 厂商（BrowserStack/SauceLabs）的特定协议</li>
+<li><strong>Java 技术栈</strong>：Selenium 在 Java 生态中集成最成熟</li>
+<li><strong>已有大量 Selenium 脚本</strong>：迁移成本高于维护成本</li>
+</ul>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+driver = webdriver.Chrome()
+driver.get(&quot;https://example.com/login&quot;)
+driver.find_element(By.CSS_SELECTOR, &quot;[data-testid=username]&quot;).send_keys(&quot;admin&quot;)
+driver.find_element(By.CSS_SELECTOR, &quot;[data-testid=login-btn]&quot;).click()
+WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, &quot;[data-testid=dashboard]&quot;))
+)
+driver.quit()
+</code></pre>
+<h3 id="44-e2e">4.4 E2E 最佳实践</h3>
+<p><strong>1. 使用 <code>data-testid</code> 属性</strong>：避免 CSS class 或文本内容变更导致测试失败。</p>
+<pre><code class="language-html">&lt;button data-testid=&quot;submit-order&quot; class=&quot;btn-primary&quot;&gt;提交订单&lt;/button&gt;
+</code></pre>
+<p><strong>2. 测试隔离</strong>：每个测试独立创建数据，不依赖其他测试。使用 <code>beforeEach</code> 重置状态。</p>
+<p><strong>3. 重试机制</strong>：E2E 测试天然有 flakiness（网络波动、渲染时序），配置自动重试。</p>
+<pre><code class="language-typescript">// playwright.config.ts
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0,
+});
+</code></pre>
+<p><strong>4. 限制 E2E 数量</strong>：只覆盖<strong>核心关键路径</strong>（登录、支付、核心流程），异常路径和边界场景交给下层测试。</p>
+<hr />
+<h2 id="bdd">五、行为驱动开发（BDD）</h2>
+<h3 id="51-gherkin">5.1 Gherkin 语法</h3>
+<p>BDD 的核心是用自然语言描述业务行为，Gherkin 是最常用的 DSL：</p>
+<pre><code class="language-gherkin">Feature: 订单折扣
+  As a 电商用户
+  I want 在符合条件的订单上获得折扣
+  So that 我享受优惠
+
+  Scenario: 新用户首次下单享受 10% 折扣
+    Given 我是新注册用户
+    And 我的购物车中有价值 200 元的商品
+    When 我使用折扣码 &quot;NEW_USER10&quot;
+    Then 订单总额应为 180 元
+    And 折扣金额应显示为 20 元
+
+  Scenario: 折扣码过期
+    Given 折扣码 &quot;SUMMER2024&quot; 已过期
+    When 我尝试使用该折扣码
+    Then 系统提示 &quot;折扣码已失效&quot;
+    And 订单总额不变
+</code></pre>
+<h3 id="52-python-behave">5.2 Python Behave 实现</h3>
+<pre><code class="language-python"># features/steps/order_steps.py
+from behave import given, when, then
+from myapp.models import Order, DiscountCode
+
+@given(&quot;我是新注册用户&quot;)
+def step_new_user(context):
+    context.user = User(is_new=True)
+
+@given(&quot;我的购物车中有价值 {amount} 元的商品&quot;)
+def step_cart_with_amount(context, amount):
+    context.cart = Cart(user=context.user, total=float(amount))
+
+@when('我使用折扣码 &quot;{code}&quot;')
+def step_apply_discount(context, code):
+    context.order = Order.from_cart(context.cart)
+    context.result = context.order.apply_discount(code)
+
+@then(&quot;订单总额应为 {expected} 元&quot;)
+def step_check_total(context, expected):
+    assert context.order.total == float(expected), \
+        f&quot;Expected {expected}, got {context.order.total}&quot;
+
+@then('系统提示 &quot;{message}&quot;')
+def step_check_message(context, message):
+    assert context.result.message == message
+</code></pre>
+<h3 id="53-bdd-vs-tdd">5.3 BDD vs TDD</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>BDD</th>
+<th>TDD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>语言</strong></td>
+<td>自然语言（Gherkin）</td>
+<td>代码（断言）</td>
+</tr>
+<tr>
+<td><strong>受众</strong></td>
+<td>业务人员、QA、开发者</td>
+<td>主要是开发者</td>
+</tr>
+<tr>
+<td><strong>粒度</strong></td>
+<td>场景级（用户故事）</td>
+<td>函数级</td>
+</tr>
+<tr>
+<td><strong>驱动方式</strong></td>
+<td>行为驱动</td>
+<td>测试驱动</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>Cucumber, Behave, SpecFlow</td>
+<td>pytest, Jest, JUnit</td>
+</tr>
+<tr>
+<td><strong>适用阶段</strong></td>
+<td>需求讨论 → 自动化验收</td>
+<td>开发前 → 单元测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BDD + TDD 互补</strong>：BDD 用于定义<strong>做什么</strong>（业务层面的验收条件），TDD 用于保障<strong>怎么做</strong>（技术层面的正确性）。实践中，用 BDD 覆盖关键业务流程，用 TDD 覆盖内部实现细节。</p>
+<hr />
+<h2 id="linting">六、静态分析 &amp; Linting</h2>
+<h3 id="61-eslint">6.1 ESLint</h3>
+<pre><code class="language-javascript">// eslint.config.js
+export default [
+  {
+    rules: {
+      &quot;no-unused-vars&quot;: &quot;error&quot;,
+      &quot;no-console&quot;: &quot;warn&quot;,
+      &quot;eqeqeq&quot;: [&quot;error&quot;, &quot;always&quot;],
+      &quot;complexity&quot;: [&quot;warn&quot;, { max: 10 }],
+    },
+  },
+];
+</code></pre>
+<p><strong>推荐插件</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@typescript-eslint</code></td>
+<td>TS 类型相关规则</td>
+</tr>
+<tr>
+<td><code>eslint-plugin-react</code></td>
+<td>React Hooks、JSX 规则</td>
+</tr>
+<tr>
+<td><code>eslint-plugin-import</code></td>
+<td>模块导入顺序、未使用导出</td>
+</tr>
+<tr>
+<td><code>eslint-plugin-security</code></td>
+<td>安全敏感模式检测</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pre-commit Hook</strong>：</p>
+<pre><code class="language-bash"># .husky/pre-commit
+npx lint-staged
+</code></pre>
+<pre><code class="language-javascript">// package.json
+{
+  &quot;lint-staged&quot;: {
+    &quot;*.{ts,tsx}&quot;: [&quot;eslint --fix&quot;, &quot;prettier --write&quot;],
+    &quot;*.py&quot;: [&quot;ruff check --fix&quot;, &quot;ruff format&quot;]
+  }
+}
+</code></pre>
+<h3 id="62-prettier">6.2 Prettier</h3>
+<pre><code class="language-json">{
+  &quot;semi&quot;: true,
+  &quot;singleQuote&quot;: false,
+  &quot;tabWidth&quot;: 2,
+  &quot;trailingComma&quot;: &quot;all&quot;,
+  &quot;printWidth&quot;: 100
+}
+</code></pre>
+<p><strong>ESLint + Prettier 集成</strong>：用 <code>eslint-config-prettier</code> 关闭 ESLint 中与 Prettier 冲突的规则，用 <code>eslint-plugin-prettier</code> 将 Prettier 作为 ESLint 规则运行。推荐方案——直接用 Prettier 做格式化，ESLint 做代码质量检查，互不重叠。</p>
+<h3 id="63-typescript">6.3 TypeScript 严格模式</h3>
+<pre><code class="language-json">{
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;noUncheckedIndexedAccess&quot;: true,
+    &quot;noImplicitReturns&quot;: true,
+    &quot;exactOptionalPropertyTypes&quot;: true
+  }
+}
+</code></pre>
+<p><code>strict: true</code> 开启以下子选项：
+- <code>strictNullChecks</code> — null/undefined 类型安全检查
+- <code>noImplicitAny</code> — 禁止隐式 any
+- <code>strictFunctionTypes</code> — 函数类型逆变检查
+- <code>strictBindCallApply</code> — <code>bind/call/apply</code> 类型安全</p>
+<h3 id="64-python">6.4 Python 类型检查</h3>
+<pre><code class="language-bash"># mypy
+mypy myapp/ --strict --ignore-missing-imports
+
+# pyright (更快)
+pyright myapp/
+</code></pre>
+<pre><code class="language-python"># pyproject.toml
+[tool.mypy]
+strict = true
+disallow_untyped_defs = true
+warn_return_any = true
+warn_unreachable = true
+</code></pre>
+<h3 id="65">6.5 高级静态分析</h3>
+<p><strong>SonarQube</strong>：持续检查代码异味、安全漏洞、重复代码、复杂度。支持多语言，提供 Quality Gate 门禁。</p>
+<p><strong>CodeQL</strong>：GitHub 出品的语义分析引擎，能发现复杂的安全漏洞（如跨站脚本、SQL 注入、不安全的反序列化）。集成在 GitHub Actions 中自动运行。</p>
+<pre><code class="language-yaml"># .github/workflows/codeql.yml
+name: &quot;CodeQL&quot;
+on: [push, pull_request]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/analyze@v3
+</code></pre>
+<hr />
+<h2 id="_6">七、代码审查</h2>
+<h3 id="71">7.1 审查清单</h3>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>检查项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>正确性</strong></td>
+<td>逻辑完整吗？边界情况处理了吗？并发安全吗？</td>
+</tr>
+<tr>
+<td><strong>设计</strong></td>
+<td>职责单一吗？耦合度合理吗？扩展点设计是否过度？</td>
+</tr>
+<tr>
+<td><strong>可读性</strong></td>
+<td>命名清晰吗？注释解释 Why 而非 What？函数超过 50 行？</td>
+</tr>
+<tr>
+<td><strong>安全性</strong></td>
+<td>输入验证了吗？SQL 注入/SSTI/XSS？敏感信息未硬编码？</td>
+</tr>
+<tr>
+<td><strong>测试</strong></td>
+<td>有对应测试吗？测试覆盖了主要路径和边界吗？</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>N+1 查询？不必要的计算？缓存使用合理吗？</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72">7.2 审查类型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>模式</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>结对编程（Pair）</strong></td>
+<td>实施时实时审查</td>
+<td>复杂功能、模块设计</td>
+</tr>
+<tr>
+<td><strong>异步审查（Async）</strong></td>
+<td>PR/MR 评论</td>
+<td>常规开发、分布式团队</td>
+</tr>
+<tr>
+<td><strong>过肩审查（Over-the-Shoulder）</strong></td>
+<td>开发者走到你的屏幕前讨论</td>
+<td>快速反馈、新手指导</td>
+</tr>
+<tr>
+<td><strong>工具辅助审查</strong></td>
+<td>自动分析 + 人工复审</td>
+<td>静态分析、覆盖率检查</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73">7.3 有效反馈</h3>
+<p><strong>给予反馈</strong>：</p>
+<ul>
+<li>用"我"语气而非"你"的指责："这里可能会引发空指针异常" 优于 "你忘了判空"</li>
+<li>区分阻塞性（Blocking）与非阻塞性（Nitpick）：用标签明确优先级</li>
+<li>提供改进建议而非只指问题："考虑用 <code>Optional.ofNullable()</code> 替代 <code>if (x != null)</code>"</li>
+</ul>
+<p><strong>接收反馈</strong>：</p>
+<ul>
+<li>对事不对人：PR 是代码的评审，不是你个人的评审</li>
+<li>追问不明之处：如果看不懂反馈，说明代码可能确实不够清晰</li>
+<li>说"谢谢"：每个认真阅读你代码的同事都值得感谢</li>
+</ul>
+<h3 id="74-pr">7.4 PR 大小与节奏</h3>
+<p>研究（SmartBear, 2020）表明：</p>
+<ul>
+<li><strong>200 行以内</strong>的 PR 审查质量最高、缺陷发现率最优</li>
+<li>PR 超过 400 行后，缺陷密度呈指数下降</li>
+<li>PR 开放超过<strong>48 小时</strong>会显著延长 Lead Time</li>
+</ul>
+<p><strong>最佳实践</strong>：
+- 每个 PR 聚焦一个变更（单一职责）
+- 目标：2 小时内开始审查，24 小时内合并
+- 大改动用 stacked PR（基链式 PR）拆分为多个小 PR</p>
+<hr />
+<h2 id="_7">八、重构</h2>
+<h3 id="81">8.1 何时重构</h3>
+<p><strong>三次法则（Rule of Three）</strong>：同一段代码修改三次时，就应该考虑重构。</p>
+<p><strong>常见代码坏味（Code Smells）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>坏味</th>
+<th>症状</th>
+<th>重构手法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>长方法（Long Method）</td>
+<td>函数超过 20-30 行</td>
+<td>提取方法（Extract Method）</td>
+</tr>
+<tr>
+<td>大类（Large Class）</td>
+<td>类超过 300 行</td>
+<td>提取类（Extract Class）</td>
+</tr>
+<tr>
+<td>功能嫉妒（Feature Envy）</td>
+<td>一个方法频繁访问另一个类的数据</td>
+<td>移动方法（Move Method）</td>
+</tr>
+<tr>
+<td>霰弹式修改（Shotgun Surgery）</td>
+<td>改一个需求需要修改多处代码</td>
+<td>搬移字段（Move Field），内聚</td>
+</tr>
+<tr>
+<td>过长参数列表（Long Parameter List）</td>
+<td>参数超过 3-4 个</td>
+<td>引入参数对象</td>
+</tr>
+<tr>
+<td>重复代码（Duplicated Code）</td>
+<td>相同逻辑出现多次</td>
+<td>提取方法 → 模板方法模式</td>
+</tr>
+<tr>
+<td>过度耦合（Coupling）</td>
+<td>类知道其他类的内部细节</td>
+<td>迪米特法则（Law of Demeter）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82">8.2 重构技术</h3>
+<pre><code class="language-python"># 示例：提取方法（Extract Method）
+# 重构前
+def process_order(order):
+    total = sum(item.price for item in order.items)
+    discount = 0
+    if order.user.is_vip:
+        discount = total * 0.2
+    elif total &gt; 500:
+        discount = total * 0.1
+    final = total - discount
+    # 邮件通知
+    subject = &quot;订单确认&quot;
+    body = f&quot;您的订单总计 ¥{final}，已优惠 ¥{discount}&quot;
+    send_email(order.user.email, subject, body)
+    return final
+
+# 重构后
+def process_order(order):
+    final = calculate_final_total(order)
+    send_order_confirmation(order.user, final, order.total - final)
+    return final
+
+def calculate_final_total(order):
+    total = sum(item.price for item in order.items)
+    discount = calculate_discount(order.user, total)
+    return total - discount
+
+def calculate_discount(user, total):
+    if user.is_vip:
+        return total * 0.2
+    if total &gt; 500:
+        return total * 0.1
+    return 0
+
+def send_order_confirmation(user, final_total, discount):
+    subject = &quot;订单确认&quot;
+    body = f&quot;您的订单总计 ¥{final_total}，已优惠 ¥{discount}&quot;
+    send_email(user.email, subject, body)
+</code></pre>
+<h3 id="83">8.3 安全重构的前提</h3>
+<p><strong>没有测试覆盖，重构是重写</strong>。安全重构的三角约束：</p>
+<pre><code>         ┌──────────┐
+         │  测试覆盖 │
+         │ (安全网)  │
+         └──────────┘
+              ┃
+    ┌─────────┨──────────┐
+    │         ┃          │
+┌───────┐  ┌───────┐  ┌───────┐
+│ 小步骤 │  │ 频繁  │  │ 保持  │
+│ 逐步修改 │  │ 运行测试 │  │ 功能不变 │
+└───────┘  └───────┘  └───────┘
+</code></pre>
+<h3 id="84">8.4 遗留代码策略</h3>
+<p><strong>表征测试（Characterization Tests）</strong>：在重构前，先运行代码并捕获实际输出作为测试基线。这些测试验证"当前行为"，而非"期望行为"。</p>
+<p><strong>萌芽方法（Sprout Method）</strong>：在遗留类中新增一个 <code>public</code> 方法，将新逻辑独立实现，不修改原有代码。</p>
+<pre><code class="language-python">class LegacyPaymentProcessor:
+    def process(self, payment):
+        # ... 500 行遗留代码，不敢动 ...
+        result = self._old_processing(payment)
+        # 新增：在尾部插入新逻辑，不影响旧逻辑
+        self._audit_log(payment, result)
+        return result
+
+    def _audit_log(self, payment, result):
+        &quot;&quot;&quot;新加的审计日志，不修改旧方法内部&quot;&quot;&quot;
+        log_entry = AuditEntry(payment_id=payment.id, result=result)
+        db.session.add(log_entry)
+</code></pre>
+<p><strong>Seam（接缝）</strong>：代码中允许替换行为的位置（如参数、虚函数、依赖注入点）。找到这些位置，测试就能安全地插入。</p>
+<hr />
+<h2 id="_8">九、性能测试</h2>
+<h3 id="91">9.1 负载测试</h3>
+<p><strong>Locust</strong>（Python，最推荐）：</p>
+<pre><code class="language-python"># locustfile.py
+from locust import HttpUser, task, between
+
+class WebsiteUser(HttpUser):
+    wait_time = between(1, 5)  # 模拟用户思考时间
+
+    @task(3)  # 权重 3
+    def view_products(self):
+        self.client.get(&quot;/api/products&quot;)
+
+    @task(1)  # 权重 1
+    def create_order(self):
+        self.client.post(&quot;/api/orders&quot;, json={
+            &quot;items&quot;: [{&quot;sku&quot;: &quot;A001&quot;, &quot;qty&quot;: 1}],
+        })
+</code></pre>
+<pre><code class="language-bash">locust -f locustfile.py --headless -u 100 -r 10 --run-time 5m
+# --headless: 无 UI
+# -u 100: 100 个并发用户
+# -r 10: 每秒启动 10 个用户
+# --run-time 5m: 运行 5 分钟
+</code></pre>
+<p><strong>k6</strong>（Go 编写，JavaScript 脚本）：</p>
+<pre><code class="language-javascript">import http from &quot;k6/http&quot;;
+import { check, sleep } from &quot;k6&quot;;
+
+export const options = {
+  stages: [
+    { duration: &quot;2m&quot;, target: 50 },   // 爬升到 50 用户
+    { duration: &quot;5m&quot;, target: 50 },   // 保持
+    { duration: &quot;2m&quot;, target: 0 },    // 下降
+  ],
+  thresholds: {
+    http_req_duration: [&quot;p(95)&lt;500&quot;],  // 95% 请求 &lt; 500ms
+  },
+};
+
+export default function () {
+  const res = http.get(&quot;https://api.example.com/health&quot;);
+  check(res, { &quot;status is 200&quot;: (r) =&gt; r.status === 200 });
+  sleep(1);
+}
+</code></pre>
+<h3 id="92-vs-vs">9.2 压力测试 vs 尖峰测试 vs 浸泡测试</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>目的</th>
+<th>做法</th>
+<th>指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>负载测试</strong></td>
+<td>验证正常负载下的性能</td>
+<td>目标负载，保持</td>
+<td>响应时间、吞吐量</td>
+</tr>
+<tr>
+<td><strong>压力测试</strong></td>
+<td>找到系统极限</td>
+<td>逐步增加负载直到崩溃</td>
+<td>最大并发、崩溃点</td>
+</tr>
+<tr>
+<td><strong>尖峰测试</strong></td>
+<td>模拟突发的流量暴增</td>
+<td>短时间内骤增用户数</td>
+<td>自动扩缩、恢复速度</td>
+</tr>
+<tr>
+<td><strong>浸泡测试</strong></td>
+<td>发现内存泄漏、资源耗尽</td>
+<td>持续运行 24-72 小时</td>
+<td>内存增长、GC 频率</td>
+</tr>
+</tbody>
+</table>
+<h3 id="93">9.3 性能剖析</h3>
+<p><strong>Python（cProfile）</strong>：</p>
+<pre><code class="language-bash">python -m cProfile -o profile.prof myapp.py
+snakeviz profile.prof  # 可视化火焰图
+</code></pre>
+<p><strong>前端（Chrome DevTools）</strong>：</p>
+<ul>
+<li><strong>Performance 面板</strong>：录制交互，分析 FPS、CPU、内存</li>
+<li><strong>Lighthouse</strong>：自动化性能审计（FCP、LCP、CLS、TTI）</li>
+<li><strong>React DevTools Profiler</strong>：组件渲染次数、耗时、触发原因</li>
+</ul>
+<p><strong>关键前端性能指标</strong>（Core Web Vitals）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LCP</td>
+<td>最大内容绘制</td>
+<td>≤ 2.5s</td>
+</tr>
+<tr>
+<td>FID/INP</td>
+<td>首次输入延迟 / 交互到下次绘制</td>
+<td>≤ 200ms (INP)</td>
+</tr>
+<tr>
+<td>CLS</td>
+<td>累计布局偏移</td>
+<td>≤ 0.1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_9">十、软件质量度量</h2>
+<h3 id="101-dora">10.1 DORA 指标</h3>
+<p>由 Google DORA（DevOps Research and Assessment）研究提出的四个关键指标，预测 IT 组织绩效。</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>精英表现</th>
+<th>高表现</th>
+<th>中表现</th>
+<th>低表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>部署频率</strong></td>
+<td>多久部署一次到生产</td>
+<td>每日多次</td>
+<td>每周一次</td>
+<td>每月一次</td>
+<td>每半年一次</td>
+</tr>
+<tr>
+<td><strong>变更前置时间</strong></td>
+<td>从代码提交到成功运行</td>
+<td>&lt; 1 小时</td>
+<td>1 天</td>
+<td>1 周</td>
+<td>1 月</td>
+</tr>
+<tr>
+<td><strong>变更失败率</strong></td>
+<td>部署导致故障的比例</td>
+<td>&lt; 5%</td>
+<td>&lt; 10%</td>
+<td>&lt; 15%</td>
+<td>&gt; 30%</td>
+</tr>
+<tr>
+<td><strong>服务恢复时间</strong></td>
+<td>从故障中恢复的时间</td>
+<td>&lt; 1 小时</td>
+<td>&lt; 1 天</td>
+<td>&lt; 1 周</td>
+<td>&gt; 1 月</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键洞察</strong>：<strong>部署频率和前置时间与变更失败率并不呈反比</strong>——精英团队既能更频繁地部署，出现故障也更少。这说明自动化质量门禁和持续改进是有效的。</p>
+<h3 id="102">10.2 代码质量指标</h3>
+<p><strong>圈复杂度（Cyclomatic Complexity）</strong>：</p>
+<pre><code>M = E - N + 2P
+</code></pre>
+<ul>
+<li><code>E</code>：图中边的数量</li>
+<li><code>N</code>：节点数量</li>
+<li><code>P</code>：连接组件的数量（通常为 1）</li>
+</ul>
+<pre><code class="language-python">def handle_request(status_code, user_role, is_authenticated):
+    # M = 1 （线性，无分支）
+    if is_authenticated:                    # +1
+        if user_role == &quot;admin&quot;:            # +1
+            return &quot;full_access&quot;
+        elif user_role == &quot;editor&quot;:         # +1
+            if status_code == 200:          # +1
+                return &quot;editor_access&quot;
+            return &quot;read_only&quot;
+        return &quot;limited_access&quot;
+    return &quot;redirect_login&quot;
+# 圈复杂度 = 1 + 4 (if/elif) = 5
+</code></pre>
+<p><strong>阈值</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>范围</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🟢 良好</td>
+<td>1-10</td>
+<td>简单函数，易于理解测试</td>
+</tr>
+<tr>
+<td>🟡 警告</td>
+<td>11-20</td>
+<td>较复杂，需要关注</td>
+</tr>
+<tr>
+<td>🟠 次优</td>
+<td>21-50</td>
+<td>太复杂，应当拆分</td>
+</tr>
+<tr>
+<td>🔴 危险</td>
+<td>&gt; 50</td>
+<td>不可测试，必须重构</td>
+</tr>
+</tbody>
+</table>
+<p><strong>认知复杂度</strong>：比圈复杂度更能反映人类理解代码的难度。它不计算 <code>if</code> 嵌套的指数级路径，而是计算<strong>嵌套深度</strong>导致的认知负担。</p>
+<p><strong>内聚与耦合</strong>：</p>
+<pre><code>高内聚 + 低耦合 = 可维护代码
+高内聚 + 高耦合 = 模块强关联但内部一致
+低内聚 + 低耦合 = 杂物箱，什么都有一点
+低内聚 + 高耦合 = 最差的境地，谁也改不动
+</code></pre>
+<h3 id="103">10.3 技术债务管理</h3>
+<p><strong>技术债务象限</strong>（Martin Fowler）：</p>
+<pre><code>                  谨慎的
+        ┌────────────────────────┐
+        │  故意 / 已知    │  无意 / 已知    │
+        │  （策略性负债） │  （需要偿还）    │
+        │  例：为上市而  │  例：遗留代码    │
+        │  暂缓重构      │  坏味发现后      │
+        ├────────────────────────┤
+        │  故意 / 未知    │  无意 / 未知    │
+        │  （最危险）     │  （潜伏风险）    │
+        │  例：删掉测试   │  例：从未被      │
+        │  以为没事      │  检查的模块      │
+        └────────────────────────┘
+                  鲁莽的
+</code></pre>
+<p><strong>管理策略</strong>：</p>
+<ol>
+<li><strong>量化</strong>：用 SonarQube 追踪 Tech Debt Ratio（技术债务比率 = 修复成本 / 重写成本）</li>
+<li><strong>留出预算</strong>：每个迭代分配 15-20% 时间偿还技术债务</li>
+<li><strong>童子军规则</strong>（Boy Scout Rule）：每次修改代码都让它比之前好一点</li>
+<li><strong>债务记录</strong>：用 ADR（Architecture Decision Records）或 Issue 记录技术债务，明确<strong>当前状态、理想状态、预计影响</strong></li>
+</ol>
+<hr />
+<h2 id="_10">综合测试策略模板</h2>
+<pre><code class="language-yaml"># testing-strategy.yaml
+project: CodeNebula
+version: 1.0
+
+layers:
+  unit:
+    tools: [pytest, Jest]
+    coverage:
+      line: &quot;&gt;= 85%&quot;
+      branch: &quot;&gt;= 75%&quot;
+    target: &quot;src/**/*.py, src/**/*.ts&quot;
+
+  integration:
+    tools: [pytest + SQLite, supertest, Testcontainers]
+    coverage: &quot;关键 API &gt;= 90%&quot;
+    target: &quot;api/, services/, repositories/&quot;
+
+  e2e:
+    tools: [Playwright]
+    target: &quot;关键用户路径（登录、支付、注册）&quot;
+    retries: 2
+    max_tests: 20
+
+  static_analysis:
+    tools: [ESLint, mypy, SonarQube]
+    rules: &quot;errors 必须通过，warnings 48 小时内处理&quot;
+    pre_commit: true
+
+  performance:
+    tools: [Locust, Lighthouse]
+    frequency: &quot;每次发布前 + 每周回归&quot;
+    thresholds:
+      p95_response_time: 500ms
+      lcp: 2.5s
+      cls: 0.1
+
+review:
+  max_lines_per_pr: 400
+  response_time: &quot;&lt; 2 hours&quot;
+  checklist: &quot;使用 PR 模板自动生成&quot;
+
+metrics:
+  dora:
+    deployment_frequency: &quot;每周 ≥ 1&quot;
+    lead_time: &quot;&lt; 1 day&quot;
+    change_failure_rate: &quot;&lt; 10%&quot;
+    mtbf: &quot;持续追踪&quot;
+</code></pre>
+<hr />
+<h2 id="_11">扩展阅读</h2>
+<ul>
+<li>《Working Effectively with Legacy Code》— Michael Feathers（遗留代码圣经）</li>
+<li>《Refactoring: Improving the Design of Existing Code》— Martin Fowler（重构必读）</li>
+<li>《xUnit Test Patterns》— Gerard Meszaros（测试模式大全）</li>
+<li>《Accelerate》— Nicole Forsgren 等（DORA 指标原著）</li>
+<li>Google Testing Blog — testing.googleblog.com</li>
+<li>Playwright 官方文档 — playwright.dev/docs</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

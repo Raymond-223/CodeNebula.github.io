@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/software-development/03-database/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>数据库与存储 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Algorithm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../idex.md" class="nav-link">Paper Interpretion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../indx.md" class="nav-link">Machine Learning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../inex.md" class="nav-link">Mathematics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../i.md" class="nav-link">Electronic Materials</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../02-backend/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../04-version-control/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">数据库与存储</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">一、数据库基础理论</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">二、关系型数据库</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sql" class="nav-link">三、SQL 进阶</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#nosql" class="nav-link">四、NoSQL 数据库</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#orm" class="nav-link">五、ORM 深入</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_16" class="nav-link">六、数据库设计</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_17" class="nav-link">七、缓存策略</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="_1">数据库与存储</h1>
+<blockquote>
+<p>数据库是软件系统的基石。本文从理论到实践，覆盖关系型数据库、NoSQL、ORM、数据库设计、缓存策略等核心知识领域，帮助你建立完整的数据库知识体系。</p>
+</blockquote>
+<hr />
+<h2 id="_2">一、数据库基础理论</h2>
+<h3 id="11-acid">1.1 ACID 特性</h3>
+<p>ACID 是关系型数据库事务的四大特性，保证数据可靠性。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>英文</th>
+<th>含义</th>
+<th>反面例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>原子性</strong></td>
+<td>Atomicity</td>
+<td>事务要么全部成功，要么全部回滚</td>
+<td>银行转账：扣款成功但加款失败</td>
+</tr>
+<tr>
+<td><strong>一致性</strong></td>
+<td>Consistency</td>
+<td>事务前后数据满足所有约束</td>
+<td>账户总余额在转账前后保持不变</td>
+</tr>
+<tr>
+<td><strong>隔离性</strong></td>
+<td>Isolation</td>
+<td>并发事务互不干扰</td>
+<td>两个用户同时修改同一条记录</td>
+</tr>
+<tr>
+<td><strong>持久性</strong></td>
+<td>Durability</td>
+<td>提交后的事务永久保存</td>
+<td>系统崩溃后数据不丢失</td>
+</tr>
+</tbody>
+</table>
+<p><strong>原子性示例</strong>：</p>
+<pre><code class="language-sql">-- 如果第二个 UPDATE 失败，第一个也会回滚
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;
+</code></pre>
+<p><strong>持久性的实现</strong>：MySQL 通过 Redo Log（重做日志）保证持久性。事务提交时，先写 Redo Log（磁盘顺序写），再写数据页（随机写）。崩溃恢复时，通过 Redo Log 重放未完成的操作。</p>
+<h3 id="12-cap">1.2 CAP 定理</h3>
+<p>分布式系统中的三个属性无法同时完美满足，最多只能兼顾两个：</p>
+<pre><code>          Consistency (一致性)
+               │
+               │
+               ├── CP 系统：ZooKeeper、etcd
+               │
+               ├── AP 系统：Cassandra、DynamoDB
+               │
+               └── CA 系统：传统单机数据库（无分区容忍）
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>偏向</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MySQL 主从</strong></td>
+<td>CA</td>
+<td>网络分区时停止写入以保证一致性</td>
+</tr>
+<tr>
+<td><strong>Cassandra</strong></td>
+<td>AP</td>
+<td>分区时仍可写入，但数据可能不一致</td>
+</tr>
+<tr>
+<td><strong>ZooKeeper</strong></td>
+<td>CP</td>
+<td>分区时多数派节点继续服务，少数派停止服务</td>
+</tr>
+<tr>
+<td><strong>Redis Cluster</strong></td>
+<td>CP（多数场景）</td>
+<td>分区时少数分区不可写入</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>重要理解</strong>：网络分区（P）是分布式系统中的必然事件，因此实际上我们只能在 CP 和 AP 之间选择。CA 系统在网络分区发生时只能牺牲 C 或 A。</p>
+</blockquote>
+<h3 id="13-base">1.3 BASE 理论</h3>
+<p>BASE 是 NoSQL 系统常用的弱一致性模型：</p>
+<ul>
+<li><strong>Basically Available</strong>（基本可用）：系统在故障时仍可响应请求，可能返回降级结果</li>
+<li><strong>Soft State</strong>（软状态）：系统状态可以随时间变化，不要求时刻一致</li>
+<li><strong>Eventually Consistent</strong>（最终一致）：经过足够长的时间，所有副本最终会达到一致</li>
+</ul>
+<p><strong>举例</strong>：DNS 系统就是 BASE 的典型——你更新了一个域名记录，全球 DNS 服务器可能需要几个小时才能全部更新，但最终会一致。</p>
+<h3 id="14">1.4 隔离级别与并发问题</h3>
+<p>SQL 标准定义了四个隔离级别，每个级别解决了特定的并发问题：</p>
+<pre><code>                       ┌─────────────────────┐
+                       │                     │
+    Serializable ───────┤  Phantom Read      │ ← 最高隔离，性能最差
+                       │  (幻读)             │
+    Repeatable Read ────┤  Non-repeatable    │
+                       │  Read (不可重复读)   │
+    Read Committed ─────┤  Dirty Read        │
+                       │  (脏读)             │
+    Read Uncommitted ───┤                    │ ← 性能最好，问题最多
+                       └─────────────────────┘
+</code></pre>
+<p><strong>三种并发问题</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>定义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>脏读</strong></td>
+<td>读到另一个事务未提交的数据</td>
+<td>A 转给 B 100 元，事务未提交，B 看到余额已增加</td>
+</tr>
+<tr>
+<td><strong>不可重复读</strong></td>
+<td>同一事务内两次读取同一行，结果不同（行更新）</td>
+<td>第一次查 price=100，第二次查 price=150</td>
+</tr>
+<tr>
+<td><strong>幻读</strong></td>
+<td>同一事务内两次查询，结果集不同（行插入/删除）</td>
+<td>第一次查 count=10，第二次查 count=11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MySQL 语法</strong>：</p>
+<pre><code class="language-sql">-- 查看和设置隔离级别
+SELECT @@transaction_isolation;
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+</code></pre>
+<blockquote>
+<p><strong>MySQL 的 REPEATABLE READ</strong>：通过 MVCC（多版本并发控制）解决了幻读问题。但严格来说，只在快照读（普通 SELECT）上解决了幻读，当前读（SELECT ... FOR UPDATE）仍可能产生幻读。</p>
+</blockquote>
+<hr />
+<h2 id="_3">二、关系型数据库</h2>
+<h3 id="21-mysql">2.1 MySQL</h3>
+<h4 id="innodb-vs-myisam">InnoDB vs MyISAM</h4>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>InnoDB</th>
+<th>MyISAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>事务</strong></td>
+<td>✅ ACID 事务</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>外键</strong></td>
+<td>✅ 支持</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>锁粒度</strong></td>
+<td>行级锁</td>
+<td>表级锁</td>
+</tr>
+<tr>
+<td><strong>全文索引</strong></td>
+<td>✅（5.6+ 支持）</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>聚集索引</strong></td>
+<td>✅（必须）</td>
+<td>❌（堆表）</td>
+</tr>
+<tr>
+<td><strong>崩溃恢复</strong></td>
+<td>✅（Redo Log）</td>
+<td>❌（需修复）</td>
+</tr>
+<tr>
+<td><strong>MVCC</strong></td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<p><strong>何时选择 MyISAM</strong>？几乎不需要了。InnoDB 在 MySQL 5.6+ 已是默认引擎，功能全面超越 MyISAM。</p>
+<h4 id="btree">B+Tree 索引</h4>
+<p>MySQL InnoDB 使用 B+Tree 作为默认索引结构：</p>
+<pre><code>                    [根节点: 50, 120]
+                   /        |         \
+           [30, 40]    [70, 90]    [150, 180]
+          /    |    \    /   |   \     |    \
+        (10) (35) (45) (55)(75)(95)  (130)(160)
+</code></pre>
+<p><strong>特点</strong>：
+- 所有数据存在叶子节点，非叶子节点只存键值
+- 叶子节点形成有序链表，支持范围查询
+- 树高通常 3-4 层，IO 次数极少</p>
+<p><strong>聚集索引 vs 二级索引</strong>：
+- 聚集索引：主键即索引，叶子节点存整行数据
+- 二级索引（普通索引）：叶子节点存主键值，需要回表查询</p>
+<pre><code class="language-sql">-- 创建索引
+CREATE INDEX idx_email ON users(email);
+CREATE UNIQUE INDEX idx_phone ON users(phone);
+-- 复合索引（最左前缀原则）
+CREATE INDEX idx_name_age ON users(name, age);
+-- 上述索引能匹配: WHERE name=?, WHERE name=? AND age=?
+-- 不能匹配: WHERE age=?（没有 name 前缀）
+</code></pre>
+<h4 id="_4">复制架构</h4>
+<p><strong>主从复制（Master-Slave）</strong>：</p>
+<pre><code>Application
+    │   写请求 → Master ──→ Binary Log ──→ Slave 1 (只读)
+    │   读请求 → Slave 2 (只读)
+    └──────────→ Slave 3 (只读/备份)
+</code></pre>
+<p><strong>半同步复制</strong>：Master 至少等待一个 Slave 确认收到 Binlog 才返回客户端，兼顾性能和数据安全。</p>
+<p><strong>组复制（Group Replication）</strong>：MySQL 5.7+ 引入的多主复制方案，基于 Paxos 协议，提供强一致性。</p>
+<h4 id="_5">分区表</h4>
+<pre><code class="language-sql">-- 范围分区
+CREATE TABLE orders (
+    id INT, order_date DATE, amount DECIMAL(10,2)
+) PARTITION BY RANGE (YEAR(order_date)) (
+    PARTITION p2022 VALUES LESS THAN (2023),
+    PARTITION p2023 VALUES LESS THAN (2024),
+    PARTITION p2024 VALUES LESS THAN (2025)
+);
+
+-- 哈希分区
+CREATE TABLE users (
+    id INT, name VARCHAR(100)
+) PARTITION BY HASH (id) PARTITIONS 4;
+</code></pre>
+<p><strong>分区表的优势</strong>：分区裁剪（Partition Pruning）可以跳过不相关的分区，提高查询效率；方便归档和删除历史数据。</p>
+<h3 id="22-postgresql">2.2 PostgreSQL</h3>
+<p>PostgreSQL 是"最先进的开源关系型数据库"，以扩展性和标准兼容性著称。</p>
+<h4 id="mvcc">MVCC 实现</h4>
+<p>PostgreSQL 的 MVCC 通过 <strong>元组版本</strong> 实现——每个 UPDATE 产生一个新版本的元组，旧版本保留在表中（直到 VACUUM 清理）。</p>
+<pre><code class="language-sql">-- 查看事务快照信息
+SELECT xmin, xmax, * FROM users;
+</code></pre>
+<p>与 MySQL 的差异：
+- MySQL InnoDB 的 MVCC 将旧版本存在 Undo Log 中
+- PostgreSQL 的旧版本直接留在数据表中，需要定期 VACUUM</p>
+<h4 id="jsonb">JSONB 与全文搜索</h4>
+<pre><code class="language-sql">-- JSONB 数据类型
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    metadata JSONB
+);
+
+-- GIN 索引加速 JSONB 查询
+CREATE INDEX idx_metadata ON products USING GIN (metadata);
+
+-- JSONB 查询
+SELECT * FROM products WHERE metadata @&gt; '{&quot;brand&quot;: &quot;Apple&quot;}';
+SELECT * FROM products WHERE metadata -&gt; 'specs' -&gt;&gt; 'ram' = '16GB';
+
+-- 全文搜索
+CREATE INDEX idx_search ON articles USING GIN (to_tsvector('simple', content));
+
+SELECT * FROM articles
+WHERE to_tsvector('simple', content) @@ to_tsquery('simple', 'database &amp; optimization');
+</code></pre>
+<h4 id="_6">扩展生态</h4>
+<pre><code class="language-sql">-- PostGIS (地理信息)
+CREATE EXTENSION postgis;
+SELECT ST_Distance(
+    ST_SetSRID(ST_MakePoint(116.4, 39.9), 4326),  -- 北京
+    ST_SetSRID(ST_MakePoint(121.47, 31.23), 4326)  -- 上海
+);
+
+-- pg_stat_statements (SQL 性能统计)
+CREATE EXTENSION pg_stat_statements;
+SELECT query, calls, total_time, mean_time
+FROM pg_stat_statements ORDER BY total_time DESC LIMIT 10;
+</code></pre>
+<h4 id="cte">CTE 与窗口函数</h4>
+<pre><code class="language-sql">-- CTE (Common Table Expression)
+WITH regional_sales AS (
+    SELECT region, SUM(amount) AS total_sales
+    FROM orders GROUP BY region
+)
+SELECT region, total_sales
+FROM regional_sales
+WHERE total_sales &gt; (SELECT AVG(total_sales) FROM regional_sales);
+
+-- 递归 CTE (适用于树形数据)
+WITH RECURSIVE org_tree AS (
+    SELECT id, name, parent_id, 1 AS level
+    FROM employees WHERE parent_id IS NULL
+    UNION ALL
+    SELECT e.id, e.name, e.parent_id, t.level + 1
+    FROM employees e JOIN org_tree t ON e.parent_id = t.id
+)
+SELECT * FROM org_tree;
+
+-- 窗口函数
+SELECT
+    name,
+    department,
+    salary,
+    RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS dept_rank,
+    SUM(salary) OVER (PARTITION BY department) AS dept_total,
+    AVG(salary) OVER (PARTITION BY department) AS dept_avg,
+    salary - AVG(salary) OVER (PARTITION BY department) AS diff_from_avg
+FROM employees;
+</code></pre>
+<h3 id="23-sqlite">2.3 SQLite</h3>
+<p><strong>当使用 SQLite</strong>：
+- 移动端应用（Android/iOS 本地数据存储）
+- 桌面应用的本地数据库
+- 嵌入式设备
+- 开发和测试环境
+- 原型验证阶段</p>
+<p><strong>当不使用 SQLite</strong>：
+- 高并发写入场景（SQLite 写操作串行化）
+- 需要用户管理的访问控制
+- 需要网络访问的 C/S 架构
+- 超大数据集（超过 140TB 有限制，但实际几十 GB 以上建议换 PG）</p>
+<p><strong>WAL 模式（Write-Ahead Logging）</strong>：</p>
+<pre><code class="language-sql">-- 提升并发读性能
+PRAGMA journal_mode=WAL;
+-- 写入性能优化
+PRAGMA synchronous=NORMAL;
+PRAGMA cache_size=-64000;  -- 64MB 缓存
+</code></pre>
+<h3 id="24">2.4 三大关系型数据库对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+<th>SQLite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>架构</strong></td>
+<td>客户端-服务器</td>
+<td>客户端-服务器</td>
+<td>嵌入式</td>
+</tr>
+<tr>
+<td><strong>ACID</strong></td>
+<td>✅（InnoDB）</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>SQL 标准</strong></td>
+<td>部分兼容</td>
+<td>⭐ 高度兼容</td>
+<td>核心标准</td>
+</tr>
+<tr>
+<td><strong>并发控制</strong></td>
+<td>MVCC（行级锁）</td>
+<td>MVCC（行级锁）</td>
+<td>读写锁/WAL</td>
+</tr>
+<tr>
+<td><strong>索引类型</strong></td>
+<td>B+Tree, Hash, Full-Text</td>
+<td>B+Tree, Hash, GiST, GIN, BRIN, SP-GiST</td>
+<td>B-Tree</td>
+</tr>
+<tr>
+<td><strong>JSON</strong></td>
+<td>JSON 数据类型（5.7+）</td>
+<td>⭐ JSONB（性能更好）</td>
+<td>❌ 有限支持</td>
+</tr>
+<tr>
+<td><strong>窗口函数</strong></td>
+<td>8.0+ 支持</td>
+<td>✅ 原生支持</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>插件有限</td>
+<td>⭐ 极其丰富</td>
+<td>有限</td>
+</tr>
+<tr>
+<td><strong>复制</strong></td>
+<td>主从/组复制/Galera</td>
+<td>流复制/逻辑复制</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td><strong>使用场景</strong></td>
+<td>Web 应用主力</td>
+<td>复杂查询/地理/金融</td>
+<td>移动端/嵌入式</td>
+</tr>
+<tr>
+<td><strong>许可证</strong></td>
+<td>GPL / 商业版</td>
+<td>PostgreSQL 授权</td>
+<td>Public Domain</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sql">三、SQL 进阶</h2>
+<h3 id="31-join">3.1 连接（JOIN）</h3>
+<pre><code class="language-sql">-- 建表
+CREATE TABLE users (id INT PRIMARY KEY, name TEXT);
+CREATE TABLE orders (id INT PRIMARY KEY, user_id INT, amount DECIMAL);
+
+-- INNER JOIN: 两表都匹配的记录
+SELECT u.name, o.amount
+FROM users u
+INNER JOIN orders o ON u.id = o.user_id;
+
+-- LEFT JOIN: 左表全部 + 右表匹配的记录（无匹配则为 NULL）
+SELECT u.name, COALESCE(o.amount, 0) AS amount
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id;
+
+-- RIGHT JOIN: 右表全部 + 左表匹配的记录
+SELECT u.name, o.amount
+FROM users u
+RIGHT JOIN orders o ON u.id = o.user_id;
+
+-- FULL JOIN: 两表的全部记录（MySQL 不支持，用 UNION 模拟）
+SELECT * FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+UNION
+SELECT * FROM users u
+RIGHT JOIN orders o ON u.id = o.user_id;
+
+-- CROSS JOIN: 笛卡尔积（慎用！）
+SELECT u.name, p.product_name
+FROM users u
+CROSS JOIN products p;
+
+-- SELF JOIN: 自连接，查找上下级关系
+SELECT e1.name AS employee, e2.name AS manager
+FROM employees e1
+LEFT JOIN employees e2 ON e1.manager_id = e2.id;
+
+-- LATERAL JOIN (PostgreSQL): 右侧子查询可以引用左侧的列
+SELECT u.name, recent.order_id, recent.amount
+FROM users u
+LEFT JOIN LATERAL (
+    SELECT id AS order_id, amount
+    FROM orders
+    WHERE user_id = u.id
+    ORDER BY created_at DESC
+    LIMIT 1
+) recent ON true;
+</code></pre>
+<h3 id="32">3.2 子查询</h3>
+<pre><code class="language-sql">-- 非关联子查询（独立执行一次）
+SELECT * FROM users
+WHERE id IN (SELECT user_id FROM orders WHERE amount &gt; 1000);
+
+-- 关联子查询（外层每行执行一次）
+-- 查找工资高于部门平均的员工
+SELECT e1.name, e1.salary, e1.department
+FROM employees e1
+WHERE e1.salary &gt; (
+    SELECT AVG(e2.salary)
+    FROM employees e2
+    WHERE e2.department = e1.department
+);
+
+-- EXISTS（半连接语义，找到即停止）
+SELECT d.name
+FROM departments d
+WHERE EXISTS (
+    SELECT 1 FROM employees e
+    WHERE e.department_id = d.id AND e.salary &gt; 100000
+);
+
+-- ANY / ALL
+SELECT * FROM products
+WHERE price &gt; ALL (SELECT price FROM products WHERE category = 'Budget');
+</code></pre>
+<h3 id="33">3.3 窗口函数</h3>
+<p>窗口函数在不聚合行的情况下进行计算，是 SQL 进阶的核心技能。</p>
+<pre><code class="language-sql">-- ROW_NUMBER: 唯一行号
+SELECT
+    name, department, salary,
+    ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rank_seq
+FROM employees;
+
+-- RANK / DENSE_RANK: 排名（区别在于并列处理）
+SELECT
+    score,
+    RANK() OVER (ORDER BY score DESC) AS rank,           -- 1, 2, 2, 4
+    DENSE_RANK() OVER (ORDER BY score DESC) AS dense_rank -- 1, 2, 2, 3
+FROM exam_scores;
+
+-- LAG / LEAD: 前后行值
+SELECT
+    date, amount,
+    LAG(amount, 1) OVER (ORDER BY date) AS prev_day,
+    LEAD(amount, 1) OVER (ORDER BY date) AS next_day,
+    amount - LAG(amount, 1) OVER (ORDER BY date) AS change
+FROM daily_sales;
+
+-- NTILE: 分桶（例如分成 4 组等分）
+SELECT name, sales,
+    NTILE(4) OVER (ORDER BY sales DESC) AS quartile
+FROM salespeople;
+
+-- 累计和/移动平均
+SELECT
+    date, amount,
+    SUM(amount) OVER (ORDER BY date) AS running_total,
+    AVG(amount) OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS moving_avg_7d
+FROM daily_sales;
+</code></pre>
+<h3 id="34-cte">3.4 CTE（公用表表达式）</h3>
+<pre><code class="language-sql">-- WITH 子句，使复杂查询更清晰
+WITH
+high_value AS (
+    SELECT user_id, SUM(amount) AS total
+    FROM orders
+    WHERE created_at &gt;= '2024-01-01'
+    GROUP BY user_id
+    HAVING SUM(amount) &gt; 10000
+),
+top_customers AS (
+    SELECT u.name, h.total
+    FROM users u
+    JOIN high_value h ON u.id = h.user_id
+    ORDER BY h.total DESC
+    LIMIT 10
+)
+SELECT * FROM top_customers;
+
+-- 递归 CTE: 遍历树形结构
+WITH RECURSIVE menu_tree AS (
+    -- 基础情况：根节点
+    SELECT id, name, parent_id, 1 AS depth,
+           CAST(name AS TEXT) AS path
+    FROM menu_items
+    WHERE parent_id IS NULL
+
+    UNION ALL
+
+    -- 递归步骤：子节点
+    SELECT m.id, m.name, m.parent_id, t.depth + 1,
+           CAST(t.path || ' → ' || m.name AS TEXT)
+    FROM menu_items m
+    JOIN menu_tree t ON m.parent_id = t.id
+)
+SELECT * FROM menu_tree ORDER BY path;
+</code></pre>
+<h3 id="35">3.5 事务与保存点</h3>
+<pre><code class="language-sql">-- 基本事务
+BEGIN;
+UPDATE inventory SET quantity = quantity - 1 WHERE product_id = 100;
+INSERT INTO order_items (order_id, product_id, quantity) VALUES (500, 100, 1);
+COMMIT;
+-- 或 ROLLBACK;
+
+-- 保存点：部分回滚
+BEGIN;
+INSERT INTO logs (message) VALUES ('Step 1 completed');
+SAVEPOINT step1;
+INSERT INTO logs (message) VALUES ('Step 2 completed');
+-- 如果 Step 2 失败，回滚到 step1
+ROLLBACK TO SAVEPOINT step1;
+-- Step 1 的插入还在，Step 2 被撤销
+COMMIT;
+</code></pre>
+<h3 id="36">3.6 索引进阶</h3>
+<pre><code class="language-sql">-- 复合索引（最左前缀）
+CREATE INDEX idx_city_age ON users(city, age);
+-- 匹配: WHERE city='Beijing' AND age=30
+-- 匹配: WHERE city='Beijing'
+-- 不匹配: WHERE age=30（跳过了 city）
+
+-- 部分索引（PostgreSQL）
+CREATE INDEX idx_active_users ON users(email) WHERE status = 'active';
+
+-- 覆盖索引（索引包含查询所需所有列，避免回表）
+CREATE INDEX idx_covering ON orders(user_id, amount, created_at);
+-- 查询可以直接从索引获取数据：
+SELECT user_id, amount, created_at FROM orders WHERE user_id = 100;
+
+-- 全文索引
+CREATE FULLTEXT INDEX idx_content ON articles(title, body);
+SELECT * FROM articles WHERE MATCH(title, body) AGAINST('database optimization');
+
+-- GiST/GIN 索引（PostgreSQL 高级索引）
+CREATE INDEX idx_geo ON locations USING GIST (coord);  -- 地理空间
+CREATE INDEX idx_tags ON posts USING GIN (tags);        -- 数组/JSON
+</code></pre>
+<h3 id="37">3.7 查询优化</h3>
+<pre><code class="language-sql">-- EXPLAIN ANALYZE: 实际执行计划（最常用的分析工具）
+EXPLAIN ANALYZE
+SELECT u.name, COUNT(o.id) AS order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+WHERE u.created_at &gt; '2024-01-01'
+GROUP BY u.id, u.name
+HAVING COUNT(o.id) &gt; 5;
+
+-- 慢查询日志（MySQL）
+SET GLOBAL slow_query_log = ON;
+SET GLOBAL long_query_time = 1;  -- 超过 1 秒的记录
+SET GLOBAL log_queries_not_using_indexes = ON;
+</code></pre>
+<p><strong>优化原则</strong>：
+1. <strong>用小结果集驱动大结果集</strong>：先过滤再 JOIN
+2. <strong>避免 SELECT *</strong>：只取必要字段，利用覆盖索引
+3. <strong>避免函数包裹索引列</strong>：<code>WHERE DATE(created_at) = '2024-01-01'</code> 导致索引失效，应改为 <code>WHERE created_at &gt;= '2024-01-01' AND created_at &lt; '2024-01-02'</code>
+4. <strong>合理使用 LIMIT</strong>：减少数据传输量
+5. <strong>分析慢查询</strong>：使用 EXPLAIN ANALYZE 定位瓶颈</p>
+<h3 id="38-vs-vs">3.8 存储过程 vs 函数 vs 触发器</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>存储过程</th>
+<th>函数</th>
+<th>触发器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>返回值</strong></td>
+<td>可有可无（OUT 参数）</td>
+<td>必有一个返回值</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>事务控制</strong></td>
+<td>✅ 支持 COMMIT/ROLLBACK</td>
+<td>❌ 不支持</td>
+<td>继承父事务</td>
+</tr>
+<tr>
+<td><strong>SQL 调用</strong></td>
+<td>CALL proc()</td>
+<td>SELECT func()</td>
+<td>自动触发</td>
+</tr>
+<tr>
+<td><strong>参数</strong></td>
+<td>IN/OUT/INOUT</td>
+<td>IN</td>
+<td>无（通过 NEW/OLD 访问）</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-sql">-- 函数示例（PostgreSQL）
+CREATE FUNCTION get_user_order_count(user_id INT)
+RETURNS INT AS $$
+BEGIN
+    RETURN (SELECT COUNT(*) FROM orders WHERE user_id = $1);
+END;
+$$ LANGUAGE plpgsql;
+
+-- 触发器示例
+CREATE TRIGGER update_timestamp
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+</code></pre>
+<hr />
+<h2 id="nosql">四、NoSQL 数据库</h2>
+<h3 id="41-mongodb">4.1 MongoDB</h3>
+<h4 id="_7">文档模型</h4>
+<p>MongoDB 以 BSON（二进制 JSON）格式存储文档，Schema 灵活：</p>
+<pre><code class="language-json">{
+  &quot;_id&quot;: ObjectId(&quot;...&quot;),
+  &quot;name&quot;: &quot;Alice&quot;,
+  &quot;email&quot;: &quot;alice@example.com&quot;,
+  &quot;address&quot;: {
+    &quot;city&quot;: &quot;Beijing&quot;,
+    &quot;district&quot;: &quot;Haidian&quot;
+  },
+  &quot;tags&quot;: [&quot;premium&quot;, &quot;vip&quot;],
+  &quot;orders&quot;: [
+    { &quot;product&quot;: &quot;Laptop&quot;, &quot;price&quot;: 9999, &quot;qty&quot;: 1 }
+  ]
+}
+</code></pre>
+<h4 id="_8">聚合管道</h4>
+<pre><code class="language-javascript">// 聚合管道示例
+db.orders.aggregate([
+  { $match: { status: &quot;completed&quot; } },
+  { $group: {
+    _id: &quot;$customer_id&quot;,
+    total: { $sum: &quot;$amount&quot; },
+    count: { $sum: 1 }
+  }},
+  { $sort: { total: -1 } },
+  { $limit: 10 },
+  { $lookup: {
+    from: &quot;customers&quot;,
+    localField: &quot;_id&quot;,
+    foreignField: &quot;_id&quot;,
+    as: &quot;customer&quot;
+  }},
+  { $unwind: &quot;$customer&quot; },
+  { $project: {
+    customer_name: &quot;$customer.name&quot;,
+    total: 1,
+    count: 1
+  }}
+]);
+</code></pre>
+<h4 id="_9">索引</h4>
+<pre><code class="language-javascript">// 单字段索引
+db.users.createIndex({ email: 1 });
+
+// 复合索引
+db.orders.createIndex({ status: 1, created_at: -1 });
+
+// 文本索引
+db.articles.createIndex({ title: &quot;text&quot;, body: &quot;text&quot; });
+db.articles.find({ $text: { $search: &quot;database optimization&quot; } });
+
+// TTL 索引（自动过期）
+db.sessions.createIndex({ last_access: 1 }, { expireAfterSeconds: 3600 });
+
+// 部分索引
+db.users.createIndex(
+  { email: 1 },
+  { partialFilterExpression: { status: &quot;active&quot; } }
+);
+</code></pre>
+<h4 id="_10">副本集与分片</h4>
+<p><strong>副本集（Replica Set）</strong>：一个 Primary 节点（处理写请求）+ 多个 Secondary 节点（数据复制，可承担读请求）。Primary 故障时自动选举新的 Primary。</p>
+<p><strong>分片（Sharding）</strong>：
+- <strong>分片键</strong>决定数据分布策略（范围分片/哈希分片）
+- <strong>mongos</strong> 路由节点，应用层通过 mongos 访问
+- <strong>Config Server</strong> 存储集群元数据</p>
+<h3 id="42-redis">4.2 Redis</h3>
+<p>Redis 是内存中的数据存储，以极高性能著称（单实例可达 10万+ QPS）。</p>
+<h4 id="_11">数据结构</h4>
+<pre><code class="language-bash"># String（缓存、计数器）
+SET user:1000:name &quot;Alice&quot;
+INCR page_view:homepage
+SETEX session:abc123 3600 &quot;user_data&quot;  # 带过期时间
+
+# List（消息队列、最新列表）
+LPUSH notifications:user1 &quot;new_message&quot;
+BRPOP queues:email 0  # 阻塞弹出
+
+# Set（标签、去重）
+SADD user:1000:tags &quot;python&quot; &quot;redis&quot; &quot;database&quot;
+SINTER user:1000:tags user:2000:tags  # 共同标签
+
+# Sorted Set（排行榜、延迟队列）
+ZADD leaderboard 100 &quot;player1&quot; 200 &quot;player2&quot;
+ZREVRANGE leaderboard 0 9 WITHSCORES  # Top 10
+
+# Hash（对象存储）
+HSET user:1000 name &quot;Alice&quot; age 30 email &quot;alice@example.com&quot;
+HGETALL user:1000
+
+# Stream（消息队列，类似 Kafka）
+XADD events * type &quot;login&quot; user_id 1000
+XREAD COUNT 10 BLOCK 5000 STREAMS events 0
+
+# Geospatial（地理位置）
+GEOADD cities 116.4 39.9 &quot;Beijing&quot;
+GEORADIUS cities 116.4 39.9 100 km  # 方圆 100km
+</code></pre>
+<h4 id="_12">缓存策略模式</h4>
+<p><strong>Cache Aside（旁路缓存）</strong>：</p>
+<pre><code>读：先查缓存 → 命中返回 | 未命中查DB → 写缓存 → 返回
+写：先更新DB → 再删除缓存（或更新缓存）
+</code></pre>
+<pre><code class="language-python"># Cache Aside 读
+def get_user(user_id):
+    user = redis.get(f&quot;user:{user_id}&quot;)
+    if user:
+        return user
+    user = db.query(&quot;SELECT * FROM users WHERE id = ?&quot;, user_id)
+    if user:
+        redis.setex(f&quot;user:{user_id}&quot;, 3600, user)
+    return user
+
+# Cache Aside 写
+def update_user(user_id, data):
+    db.execute(&quot;UPDATE users SET ... WHERE id = ?&quot;, data, user_id)
+    redis.delete(f&quot;user:{user_id}&quot;)  # 删除缓存，而不是更新
+</code></pre>
+<blockquote>
+<p><strong>为什么写时删除缓存而不是更新？</strong> 更新缓存存在并发问题——两个写操作乱序可能导致缓存中出现旧数据。而删除缓存+下次读取时重建，是更安全的做法。</p>
+</blockquote>
+<p><strong>Read-Through（穿透读）</strong>：应用层只操作缓存，缓存负责从数据库加载数据（需要缓存中间件支持）。</p>
+<p><strong>Write-Through（穿透写）</strong>：数据同时写入缓存和数据库，保证一致性但增加写延迟。</p>
+<p><strong>Write-Behind（异步写）</strong>：先写入缓存，后台异步批量写入数据库，牺牲一致性换取高吞吐。</p>
+<h4 id="_13">分布式锁</h4>
+<pre><code class="language-python"># Redlock 简化版：使用 SET NX EX
+def acquire_lock(redis, lock_name, ttl_ms=10000):
+    lock_key = f&quot;lock:{lock_name}&quot;
+    lock_value = str(uuid.uuid4())  # 唯一标识
+    if redis.set(lock_key, lock_value, nx=True, px=ttl_ms):
+        return lock_value
+    return None
+
+def release_lock(redis, lock_name, lock_value):
+    lock_key = f&quot;lock:{lock_name}&quot;
+    # 使用 Lua 脚本保证原子性：只释放自己持有的锁
+    script = &quot;&quot;&quot;
+    if redis.call(&quot;get&quot;, KEYS[1]) == ARGV[1] then
+        return redis.call(&quot;del&quot;, KEYS[1])
+    else
+        return 0
+    end
+    &quot;&quot;&quot;
+    redis.eval(script, 1, lock_key, lock_value)
+</code></pre>
+<h4 id="pubsub">Pub/Sub</h4>
+<pre><code class="language-bash"># 发布者
+PUBLISH channel:notifications &quot;Hello, everyone!&quot;
+
+# 订阅者
+SUBSCRIBE channel:notifications
+</code></pre>
+<h3 id="43-elasticsearch">4.3 Elasticsearch</h3>
+<h4 id="_14">倒排索引</h4>
+<p>Elasticsearch 的核心是倒排索引（Inverted Index）：</p>
+<pre><code>文档内容: &quot;The quick brown fox jumps over the lazy dog&quot;
+             ↓
+倒排索引:
+  term    →  [doc_id, position]
+  &quot;the&quot;   →  [(1,0), (1,7)]
+  &quot;quick&quot; →  [(1,1)]
+  &quot;brown&quot; →  [(1,2)]
+  &quot;fox&quot;   →  [(1,3)]
+</code></pre>
+<h4 id="_15">分析器</h4>
+<pre><code class="language-json">// 自定义分析器
+PUT /my_index
+{
+  &quot;settings&quot;: {
+    &quot;analysis&quot;: {
+      &quot;analyzer&quot;: {
+        &quot;my_analyzer&quot;: {
+          &quot;type&quot;: &quot;custom&quot;,
+          &quot;tokenizer&quot;: &quot;standard&quot;,
+          &quot;filter&quot;: [&quot;lowercase&quot;, &quot;stop&quot;, &quot;snowball&quot;]
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<h4 id="query-dsl">Query DSL</h4>
+<pre><code class="language-json">// 全文搜索
+GET /articles/_search
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;content&quot;: &quot;database optimization&quot;
+    }
+  }
+}
+
+// 复合查询
+GET /products/_search
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;must&quot;: [
+        { &quot;match&quot;: { &quot;name&quot;: &quot;laptop&quot; } },
+        { &quot;range&quot;: { &quot;price&quot;: { &quot;gte&quot;: 5000, &quot;lte&quot;: 15000 } } }
+      ],
+      &quot;filter&quot;: [
+        { &quot;term&quot;: { &quot;status&quot;: &quot;active&quot; } }
+      ]
+    }
+  },
+  &quot;sort&quot;: [
+    { &quot;price&quot;: { &quot;order&quot;: &quot;asc&quot; } }
+  ],
+  &quot;aggs&quot;: {
+    &quot;by_brand&quot;: {
+      &quot;terms&quot;: { &quot;field&quot;: &quot;brand.keyword&quot; }
+    }
+  }
+}
+</code></pre>
+<p><strong>集群架构</strong>：
+- <strong>Node</strong>：单个 ES 实例
+- <strong>Index</strong>：等同于关系型数据库的"表"
+- <strong>Shard</strong>：索引的分片（每个分片是一个 Lucene 实例）
+- <strong>Replica</strong>：分片的副本
+- <strong>Cluster</strong>：多个 Node 组成的集群</p>
+<hr />
+<h2 id="orm">五、ORM 深入</h2>
+<h3 id="51-sqlalchemypython">5.1 SQLAlchemy（Python）</h3>
+<pre><code class="language-python">from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy.orm import declarative_base, relationship, Session
+from sqlalchemy.orm import joinedload, selectinload
+
+Base = declarative_base()
+
+# 模型定义
+class User(Base):
+    __tablename__ = &quot;users&quot;
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(200), unique=True)
+
+    posts = relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)
+
+class Post(Base):
+    __tablename__ = &quot;posts&quot;
+    id = Column(Integer, primary_key=True)
+    title = Column(String(200), nullable=False)
+    content = Column(Text)
+    user_id = Column(Integer, ForeignKey(&quot;users.id&quot;))
+
+    author = relationship(&quot;User&quot;, back_populates=&quot;posts&quot;)
+
+# Session 生命周期
+engine = create_engine(&quot;postgresql://user:pass@localhost/db&quot;)
+session = Session(engine)
+
+# 加载策略
+# 懒加载（默认）：访问 posts 时才查询
+user = session.get(User, 1)
+print(user.posts)  # 此时执行 SELECT
+
+# 预加载：一次 JOIN 查询
+user = session.query(User).options(
+    joinedload(User.posts)
+).filter(User.id == 1).first()
+
+# 子查询预加载：两次查询但避免笛卡尔积
+user = session.query(User).options(
+    selectinload(User.posts)
+).filter(User.id == 1).first()
+</code></pre>
+<p><strong>Alembic 迁移</strong>：</p>
+<pre><code class="language-bash">alembic init alembic
+alembic revision --autogenerate -m &quot;add user table&quot;
+alembic upgrade head
+</code></pre>
+<h3 id="52-prismatypescriptnodejs">5.2 Prisma（TypeScript/Node.js）</h3>
+<pre><code class="language-prisma">// schema.prisma
+generator client {
+  provider = &quot;prisma-client-js&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+  url      = env(&quot;DATABASE_URL&quot;)
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+</code></pre>
+<pre><code class="language-typescript">// 客户端使用
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
+
+// 查询
+const users = await prisma.user.findMany({
+  where: { email: { contains: 'example.com' } },
+  include: { posts: true },
+  orderBy: { createdAt: 'desc' },
+  take: 10,
+  skip: 0
+})
+
+// 分页：游标分页
+const page = await prisma.user.findMany({
+  take: 10,
+  cursor: { id: lastUserId },
+  skip: 1,  // 跳过游标本身
+  orderBy: { id: 'asc' }
+})
+</code></pre>
+<h3 id="53-typeormtypescriptnodejs">5.3 TypeORM（TypeScript/Node.js）</h3>
+<pre><code class="language-typescript">// 实体定义
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ unique: true })
+    email: string;
+
+    @Column()
+    name: string;
+
+    @OneToMany(() =&gt; Post, post =&gt; post.author)
+    posts: Post[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+}
+
+// Query Builder
+const users = await dataSource
+    .getRepository(User)
+    .createQueryBuilder(&quot;user&quot;)
+    .leftJoinAndSelect(&quot;user.posts&quot;, &quot;post&quot;)
+    .where(&quot;user.email LIKE :email&quot;, { email: &quot;%@example.com&quot; })
+    .orderBy(&quot;user.createdAt&quot;, &quot;DESC&quot;)
+    .take(10)
+    .getMany();
+
+// 迁移
+typeorm migration:create -n CreateUserTable
+typeorm migration:run
+</code></pre>
+<h3 id="54-n1">5.4 N+1 问题与解决方案</h3>
+<p><strong>N+1 问题</strong>：查询 1 次主表 + N 次关联查询。例如查询 100 个用户及其订单，如果懒加载，会执行 1 次 <code>SELECT * FROM users</code> + 100 次 <code>SELECT * FROM orders WHERE user_id = ?</code>。</p>
+<p><strong>解决方案</strong>：</p>
+<ol>
+<li><strong>Eager Loading（预加载）</strong>：</li>
+</ol>
+<pre><code class="language-python"># SQLAlchemy
+users = session.query(User).options(joinedload(User.orders)).all()
+
+# TypeORM
+const users = await userRepository.find({ relations: ['orders'] });
+
+# Prisma（自动使用 IN 查询）
+const users = await prisma.user.findMany({ include: { orders: true } });
+</code></pre>
+<ol>
+<li><strong>Batch Loading（批量加载）</strong>：</li>
+</ol>
+<pre><code class="language-python"># 手动批量加载
+user_ids = [user.id for user in users]
+orders = session.query(Order).filter(Order.user_id.in_(user_ids)).all()
+# 然后按 user_id 分组
+</code></pre>
+<ol>
+<li><strong>DataLoader</strong>（Facebook 的方案）：</li>
+</ol>
+<pre><code class="language-javascript">const DataLoader = require('dataloader');
+
+const batchUsers = async (ids) =&gt; {
+    const users = await db.user.findAll({ where: { id: ids } });
+    return ids.map(id =&gt; users.find(u =&gt; u.id === id));
+};
+
+const userLoader = new DataLoader(batchUsers);
+const user1 = await userLoader.load(1);
+const user2 = await userLoader.load(2);
+// 合并成一次查询
+</code></pre>
+<hr />
+<h2 id="_16">六、数据库设计</h2>
+<h3 id="61">6.1 范式化</h3>
+<p><strong>第一范式（1NF）</strong>：每个字段不可再分（原子性）。</p>
+<p>❌ 违反 1NF：
+| id | name | phones |
+|----|------|--------|
+| 1 | Alice | 138xxx, 139xxx |</p>
+<p>✅ 符合 1NF：
+| id | name | phone |
+|----|------|-------|
+| 1 | Alice | 138xxx |
+| 2 | Alice | 139xxx |</p>
+<p><strong>第二范式（2NF）</strong>：在 1NF 基础上，每个非主键字段完全依赖于主键（消除部分依赖）。</p>
+<p>❌ 违反 2NF（复合主键 <code>(order_id, product_id)</code>，但 <code>product_name</code> 只依赖于 <code>product_id</code>）：
+| order_id | product_id | product_name | quantity |
+|----------|-----------|-------------|----------|
+| 1 | 100 | Laptop | 1 |
+| 1 | 101 | Mouse | 2 |</p>
+<p>✅ 符合 2NF：将 <code>product_name</code> 移到 <code>products</code> 表。</p>
+<p><strong>第三范式（3NF）</strong>：在 2NF 基础上，非主键字段不传递依赖于主键。</p>
+<p>❌ 违反 3NF（<code>city</code> 通过 <code>zip_code</code> 与主键传递依赖）：
+| id | name | zip_code | city |
+|----|------|---------|------|
+| 1 | Alice | 100000 | Beijing |</p>
+<p>✅ 符合 3NF：将 <code>zip_code → city</code> 关系分离到 <code>zip_codes</code> 表。</p>
+<p><strong>BCNF（Boyce-Codd Normal Form）</strong>：3NF 的强化版——所有决定因素必须是候选键。大多数情况下满足 3NF 就足够了。</p>
+<h3 id="62">6.2 反范式化</h3>
+<p><strong>何时反范式化</strong>：
+- 读多写少的场景（如报表、数据仓库）
+- 需要避免 JOIN 的查询热点
+- 实时性要求高，无法承受 JOIN 开销</p>
+<p><strong>权衡</strong>：</p>
+<pre><code>范式化 → 存储少、更新快、数据一致 ← 写优化
+反范式化 → 查询快、读性能好、冗余多 ← 读优化
+</code></pre>
+<p><strong>常见反范式化手段</strong>：
+- 在订单表中冗余「用户名」（避免 JOIN users 表）
+- 在文章表中冗余「评论数」（避免 COUNT 查询）
+- 反范式化需要应用程序维护数据一致，或通过触发器/事件同步</p>
+<h3 id="63-er">6.3 ER 建模</h3>
+<p><strong>实体-关系图（ERD）</strong> 的核心元素：</p>
+<ul>
+<li><strong>实体</strong>（Entity）：矩形，如 User、Order</li>
+<li><strong>属性</strong>（Attribute）：椭圆，如 name、email</li>
+<li><strong>关系</strong>（Relationship）：菱形，如 "创建"</li>
+<li><strong>基数</strong>（Cardinality）：</li>
+<li><code>1:1</code>：一个人对应一个身份证号</li>
+<li><code>1:N</code>：一个用户有多个订单</li>
+<li><code>M:N</code>：一个学生可选多门课程，一门课程有多个学生</li>
+</ul>
+<p><strong>设计模式示例</strong>：</p>
+<pre><code>┌──────────┐    1:N    ┌──────────┐    M:N    ┌──────────┐
+│  User    │───────────│  Order   │───────────│ Product  │
+├──────────┤           ├──────────┤           ├──────────┤
+│ id (PK)  │           │ id (PK)  │           │ id (PK)  │
+│ name     │           │ user_id  │           │ name     │
+│ email    │           │ total    │           │ price    │
+└──────────┘           │ status   │           └──────────┘
+                       └──────────┘
+</code></pre>
+<h3 id="64">6.4 连接池</h3>
+<pre><code class="language-python"># HikariCP (Java) - 默认配置即优秀
+HikariConfig config = new HikariConfig();
+config.setJdbcUrl(&quot;jdbc:postgresql://localhost/db&quot;);
+config.setMaximumPoolSize(20);
+config.setMinimumIdle(5);
+config.setConnectionTimeout(30000);
+config.setIdleTimeout(600000);
+config.setMaxLifetime(1800000);
+
+// pgBouncer (PostgreSQL 连接池代理)
+// pgBouncer.ini
+[databases]
+mydb = host=127.0.0.1 port=5432
+
+[pgbouncer]
+pool_mode = transaction  -- 事务级复用
+default_pool_size = 25
+max_client_conn = 100
+</code></pre>
+<p><strong>连接池推荐大小</strong>：<code>(core_count * 2) + effective_spindle_count</code>。对于大多数应用，10-30 个连接就足够了。过多的连接反而会导致数据库上下文切换开销。</p>
+<h3 id="65">6.5 迁移策略</h3>
+<p><strong>可逆迁移</strong>：每个迁移必须提供 <code>up</code> 和 <code>down</code>（回滚）操作。</p>
+<pre><code class="language-python"># Alembic 迁移示例
+def upgrade():
+    op.add_column('users', sa.Column('phone', sa.String(20)))
+
+def downgrade():
+    op.drop_column('users', 'phone')
+</code></pre>
+<p><strong>零停机迁移原则</strong>：
+1. <strong>加列</strong>：安全，旧代码忽略新列
+2. <strong>删列</strong>：先修改代码不再引用该列，部署后再删除
+3. <strong>重命名列</strong>：分三步——加新列 → 双写（新旧同时更新） → 切换读取新列 → 删旧列
+4. <strong>大表加索引</strong>：使用 <code>CONCURRENTLY</code>（PostgreSQL）避免锁表</p>
+<pre><code class="language-sql">CREATE INDEX CONCURRENTLY idx_name ON big_table(name);
+</code></pre>
+<h3 id="66">6.6 备份与恢复</h3>
+<table>
+<thead>
+<tr>
+<th>备份类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>逻辑备份</strong>（mysqldump/pg_dump）</td>
+<td>生成 SQL 文件，可移植，恢复慢</td>
+<td>小数据库、迁移</td>
+</tr>
+<tr>
+<td><strong>物理备份</strong>（文件拷贝/XtraBackup）</td>
+<td>二进制拷贝，恢复快，体积大</td>
+<td>大数据库、PITR</td>
+</tr>
+<tr>
+<td><strong>快照备份</strong>（LVM/ZFS）</td>
+<td>秒级完成，文件系统级别</td>
+<td>需要快速恢复</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PITR（时间点恢复）</strong>：全量备份 + WAL 归档（连续归档日志），可恢复到任意时间点。</p>
+<pre><code class="language-bash"># PostgreSQL PITR
+# 1. 开启归档
+archive_mode = on
+archive_command = 'cp %p /backup/%f'
+
+# 2. 全量备份
+pg_basebackup -D /backup/base -F t -z
+
+# 3. 恢复：使用全量备份 + 回放到指定时间
+# recovery.conf
+restore_command = 'cp /backup/%f %p'
+recovery_target_time = '2024-03-15 14:30:00'
+</code></pre>
+<hr />
+<h2 id="_17">七、缓存策略</h2>
+<h3 id="71">7.1 缓存模式对比</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>读流程</th>
+<th>写流程</th>
+<th>一致性</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cache Aside</strong></td>
+<td>先查缓存→未命中查DB→写缓存</td>
+<td>写DB→删缓存</td>
+<td>最终一致（有窗口期）</td>
+<td>⭐ 低</td>
+</tr>
+<tr>
+<td><strong>Read-Through</strong></td>
+<td>缓存层负责加载</td>
+<td>写DB→删缓存</td>
+<td>最终一致</td>
+<td>⭐⭐ 中</td>
+</tr>
+<tr>
+<td><strong>Write-Through</strong></td>
+<td>同上</td>
+<td>同时写缓存+DB</td>
+<td>强一致</td>
+<td>⭐⭐ 中</td>
+</tr>
+<tr>
+<td><strong>Write-Behind</strong></td>
+<td>同上</td>
+<td>只写缓存，异步写DB</td>
+<td>弱一致（有丢数据风险）</td>
+<td>⭐⭐⭐ 高</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cache Aside 的缓存击穿问题</strong>：</p>
+<pre><code>场景：热点 key 刚好过期，大量请求同时涌入
+问题：所有请求都去查数据库，DB 被打垮
+方案：互斥锁（只让一个请求查 DB 重建缓存）
+</code></pre>
+<pre><code class="language-python">def get_hot_data(key):
+    data = redis.get(key)
+    if data:
+        return data
+
+    # 互斥锁重建缓存
+    lock_key = f&quot;lock:{key}&quot;
+    if redis.setnx(lock_key, 1, ex=5):  # 获取锁
+        try:
+            data = db.query(&quot;SELECT ...&quot;)
+            redis.setex(key, 3600, data)
+            return data
+        finally:
+            redis.delete(lock_key)
+    else:
+        time.sleep(0.1)
+        return get_hot_data(key)  # 重试
+</code></pre>
+<h3 id="72">7.2 缓存失效策略</h3>
+<p><strong>TTL（Time-To-Live）</strong>：
+- 最简单的失效方式，设置过期时间
+- 问题：同一时刻大量缓存过期导致缓存雪崩
+- 解决：过期时间加随机偏移 <code>TTL + random(0, 300)</code></p>
+<p><strong>事件驱动失效</strong>：
+- 数据变更时主动删除/更新缓存
+- 使用消息队列解耦（更新DB→发消息→删缓存）
+- 问题：消息可能丢失或延迟</p>
+<p><strong>写穿透</strong>：
+- 每次写操作同时更新缓存和DB
+- 保证缓存始终最新
+- 问题：写延迟增加，不频繁读的数据也在缓存中</p>
+<h3 id="73">7.3 分布式缓存</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>架构</th>
+<th>数据分布</th>
+<th>高可用</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Redis Cluster</strong></td>
+<td>去中心化</td>
+<td>哈希槽（16384个槽）</td>
+<td>主从切换</td>
+<td>大型缓存、高写入</td>
+</tr>
+<tr>
+<td><strong>Redis Sentinel</strong></td>
+<td>主从+哨兵</td>
+<td>单主写入</td>
+<td>自动故障转移</td>
+<td>中小规模、读多写少</td>
+</tr>
+<tr>
+<td><strong>Memcached</strong></td>
+<td>分布式客户端分片</td>
+<td>一致性哈希</td>
+<td>无复制（节点挂了丢数据）</td>
+<td>纯 KV、简单缓存</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash"># Redis Cluster 创建
+redis-cli --cluster create \
+    192.168.1.1:7000 192.168.1.1:7001 \
+    192.168.1.2:7000 192.168.1.2:7001 \
+    192.168.1.3:7000 192.168.1.3:7001 \
+    --cluster-replicas 1
+</code></pre>
+<h3 id="74-cdn">7.4 CDN 缓存</h3>
+<p>CDN（Content Delivery Network）将静态资源缓存到全球边缘节点：</p>
+<ul>
+<li>用户请求 → DNS 解析到最近的 CDN 节点</li>
+<li>节点有缓存 → 直接返回</li>
+<li>节点无缓存 → 回源站拉取 → 缓存并返回</li>
+</ul>
+<p><strong>缓存控制</strong>：</p>
+<pre><code>Edge-Control: max-age=86400  # CDN 缓存 1 天
+CDN-Cache-Control: no-cache  # CDN 不缓存
+</code></pre>
+<h3 id="75">7.5 浏览器缓存</h3>
+<p><strong>强缓存</strong>（不请求服务器）：</p>
+<pre><code class="language-http">Cache-Control: max-age=3600          # HTTP/1.1 标准
+Expires: Wed, 21 Oct 2024 07:28:00   # HTTP/1.0，已被 Cache-Control 替代
+</code></pre>
+<p><strong>协商缓存</strong>（请求服务器，304 Not Modified 则复用缓存）：</p>
+<pre><code class="language-http"># 方式一：基于时间
+Last-Modified: Wed, 21 Oct 2024 07:00:00 GMT  # 服务器返回
+If-Modified-Since: Wed, 21 Oct 2024 07:00:00 GMT  # 客户端请求
+
+# 方式二：基于内容哈希（推荐）
+ETag: &quot;33a64df551425fcc55e4d42a148795d9f25f89d4&quot;  # 服务器返回
+If-None-Match: &quot;33a64df551425fcc55e4d42a148795d9f25f89d4&quot;  # 客户端请求
+</code></pre>
+<p><strong>最佳实践</strong>：
+- 静态资源（JS/CSS/图片）使用强缓存 + 文件名带内容哈希</p>
+<pre><code class="language-html">&lt;script src=&quot;/static/app.a1b2c3d4.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<ul>
+<li>HTML 页面使用协商缓存（<code>no-cache</code>）</li>
+<li>敏感数据不缓存（<code>no-store</code>）</li>
+</ul>
+<hr />
+<blockquote>
+<p><strong>本系列下一章</strong>：<a href="../04-version-control/">版本控制 →</a> — Git 深入</p>
+</blockquote></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

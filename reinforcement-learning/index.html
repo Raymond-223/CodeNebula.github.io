@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/reinforcement-learning/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>概览 - CodeNebula</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">概览</a>
+</li>
+                                    
+<li>
+    <a href="00-bandit/" class="dropdown-item">多臂老虎机</a>
+</li>
+                                    
+<li>
+    <a href="01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
+</li>
+                                    
+<li>
+    <a href="02-dynamic-programming/" class="dropdown-item">动态规划</a>
+</li>
+                                    
+<li>
+    <a href="03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
+</li>
+                                    
+<li>
+    <a href="04-temporal-difference/" class="dropdown-item">时序差分学习</a>
+</li>
+                                    
+<li>
+    <a href="05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
+</li>
+                                    
+<li>
+    <a href="06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
+</li>
+                                    
+<li>
+    <a href="07-continuous-control/" class="dropdown-item">连续控制</a>
+</li>
+                                    
+<li>
+    <a href="08-tools-environments/" class="dropdown-item">环境与工具链</a>
+</li>
+                                    
+<li>
+    <a href="09-advanced-topics/" class="dropdown-item">进阶专题</a>
+</li>
+                                    
+<li>
+    <a href="10-engineering-practice/" class="dropdown-item">工程实践</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../software-development/" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../software-development/08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="00-bandit/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">强化学习概览</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">一、强化学习的设计哲学</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">二、核心概念：五要素</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">三、技术全景：从表格到深度到对齐</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_5" class="nav-link">四、技术选型框架</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_6" class="nav-link">五、学习路径</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_7" class="nav-link">六、章节导航</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="_1">强化学习概览</h1>
+<blockquote>
+<p>本文是 CodeNebula 强化学习知识体系的纲领。从<strong>设计哲学</strong>出发，到<strong>核心概念</strong>、<strong>技术全景</strong>、<strong>算法谱系</strong>，再到<strong>学习路径</strong>，为你建立完整的强化学习世界观。全文假设读者具备基础 Python 与概率论知识，零机器学习基础亦可阅读。</p>
+</blockquote>
+<p><img alt="Agent 与环境交互闭环" src="assets/agent-environment-loop.png" /></p>
+<hr />
+<h2 id="_2">一、强化学习的设计哲学</h2>
+<p>在深入任何算法之前，先理解强化学习区别于其他机器学习范式的核心思想——这些思想贯穿所有 RL 算法，是理解一切细节的钥匙。</p>
+<h3 id="11-reward-hypothesis">1.1 奖励假设（Reward Hypothesis）</h3>
+<blockquote>
+<p><strong>核心思想</strong>：任何目标都可以被表述为"最大化累积奖励的期望"。</p>
+</blockquote>
+<p>这是强化学习的<strong>第一性原理</strong>。下围棋的"赢棋"→ 转化为终局 +1/-1；训练机器人行走 → 前进距离转化为即时奖励；训练对话模型 → 人类偏好转化为奖励信号。Sutton 在《Reinforcement Learning: An Introduction》中将其表述为：</p>
+<blockquote>
+<p><em>"That all of what we mean by goals and purposes can be well thought of as the maximization of the expected value of the cumulative sum of a received scalar signal (called reward)."</em></p>
+</blockquote>
+<p>奖励设计（Reward Design）因此成为 RL 工程中最重要也最棘手的问题——奖励给得不对，智能体就会学到你<strong>不想要</strong>的行为（即 Reward Hacking，见第 10 章）。</p>
+<h3 id="12">1.2 试错学习：三种学习范式的对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>监督学习（SL）</th>
+<th>无监督学习（UL）</th>
+<th>强化学习（RL）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>目标</strong></td>
+<td>拟合输入→输出映射</td>
+<td>发现数据内在结构</td>
+<td>最大化累积奖励</td>
+</tr>
+<tr>
+<td><strong>数据来源</strong></td>
+<td>带标签的静态数据集</td>
+<td>无标签静态数据集</td>
+<td>与环境交互产生的轨迹</td>
+</tr>
+<tr>
+<td><strong>反馈形式</strong></td>
+<td>每个样本有正确标签</td>
+<td>无反馈</td>
+<td>稀疏的标量奖励（有延迟）</td>
+</tr>
+<tr>
+<td><strong>错误纠正</strong></td>
+<td>直接对比标签</td>
+<td>无</td>
+<td>只能靠"试"和"事后归因"</td>
+</tr>
+<tr>
+<td><strong>时间结构</strong></td>
+<td>样本独立同分布</td>
+<td>样本独立同分布</td>
+<td>序列决策，动作影响未来</td>
+</tr>
+<tr>
+<td><strong>典型任务</strong></td>
+<td>图像分类、机器翻译</td>
+<td>聚类、降维</td>
+<td>下棋、机器人控制、推荐</td>
+</tr>
+<tr>
+<td><strong>代表算法</strong></td>
+<td>CNN、Transformer</td>
+<td>K-Means、PCA</td>
+<td>DQN、PPO、SAC</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键区别</strong>：监督学习是"教"（告诉它对错），强化学习是"试"（做错了没人告诉你错在哪，只有事后算总账）。这引出了 RL 独有的两大难题——<strong>信用分配</strong>与<strong>探索-利用困境</strong>。</p>
+<h3 id="13-exploration-exploitation-dilemma">1.3 探索与利用困境（Exploration-Exploitation Dilemma）</h3>
+<blockquote>
+<p>RL 最根本的矛盾：<strong>利用</strong>（Exploitation）——执行当前认为最优的动作，获得即时报偿；<strong>探索</strong>（Exploration）——尝试未知动作，获取信息以改进未来决策。</p>
+</blockquote>
+<ul>
+<li><strong>类比</strong>：去一家新城市吃饭。每次都去评分最高的店（利用）→ 可能错过隐藏神店；每次都试新店（探索）→ 可能连续踩雷。最优策略是两者平衡。</li>
+<li><strong>数学表述</strong>：这是一个经典的 regret 最小化问题——多臂老虎机（Multi-Armed Bandit）是它的最小模型，也是我们第 0 章的内容。</li>
+<li><strong>深度 RL 中的体现</strong>：ε-greedy 随机探索、熵正则（SAC）、内在奖励（ICM/RND）、参数空间噪声。</li>
+</ul>
+<h3 id="14-credit-assignment-problem">1.4 信用分配问题（Credit Assignment Problem）</h3>
+<p>当智能体走完一整局棋才获得最终胜负奖励时，<strong>哪一步棋"值得"这个奖励？</strong> 这是 RL 独有的归因难题：</p>
+<pre><code>回合：s₀ →a₀→ s₁ →a₁→ s₂ →a₂→ s₃ →a₃→ s₄ ... → 终局奖励 R = +1
+问题：这 +1 归功于哪几个动作？每一步对最终结果贡献多少？
+</code></pre>
+<ul>
+<li><strong>蒙特卡洛方法</strong>：整局结束，把总回报均摊给所有步骤（高方差、无偏）</li>
+<li><strong>时序差分方法</strong>：每步用"当前奖励 + 下一步估计"更新（低方差、有偏）</li>
+<li><strong>策略梯度</strong>：用累积回报加权动作概率，配合基线（Baseline）降低方差</li>
+</ul>
+<h3 id="15">1.5 经典格言背后的思想</h3>
+<table>
+<thead>
+<tr>
+<th>格言 / 论断</th>
+<th>出处</th>
+<th>解读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>"强化学习是人工智能的第一个真正计算理论。"</strong></td>
+<td>Sutton</td>
+<td>RL 给出了智能体在不确定环境中学习的最一般框架</td>
+</tr>
+<tr>
+<td><strong>"所有智能都可以理解为最大化期望奖励。"</strong></td>
+<td>奖励假设</td>
+<td>目标设计的统一视角</td>
+</tr>
+<tr>
+<td><strong>"RL 的痛苦在于：你永远在和自己的过去赛跑。"</strong></td>
+<td>社区共识</td>
+<td>策略更新后，旧数据分布失效（非平稳性）</td>
+</tr>
+<tr>
+<td><strong>"没有免费的午餐（No Free Lunch）。"</strong></td>
+<td>Wolpert</td>
+<td>没有算法在所有任务上最优，选型取决于任务特性</td>
+</tr>
+<tr>
+<td><strong>"The bitter lesson."</strong></td>
+<td>Rich Sutton（2019）</td>
+<td>通用方法（搜索 + 学习）长期胜过人工设计的特征与结构</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">二、核心概念：五要素</h2>
+<p>所有 RL 算法都围绕五个基本要素展开。理解它们的定义与关系，是阅读后续所有章节的前提。</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>符号</th>
+<th>定义</th>
+<th>类比（下围棋）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>状态 State</strong></td>
+<td>$s \in S$</td>
+<td>智能体观察到的环境情况</td>
+<td>当前棋盘局面</td>
+</tr>
+<tr>
+<td><strong>动作 Action</strong></td>
+<td>$a \in A$</td>
+<td>智能体可执行的选择</td>
+<td>落子在某个交叉点</td>
+</tr>
+<tr>
+<td><strong>策略 Policy</strong></td>
+<td>$\pi(a|s)$</td>
+<td>状态→动作的映射（RL 要学的对象）</td>
+<td>棋手的落子风格</td>
+</tr>
+<tr>
+<td><strong>奖励 Reward</strong></td>
+<td>$r \in R$</td>
+<td>环境对动作的即时反馈</td>
+<td>提子得利 / 终局胜负</td>
+</tr>
+<tr>
+<td><strong>价值函数 Value</strong></td>
+<td>$V(s), Q(s,a)$</td>
+<td>对"未来累积奖励"的预期</td>
+<td>局面优劣判断</td>
+</tr>
+</tbody>
+</table>
+<p><strong>策略与价值的区别</strong>（RL 最重要的两个概念）：</p>
+<pre><code>策略 π：我应该怎么做？        （行为准则）
+价值 V：现在这局面有多好？    （状态评估）
+</code></pre>
+<ul>
+<li><strong>策略搜索派</strong>：直接优化策略（策略梯度、PPO）</li>
+<li><strong>价值评估派</strong>：先学价值函数，再由价值导出策略（Q-Learning、DQN）</li>
+<li><strong>演员-评论家（Actor-Critic）</strong>：两者结合，策略（演员）+ 价值（评论家）</li>
+</ul>
+<h3 id="21-mdp">2.1 马尔可夫决策过程（MDP）</h3>
+<p>绝大多数 RL 问题的数学框架：</p>
+<pre><code>MDP = (S, A, P, R, γ)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$S$</td>
+<td>状态集合（有限或无限）</td>
+</tr>
+<tr>
+<td>$A$</td>
+<td>动作集合</td>
+</tr>
+<tr>
+<td>$P(s'|s,a)$</td>
+<td>状态转移概率：在 s 执行 a 后到达 s' 的概率</td>
+</tr>
+<tr>
+<td>$R(s,a,s')$</td>
+<td>奖励函数</td>
+</tr>
+<tr>
+<td>$\gamma \in [0,1]$</td>
+<td>折扣因子：未来奖励的折现率</td>
+</tr>
+</tbody>
+</table>
+<p><strong>马尔可夫性质</strong>：下一状态只依赖于当前状态与动作，与更早的历史无关（$P(s_{t+1}|s_t,a_t) = P(s_{t+1}|s_t,a_t,s_{t-1},a_{t-1},...)$）。</p>
+<p><strong>智能体的终极目标</strong>：找到最优策略 $\pi^*$，最大化期望累积折扣回报：</p>
+<p>$$G_t = \sum_{k=0}^{\infty} \gamma^k r_{t+k+1} = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \cdots$$</p>
+<blockquote>
+<p><strong>为什么需要折扣因子 γ？</strong> ① 数学上保证无穷级数收敛；② 经济直觉——未来的收益不如当下的确定；③ 控制"远见"程度：γ→0 是短视（只看当下），γ→1 是远视（看重长远）。</p>
+</blockquote>
+<hr />
+<h2 id="_4">三、技术全景：从表格到深度到对齐</h2>
+<p><img alt="RL 经典里程碑" src="assets/rl-milestones.png" /></p>
+<p>强化学习的发展可以概括为<strong>三次跃迁</strong>：</p>
+<pre><code>1950s-1990s               2013-2016                2017-至今
+┌──────────────┐        ┌──────────────┐        ┌──────────────┐
+│  表格型 RL    │  ────► │   深度 RL     │  ────► │  RL 与 LLM   │
+│ MDP 理论奠基  │        │ DQN 玩 Atari │        │ RLHF 对齐    │
+│ Q-Learning   │        │ AlphaGo 屠龙 │        │ Agent 决策   │
+│ TD-Gammon    │        │ 连续控制 DDPG │        │ 离线/多智能体 │
+└──────────────┘        └──────────────┘        └──────────────┘
+  状态表/查表             神经网络逼近价值/策略      大模型+RL 融合
+</code></pre>
+<ul>
+<li><strong>表格型时代</strong>：状态-动作空间小，用表格精确存储价值。代表：Q-Learning、SARSA、TD-Gammon。</li>
+<li><strong>深度时代</strong>：深度神经网络作为函数逼近器，处理高维状态（像素、传感器）。代表：DQN、PPO、SAC、AlphaGo。</li>
+<li><strong>大模型时代</strong>：RL 用于对齐 LLM（RLHF）、让 Agent 学会工具使用与多步推理。代表：ChatGPT、DeepSeek-R1。</li>
+</ul>
+<h3 id="31">3.1 算法谱系全景</h3>
+<p><img alt="深度强化学习算法谱系" src="assets/rl-family-tree.png" /></p>
+<p><strong>两大主干</strong>（见第 5-7 章）：</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>学习对象</th>
+<th>代表算法</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>基于价值</strong></td>
+<td>价值函数 Q(s,a)</td>
+<td>DQN、Double DQN、Rainbow</td>
+<td>间接导出策略，样本效率较高</td>
+<td>离散动作、Atari 游戏</td>
+</tr>
+<tr>
+<td><strong>基于策略</strong></td>
+<td>策略 π(a|s) 直接</td>
+<td>REINFORCE、PPO</td>
+<td>直接优化目标，稳定</td>
+<td>连续动作、机器人控制</td>
+</tr>
+<tr>
+<td><strong>Actor-Critic</strong></td>
+<td>两者结合</td>
+<td>A2C、DDPG、TD3、SAC</td>
+<td>综合二者优势，SOTA</td>
+<td>复杂连续控制、真实系统</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">四、技术选型框架</h2>
+<blockquote>
+<p><strong>选型关键准则</strong>：没有最好的算法，只有最适合任务的算法。下面按任务特性给出决策路径。</p>
+</blockquote>
+<pre><code>开始
+ │
+ ├─ 环境模型已知？ ──是──► 动态规划（第2章） / 基于模型的规划（第9章）
+ │
+ ├─ 动作空间是离散的？
+ │    ├─ 是，状态低维 ─────► Q-Learning / SARSA（第4章）
+ │    ├─ 是，状态高维 ─────► DQN 家族（第5章）
+ │    └─ 否（连续动作）────► PPO / SAC（第6、7章）
+ │
+ ├─ 有专家演示数据？
+ │    └─ 是，且不想要交互 ──► 模仿学习 / 离线 RL（第9章）
+ │
+ ├─ 多智能体博弈？ ─────────► MADDPG / MAPPO / QMIX（第9章）
+ │
+ └─ 目标是语言模型对齐？ ────► RLHF / DPO（第9章）
+</code></pre>
+<h3 id="41">4.1 常用算法快速对照表</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>类型</th>
+<th>动作空间</th>
+<th>样本效率</th>
+<th>稳定性</th>
+<th>一句话定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q-Learning</td>
+<td>价值</td>
+<td>离散</td>
+<td>低</td>
+<td>中</td>
+<td>表格型 RL 入门必修</td>
+</tr>
+<tr>
+<td>DQN</td>
+<td>价值</td>
+<td>离散</td>
+<td>中</td>
+<td>中</td>
+<td>深度 RL 的开山之作</td>
+</tr>
+<tr>
+<td>REINFORCE</td>
+<td>策略</td>
+<td>任意</td>
+<td>低</td>
+<td>低</td>
+<td>策略梯度最简单的形态</td>
+</tr>
+<tr>
+<td>A2C/A3C</td>
+<td>AC</td>
+<td>任意</td>
+<td>中</td>
+<td>中</td>
+<td>并行加速的 AC 经典</td>
+</tr>
+<tr>
+<td>PPO</td>
+<td>AC</td>
+<td>任意</td>
+<td>高</td>
+<td><strong>高</strong></td>
+<td><strong>工业界默认首选</strong></td>
+</tr>
+<tr>
+<td>DDPG</td>
+<td>AC</td>
+<td>连续</td>
+<td>高</td>
+<td>低</td>
+<td>连续控制先驱，调参难</td>
+</tr>
+<tr>
+<td>TD3</td>
+<td>AC</td>
+<td>连续</td>
+<td>高</td>
+<td>中</td>
+<td>DDPG 的稳健改进版</td>
+</tr>
+<tr>
+<td>SAC</td>
+<td>AC</td>
+<td>连续</td>
+<td><strong>最高</strong></td>
+<td>高</td>
+<td><strong>连续控制 SOTA 首选</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>默认建议</strong>：新任务不知道选什么 → 离散动作用 <strong>DQN（入门）→ Rainbow（进阶）</strong>，连续动作直接 <strong>SAC 或 PPO</strong>。PPO 是鲁棒性之王，SAC 是样本效率之王。</p>
+</blockquote>
+<hr />
+<h2 id="_6">五、学习路径</h2>
+<blockquote>
+<p>按"每月一个里程碑"设计，假设每天投入 1-2 小时，有 Python 基础。</p>
+</blockquote>
+<pre><code>第 1 月  基础与表格型 RL
+         ├─ 概率论回顾、MDP、贝尔曼方程（第1章）
+         ├─ 动态规划：策略迭代 / 价值迭代（第2章）
+         ├─ 多臂老虎机：ε-greedy / UCB / Thompson Sampling（第0章）
+         └─ 🎯 里程碑：手写代码跑通 GridWorld 策略迭代
+                    ↓
+第 2 月  免模型经典算法
+         ├─ 蒙特卡洛 + 时序差分（第3、4章）
+         ├─ SARSA / Q-Learning / n-step TD
+         └─ 🎯 里程碑：在 Cliff Walking 上对比 Q-Learning 与 SARSA 的收敛曲线
+                    ↓
+第 3 月  深度强化学习
+         ├─ 函数逼近、DQN 与改进家族（第5章）
+         ├─ 策略梯度、Actor-Critic、PPO（第6章）
+         ├─ 熟悉 Gymnasium + Stable-Baselines3（第8章）
+         └─ 🎯 里程碑：用 PPO 训练 CartPole / LunarLander 达到满分局
+                    ↓
+第 4 月  连续控制与进阶
+         ├─ DDPG / TD3 / SAC（第7章）
+         ├─ 多智能体、模仿学习、Model-based（第9章）
+         └─ 🎯 里程碑：SAC 在 MuJoCo HalfCheetah 上跑出学习曲线
+                    ↓
+第 5-6 月 工程化与前沿
+         ├─ 调参、评估、可复现性（第10章）
+         ├─ 阅读经典论文（Spinning Up 论文清单）
+         └─ 🎯 里程碑：完成一个端到端 RL 项目（训练→评估→部署）
+</code></pre>
+<p><strong>配套学习资源</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>类型</th>
+<th>定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sutton &amp; Barto《强化学习》(第 2 版)</td>
+<td>教材</td>
+<td>理论圣经，前 6 章必读</td>
+</tr>
+<tr>
+<td>OpenAI Spinning Up</td>
+<td>在线课程</td>
+<td>深度 RL 最佳入门，含代码</td>
+</tr>
+<tr>
+<td>David Silver 强化学习课程</td>
+<td>视频</td>
+<td>与 Sutton 教材配套的经典讲解</td>
+</tr>
+<tr>
+<td>UC Berkeley CS285 (Deep RL)</td>
+<td>课程</td>
+<td>深度 RL 进阶，工程视角</td>
+</tr>
+<tr>
+<td>huggingface deep-rl-class</td>
+<td>课程</td>
+<td>上手最快，带环境与代码练习</td>
+</tr>
+<tr>
+<td>Stable-Baselines3 文档</td>
+<td>文档</td>
+<td>工业级算法库参考</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">六、章节导航</h2>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>内容</th>
+<th>难度</th>
+<th>前置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="00-bandit/">第 0 章：多臂老虎机</a></td>
+<td>探索与利用的最小模型</td>
+<td>⭐</td>
+<td>概率基础</td>
+</tr>
+<tr>
+<td><a href="01-mdp-foundations/">第 1 章：MDP 与数学基础</a></td>
+<td>状态/动作/奖励/贝尔曼方程</td>
+<td>⭐⭐</td>
+<td>第 0 章</td>
+</tr>
+<tr>
+<td><a href="02-dynamic-programming/">第 2 章：动态规划</a></td>
+<td>策略迭代、价值迭代、GPI</td>
+<td>⭐⭐</td>
+<td>第 1 章</td>
+</tr>
+<tr>
+<td><a href="03-monte-carlo-methods/">第 3 章：蒙特卡洛方法</a></td>
+<td>MC 预测/控制、MCTS</td>
+<td>⭐⭐</td>
+<td>第 1 章</td>
+</tr>
+<tr>
+<td><a href="04-temporal-difference/">第 4 章：时序差分学习</a></td>
+<td>SARSA、Q-Learning、TD(λ)</td>
+<td>⭐⭐⭐</td>
+<td>第 2、3 章</td>
+</tr>
+<tr>
+<td><a href="05-value-approximation/">第 5 章：值函数逼近与 DQN</a></td>
+<td>经验回放、DQN 家族</td>
+<td>⭐⭐⭐</td>
+<td>第 4 章</td>
+</tr>
+<tr>
+<td><a href="06-policy-gradient/">第 6 章：策略梯度</a></td>
+<td>REINFORCE、AC、PPO</td>
+<td>⭐⭐⭐</td>
+<td>第 4、5 章</td>
+</tr>
+<tr>
+<td><a href="07-continuous-control/">第 7 章：连续控制</a></td>
+<td>DDPG、TD3、SAC</td>
+<td>⭐⭐⭐⭐</td>
+<td>第 6 章</td>
+</tr>
+<tr>
+<td><a href="08-tools-environments/">第 8 章：环境与工具链</a></td>
+<td>Gymnasium、MuJoCo、SB3</td>
+<td>⭐⭐</td>
+<td>任意章节</td>
+</tr>
+<tr>
+<td><a href="09-advanced-topics/">第 9 章：进阶专题</a></td>
+<td>MARL、RLHF、离线 RL</td>
+<td>⭐⭐⭐⭐</td>
+<td>第 6、7 章</td>
+</tr>
+<tr>
+<td><a href="10-engineering-practice/">第 10 章：工程实践</a></td>
+<td>调参、评估、避坑</td>
+<td>⭐⭐⭐</td>
+<td>全书</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>建议路线</strong>：新手按 0→1→2→3→4→5→6→8→10 顺序精读；有监督学习基础的读者可从第 0 章快速跳到第 5 章；工程导向的读者可先读第 8 章搭建环境再回头补理论。</p>
+</blockquote>
+<hr />
+<blockquote>
+<p><strong>下一步</strong>：从 <a href="00-bandit/">第 0 章：多臂老虎机</a> 开始，用最小的模型理解"探索与利用"这一 RL 第一难题。</p>
+</blockquote></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

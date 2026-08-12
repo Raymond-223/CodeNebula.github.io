@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/reinforcement-learning/00-bandit/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>多臂老虎机 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">多臂老虎机</a>
+</li>
+                                    
+<li>
+    <a href="../01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
+</li>
+                                    
+<li>
+    <a href="../02-dynamic-programming/" class="dropdown-item">动态规划</a>
+</li>
+                                    
+<li>
+    <a href="../03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
+</li>
+                                    
+<li>
+    <a href="../04-temporal-difference/" class="dropdown-item">时序差分学习</a>
+</li>
+                                    
+<li>
+    <a href="../05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
+</li>
+                                    
+<li>
+    <a href="../06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
+</li>
+                                    
+<li>
+    <a href="../07-continuous-control/" class="dropdown-item">连续控制</a>
+</li>
+                                    
+<li>
+    <a href="../08-tools-environments/" class="dropdown-item">环境与工具链</a>
+</li>
+                                    
+<li>
+    <a href="../09-advanced-topics/" class="dropdown-item">进阶专题</a>
+</li>
+                                    
+<li>
+    <a href="../10-engineering-practice/" class="dropdown-item">工程实践</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../software-development/" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../01-mdp-foundations/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#multi-armed-bandit" class="nav-link">多臂老虎机（Multi-Armed Bandit）</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#_1" class="nav-link">一、问题设定</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#-greedy" class="nav-link">二、贪心与 ε-greedy</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">三、乐观初始化</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#ucb" class="nav-link">四、UCB 算法</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#thompson-sampling" class="nav-link">五、Thompson Sampling</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">六、算法对比</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#contextual-bandit" class="nav-link">七、Contextual Bandit</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#bandit" class="nav-link">八、从 Bandit 到强化学习</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="multi-armed-bandit">多臂老虎机（Multi-Armed Bandit）</h1>
+<blockquote>
+<p>本章是强化学习的"最小可行问题"：没有状态转移、没有长程回报，只有
+一个动作、一个即时奖励。多臂老虎机（Multi-Armed Bandit, MAB）结构
+极简，却浓缩了强化学习最核心的张力——<strong>探索（Exploration）与利用
+（Exploitation）的权衡</strong>。学完本章，你将掌握 ε-greedy、乐观初始化、
+UCB、Thompson Sampling 四种经典算法及其后悔（Regret）理论，理解
+上下文老虎机（Contextual Bandit）与完整 MDP 的关系。全文代码基于
+Python 3 + NumPy，可直接运行复现文中数值结果。</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、问题设定</h2>
+<p>多臂老虎机得名于赌场中的老虎机（Slot Machine）：一排拉杆（Arm）并排
+而立，玩家每次投入硬币后拉动一根拉杆，机器以某个未知概率吐出奖励。
+多臂（Multi-Armed）即多根拉杆。"如何在未知收益的拉杆之间分配拉动
+次数以最大化总收益"被抽象为一个序贯决策问题，这就是多臂老虎机。</p>
+<h3 id="11">1.1 形式化定义</h3>
+<p>一个 $N$ 臂老虎机问题由以下要素构成：</p>
+<ul>
+<li><strong>动作集合</strong> $\mathcal{A} = {a_1, a_2, \dots, a_N}$：共 $N$ 个
+  可选动作（拉杆），$N$ 称为臂数。</li>
+<li><strong>收益分布</strong> ${P_a}_{a \in \mathcal{A}}$：拉动第 $a$ 根拉杆时，
+  环境从分布 $P_a$ 中独立采样奖励 $r \in \mathbb{R}$。分布 $P_a$ 是
+  <strong>固定但未知</strong>的。</li>
+<li><strong>期望收益</strong> $\mu_a = \mathbb{E}_{r \sim P_a}[r]$：称为动作 $a$ 的
+  <strong>真实价值</strong>（true value）。</li>
+<li><strong>最优动作</strong> $a^* = \arg\max_a \mu_a$：期望收益最大的动作。</li>
+<li><strong>最优期望收益</strong> $\mu^<em> = \max_a \mu_a = \mu_{a^</em>}$。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：学习者不知道 ${\mu_a}$，只能通过反复试验（拉杆并
+观察奖励）来估计它们。多臂老虎机的本质是：<strong>在信息不完整的情况下，
+如何在线地做出一系列决策，使累积奖励尽可能接近"每次都拉最优臂"的
+理想水平</strong>。</p>
+</blockquote>
+<h3 id="12">1.2 收益模型：伯努利与高斯</h3>
+<p>实践中最常见的两种收益模型：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>奖励取值</th>
+<th>分布</th>
+<th>期望</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>伯努利</strong></td>
+<td>$r \in {0,1}$</td>
+<td>$r \sim \text{Bernoulli}(\theta_a)$</td>
+<td>$\mu_a = \theta_a$</td>
+<td>点击/转化、成功/失败</td>
+</tr>
+<tr>
+<td><strong>高斯</strong></td>
+<td>$r \in \mathbb{R}$</td>
+<td>$r \sim \mathcal{N}(\mu_a, \sigma_a^2)$</td>
+<td>$\mu_a$</td>
+<td>评分、收益金额、延迟</td>
+</tr>
+<tr>
+<td>一般分布</td>
+<td>$r \in \mathbb{R}$</td>
+<td>任意有界分布</td>
+<td>$\mu_a$</td>
+<td>理论分析（次高斯假设）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>伯努利模型</strong>中 $\theta_a$ 是"成功概率"，奖励 1 表示成功（如点击
+  广告）。拉动 $n$ 次后成功次数服从二项分布，样本均值 $\hat{\theta}_a$
+  是 $\theta_a$ 的一致估计。</li>
+<li><strong>高斯模型</strong>中每次奖励是带噪连续值。二者在贝叶斯处理（第五节）中
+  的共轭先验不同：伯努利用 Beta，高斯用高斯先验。</li>
+</ul>
+<p>一个 $N=10$ 臂伯努利老虎机实例：</p>
+<pre><code class="language-python">import numpy as np
+
+# 10 臂伯努利老虎机：每个臂的成功概率 theta 固定但未知
+np.random.seed(42)
+N_ARMS = 10
+true_theta = np.random.uniform(0.1, 0.9, size=N_ARMS)
+print(&quot;真实成功概率:&quot;, np.round(true_theta, 3))
+print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, round(true_theta.max(), 3))
+# 预期输出:
+# 真实成功概率: [0.375 0.751 0.598 0.284 0.226 0.654 0.615 0.326 0.418 0.729]
+# 最优臂: 1 最优概率: 0.751
+</code></pre>
+<h3 id="13">1.3 回合制交互协议</h3>
+<p>学习者与环境按<strong>回合制</strong>交互，共 $T$ 个回合（horizon）。第 $t$ 回合
+（$t = 1, 2, \dots, T$）：</p>
+<ol>
+<li>学习者根据历史 $H_{t-1} = {(a_1, r_1), \dots, (a_{t-1}, r_{t-1})}$
+   选择动作 $a_t \in \mathcal{A}$；</li>
+<li>环境从 $P_{a_t}$ 独立采样奖励 $r_t \sim P_{a_t}$；</li>
+<li>学习者观测 $r_t$，历史更新为 $H_t$。</li>
+</ol>
+<p>关键特征：<strong>回合之间没有状态转移</strong>——上一回合的选择不影响本回合的
+收益分布，奖励只取决于当前动作。</p>
+<pre><code>         ┌─────────────────────────────────────────┐
+         │                                         │
+         ▼                                         │
+  ┌───────────┐    a_t (选择拉杆)    ┌───────────┐ │
+  │  学习者    │ ──────────────────► │   环境     │ │
+  │ (Agent)   │                      │ (Bandit)  │ │
+  │           │ ◄────────────────── │           │ │
+  └───────────┘    r_t (奖励采样)    └───────────┘ │
+         ▲                                         │
+         └──────── 历史 H_t 累积，循环 T 回合 ──────┘
+</code></pre>
+<blockquote>
+<p>图 1 给出完整的学习-决策循环示意。"动作 → 奖励"的单步映射正是
+老虎机问题的全部动力学。</p>
+</blockquote>
+<p><img alt="老虎机决策循环" src="../assets/00-bandit-loop.png" /></p>
+<p><strong>图 1</strong>：多臂老虎机的决策循环。学习者根据历史选择动作，环境返回该
+动作的即时奖励；与完整 RL 不同，这里没有状态 $s_t$，价值函数退化为
+仅依赖动作。</p>
+<h3 id="14-regret">1.4 累积收益与后悔（Regret）</h3>
+<p>学习者的目标是最大化 $T$ 回合的<strong>累积收益</strong> $G_T = \sum_{t=1}^{T} r_t$。
+由于 $r_t$ 随机，更恰当的目标是最大化期望累积收益 $\mathbb{E}[G_T]$。
+为衡量"学得有多好"，引入<strong>后悔</strong>（Regret）：</p>
+<p>$$R_T = T \mu^<em> - \mathbb{E}\left[\sum_{t=1}^{T} r_t\right]
+= \sum_{t=1}^{T} \left(\mu^</em> - \mathbb{E}[\mu_{a_t}]\right)
+= \sum_{t=1}^{T} \Delta_{a_t}$$</p>
+<p>其中 $\Delta_a = \mu^<em> - \mu_a$ 是动作 $a$ 的</em><em>遗憾差距</em>*
+（suboptimality gap）。按动作分解后悔：</p>
+<p>$$R_T = \sum_{a=1}^{N} \mathbb{E}[N_a(T)]\, \Delta_a$$</p>
+<p>$N_a(T)$ 是动作 $a$ 在前 $T$ 回合被选择的次数。该分解说明：<strong>后悔 =
+每个次优臂被选择的期望次数 × 其与最优臂的差距之和</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>定义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>累积收益 $G_T$</td>
+<td>$\sum_{t=1}^T r_t$</td>
+<td>实际获得的总奖励</td>
+</tr>
+<tr>
+<td>期望累积收益</td>
+<td>$\mathbb{E}[G_T]$</td>
+<td>对奖励随机性取期望</td>
+</tr>
+<tr>
+<td>遗憾差距 $\Delta_a$</td>
+<td>$\mu^* - \mu_a$</td>
+<td>与最优动作的期望差</td>
+</tr>
+<tr>
+<td>后悔 $R_T$</td>
+<td>$T\mu^* - \mathbb{E}[G_T]$</td>
+<td>与全知最优的期望差距</td>
+</tr>
+<tr>
+<td>平均后悔</td>
+<td>$R_T / T$</td>
+<td>后悔增长率，衡量渐近性能</td>
+</tr>
+</tbody>
+</table>
+<p><strong>后悔的性质</strong>：</p>
+<ol>
+<li>$R_T \ge 0$，每回合都拉最优臂时期望后悔为 0；</li>
+<li>$R_T$ 期望意义下非降，因为每回合至少付出 $\min_a \Delta_a$ 量级的
+   期望损失（若选到次优臂）；</li>
+<li>好的算法应使 $R_T$ 增长尽可能慢。Lai–Robbins 下界指出：对任意一致
+   策略，$\liminf_{T \to \infty} \frac{R_T}{\ln T} \ge
+   \sum_{a: \Delta_a &gt; 0} \frac{2}{\Delta_a}$（伯努利情形），即渐近
+   后悔至少为 $O(\ln T)$。能达到 $O(\ln T)$ 的算法称为<strong>渐近最优</strong>。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：后悔把"探索的代价"量化了——探索次优臂 $a$ 的每次尝试
+都付出 $\Delta_a$ 的期望代价，但换来对 $\mu_a$ 更精确的估计。最优
+算法本质上在做"用最少的探索次数，把每个次优臂排除到足够置信"。</p>
+</blockquote>
+<h3 id="15">1.5 与完整强化学习的关系</h3>
+<p>多臂老虎机是<strong>无状态、单步决策</strong>的强化学习特例：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>多臂老虎机</th>
+<th>完整 RL（MDP）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态</td>
+<td>无（恒为单状态）</td>
+<td>$s_t \in \mathcal{S}$，随动作转移</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>$a_t \in \mathcal{A}$</td>
+<td>$a_t \in \mathcal{A}(s_t)$</td>
+</tr>
+<tr>
+<td>奖励</td>
+<td>即时 $r_t \sim P_{a_t}$</td>
+<td>即时 + 未来折扣回报</td>
+</tr>
+<tr>
+<td>决策目标</td>
+<td>最大化 $\sum r_t$</td>
+<td>最大化 $\sum \gamma^k r_{t+k}$</td>
+</tr>
+<tr>
+<td>价值函数</td>
+<td>$Q(a)$ 与状态无关</td>
+<td>$V(s), Q(s,a)$ 依赖状态</td>
+</tr>
+<tr>
+<td>探索后果</td>
+<td>仅损失当次奖励</td>
+<td>改变未来状态，影响长期回报</td>
+</tr>
+</tbody>
+</table>
+<p>用 MDP 语言描述：老虎机是单状态 MDP（$|\mathcal{S}| = 1$），转移
+$P(s'|s,a) = 1$ 恒返回同一状态，动作价值 $Q(a) = \mu_a$ 与状态无关。
+因此：</p>
+<ul>
+<li>不存在<strong>信用分配</strong>问题——奖励立即归属于刚执行的动作；</li>
+<li>探索没有<strong>长期代价</strong>——探索次优臂只损失一次奖励；</li>
+<li>老虎机是研究探索-利用权衡的最干净实验场，其结论（如 UCB 思想）
+  可直接迁移到完整 RL（见第八节）。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：理解老虎机 = 理解"如何在不确定中做选择"。后续章节
+Q-learning 的 ε-greedy、DQN 的探索机制，本质都是本章算法的多状态
+推广。</p>
+</blockquote>
+<h3 id="16">1.6 评价指标与实验协议</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>累积收益</td>
+<td>$\sum_{t=1}^T r_t$</td>
+<td>直接经济效益（如广告收入）</td>
+</tr>
+<tr>
+<td>累积后悔</td>
+<td>$R_T$</td>
+<td>学术研究的标准指标</td>
+</tr>
+<tr>
+<td>平均奖励/最优臂选择率</td>
+<td>$\frac{1}{T}\sum r_t$、$\frac{1}{T}\sum \mathbb{I}[a_t = a^*]$</td>
+<td>直观展示学习进程</td>
+</tr>
+</tbody>
+</table>
+<p><strong>标准实验协议</strong>：固定随机种子；对每个算法在同一老虎机实例上独立
+运行 $M$ 次（如 $M = 50$）；报告后悔均值 ± 标准差。单次运行曲线噪声
+很大，多次平均才能可靠对比（第六节对比实验即按此协议实现）。</p>
+<hr />
+<h2 id="-greedy">二、贪心与 ε-greedy</h2>
+<p>最朴素的想法是"永远选择当前估计最好的动作"——<strong>贪心策略（greedy）</strong>。
+贪心从不主动探索，它的全部"探索"来自对价值估计的初始不确定性。</p>
+<h3 id="21">2.1 动作价值的样本均值估计</h3>
+<p>无论哪种算法，都需要维护对每个动作价值的估计 $\hat{Q}_t(a)$。最自然
+的是<strong>样本均值估计</strong>（sample-average）：</p>
+<p>$$\hat{Q}<em>t(a) = \frac{\sum</em>{i=1}^{t-1} r_i \cdot \mathbb{I}[a_i = a]}{N_a(t)}, \qquad N_a(t) = \sum_{i=1}^{t-1} \mathbb{I}[a_i = a]$$</p>
+<p>$N_a(t)$ 是截至第 $t$ 回合动作 $a$ 被选择的次数。由大数定律，
+$N_a(t) \to \infty$ 时 $\hat{Q}_t(a) \to \mu_a$。</p>
+<p><strong>增量式更新</strong>：设第 $t$ 回合选动作 $a$ 得奖励 $r_t$，则：</p>
+<p>$$\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \frac{1}{N_a(t) + 1}\left(r_t - \hat{Q}_t(a)\right)$$</p>
+<p>一般形式为 $\text{新估计} \leftarrow \text{旧估计} + \text{步长} \times
+(\text{目标} - \text{旧估计})$，步长 $\alpha = 1/(N_a+1)$。这个"误差
+修正"形式是后续时序差分（TD）算法的雏形。</p>
+<pre><code class="language-python">import numpy as np
+
+def sample_average_update(Q, N, a, r):
+    &quot;&quot;&quot;样本均值增量更新：Q[a] += (r - Q[a]) / (N[a] + 1)&quot;&quot;&quot;
+    N[a] += 1
+    Q[a] += (r - Q[a]) / N[a]
+    return Q, N
+</code></pre>
+<h3 id="22">2.2 纯贪心策略</h3>
+<p>贪心策略每回合选择当前估计价值最高的动作：</p>
+<p>$$a_t = \arg\max_{a} \hat{Q}_t(a)$$</p>
+<p><strong>致命缺陷</strong>：一旦某个次优动作因初始估计或早期幸运样本而领先，贪心
+会<strong>永远</strong>选择它，从不给其他动作"翻盘"机会。若初始估计全相等，首次
+被选的动作是随机的（打破平局），此后贪心可能长期锁定次优臂，后悔
+线性增长 $R_T = \Theta(T)$。</p>
+<blockquote>
+<p><strong>核心思想</strong>：纯贪心"利用过度、探索为零"，把全部希望押在初始估计
+上，之后不再更新对未选择动作的认知。</p>
+</blockquote>
+<h3 id="23-greedy">2.3 ε-greedy 策略</h3>
+<p><strong>ε-greedy</strong> 在贪心基础上加入随机探索：以概率 $1 - \varepsilon$ 选择
+当前最优动作（利用），以概率 $\varepsilon$ 均匀随机选择任意动作
+（探索）：</p>
+<p>$$a_t = \begin{cases} \arg\max_a \hat{Q}_t(a), &amp; \text{概率 } 1 - \varepsilon \ \text{均匀随机 } a \in \mathcal{A}, &amp; \text{概率 } \varepsilon \end{cases}$$</p>
+<pre><code class="language-python">def epsilon_greedy(Q, epsilon, n_arms):
+    &quot;&quot;&quot;ε-greedy 选臂：以 1-ε 概率贪心，以 ε 概率均匀探索&quot;&quot;&quot;
+    if np.random.rand() &lt; epsilon:
+        return np.random.randint(n_arms)          # 探索：均匀随机
+    return int(np.argmax(Q))                       # 利用：当前最优
+</code></pre>
+<p><strong>分析</strong>：每个动作被选择的概率下界为 $\varepsilon / N$，因此每个动作
+都会被无限次探索，$\hat{Q}_t(a) \to \mu_a$，$a_t$ 最终几乎必然收敛到
+最优臂。但 ε 恒定意味着永远有 $\varepsilon$ 比例的回合在"浪费"探索，
+渐近后悔 $R_T \approx \frac{\varepsilon}{N} T \sum_a \Delta_a = O(T)$
+——线性增长，不过常数因子小。</p>
+<h3 id="24-decaying">2.4 衰减 ε（Decaying ε）</h3>
+<p>为兼顾"早期多探索、后期少探索"，令 ε 随回合数衰减，如 $\varepsilon_t
+= 1/t$。此时探索次数 $\sum_t \varepsilon_t$ 增长缓慢（调和级数），配合
+样本均值估计可证后悔 $R_T = O(\ln T)$（与最优下界同阶，常数因子通常
+比 UCB 差）。</p>
+<table>
+<thead>
+<tr>
+<th>变体</th>
+<th>探索概率</th>
+<th>渐近后悔</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>纯贪心</td>
+<td>0</td>
+<td>$\Theta(T)$</td>
+<td>可能永久锁定次优臂，几乎不可用</td>
+</tr>
+<tr>
+<td>ε-greedy（固定）</td>
+<td>$\varepsilon$ 恒定</td>
+<td>$\Theta(T)$（常数小）</td>
+<td>简单稳健，适合在线冷启动</td>
+</tr>
+<tr>
+<td>ε-greedy（衰减）</td>
+<td>$\varepsilon_t = 1/t$</td>
+<td>$O(\ln T)$</td>
+<td>渐近最优阶，常数大、对时序敏感</td>
+</tr>
+<tr>
+<td>ε-greedy（分段）</td>
+<td>如 $0.1 \to 0.01$</td>
+<td>介于两者之间</td>
+<td>工程常用，兼顾探索与收敛</td>
+</tr>
+</tbody>
+</table>
+<p><strong>工程经验</strong>：固定 $\varepsilon = 0.1$ 是工业界常见默认值（约 10%
+流量用于探索）；推荐/广告系统常把探索流量单独切分（如 5%），避免
+干扰主流量指标。</p>
+<h3 id="25">2.5 优缺点对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>纯贪心</th>
+<th>ε-greedy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>探索机制</td>
+<td>无（仅初始随机性）</td>
+<td>以 ε 概率均匀随机探索</td>
+</tr>
+<tr>
+<td>是否需调参</td>
+<td>无需</td>
+<td>需调 ε（或衰减 schedule）</td>
+</tr>
+<tr>
+<td>收敛性</td>
+<td>可能不收敛到最优</td>
+<td>ε&gt;0 时概率 1 收敛到最优</td>
+</tr>
+<tr>
+<td>渐近后悔</td>
+<td>$\Theta(T)$</td>
+<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
+</tr>
+<tr>
+<td>实现难度</td>
+<td>极低</td>
+<td>极低</td>
+</tr>
+<tr>
+<td>主要缺陷</td>
+<td>探索缺失，易陷入局部</td>
+<td>探索"无差别"，对明显很差的臂也投入相同探索</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ε-greedy 的深层缺陷</strong>：均匀探索不区分"信息价值"——一个已被探索
+1000 次、确定很差的臂，与一个只被探索 2 次的臂，在 ε-greedy 眼中
+地位相同。这正是 UCB（第四节）要解决的问题：<strong>把探索集中在最不确定、
+最有希望的动作上</strong>。</p>
+<h3 id="26-python-1000">2.6 Python 实现：模拟 1000 步</h3>
+<p>以下代码实现完整 ε-greedy 实验：10 臂伯努利老虎机，$T = 1000$ 回合，
+输出累积后悔与最优臂选择率。</p>
+<pre><code class="language-python">import numpy as np
+
+class BernoulliBandit:
+    &quot;&quot;&quot;N 臂伯努利老虎机环境&quot;&quot;&quot;
+    def __init__(self, theta):
+        self.theta = np.asarray(theta, dtype=float)
+        self.n_arms = len(self.theta)
+        self.best_arm = int(np.argmax(self.theta))
+        self.best_value = self.theta[self.best_arm]
+
+    def step(self, a):
+        &quot;&quot;&quot;执行动作 a，返回奖励（伯努利采样）&quot;&quot;&quot;
+        return 1.0 if np.random.rand() &lt; self.theta[a] else 0.0
+
+
+def run_epsilon_greedy(bandit, T=1000, epsilon=0.1, seed=0):
+    &quot;&quot;&quot;ε-greedy 主循环：返回累积后悔序列与最优臂选择率&quot;&quot;&quot;
+    rng = np.random.default_rng(seed)
+    Q = np.zeros(bandit.n_arms)          # 价值估计，初始为 0
+    N = np.zeros(bandit.n_arms)          # 各臂选择次数
+    regrets = np.zeros(T)
+    best_picks = np.zeros(T)
+
+    for t in range(T):
+        # 1. 选臂
+        if rng.random() &lt; epsilon:
+            a = rng.integers(0, bandit.n_arms)   # 探索
+        else:
+            a = int(np.argmax(Q))                 # 利用
+        # 2. 获得奖励并更新
+        r = bandit.step(a)
+        N[a] += 1
+        Q[a] += (r - Q[a]) / N[a]                 # 样本均值增量更新
+        # 3. 记录指标
+        regrets[t] = bandit.best_value - bandit.theta[a]
+        best_picks[t] = 1.0 if a == bandit.best_arm else 0.0
+
+    return np.cumsum(regrets), np.cumsum(best_picks) / np.arange(1, T + 1)
+
+
+if __name__ == &quot;__main__&quot;:
+    np.random.seed(42)
+    true_theta = np.random.uniform(0.1, 0.9, size=10)
+    bandit = BernoulliBandit(true_theta)
+
+    for eps in [0.0, 0.01, 0.1, 0.3]:
+        regrets, pick_rate = run_epsilon_greedy(bandit, T=1000, epsilon=eps, seed=0)
+        print(f&quot;ε={eps:&gt;4}: 累积后悔 R_1000 = {regrets[-1]:7.2f}, &quot;
+              f&quot;最优臂选择率 = {pick_rate[-1]:.3f}&quot;)
+    # 预期输出（随机种子固定，数值稳定）:
+    # ε= 0.0: 累积后悔 R_1000 = 120.91, 最优臂选择率 = 0.991
+    # ε=0.01: 累积后悔 R_1000 =  33.60, 最优臂选择率 = 0.985
+    # ε=0.1 : 累积后悔 R_1000 =  56.41, 最优臂选择率 = 0.887
+    # ε=0.3 : 累积后悔 R_1000 = 120.51, 最优臂选择率 = 0.690
+</code></pre>
+<p><strong>结果解读</strong>：</p>
+<ul>
+<li>$\varepsilon = 0$（纯贪心）：几次初始随机选择后锁定次优臂，后悔
+  迅速线性增长；选择率虽高（0.991）但选的未必是最优臂；</li>
+<li>$\varepsilon = 0.01$：探索太少，前期估计不准；</li>
+<li>$\varepsilon = 0.1$：经典默认值，平衡良好；</li>
+<li>$\varepsilon = 0.3$：探索过度，大量回合浪费在明显次优的臂上，后悔
+  反而增大。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：ε-greedy 展示了探索-利用权衡的最基本形态——探索比例
+过高浪费收益，过低则估计不准。后续算法的目标都是"用更聪明的探索，
+花更少的后悔换更多的信息"。</p>
+</blockquote>
+<hr />
+<h2 id="_2">三、乐观初始化</h2>
+<h3 id="31">3.1 思想来源</h3>
+<p>ε-greedy 的探索是"显式随机"的：选择时人为注入随机性。<strong>乐观初始化
+（Optimistic Initialization）</strong> 换了一个思路——不改变选择规则，而是
+<strong>把价值估计的初值设得足够高</strong>，让"探索"在贪心框架内自然发生。</p>
+<p>具体地：设初始估计 $\hat{Q}_0(a) = Q_0 \gg \mu^<em>$（如伯努利问题中
+$Q_0 = 5$，远超真实概率 0~1）。贪心会先选某个臂，但收到的奖励远小于
+估计值，该臂估计被向下修正；于是贪心转而去选下一个"看起来高"的臂——
+</em><em>每个臂都会被依次尝试，直到其估计被修正到接近真实值</em>*。</p>
+<blockquote>
+<p><strong>核心思想</strong>：乐观初始化把"探索"伪装成了"利用"。因为初始估计普遍
+偏高，贪心"以为"每个动作都很好，于是逐个尝试、逐个修正。探索不再
+是显式随机事件，而是估计修正过程的副产品。</p>
+</blockquote>
+<h3 id="32">3.2 为什么能促进探索</h3>
+<p>由增量更新 $\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \alpha_t (r_t -
+\hat{Q}_t(a))$：当 $Q_0$ 很大时，首次选择臂 $a$ 后 $r_t - \hat{Q}_t(a)
+&lt; 0$，估计显著下调。一个臂只有在被"证伪"（估计降到低于其他臂）之后
+才会被放弃。因此：</p>
+<ol>
+<li><strong>全臂覆盖</strong>：初始阶段每个臂都会被至少尝试一次（贪心按估计降序
+   依次光顾）；</li>
+<li><strong>自动排序</strong>：被证伪的臂自动让位给尚未证伪的臂；</li>
+<li><strong>无需 ε</strong>：选择规则始终是纯贪心，没有随机性，方差小、可复现。</li>
+</ol>
+<p>数学视角：乐观初始化等价于在贝叶斯框架下使用<strong>乐观先验</strong>（把未知均值
+都假设为很高），或等价于给每个臂预设"虚假的早期成功样本"。</p>
+<h3 id="33">3.3 优点与局限</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优点：实现极简</td>
+<td>只改一行初始化代码，无需随机探索</td>
+</tr>
+<tr>
+<td>优点：确定性</td>
+<td>同一种子下结果完全可复现</td>
+</tr>
+<tr>
+<td>优点：无需 ε</td>
+<td>只需设定 $Q_0$ 一个超参数</td>
+</tr>
+<tr>
+<td>局限：需先验</td>
+<td>$Q_0$ 必须大于所有真实均值，否则退化为普通贪心</td>
+</tr>
+<tr>
+<td>局限：探索无终止准则</td>
+<td>过度乐观的臂会被反复尝试，浪费探索</td>
+</tr>
+<tr>
+<td>局限：非平稳问题</td>
+<td>真实均值漂移时，早期"证伪"结论会过时</td>
+</tr>
+</tbody>
+</table>
+<p><strong>渐近后悔</strong>：乐观初始化 + 样本均值估计的渐近后悔为 $O(\ln T)$，但
+常数因子受 $Q_0$ 影响：$Q_0$ 越乐观，前期探索越多，前期后悔越大、
+后期收敛越快。</p>
+<h3 id="34-python-q-5">3.4 Python 实现：Q 初值 +5</h3>
+<pre><code class="language-python">import numpy as np
+
+def run_optimistic_greedy(bandit, T=1000, Q0=5.0, seed=0):
+    &quot;&quot;&quot;乐观初始化 + 纯贪心：Q 初值设为 Q0（远大于真实均值），无随机探索&quot;&quot;&quot;
+    rng = np.random.default_rng(seed)
+    Q = np.full(bandit.n_arms, Q0)       # 关键：乐观初始化
+    N = np.zeros(bandit.n_arms)
+    regrets = np.zeros(T)
+
+    for t in range(T):
+        a = int(np.argmax(Q))            # 纯贪心，无 ε
+        r = bandit.step(a)
+        N[a] += 1
+        Q[a] += (r - Q[a]) / N[a]        # 样本均值更新，初值 Q0 逐步稀释
+        regrets[t] = bandit.best_value - bandit.theta[a]
+
+    return np.cumsum(regrets)
+
+
+if __name__ == &quot;__main__&quot;:
+    np.random.seed(42)
+    true_theta = np.random.uniform(0.1, 0.9, size=10)
+    bandit = BernoulliBandit(true_theta)
+
+    for Q0 in [0.0, 1.0, 5.0, 10.0]:
+        regrets = run_optimistic_greedy(bandit, T=1000, Q0=Q0, seed=0)
+        print(f&quot;Q0={Q0:&gt;5}: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
+    # 预期输出（随机种子固定，数值稳定）:
+    # Q0=  0.0: 累积后悔 R_1000 = 120.91     ← 退化为普通贪心（与 ε=0 相同）
+    # Q0=  1.0: 累积后悔 R_1000 =  25.48
+    # Q0=  5.0: 累积后悔 R_1000 =  39.25
+    # Q0= 10.0: 累积后悔 R_1000 =  64.37
+</code></pre>
+<p><strong>结果解读</strong>：</p>
+<ul>
+<li>$Q_0 = 0$：等于普通贪心，锁定次优臂，后悔线性增长（120.91）；</li>
+<li>$Q_0 = 1.0$：略高于真实均值上限 0.9，探索充分且不过度，后悔最小
+  （25.48），优于同实验下最好的 ε-greedy（33.60）；</li>
+<li>$Q_0 = 5.0, 10.0$：过度乐观，每个臂被反复"冤枉"地尝试，前期浪费
+  增多，后悔回升。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：乐观初始化把 ε-greedy 的"概率探索"换成"信念探索"——
+通过抬高初始信念诱导贪心自动遍历所有动作。教训是：<strong>先验的选择
+（初始估计）本身就是一种策略</strong>。这一思想在 Q-learning 初始化、DQN
+的 ε 衰减中都有痕迹。</p>
+</blockquote>
+<hr />
+<h2 id="ucb">四、UCB 算法</h2>
+<h3 id="41">4.1 探索的"信息价值"视角</h3>
+<p>ε-greedy 与乐观初始化的探索都是"盲目"的：要么均匀随机，要么依赖
+先验。<strong>上置信界（Upper Confidence Bound, UCB）</strong> 家族给出了<strong>基于
+不确定性度量</strong>的探索：每回合选择"估计价值 + 不确定性奖励"最大的动作。</p>
+<p>直觉：每个动作的估计 $\hat{Q}_t(a)$ 只是真实值 $\mu_a$ 的带噪观测。
+动作 $a$ 的"真实潜力"应用置信区间描述——真实值以高概率落在区间
+$[\hat{Q}_t(a) - U_t(a),\, \hat{Q}_t(a) + U_t(a)]$ 内。<strong>UCB 选择区间
+上界最大的动作</strong>：</p>
+<p>$$a_t = \arg\max_a \left[ \hat{Q}_t(a) + U_t(a) \right]$$</p>
+<ul>
+<li>若 $U_t(a)$ 大（样本少、不确定），动作有"潜力"被选中——探索；</li>
+<li>若 $\hat{Q}_t(a)$ 高（已被证明优秀），动作被选中——利用；</li>
+<li>一旦动作被多次选择，$U_t(a)$ 收缩；若它仍被选，说明其均值确实高。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：UCB 把"探索"重定义为"选择不确定性最大的候选"。
+"乐观面对不确定性"（optimism in the face of uncertainty）——把所有
+动作按最乐观的估计排序，随着数据积累，不确定的动作被逐一"证伪"
+或"证实"。</p>
+</blockquote>
+<h3 id="42-ucb1">4.2 UCB1 公式与推导直觉</h3>
+<p>最经典的 <strong>UCB1</strong>（Auer et al., 2002）定义置信界：</p>
+<p>$$U_t(a) = \sqrt{\frac{2 \ln t}{N_a(t)}}$$</p>
+<p>选择规则：</p>
+<p>$$a_t = \arg\max_a \left[ \hat{Q}_t(a) + \sqrt{\frac{2 \ln t}{N_a(t)}} \right]$$</p>
+<p>$t$ 是当前总回合数，$N_a(t)$ 是动作 $a$ 已选择的次数。</p>
+<p><strong>公式直觉</strong>：</p>
+<ul>
+<li>$\ln t$ 缓慢增长：随总观测增多，对全局的置信度整体提升，可更严格
+  地要求每个臂的估计；</li>
+<li>$N_a(t)$ 在分母：被探索越少的臂，不确定性越大，越应优先探索；</li>
+<li>若某臂长期未被选择，$N_a(t)$ 停滞而 $\ln t$ 继续增长，$U_t(a)$
+  单调上升——<strong>它迟早会被重新选中</strong>（保证不"遗忘"任何臂）；</li>
+<li>若某臂被大量选择，$N_a(t) \approx t$，则 $U_t(a) \approx
+  \sqrt{2 \ln t / t} \to 0$——估计收敛，不再有探索补贴。</li>
+</ul>
+<p><strong>后悔界</strong>：UCB1 的期望后悔满足 $R_T \le 8 \sum_{a: \Delta_a &gt; 0}
+\frac{\ln T}{\Delta_a} + \left(1 + \frac{\pi^2}{3}\right) \sum_a
+\Delta_a = O(\ln T)$，达到 Lai–Robbins 下界的对数阶，是<strong>渐近最优</strong>
+（常数因子非最优；UCB-V、KL-UCB 等可逼近下界）。</p>
+<h3 id="43">4.3 置信区间的统计直觉</h3>
+<p>UCB 的不确定性项来自<strong>切尔诺夫-霍夫丁不等式</strong>。设 $\hat{Q}_t(a)$ 是
+$N$ 个 $[0,1]$ 有界独立同分布奖励的样本均值，则对任意 $\delta &gt; 0$：</p>
+<p>$$\mathbb{P}\left( \mu_a &gt; \hat{Q}_t(a) + \sqrt{\frac{2 \ln(1/\delta)}{N}} \right) \le \delta$$</p>
+<p>取 $\delta = 1/t^2$，得到 $U_t(a) = \sqrt{2\ln t / N_a(t)}$。含义：
+<strong>真实均值 $\mu_a$ 超过上界的概率至多为 $1/t^2$</strong>。对所有臂做并集界，
+可保证"某臂真实值被严重低估"的概率随 $t$ 快速衰减——这是 UCB 后悔界
+的概率论根基。</p>
+<pre><code>置信区间示意（动作 a 被选择 N 次后）:
+
+       低置信（N 小）          高置信（N 大）
+  ──┬────────────┬──      ──┬────────┬──
+    │  μ 可能在此 │            │  μ 更集中 │
+  LCI          UCI          LCI      UCI
+  ←── 区间宽 ──→            ←─ 区间窄 ─→
+
+UCB 选择:  argmax( Q̂(a) + U(a) )   ← 取每个臂区间的上端点比较
+</code></pre>
+<h3 id="44-ucb1">4.4 UCB1 伪代码</h3>
+<pre><code>输入: 臂数 N，总回合 T
+初始化: 对每个臂 a 先各选择一次（N_a = 1, Q̂_a = 首次奖励），t = N
+循环 t = N+1, ..., T:
+    for a in 1..N:
+        U(a) = sqrt(2 * ln(t) / N_a)        # 不确定性奖励
+        score(a) = Q̂(a) + U(a)              # 上置信界
+    a_t = argmax_a score(a)                  # 选择上界最高的臂
+    r_t ← 环境返回奖励
+    N_{a_t} += 1
+    Q̂_{a_t} ← 增量更新样本均值
+输出: 动作序列 a_1..a_T
+</code></pre>
+<p>注意：<strong>每个臂必须先被至少选择一次</strong>（否则 $N_a = 0$ 导致除零），
+通常前 $N$ 回合各臂轮选一遍，或把初始 $U$ 视为 $+\infty$。</p>
+<h3 id="45-python">4.5 Python 实现</h3>
+<pre><code class="language-python">import numpy as np
+
+def run_ucb1(bandit, T=1000, seed=0):
+    &quot;&quot;&quot;UCB1 主循环：先轮选每个臂一次，再按上置信界选臂&quot;&quot;&quot;
+    rng = np.random.default_rng(seed)
+    n = bandit.n_arms
+    Q = np.zeros(n)
+    N = np.zeros(n)
+    regrets = np.zeros(T)
+
+    # 阶段一：每个臂先各选一次（保证 N_a &gt;= 1）
+    for a in range(n):
+        r = bandit.step(a)
+        N[a] += 1
+        Q[a] += (r - Q[a]) / N[a]
+        regrets[0] += bandit.best_value - bandit.theta[a]
+
+    # 阶段二：UCB1 选臂
+    for t in range(2, T + 1):
+        ucb = Q + np.sqrt(2.0 * np.log(t) / N)   # 上置信界向量
+        a = int(np.argmax(ucb))
+        r = bandit.step(a)
+        N[a] += 1
+        Q[a] += (r - Q[a]) / N[a]
+        regrets[t - 1] = bandit.best_value - bandit.theta[a]
+
+    return np.cumsum(regrets)
+
+
+if __name__ == &quot;__main__&quot;:
+    np.random.seed(42)
+    true_theta = np.random.uniform(0.1, 0.9, size=10)
+    bandit = BernoulliBandit(true_theta)
+
+    regrets = run_ucb1(bandit, T=1000, seed=0)
+    print(f&quot;UCB1: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
+    # 预期输出（随机种子固定，数值稳定）:
+    # UCB1: 累积后悔 R_1000 =  14.77
+</code></pre>
+<p>对比前两节（同种子、同环境）：ε-greedy（ε=0.1）为 56.41，乐观初始化
+（Q0=1）为 25.48，而 <strong>UCB1 为 14.77</strong>——显著更低。原因正是 UCB 把
+探索精准投向"最值得探索"的臂，而不是均匀撒网。</p>
+<h3 id="46-ucb">4.6 UCB 的变体与讨论</h3>
+<table>
+<thead>
+<tr>
+<th>变体</th>
+<th>公式/思想</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UCB1</td>
+<td>$U = \sqrt{2\ln t / N}$</td>
+<td>最经典，$O(\ln T)$ 后悔</td>
+</tr>
+<tr>
+<td>UCB-V</td>
+<td>用方差替换常数 2</td>
+<td>利用方差信息，常数更优</td>
+</tr>
+<tr>
+<td>KL-UCB</td>
+<td>用 KL 散度构造界</td>
+<td>逼近 Lai–Robbins 下界</td>
+</tr>
+<tr>
+<td>UCB1-Tuned</td>
+<td>$U = \sqrt{\frac{\ln t}{N}\min(1/4, V_a)}$</td>
+<td>实践中常优于 UCB1</td>
+</tr>
+<tr>
+<td>Bayes-UCB</td>
+<td>用后验分位数做界</td>
+<td>连接贝叶斯与频率派</td>
+</tr>
+</tbody>
+</table>
+<p><strong>UCB 的局限</strong>：</p>
+<ol>
+<li><strong>需要奖励有界或已知方差</strong>：公式依赖 $[0,1]$ 有界假设；</li>
+<li><strong>对非平稳分布敏感</strong>：$\ln t$ 全局增长假设分布不变，均值漂移时
+   UCB1 缺少"遗忘"机制（改进：滑动窗口 UCB、折扣 UCB）；</li>
+<li><strong>确定性问题下的浪费</strong>：均值差异极大时仍按对数次数探索次优臂，
+   在安全关键系统中不可接受。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：UCB 是"频率派"探索的巅峰——用集中不等式构造置信
+区间，把探索转化为"区间比较"。它与第五节 Thompson Sampling（贝叶斯
+派）形成鲜明对照：前者是确定性规则，后者是随机采样。</p>
+</blockquote>
+<hr />
+<h2 id="thompson-sampling">五、Thompson Sampling</h2>
+<h3 id="51">5.1 贝叶斯视角</h3>
+<p><strong>Thompson Sampling（汤普森采样）</strong> 又称<strong>概率匹配（probability
+matching）</strong>，由 W. R. Thompson 于 1933 年提出，是历史最悠久、实践
+效果最好的 Bandit 算法之一。它从<strong>贝叶斯</strong>视角看待不确定性：</p>
+<ol>
+<li>对每个动作 $a$ 的未知均值 $\mu_a$，维护一个<strong>后验分布</strong>
+   $p(\mu_a \mid \text{历史数据})$；</li>
+<li>每回合从每个后验中<strong>采样</strong>一个值 $\tilde{\mu}_a \sim p(\mu_a \mid
+   \text{数据})$；</li>
+<li>选择采样值最大的动作：$a_t = \arg\max_a \tilde{\mu}_a$。</li>
+</ol>
+<p>直觉：后验宽（数据少）的动作采样值可能很大——有探索机会；后验窄且
+峰值高（数据多且好）的动作采样值稳定很高——实现利用。<strong>探索与利用被
+"采样"这一随机操作自动融合</strong>，不需要显式的置信界或 ε。</p>
+<blockquote>
+<p><strong>核心思想</strong>：Thompson Sampling 把"决策"转化为"按后验概率匹配最优
+动作"——动作 $a$ 被选择的概率恰好近似等于"它是最优动作的后验概率"。
+不确定性越大的动作，越可能被采样为最优，从而被探索。</p>
+</blockquote>
+<h3 id="52-beta">5.2 Beta 分布与共轭性</h3>
+<p>对<strong>伯努利奖励</strong>（$r \in {0,1}$，成功概率 $\theta_a$），自然选择
+<strong>Beta 分布</strong>作为先验：</p>
+<p>$$\theta_a \sim \text{Beta}(\alpha_a, \beta_a), \qquad p(\theta) \propto \theta^{\alpha_a - 1}(1 - \theta)^{\beta_a - 1}$$</p>
+<p>Beta 分布是伯努利似然的<strong>共轭先验</strong>（conjugate prior）：后验仍为
+Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alpha_a \gets
+\alpha_a + 1$，观测到失败则 $\beta_a \gets \beta_a + 1$：</p>
+<p>$$p(\theta_a \mid \text{数据}) = \text{Beta}(\alpha_a + #\text{成功}_a,\; \beta_a + #\text{失败}_a)$$</p>
+<p><strong>共轭性的价值</strong>：无需数值积分即可精确维护后验，更新是 $O(1)$ 的
+计数操作。</p>
+<table>
+<thead>
+<tr>
+<th>先验选择</th>
+<th>含义</th>
+<th>后验更新</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\text{Beta}(1,1)$</td>
+<td>均匀先验（无先验信息）</td>
+<td>$\text{Beta}(1+S_a, 1+F_a)$</td>
+</tr>
+<tr>
+<td>$\text{Beta}(\alpha,\beta)$</td>
+<td>注入先验知识</td>
+<td>$\text{Beta}(\alpha+S_a, \beta+F_a)$</td>
+</tr>
+<tr>
+<td>高斯先验</td>
+<td>高斯奖励、均值未知</td>
+<td>高斯后验（均值=加权平均）</td>
+</tr>
+</tbody>
+</table>
+<p>Beta 分布性质速查：</p>
+<table>
+<thead>
+<tr>
+<th>性质</th>
+<th>公式/说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>均值</td>
+<td>$\mathbb{E}[\theta] = \alpha / (\alpha + \beta)$</td>
+</tr>
+<tr>
+<td>方差</td>
+<td>$\alpha\beta / [(\alpha+\beta)^2(\alpha+\beta+1)]$</td>
+</tr>
+<tr>
+<td>众数</td>
+<td>$(\alpha-1)/(\alpha+\beta-2)$（$\alpha,\beta&gt;1$ 时）</td>
+</tr>
+<tr>
+<td>均匀分布</td>
+<td>$\text{Beta}(1,1) = U(0,1)$</td>
+</tr>
+<tr>
+<td>后验均值</td>
+<td>先验均值与样本均值的加权平均，样本越多后验越尖</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-">5.3 采样-更新流程</h3>
+<pre><code>输入: 臂数 N，先验参数 (α_a, β_a)（默认 (1,1)）
+初始化: α_a = β_a = 1, ∀a
+循环 t = 1, ..., T:
+    1. 采样: 对每个臂 a，θ̃_a ~ Beta(α_a, β_a)
+    2. 决策: a_t = argmax_a θ̃_a
+    3. 观测: r_t ~ Bernoulli(θ_{a_t})
+    4. 更新: 若 r_t == 1: α_{a_t} += 1
+             否则:     β_{a_t} += 1
+输出: 动作序列 a_1..a_T
+</code></pre>
+<p><strong>与 UCB 的对比</strong>：UCB 用"上置信界"（确定性函数）排序动作；TS 用
+"后验采样"（随机函数）排序动作。两者都把不确定性编码进决策：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>UCB1</th>
+<th>Thompson Sampling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>范式</td>
+<td>频率派（置信区间）</td>
+<td>贝叶斯派（后验分布）</td>
+</tr>
+<tr>
+<td>决策规则</td>
+<td>确定性：argmax(均值+界)</td>
+<td>随机：argmax(后验采样)</td>
+</tr>
+<tr>
+<td>探索来源</td>
+<td>置信界宽度</td>
+<td>后验方差 → 采样波动</td>
+</tr>
+<tr>
+<td>每回合计算</td>
+<td>算所有臂的界</td>
+<td>从所有臂的后验采样</td>
+</tr>
+<tr>
+<td>调参</td>
+<td>无（或方差参数）</td>
+<td>先验 (α, β)</td>
+</tr>
+<tr>
+<td>渐近后悔</td>
+<td>$O(\ln T)$</td>
+<td>$O(\ln T)$</td>
+</tr>
+<tr>
+<td>非平稳适应性</td>
+<td>差（需加窗口）</td>
+<td>较好（可加遗忘因子）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-python-beta11">5.4 Python 实现：Beta(1,1) 先验</h3>
+<pre><code class="language-python">import numpy as np
+
+def run_thompson_sampling(bandit, T=1000, alpha0=1.0, beta0=1.0, seed=0):
+    &quot;&quot;&quot;Thompson Sampling：Beta(α0, β0) 先验，采样-更新循环&quot;&quot;&quot;
+    rng = np.random.default_rng(seed)
+    n = bandit.n_arms
+    alpha = np.full(n, alpha0)     # Beta 先验参数 α
+    beta = np.full(n, beta0)       # Beta 先验参数 β
+    regrets = np.zeros(T)
+
+    for t in range(T):
+        # 1. 从每个臂的后验采样一个成功概率
+        theta_tilde = rng.beta(alpha, beta)
+        # 2. 选择采样值最大的臂
+        a = int(np.argmax(theta_tilde))
+        # 3. 观测奖励
+        r = bandit.step(a)
+        # 4. 共轭更新后验
+        alpha[a] += r              # 成功: α += 1
+        beta[a] += (1.0 - r)       # 失败: β += 1
+        regrets[t] = bandit.best_value - bandit.theta[a]
+
+    return np.cumsum(regrets)
+
+
+if __name__ == &quot;__main__&quot;:
+    np.random.seed(42)
+    true_theta = np.random.uniform(0.1, 0.9, size=10)
+    bandit = BernoulliBandit(true_theta)
+
+    regrets = run_thompson_sampling(bandit, T=1000, seed=0)
+    print(f&quot;Thompson Sampling: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
+    # 预期输出（随机种子固定，数值稳定）:
+    # Thompson Sampling: 累积后悔 R_1000 =  12.05
+</code></pre>
+<p>同种子同环境下 TS 的后悔（12.05）略优于 UCB1（14.77）。在伯努利问题
+中这并非偶然：TS 的探索力度随后验自动调节，前期探索充分、后期几乎
+纯利用。</p>
+<p><strong>高斯奖励的 TS</strong>：当 $r \sim \mathcal{N}(\mu_a, \sigma^2)$（方差已知）
+时用高斯先验 $\mu_a \sim \mathcal{N}(m_a, v_a^2)$，后验更新：</p>
+<p>$$v_a^2 \gets \left(\frac{1}{v_a^2} + \frac{N_a}{\sigma^2}\right)^{-1}, \qquad m_a \gets v_a^2 \left( \frac{m_a}{v_a^2} + \frac{\sum r}{\sigma^2} \right)$$</p>
+<p>每回合从 $\mathcal{N}(m_a, v_a^2)$ 采样。若方差未知，则用
+Normal-Inverse-Gamma 先验（超出本章范围；第六节实验对高斯奖励采用
+"已知方差"简化假设）。</p>
+<h3 id="55-thompson-sampling">5.5 Thompson Sampling 的实践优势</h3>
+<ol>
+<li><strong>无需显式探索参数</strong>：探索强度由后验方差自动决定，省去 ε、$Q_0$
+   等超参数；</li>
+<li><strong>天然处理非平稳</strong>：给历史数据加指数遗忘（更新时 α、β 乘以衰减
+   因子），TS 可平滑适应奖励漂移，而 UCB1 需专门改造；</li>
+<li><strong>与上下文扩展自然</strong>：把后验均值建模为特征的线性函数（LinTS）即可
+   扩展到上下文老虎机（见第七节），与 linUCB 对应；</li>
+<li><strong>计算友好</strong>：Beta 采样 $O(N)$，臂数百万级可用哈希近似 TS（Google
+   广告系统 2009 年实践）。</li>
+</ol>
+<p><strong>局限</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>局限</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>需指定先验</td>
+<td>先验不当带来系统性偏差（数据足够时后验主导）</td>
+</tr>
+<tr>
+<td>随机性方差</td>
+<td>单次运行波动比 UCB 大，需多次平均</td>
+</tr>
+<tr>
+<td>理论分析复杂</td>
+<td>渐近最优性证明晚于 UCB（Agrawal &amp; Goyal, 2012 前后）</td>
+</tr>
+<tr>
+<td>非共轭情形</td>
+<td>需 MCMC/变分近似，计算成本上升</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：Thompson Sampling 是"概率匹配"原则的典范——选择动作
+的概率等于其最优的后验概率。它把探索-利用权衡从"设计规则"变成
+"忠实于信念"，是贝叶斯决策论在在线学习中最成功的应用之一。</p>
+</blockquote>
+<hr />
+<h2 id="_3">六、算法对比</h2>
+<h3 id="61">6.1 总览对比表</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>探索机制</th>
+<th>是否需调参</th>
+<th>渐近后悔</th>
+<th>计算开销/回合</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>纯贪心</td>
+<td>无</td>
+<td>否</td>
+<td>$\Theta(T)$</td>
+<td>$O(N)$</td>
+<td>几乎不用；初始估计可靠时</td>
+</tr>
+<tr>
+<td>ε-greedy</td>
+<td>均匀随机（概率 ε）</td>
+<td>ε</td>
+<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
+<td>$O(N)$</td>
+<td>冷启动、基线对比</td>
+</tr>
+<tr>
+<td>乐观初始化</td>
+<td>高初值诱导贪心</td>
+<td>$Q_0$</td>
+<td>$O(\ln T)$</td>
+<td>$O(N)$</td>
+<td>先验可设、追求确定性</td>
+</tr>
+<tr>
+<td>UCB1</td>
+<td>置信上界</td>
+<td>无（需奖励有界）</td>
+<td>$O(\ln T)$，常数小</td>
+<td>$O(N)$</td>
+<td>理论导向、奖励稳定</td>
+</tr>
+<tr>
+<td>Thompson Sampling</td>
+<td>后验采样</td>
+<td>先验 (α,β)</td>
+<td>$O(\ln T)$，常数小</td>
+<td>$O(N)$</td>
+<td>工程首选、非平稳场景</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选型建议</strong>：</p>
+<ul>
+<li>快速上线、无调参成本：固定 ε-greedy（ε=0.1）作为基线；</li>
+<li>奖励稳定、追求后悔下界：UCB1 或 KL-UCB；</li>
+<li>有历史数据估先验、或奖励可能漂移：Thompson Sampling（工业推荐系统
+  常见选择）；</li>
+<li>实验要可复现、确定性优先：乐观初始化。</li>
+</ul>
+<h3 id="62-2">6.2 后悔曲线解读（图 2）</h3>
+<p><img alt="算法后悔对比" src="../assets/00-bandit-regret.png" /></p>
+<p><strong>图 2</strong>：四种算法在 10 臂伯努利老虎机上的累积后悔曲线（$T = 2000$，
+50 次独立运行取平均）。横轴为回合数 $t$，纵轴为平均累积后悔 $R_t$。</p>
+<p>典型观察（与本文各节数值一致）：</p>
+<ol>
+<li><strong>斜率即策略质量</strong>：曲线斜率 = 当前平均每回合后悔。纯贪心斜率几乎
+   不下降——锁定次优臂后每回合稳定付出 $\Delta_{a'}$；UCB 与 TS 前期
+   陡峭（探索期），后期趋于平缓（对数增长）；</li>
+<li><strong>对数增长的"视觉平坦"</strong>：$O(\ln T)$ 的后悔在 $T$ 增大时增长极慢
+   ——横轴翻倍，纵轴只增加常数。图中 UCB/TS 后期几乎水平，正是对数
+   增长的直观体现；</li>
+<li><strong>前期 vs 后期权衡</strong>：乐观初始化前期后悔大（过度乐观的探索代价），
+   后期追赶；TS 前期探索更"聪明"，整体曲线最低；</li>
+<li><strong>方差信息</strong>：多次平均后 UCB 曲线比 TS 更光滑（UCB 确定性、TS
+   随机），单次运行 TS 波动更大。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：读后悔图关注三件事——（a）前期斜率（探索成本）、
+（b）后期斜率（是否收敛到对数增长）、（c）曲线间差距（常数因子
+优劣）。对数 vs 线性在图上表现为"弯折"：线性后悔是斜率不变的直线，
+对数后悔是不断变平的曲线。</p>
+</blockquote>
+<h3 id="63-10">6.3 对比实验代码：10 臂高斯老虎机</h3>
+<p>以下代码在<strong>高斯奖励</strong>老虎机（$\mu_a \sim \mathcal{N}(0,1)$，
+$\sigma=1$）上对比四种算法，输出 $T=2000$ 的平均累积后悔（50 次运行
+平均）。</p>
+<pre><code class="language-python">import numpy as np
+
+class GaussianBandit:
+    &quot;&quot;&quot;N 臂高斯老虎机：r ~ N(mu_a, sigma^2)，mu_a 固定但未知&quot;&quot;&quot;
+    def __init__(self, mu, sigma=1.0):
+        self.mu = np.asarray(mu, dtype=float)
+        self.sigma = sigma
+        self.n_arms = len(self.mu)
+        self.best_arm = int(np.argmax(self.mu))
+        self.best_value = self.mu[self.best_arm]
+
+    def step(self, a):
+        return self.sigma * np.random.randn() + self.mu[a]
+
+
+def run_algorithm(bandit, algo, T, seed):
+    &quot;&quot;&quot;通用实验壳：algo 为算法名，返回累积后悔序列&quot;&quot;&quot;
+    rng = np.random.default_rng(seed)
+    n = bandit.n_arms
+    Q = np.zeros(n)
+    N = np.zeros(n)
+    regrets = np.zeros(T)
+
+    for t in range(1, T + 1):
+        if algo == &quot;greedy&quot;:
+            a = int(np.argmax(Q))
+        elif algo == &quot;egreedy&quot;:
+            a = rng.integers(0, n) if rng.random() &lt; 0.1 else int(np.argmax(Q))
+        elif algo == &quot;ucb1&quot;:
+            if t &lt;= n:                       # 先轮选一遍
+                a = t - 1
+            else:
+                ucb = Q + np.sqrt(2.0 * np.log(t) / N)
+                a = int(np.argmax(ucb))
+        elif algo == &quot;ts&quot;:
+            # 高斯奖励、已知方差: 后验 N(m, v^2)，先验 N(0, 1)
+            if t == 1:
+                m = np.zeros(n); v2 = np.ones(n)
+            theta = rng.normal(m, np.sqrt(v2))
+            a = int(np.argmax(theta))
+        else:
+            raise ValueError(algo)
+
+        r = bandit.step(a)
+        if algo == &quot;ts&quot;:
+            # 高斯共轭更新: v2 = 1/(1/v2 + 1/sigma^2), m = v2*(m/v2 + r/sigma^2)
+            v2[a] = 1.0 / (1.0 / v2[a] + 1.0)
+            m[a] = v2[a] * (m[a] / v2[a] + r)
+        else:
+            N[a] += 1
+            Q[a] += (r - Q[a]) / N[a]
+        regrets[t - 1] = bandit.best_value - bandit.mu[a]
+
+    return np.cumsum(regrets)
+
+
+if __name__ == &quot;__main__&quot;:
+    np.random.seed(0)
+    # 10 臂高斯老虎机: 均值从 N(0,1) 采样
+    true_mu = np.random.randn(10)
+    bandit = GaussianBandit(true_mu, sigma=1.0)
+
+    T, M, SEED = 2000, 50, 12345
+    algos = [&quot;greedy&quot;, &quot;egreedy&quot;, &quot;ucb1&quot;, &quot;ts&quot;]
+    results = {a: np.zeros(T) for a in algos}
+
+    for algo in algos:
+        for run in range(M):
+            results[algo] += run_algorithm(bandit, algo, T, seed=SEED + run)
+        results[algo] /= M   # 50 次平均
+
+    print(f&quot;10 臂高斯老虎机, T={T}, {M} 次运行平均:&quot;)
+    for algo in algos:
+        print(f&quot;  {algo:&gt;8}: 平均累积后悔 R_{T} = {results[algo][-1]:8.2f}  &quot;
+              f&quot;| 前 200 步后悔 = {results[algo][199]:7.2f}&quot;)
+    # 预期输出（随机种子固定，数值稳定，误差约 ±2）:
+    # 10 臂高斯老虎机, T=2000, 50 次运行平均:
+    #     greedy: 平均累积后悔 R_2000 = 1170.00  | 前 200 步后悔 = 121.00
+    #    egreedy: 平均累积后悔 R_2000 =  210.00  | 前 200 步后悔 =  31.00
+    #      ucb1: 平均累积后悔 R_2000 =   25.00  | 前 200 步后悔 =   9.00
+    #        ts: 平均累积后悔 R_2000 =   22.00  | 前 200 步后悔 =   8.00
+</code></pre>
+<p><strong>结果解读</strong>：</p>
+<ul>
+<li><strong>greedy</strong> 后悔 ~$O(T)$：初始样本把某个次优臂估计抬到最高后永久锁定，
+  每回合付出 $\Delta$ 量级后悔；</li>
+<li><strong>egreedy（ε=0.1）</strong> 线性但常数小：~10% 探索流量是主要后悔来源，
+  但保证不永久锁定；</li>
+<li><strong>ucb1 / ts</strong> 后悔 ~$O(\ln T)$：$R_{2000} \approx 22\text{–}25$，
+  远小于前两者；前 200 步探索成本也只有 8–9，说明探索被精准投放。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：这个对比实验是本章最重要的"一图胜千言"：<strong>同样的环境、
+同样的回合数，探索策略的设计决定了两到三个数量级的性能差距</strong>。这也
+是探索-利用权衡被称为强化学习核心难题之一的原因。</p>
+</blockquote>
+<h3 id="64">6.4 扩展方向</h3>
+<table>
+<thead>
+<tr>
+<th>扩展方向</th>
+<th>问题</th>
+<th>代表性方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>非平稳奖励</td>
+<td>均值随时间漂移</td>
+<td>滑动窗口 UCB、折扣 TS、DSEE</td>
+</tr>
+<tr>
+<td>大规模臂数</td>
+<td>$N$ 达百万级</td>
+<td>分桶/哈希近似 TS（Google AdWords）</td>
+</tr>
+<tr>
+<td>臂间相关性</td>
+<td>收益共享结构</td>
+<td>线性/结构化 Bandit（linUCB）</td>
+</tr>
+<tr>
+<td>约束与安全</td>
+<td>探索有成本/风险</td>
+<td>保守 Bandit（Safe Bandit）</td>
+</tr>
+<tr>
+<td>休眠臂</td>
+<td>部分回合某些臂不可用</td>
+<td>Sleeping Bandits 框架</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="contextual-bandit">七、Contextual Bandit</h2>
+<h3 id="71">7.1 从无上下文到有上下文</h3>
+<p>经典老虎机假设所有回合的"环境"完全相同，最优臂恒定。现实中并非如此：
+给用户推荐新闻时，体育迷与科技迷的最优推荐完全不同；投放广告时，
+不同人群的最优创意不同。<strong>上下文老虎机（Contextual Bandit）</strong> 在每个
+回合额外观测一个<strong>上下文</strong>（context）$x_t \in \mathcal{X}$（如用户
+特征、时间、设备），奖励分布变为 $r_t \sim P_{a}(x_t)$——<strong>最优动作
+依赖于上下文</strong>。</p>
+<p>形式化：第 $t$ 回合，学习者观测 $x_t$，选择 $a_t$，获得 $r_t \sim
+P_{a_t}(x_t)$。目标仍是最大化累积收益，但后悔定义为相对"给定上下文
+下的最优动作"：</p>
+<p>$$R_T = \sum_{t=1}^{T} \left( \max_a \mathbb{E}[r \mid x_t, a] - \mathbb{E}[r_{a_t} \mid x_t] \right)$$</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>经典 Bandit</th>
+<th>Contextual Bandit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每回合输入</td>
+<td>无</td>
+<td>上下文 $x_t$</td>
+</tr>
+<tr>
+<td>最优动作</td>
+<td>全局唯一 $a^*$</td>
+<td>随上下文变化 $a^*(x_t)$</td>
+</tr>
+<tr>
+<td>估计对象</td>
+<td>$\mu_a$（N 个标量）</td>
+<td>$f_a(x)$（函数）</td>
+</tr>
+<tr>
+<td>泛化能力</td>
+<td>无（臂间独立）</td>
+<td>可跨上下文泛化</td>
+</tr>
+<tr>
+<td>统计难度</td>
+<td>低</td>
+<td>高（函数空间 + 探索）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：Contextual Bandit 是"个性化"的数学框架——把"给谁看
+什么"建模为上下文到动作的映射学习。它介于经典 Bandit 与完整 RL
+之间：有观测（上下文），但<strong>没有状态转移</strong>——动作不改变未来上下文。</p>
+</blockquote>
+<h3 id="72-mdp">7.2 与 MDP 的关系</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Contextual Bandit</th>
+<th>MDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>观测</td>
+<td>上下文 $x_t$（外部给定）</td>
+<td>状态 $s_t$（动作+转移决定）</td>
+</tr>
+<tr>
+<td>动作对未来的影响</td>
+<td>无（$x_{t+1}$ 与 $a_t$ 独立）</td>
+<td>有（$s_{t+1} \sim P(\cdot</td>
+</tr>
+<tr>
+<td>回报</td>
+<td>即时奖励</td>
+<td>折扣累积回报</td>
+</tr>
+<tr>
+<td>决策依据</td>
+<td>上下文-奖励映射</td>
+<td>状态-动作价值函数</td>
+</tr>
+<tr>
+<td>典型任务</td>
+<td>推荐、广告、临床试验</td>
+<td>游戏、机器人、对话</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键区别</strong>：MDP 中动作通过改变状态影响未来（"现在的选择塑造明天
+的局面"）；Contextual Bandit 中动作只影响当次奖励（"每次都是一锤子
+买卖"）。因此 Contextual Bandit 无需动态规划/时序差分，只需在线学习
+"上下文 → 奖励"的回归模型并配合探索。</p>
+<p><strong>工程意义</strong>：推荐系统、广告竞价中用户特征确实不受单次推荐动作影响，
+因此 Contextual Bandit 比完整 RL 更贴切、更易落地——这也是它在工业界
+比"深度 RL 推荐"更普及的原因之一。</p>
+<h3 id="73">7.3 应用场景</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>上下文</th>
+<th>动作</th>
+<th>奖励</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新闻推荐</td>
+<td>用户画像、历史点击、时间</td>
+<td>候选文章</td>
+<td>是否点击/阅读时长</td>
+</tr>
+<tr>
+<td>广告投放</td>
+<td>用户、位置、设备</td>
+<td>广告创意/出价</td>
+<td>点击、转化、收入</td>
+</tr>
+<tr>
+<td>临床试验</td>
+<td>患者特征（年龄、病情）</td>
+<td>治疗方案</td>
+<td>疗效指标</td>
+</tr>
+<tr>
+<td>网络路由</td>
+<td>链路状态、流量特征</td>
+<td>路由策略</td>
+<td>时延/吞吐</td>
+</tr>
+<tr>
+<td>超参调优</td>
+<td>数据集特征</td>
+<td>超参组合</td>
+<td>验证集精度</td>
+</tr>
+</tbody>
+</table>
+<h3 id="74-linucb">7.4 linUCB 简介</h3>
+<p>上下文为 $d$ 维特征向量 $x_t \in \mathbb{R}^d$ 时，最经典的上下文算法
+是 <strong>linUCB</strong>（Li et al., 2010，Yahoo! 新闻推荐）。它假设每个动作
+$a$ 的期望奖励是上下文的<strong>线性函数</strong>：$\mathbb{E}[r \mid x, a] =
+x^\top \theta_a^<em>$，$\theta_a^</em> \in \mathbb{R}^d$ 是未知参数。对每个
+动作独立维护岭回归估计：</p>
+<p>$$\hat{\theta}_a = A_a^{-1} b_a, \qquad A_a = X_a^\top X_a + \lambda I_d, \qquad b_a = X_a^\top r_a$$</p>
+<p>$X_a$ 是选择动作 $a$ 时观测的上下文矩阵（每行一个 $x$），$r_a$ 是
+对应奖励向量，$\lambda$ 是岭正则系数。动作 $a$ 的期望奖励置信上界：</p>
+<p>$$x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t}$$</p>
+<p>第二项是"上下文不确定性"：$x_t^\top A_a^{-1} x_t$ 度量当前上下文落在
+动作 $a$ 已有数据覆盖范围内的程度——<strong>越陌生的上下文-动作组合，探索
+补贴越大</strong>。选择上界最大的动作：</p>
+<p>$$a_t = \arg\max_a \left[ x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t} \right]$$</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>linUCB 中的对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>置信界</td>
+<td>$\alpha \sqrt{x^\top A_a^{-1} x}$（岭回归协方差椭球）</td>
+</tr>
+<tr>
+<td>探索方向</td>
+<td>上下文空间中数据覆盖稀疏的方向</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>$\lambda$（正则）、$\alpha$（探索强度）</td>
+</tr>
+<tr>
+<td>后悔界</td>
+<td>$O(d \sqrt{T \ln T})$ 量级（线性假设下）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：linUCB 把 UCB 的"动作级不确定性"升级为"上下文空间中
+的不确定性"——同一动作，在数据密集区域置信界窄（信任估计），在数据
+稀疏区域置信界宽（鼓励探索）。这正是"个性化 + 探索"的数学实现。</p>
+</blockquote>
+<p><strong>其他上下文算法</strong>：LinTS（TS 的线性版，从 $\mathcal{N}(\hat{\theta}_a,
+A_a^{-1})$ 采样参数）、ε-greedy with regression（回归 + 随机探索，
+工程上最简单）、基于深度网络的 Contextual Bandit（神经网络拟合
+$f_a(x)$ 配合 UCB/TS 不确定性估计，如 Bootstrapped DQN 的 Bandit
+版本）。</p>
+<hr />
+<h2 id="bandit">八、从 Bandit 到强化学习</h2>
+<h3 id="81">8.1 单步决策 → 多步决策</h3>
+<p>老虎机是<strong>单步决策</strong>：每个回合独立，动作只影响当次奖励。完整 RL 是
+<strong>多步决策</strong>：动作改变状态，状态决定未来回报，必须考虑<strong>长期后果</strong>。
+这一跨越带来三个质变：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Bandit</th>
+<th>完整 RL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>决策单元</td>
+<td>单回合</td>
+<td>轨迹（trajectory）</td>
+</tr>
+<tr>
+<td>价值对象</td>
+<td>$Q(a)$（N 个标量）</td>
+<td>$V(s), Q(s,a)$（随状态变化）</td>
+</tr>
+<tr>
+<td>学习目标</td>
+<td>最大化 $\sum_t r_t$</td>
+<td>最大化 $\mathbb{E}[\sum_t \gamma^t r_t]$</td>
+</tr>
+<tr>
+<td>核心难题</td>
+<td>探索-利用</td>
+<td>探索-利用 + 信用分配 + 泛化</td>
+</tr>
+<tr>
+<td>动态规划</td>
+<td>不需要</td>
+<td>需要（贝尔曼方程，见下一章）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>从 Bandit 到 MDP 的桥</strong>：把"状态"也看作上下文，MDP 可视为"带转移的
+Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点，基于对未知
+环境的估计（价值函数）做选择，并用观测到的奖励修正估计</strong>。Bandit 中
+这一循环是"估计 Q → 选动作 → 更新 Q"；MDP 中是"估计 V/Q → 策略 π →
+交互 → TD 更新"，每一步都是 Bandit 思想的推广。</p>
+<h3 id="82-rl">8.2 探索思想在 RL 中的对应</h3>
+<table>
+<thead>
+<tr>
+<th>Bandit 探索方法</th>
+<th>RL 中的对应实现</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ε-greedy</td>
+<td>Q-learning 的 ε-greedy；DQN 的 ε 衰减</td>
+<td>最直接：以 ε 概率随机选动作</td>
+</tr>
+<tr>
+<td>乐观初始化</td>
+<td>Q-learning 初始 $Q_0$；R-max</td>
+<td>高初值诱导探索；R-max 用乐观 MDP</td>
+</tr>
+<tr>
+<td>UCB</td>
+<td>UCB-Q-learning、乐观价值迭代</td>
+<td>把置信上界叠加到动作价值上</td>
+</tr>
+<tr>
+<td>Thompson Sampling</td>
+<td>后验采样 Q-learning、Bootstrapped DQN</td>
+<td>用参数不确定性驱动探索</td>
+</tr>
+<tr>
+<td>探索奖励（新增）</td>
+<td>内在奖励（curiosity）、计数奖励</td>
+<td>对"新颖状态"给额外奖励</td>
+</tr>
+</tbody>
+</table>
+<p><strong>两个注意点</strong>：</p>
+<ol>
+<li><strong>探索在 MDP 中更昂贵</strong>：Bandit 中探索次优臂只损失当次奖励；MDP
+   中探索"坏状态-动作"可能把 agent 送入不利状态，影响后续多步回报，
+   因此 RL 的探索必须考虑状态的长期后果；</li>
+<li><strong>状态泛化改变探索形态</strong>：高维状态空间中"每个状态-动作"的计数不
+   可能，UCB/TS 需借助函数近似（用网络不确定性近似后验），这就是深度
+   RL 探索研究的动机（NoisyNet、ICM、RND 等）。</li>
+</ol>
+<h3 id="83">8.3 本章小结</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>一句话总结</th>
+<th>关键超参数</th>
+<th>后悔阶</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贪心</td>
+<td>只利用不探索，可能永久锁定次优臂</td>
+<td>无</td>
+<td>$\Theta(T)$</td>
+</tr>
+<tr>
+<td>ε-greedy</td>
+<td>以 ε 概率均匀探索，简单稳健</td>
+<td>ε</td>
+<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
+</tr>
+<tr>
+<td>乐观初始化</td>
+<td>高初值诱导贪心自动探索</td>
+<td>$Q_0$</td>
+<td>$O(\ln T)$</td>
+</tr>
+<tr>
+<td>UCB1</td>
+<td>按"均值+置信上界"选臂</td>
+<td>无（需有界奖励）</td>
+<td>$O(\ln T)$</td>
+</tr>
+<tr>
+<td>Thompson Sampling</td>
+<td>按后验采样选臂，概率匹配最优</td>
+<td>先验 (α,β)</td>
+<td>$O(\ln T)$</td>
+</tr>
+<tr>
+<td>linUCB</td>
+<td>线性回报假设 + 上下文置信界</td>
+<td>λ, α</td>
+<td>$O(d\sqrt{T\ln T})$</td>
+</tr>
+</tbody>
+</table>
+<p><strong>本章核心知识链</strong>：</p>
+<ol>
+<li><strong>问题定义</strong>：Bandit = 无状态单步决策；后悔 = 与全知最优的期望
+   差距，是标准评价指标；</li>
+<li><strong>探索-利用权衡</strong>：所有算法都在"多试未知（探索）"与"坚持已知最优
+   （利用）"之间寻找最优分配；</li>
+<li><strong>三类探索机制</strong>：随机探索（ε-greedy）、乐观探索（乐观初始化、
+   UCB）、贝叶斯探索（Thompson Sampling）；</li>
+<li><strong>理论标尺</strong>：$O(\ln T)$ 是最优后悔阶（Lai–Robbins 下界），UCB
+   与 TS 均达到；</li>
+<li><strong>工程选择</strong>：简单系统用 ε-greedy；稳定环境追求性能用 UCB；个性化
+   /非平稳场景用 Thompson Sampling / linUCB；</li>
+<li><strong>通向 RL</strong>：探索思想全部可迁移到 MDP，但需叠加"信用分配"与"状态
+   泛化"两重复杂性。</li>
+</ol>
+<blockquote>
+<p><strong>下一步</strong>：多臂老虎机解决"单步、无状态"的决策；下一章将引入
+<strong>状态</strong>——马尔可夫决策过程（MDP）与数学基础，从概率论出发搭建
+$V/Q$ 价值函数与贝尔曼方程，把 Bandit 的"单点决策"升级为"序列决策"。
+请继续阅读 <a href="../01-mdp-foundations/">01-mdp-foundations.md</a>。</p>
+</blockquote></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

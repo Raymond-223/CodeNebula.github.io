@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://CodeNebula.github.io/reinforcement-learning/04-temporal-difference/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>时序差分学习 - CodeNebula</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">CodeNebula</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../00-bandit/" class="dropdown-item">多臂老虎机</a>
+</li>
+                                    
+<li>
+    <a href="../01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
+</li>
+                                    
+<li>
+    <a href="../02-dynamic-programming/" class="dropdown-item">动态规划</a>
+</li>
+                                    
+<li>
+    <a href="../03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
+</li>
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">时序差分学习</a>
+</li>
+                                    
+<li>
+    <a href="../05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
+</li>
+                                    
+<li>
+    <a href="../06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
+</li>
+                                    
+<li>
+    <a href="../07-continuous-control/" class="dropdown-item">连续控制</a>
+</li>
+                                    
+<li>
+    <a href="../08-tools-environments/" class="dropdown-item">环境与工具链</a>
+</li>
+                                    
+<li>
+    <a href="../09-advanced-topics/" class="dropdown-item">进阶专题</a>
+</li>
+                                    
+<li>
+    <a href="../10-engineering-practice/" class="dropdown-item">工程实践</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../../software-development/" class="dropdown-item">概览</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/01-frontend/" class="dropdown-item">前端开发</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/02-backend/" class="dropdown-item">后端开发</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/03-database/" class="dropdown-item">数据库与存储</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/04-version-control/" class="dropdown-item">版本控制</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/05-devops/" class="dropdown-item">DevOps与部署</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/06-architecture/" class="dropdown-item">软件架构</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/07-testing/" class="dropdown-item">测试与质量</a>
+</li>
+                                    
+<li>
+    <a href="../../software-development/08-security/" class="dropdown-item">安全基础</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../03-monte-carlo-methods/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../05-value-approximation/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#temporal-difference-learning" class="nav-link">时序差分学习（Temporal Difference Learning）</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#td" class="nav-link">一、TD 核心思想：一步估计更新</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#td-mc" class="nav-link">二、TD 与 MC 的误差分析</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sarsaon-policy" class="nav-link">三、SARSA：on-policy 时序差分控制</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#q-learningoff-policy" class="nav-link">四、Q-Learning：off-policy 时序差分控制</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#expected-sarsa-double-q-learning" class="nav-link">五、Expected SARSA 与 Double Q-Learning</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#n-step-td" class="nav-link">六、n-step TD：单步与整回合之间的连续谱</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#td_1" class="nav-link">七、TD(λ) 与资格迹（进阶选读）</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cliff-walking-sarsa-vs-q-learning" class="nav-link">八、综合实验：Cliff Walking 上 SARSA vs Q-Learning</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#_1" class="nav-link">附：本章速查表</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="temporal-difference-learning">时序差分学习（Temporal Difference Learning）</h1>
+<blockquote>
+<p>时序差分学习（Temporal Difference Learning, TD）是强化学习<strong>最核心、
+最具独创性</strong>的思想——Sutton 称之为"强化学习的中心思想"。它把蒙特卡洛
+（Monte Carlo, MC）的<strong>采样（sampling）</strong>与动态规划（Dynamic Programming,
+DP）的<strong>自举（bootstrapping）</strong>合二为一：每与环境交互一步，就用"即时
+奖励 + 下一步价值的估计"更新当前状态的价值，<strong>无需等待回合结束</strong>。
+本章从 TD 的一步更新公式出发，依次展开：TD 与 MC 的误差分析、on-policy
+的 SARSA、off-policy 的 Q-Learning、Expected SARSA 与 Double Q-Learning、
+n-step TD 与 TD(λ)/资格迹（eligibility traces），最后在 Cliff Walking
+上用完整实验对比 SARSA 与 Q-Learning。全文假设读者已掌握第 2 章（DP）
+与第 3 章（MC）的内容；所有代码均为可运行的 Python 3 实现。</p>
+</blockquote>
+<hr />
+<h2 id="td">一、TD 核心思想：一步估计更新</h2>
+<h3 id="11-mc-td">1.1 从 MC 到 TD：为什么要"边走边学"</h3>
+<p>第 3 章的蒙特卡洛方法用<strong>完整回合的回报</strong> $G_t$ 来估计价值：</p>
+<p>$$V(S_t) \leftarrow V(S_t) + \alpha \left[ G_t - V(S_t) \right], \qquad
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots$$</p>
+<p>MC 有一个结构性短板：<strong>必须等到回合结束</strong>才能拿到 $G_t$，然后才能更新。
+这带来三个连锁问题：</p>
+<table>
+<thead>
+<tr>
+<th>MC 的短板</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只能用于回合制任务</td>
+<td>无法处理"无限持续"（continuing）任务，如股票交易、过程控制</td>
+</tr>
+<tr>
+<td>更新滞后</td>
+<td>整回合经验先攒着、后处理，无法在线（online）逐步学习</td>
+</tr>
+<tr>
+<td>整回合回报方差大</td>
+<td>$G_t$ 是 $T-t$ 个随机奖励的累加，方差随回合长度增长</td>
+</tr>
+</tbody>
+</table>
+<p>TD 的关键洞察是：<strong>不必等完整的 $G_t$，走一步就够了</strong>。用"即时奖励 +
+下一步价值的当前估计"作为 $G_t$ 的替代品：</p>
+<pre><code>MC 视角：  S_t ──► R_{t+1} ──► S_{t+1} ──► R_{t+2} ──► S_{t+2} ──► ... ──► 回合结束才更新
+                                 （需要完整轨迹，回报 G_t 方差大）
+
+TD 视角：  S_t ──► R_{t+1} ──► S_{t+1}
+              └──────┘    └──────┘
+             即时奖励   用 V(S_{t+1}) 估计未来
+             走一步就更新（无需回合结束）
+</code></pre>
+<blockquote>
+<p><strong>核心思想</strong>：$V(S_{t+1})$ 本身就是"从 $S_{t+1}$ 出发的期望回报"的当前
+估计。把它当作未来的代理，那么"$R_{t+1} + \gamma V(S_{t+1})$"就是一个
+只需一步就能算出的回报估计——<strong>用估计去更新估计</strong>，这就是自举。</p>
+</blockquote>
+<h3 id="12-td">1.2 更新公式与 TD 误差</h3>
+<p>TD 的更新公式（TD(0)，即零步自举的 TD 预测）：</p>
+<p>$$
+\boxed{\; V(S_t) \leftarrow V(S_t) + \alpha \left[ R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \right] \;}
+$$</p>
+<p>其中方括号内是<strong>TD 目标（TD target）</strong>，被估计量本身：</p>
+<p>$$V(S_t) \leftarrow V(S_t) + \alpha \left[ \underbrace{R_{t+1} + \gamma V(S_{t+1})}_{\text{TD 目标}} - V(S_t) \right]$$</p>
+<p>方括号整体称为<strong>TD 误差（TD error）</strong>，记作 $\delta_t$：</p>
+<p>$$\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$$</p>
+<p>TD 误差刻画的是"这次一步经验，与当前价值估计之间的<strong>不一致程度</strong>"。
+注意 $\delta_t$ 与第 3 章的 MC 误差 $G_t - V(S_t)$ 有本质区别：</p>
+<table>
+<thead>
+<tr>
+<th>误差类型</th>
+<th>定义</th>
+<th>依赖信息</th>
+<th>性质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC 误差</td>
+<td>$G_t - V(S_t)$</td>
+<td>完整回合回报</td>
+<td>无偏，高方差，回合结束才能算</td>
+</tr>
+<tr>
+<td>TD 误差</td>
+<td>$R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$</td>
+<td>单步转移 + 当前估计</td>
+<td>有偏，低方差，每步都能算</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：TD 误差 $\delta_t$ 是强化学习里最重要的标量信号之一——
+它是"预测与现实之差"，后续几乎所有算法（SARSA、Q-Learning、TD(λ)、
+乃至策略梯度里的 GAE）都在以各种方式利用这个差值。</p>
+</blockquote>
+<h3 id="13-td">1.3 自举与采样：TD 的双重身份</h3>
+<p>为什么 TD 同时拥有 MC 与 DP 的血统？因为"计算价值更新"这件事可以拆成
+两个独立的维度：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>两种选择</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>采样（Sampling）</strong></td>
+<td>采样 / 求期望</td>
+<td>用单次经验近似期望（采样），还是用已知模型精确计算（期望）</td>
+</tr>
+<tr>
+<td><strong>自举（Bootstrapping）</strong></td>
+<td>自举 / 不自举</td>
+<td>更新时是否使用"后继状态的当前估计"代替真实回报</td>
+</tr>
+</tbody>
+</table>
+<p>三大方法族恰好占据这个二维空间的三个角：</p>
+<pre><code>                    不自举（用真实回报 G_t）
+                          │
+              MC           │
+        （采样+不自举）      │
+                          │
+  采样 ────────────────────┼──────────────────── 期望（需模型）
+                          │
+              TD           │          DP
+        （采样+自举）       │   （期望+自举）
+                          │
+                    自举（用估计 V(S')）
+</code></pre>
+<ul>
+<li><strong>DP</strong>：期望 + 自举。已知模型，精确计算期望；用 $v_k(S')$ 更新 $v_{k+1}(S)$。</li>
+<li><strong>MC</strong>：采样 + 不自举。用完整回合回报，无偏但高方差。</li>
+<li><strong>TD</strong>：采样 + 自举。用一步经验 + 后继状态估计，有偏但低方差。</li>
+</ul>
+<h3 id="14-dp-mc-td">1.4 DP / MC / TD 三方对比表</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>动态规划 DP</th>
+<th>蒙特卡洛 MC</th>
+<th>时序差分 TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>是否采样</strong></td>
+<td>否（对全状态求期望）</td>
+<td>是（完整回合采样）</td>
+<td>是（单步转移采样）</td>
+</tr>
+<tr>
+<td><strong>是否自举</strong></td>
+<td>是（用 $v_k(S')$）</td>
+<td>否（用真实 $G_t$）</td>
+<td>是（用 $V(S')$）</td>
+</tr>
+<tr>
+<td><strong>方差</strong></td>
+<td>无（模型精确时）</td>
+<td>高（随回合长度增长）</td>
+<td>低（只累加一步随机性）</td>
+</tr>
+<tr>
+<td><strong>偏差</strong></td>
+<td>无（模型精确时）</td>
+<td>无偏</td>
+<td>有偏（初始估计不准时）</td>
+</tr>
+<tr>
+<td><strong>是否需环境模型</strong></td>
+<td>需要（已知 $P, R$）</td>
+<td>不需要</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td><strong>是否需等回合结束</strong></td>
+<td>不需要（全状态扫描）</td>
+<td><strong>需要</strong></td>
+<td><strong>不需要</strong>（单步即可）</td>
+</tr>
+<tr>
+<td><strong>能否用于持续任务</strong></td>
+<td>能</td>
+<td>不能（须有终止）</td>
+<td>能</td>
+</tr>
+<tr>
+<td><strong>典型算法</strong></td>
+<td>策略迭代、价值迭代</td>
+<td>首次访问 / 每次访问 MC</td>
+<td>SARSA、Q-Learning</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：DP、MC、TD 解的是同一个贝尔曼方程，区别只在"期望怎么算"。
+TD 用"单步采样 + 自举"在方差与偏差之间取得折中，且天然支持在线学习与
+持续任务——这正是它成为免模型 RL 主力的原因。</p>
+</blockquote>
+<h3 id="15">1.5 最小示例：三状态链上的逐步更新</h3>
+<p>用一个极小的确定性任务观察 TD 误差如何驱动更新。三状态链
+$A \to B \to C$，$C$ 为终止状态，每步奖励 $+1$，$\gamma = 0.9$，
+$\alpha = 0.1$，$V$ 初始全 0。真值：$v_\pi(B) = 1$，$v_\pi(A) = 1.9$。</p>
+<pre><code class="language-python">import numpy as np
+
+# 三状态链 A→B→C（C 为终止状态），每步奖励 +1，γ = 0.9，α = 0.1
+V = np.zeros(3)
+alpha, gamma = 0.1, 0.9
+for ep in range(1, 7):
+    s = 0; done = False
+    while not done:
+        s2 = s + 1
+        done = (s2 == 2)          # C 是终止状态
+        r = 1.0
+        delta = r + gamma * (0.0 if done else V[s2]) - V[s]
+        V[s] += alpha * delta
+        s = s2
+    print(f&quot;episode {ep}: V(A)={V[0]:.4f}  V(B)={V[1]:.4f}  (真值 1.9 / 1.0)&quot;)
+
+# 预期输出:
+# episode 1: V(A)=0.1000  V(B)=0.1000  (真值 1.9 / 1.0)
+# episode 2: V(A)=0.1990  V(B)=0.1900  (真值 1.9 / 1.0)
+# episode 3: V(A)=0.2962  V(B)=0.2710  (真值 1.9 / 1.0)
+# episode 4: V(A)=0.3910  V(B)=0.3439  (真值 1.9 / 1.0)
+# episode 5: V(A)=0.4828  V(B)=0.4095  (真值 1.9 / 1.0)
+# episode 6: V(A)=0.5714  V(B)=0.4686  (真值 1.9 / 1.0)
+</code></pre>
+<p>前两个回合的 TD 误差明细（可自行验算）：</p>
+<table>
+<thead>
+<tr>
+<th>回合</th>
+<th>步骤</th>
+<th>$\delta_t = r + \gamma V(s') - V(s)$</th>
+<th>更新后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>$A \to B$</td>
+<td>$1 + 0.9 \times 0 - 0 = 1.000$</td>
+<td>$V(A) = 0.1$</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$B \to C$</td>
+<td>$1 + 0.9 \times 0 - 0 = 1.000$</td>
+<td>$V(B) = 0.1$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$A \to B$</td>
+<td>$1 + 0.9 \times 0.1 - 0.1 = 0.990$</td>
+<td>$V(A) = 0.199$</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$B \to C$</td>
+<td>$1 + 0.9 \times 0 - 0.1 = 0.900$</td>
+<td>$V(B) = 0.19$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$A \to B$</td>
+<td>$1 + 0.9 \times 0.19 - 0.199 = 0.972$</td>
+<td>$V(A) = 0.2962$</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$B \to C$</td>
+<td>$1 + 0.9 \times 0 - 0.19 = 0.810$</td>
+<td>$V(B) = 0.271$</td>
+</tr>
+</tbody>
+</table>
+<p>注意两点：① 每走一步、每回合结束前，价值就在更新——<strong>不需要等回合
+结束</strong>；② $V(B)$ 先于 $V(A)$ 逼近真值，因为 $B$ 离终止状态更近、它的
+TD 目标里"真实信息"占比更高——这就是<strong>信用分配</strong>在 TD 中的自然形态：
+信息从终止状态沿转移边<strong>逐步往回传导</strong>。</p>
+<h3 id="16-td">1.6 TD 的适用场景与局限</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>是否适合 TD</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回合制任务（棋类、导航）</td>
+<td>适合</td>
+<td>在线更新，样本效率高于 MC</td>
+</tr>
+<tr>
+<td>持续任务（控制、交易）</td>
+<td><strong>TD 是少数选择</strong></td>
+<td>不依赖回合终止</td>
+</tr>
+<tr>
+<td>非马尔可夫 / 部分可观测环境</td>
+<td>不太适合</td>
+<td>自举会放大观测缺失导致的偏差（见 2.4 节）</td>
+</tr>
+<tr>
+<td>与函数逼近结合（深度 RL）</td>
+<td>适合但需技巧</td>
+<td>自举 + 函数逼近可能发散，需经验回放等（第 5 章）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：本章所有 TD 算法都是<strong>表格型（tabular）</strong>的——价值存成表，
+每个状态独立更新。表格型 TD 在有限状态空间下有严格的收敛保证；一旦
+换成函数逼近，自举带来的"估计更新估计"就可能不稳定，这是第 5 章要
+解决的核心矛盾。</p>
+</blockquote>
+<hr />
+<h2 id="td-mc">二、TD 与 MC 的误差分析</h2>
+<h3 id="21-bias-variance-tradeoff">2.1 偏差-方差权衡（Bias-Variance Tradeoff）</h3>
+<p>TD 与 MC 的根本分歧在于：<strong>用"有偏但低方差的单步估计"还是"无偏但高方差
+的整回合回报"</strong>。两者都是 $v_\pi(s)$ 的估计量，性质截然不同：</p>
+<table>
+<thead>
+<tr>
+<th>估计量</th>
+<th>偏差</th>
+<th>方差</th>
+<th>收敛性</th>
+<th>样本效率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$G_t$（MC 回报）</td>
+<td><strong>无偏</strong>：$\mathbb{E}[G_t \mid S_t = s] = v_\pi(s)$</td>
+<td>高：累加 $T - t$ 个随机奖励</td>
+<td>随回合数收敛，$\alpha$ 需满足 Robbins-Monro 条件</td>
+<td>低：每个状态只从"路过它的回合"学习</td>
+</tr>
+<tr>
+<td>$R_{t+1} + \gamma V(S_{t+1})$（TD 目标）</td>
+<td><strong>有偏</strong>：$V(S_{t+1})$ 是估计值，初始偏差非零</td>
+<td>低：只含一步随机性</td>
+<td>随回合数收敛（表格型保证）</td>
+<td>高：一步经验即可更新，状态间共享信息</td>
+</tr>
+</tbody>
+</table>
+<p>方差来源的直观拆解：设奖励方差为 $\sigma^2$，则</p>
+<p>$$\mathrm{Var}(G_t) \approx (T - t)\,\sigma^2 \qquad\text{vs.}\qquad
+\mathrm{Var}!\left(R_{t+1} + \gamma V(S_{t+1})\right) \approx \sigma^2$$</p>
+<p>MC 的方差随回合长度<strong>线性增长</strong>，TD 的方差被压到"一步"的量级——代价是
+引入了由初始估计不准带来的<strong>系统性偏差</strong>。</p>
+<blockquote>
+<p><strong>核心思想</strong>：TD 用"一点偏差"换"大幅降方差"。当偏差（随学习迅速衰减）
+小于方差（随回合长度持续增长）时，TD 在有限样本下几乎总是胜出。这个
+权衡贯穿整个 RL：第 6 章的 n-step 方法、第 7 章的 TD(λ)、第 6 章的
+GAE，本质上都是在<strong>手动调节偏差与方差的配比</strong>。</p>
+</blockquote>
+<h3 id="22-sutton-barto-62">2.2 随机游走实验（Sutton &amp; Barto 例 6.2 风格）</h3>
+<p>实验环境：5 个非终止状态 $A, B, C, D, E$，左右两端为终止状态。从任意
+非终止状态等概率向左或右移动一步；到达左端奖励 $0$，到达右端奖励 $+1$，
+$\gamma = 1$（无折扣）：</p>
+<pre><code>   左端终止 r=0                        右端终止 r=+1
+        │                                  │
+        ▼                                  ▼
+   ┌────┬────┬────┬────┬────┬────┬────┐
+   │ 终 │ A  │ B  │ C  │ D  │ E  │ 终 │
+   └────┴────┴────┴────┴────┴────┴────┘
+         等概率 ← → 随机游走
+</code></pre>
+<p>该随机游走的价值有解析解（从状态 $s$ 出发到达右端的概率）：</p>
+<table>
+<thead>
+<tr>
+<th>状态</th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>真值 $v_\pi$</td>
+<td>$1/6 \approx 0.167$</td>
+<td>$2/6 \approx 0.333$</td>
+<td>$3/6 = 0.500$</td>
+<td>$4/6 \approx 0.667$</td>
+<td>$5/6 \approx 0.833$</td>
+</tr>
+</tbody>
+</table>
+<p>实验设置：TD(0) 取 $\alpha = 0.1$，MC 取 $\alpha = 0.01$（MC 方差大，
+需要更小的步长才能收敛），各训练 100 回合，用 RMS 误差
+$\sqrt{\frac{1}{5}\sum_s (V(s) - v_\pi(s))^2}$ 衡量估计质量。</p>
+<pre><code class="language-python">import numpy as np
+
+class RandomWalk:
+    &quot;&quot;&quot;5 个非终止状态 A-E，两端为终止状态（左端奖励 0，右端奖励 +1）&quot;&quot;&quot;
+    def __init__(self, n=5):
+        self.n = n
+        self.s = None
+    def reset(self):
+        self.s = self.n // 2          # 从中间状态 C 出发
+        return self.s
+    def step(self, a):
+        ns = self.s + np.random.choice([-1, 1])
+        if ns &lt; 0:
+            return 0, 0.0, True       # 左端终止：奖励 0
+        if ns &gt;= self.n:
+            return 0, 1.0, True       # 右端终止：奖励 +1
+        self.s = ns
+        return self.s, 0.0, False
+
+def td0_predict(env, episodes=100, alpha=0.1, gamma=1.0):
+    V = np.zeros(env.n)
+    for _ in range(episodes):
+        s = env.reset(); done = False
+        while not done:
+            s2, r, done = env.step(0)
+            V[s] += alpha * (r + gamma * (0.0 if done else V[s2]) - V[s])
+            s = s2
+    return V
+
+def mc_predict(env, episodes=100, alpha=0.01, gamma=1.0):
+    V = np.zeros(env.n)
+    for _ in range(episodes):
+        traj = []                     # 记录完整回合 (状态, 奖励)
+        s = env.reset(); done = False
+        while not done:
+            s2, r, done = env.step(0)
+            traj.append((s, r)); s = s2
+        G = 0.0                       # 从回合末尾倒推回报
+        for s, r in reversed(traj):
+            G = r + gamma * G
+            V[s] += alpha * (G - V[s])
+    return V
+
+true_v = np.array([1, 2, 3, 4, 5]) / 6.0
+def rms(V): return np.sqrt(np.mean((V - true_v) ** 2))
+
+# 单次运行：100 回合后的 V 估计
+np.random.seed(42)
+V_td = td0_predict(RandomWalk(), 100, 0.1)
+np.random.seed(42)
+V_mc = mc_predict(RandomWalk(), 100, 0.01)
+print(&quot;TD(0)  100 回合后 V:&quot;, [f&quot;{x:.3f}&quot; for x in V_td], &quot; RMS =&quot;, f&quot;{rms(V_td):.4f}&quot;)
+print(&quot;MC     100 回合后 V:&quot;, [f&quot;{x:.3f}&quot; for x in V_mc], &quot; RMS =&quot;, f&quot;{rms(V_mc):.4f}&quot;)
+print(&quot;真实值 vπ         :&quot;, [f&quot;{x:.3f}&quot; for x in true_v])
+
+# 学习曲线：100 次独立运行平均 RMS 误差（每 10 回合采样一次）
+def curves(seed):
+    rng = np.random.default_rng(seed)
+    Vt = np.zeros(5); Vm = np.zeros(5)
+    td_rms = []; mc_rms = []
+    for ep in range(101):
+        s = 2; done = False
+        while not done:
+            ns = s + rng.choice([-1, 1])
+            if ns &lt; 0: r, done = 0.0, True
+            elif ns &gt;= 5: r, done = 1.0, True
+            else: r, done = 0.0, False
+            Vt[s] += 0.1 * (r + (0.0 if done else Vt[ns]) - Vt[s])
+            s = ns
+        traj = []; s = 2; done = False
+        while not done:
+            ns = s + rng.choice([-1, 1])
+            if ns &lt; 0: r, done = 0.0, True
+            elif ns &gt;= 5: r, done = 1.0, True
+            else: r, done = 0.0, False
+            traj.append((s, r)); s = ns
+        G = 0.0
+        for s, r in reversed(traj):
+            G = r + G
+            Vm[s] += 0.01 * (G - Vm[s])
+        if ep % 10 == 0:
+            td_rms.append(rms(Vt)); mc_rms.append(rms(Vm))
+    return td_rms, mc_rms
+
+td_sum = np.zeros(11); mc_sum = np.zeros(11)
+for seed in range(100):
+    t, m = curves(seed)
+    td_sum += np.array(t); mc_sum += np.array(m)
+print(&quot;episodes :&quot;, list(range(0, 101, 10)))
+print(&quot;TD(0) RMS:&quot;, [f&quot;{x:.3f}&quot; for x in td_sum / 100])
+print(&quot;MC    RMS:&quot;, [f&quot;{x:.3f}&quot; for x in mc_sum / 100])
+
+# 预期输出（节选）:
+# TD(0)  100 回合后 V: ['0.128', '0.249', '0.432', '0.682', '0.826']  RMS = 0.0519
+# MC     100 回合后 V: ['0.120', '0.265', '0.434', '0.572', '0.570']  RMS = 0.1339
+# 真实值 vπ         : ['0.167', '0.333', '0.500', '0.667', '0.833']
+# episodes : [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+# TD(0) RMS: ['0.535', '0.413', '0.320', '0.249', '0.186', '0.147', '0.118', '0.099', '0.083', '0.072', '0.064']
+# MC    RMS: ['0.546', '0.462', '0.392', '0.340', '0.298', '0.261', '0.230', '0.205', '0.187', '0.167', '0.152']
+</code></pre>
+<h3 id="23-td">2.3 结果解读：为什么 TD 更快</h3>
+<p>把学习曲线整理成表（100 次独立运行平均的 RMS 误差）：</p>
+<table>
+<thead>
+<tr>
+<th>训练回合数</th>
+<th>0</th>
+<th>10</th>
+<th>20</th>
+<th>30</th>
+<th>40</th>
+<th>50</th>
+<th>60</th>
+<th>70</th>
+<th>80</th>
+<th>90</th>
+<th>100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TD(0)</strong> $\alpha=0.1$</td>
+<td>0.535</td>
+<td>0.413</td>
+<td>0.320</td>
+<td>0.249</td>
+<td>0.186</td>
+<td>0.147</td>
+<td>0.118</td>
+<td>0.099</td>
+<td>0.083</td>
+<td>0.072</td>
+<td><strong>0.064</strong></td>
+</tr>
+<tr>
+<td><strong>MC</strong> $\alpha=0.01$</td>
+<td>0.546</td>
+<td>0.462</td>
+<td>0.392</td>
+<td>0.340</td>
+<td>0.298</td>
+<td>0.261</td>
+<td>0.230</td>
+<td>0.205</td>
+<td>0.187</td>
+<td>0.167</td>
+<td>0.152</td>
+</tr>
+</tbody>
+</table>
+<p>两个观察：① 100 回合后 TD(0) 的 RMS（0.064）不到 MC（0.152）的一半；
+② MC 的 $\alpha$ 已经取了 TD 的十分之一，仍追不上。<strong>TD 快在哪？</strong></p>
+<ol>
+<li><strong>每步都在更新</strong>：一个回合里 MC 只在结束后更新一次（且只有途经的状态
+   被更新），TD 则每个转移更新一次——同样 100 回合，TD 的"有效更新次数"
+   远多于 MC。</li>
+<li><strong>状态间共享信息（马尔可夫结构）</strong>：$V(A)$ 的 TD 目标包含 $V(B)$，
+   而 $V(B)$ 又包含 $V(C)$……一步经验带来的信息会沿转移边<strong>传导</strong>到相邻
+   状态。MC 则把每个状态孤立对待——$V(A)$ 只从"恰好经过 $A$ 的回合"
+   学习，信息无法共享。</li>
+<li><strong>方差小</strong>：见 2.1 节，TD 目标只含一步随机性。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：TD 的样本效率优势来自<strong>确定性等价估计（certainty-
+equivalence estimate）</strong>：在批处理（batch）情形下，TD(0) 收敛到的解，
+等价于<strong>先根据观测到的经验构造最大似然 MDP</strong>（用观测到的转移频率和
+平均奖励作为 $P$ 与 $R$），<strong>再在这个经验 MDP 上精确求解贝尔曼方程</strong>
+得到的值——它充分利用了数据中的马尔可夫结构。而 MC 收敛到的解，只是
+对已见回报做最小二乘拟合，<strong>丢弃了状态间的转移关系</strong>。马尔可夫性质
+成立时，确定性等价估计利用了更多信息，因而更准。</p>
+</blockquote>
+<h3 id="24-mc">2.4 什么时候 MC 反而更好</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>为什么 MC 占优</th>
+<th>典型例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>环境非马尔可夫 / 部分可观测</strong></td>
+<td>TD 自举依赖 $V(S_{t+1})$ 蕴含的马尔可夫假设；观测缺失时自举会把偏差逐状态放大，MC 用真实回报不受影响</td>
+<td>POMDP、带噪声传感器</td>
+</tr>
+<tr>
+<td><strong>需要无偏估计</strong></td>
+<td>TD 初始偏差需要时间消退；MC 的估计始终无偏</td>
+<td>理论分析、离线评估</td>
+</tr>
+<tr>
+<td><strong>批处理且数据充足</strong></td>
+<td>数据多到方差不再是瓶颈时，无偏性更值钱</td>
+<td>离线数据集评估</td>
+</tr>
+<tr>
+<td><strong>回合很短</strong></td>
+<td>回合短则 $G_t$ 方差小，MC 的短板消失</td>
+<td>一步棋局、短对话</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：两者并非互斥。n-step 方法（第 6 节）在"1 步"与"整回合"之间
+连续插值，TD(λ)（第 7 节）用加权平均统一两者——<strong>偏差与方差的权衡
+不是二选一，而是一个连续旋钮</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="sarsaon-policy">三、SARSA：on-policy 时序差分控制</h2>
+<h3 id="31-td">3.1 从预测到控制：TD 用于动作价值</h3>
+<p>第 1、2 节讨论的是<strong>预测问题</strong>（给定策略求 $v_\pi$）。真实任务需要
+<strong>控制</strong>——找到最优策略。把 TD 思想从 $V(s)$ 搬到动作价值 $Q(s, a)$ 上，
+就得到时序差分控制方法。其中第一个登场的是 <strong>SARSA</strong>，名字来自它的更新
+需要五元组 $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$：</p>
+<pre><code>S → A → R → S' → A'
+</code></pre>
+<p>SARSA 的更新公式（用"下一步动作的实际价值" $Q(S', A')$ 自举）：</p>
+<p>$$
+\boxed{\; Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t) \right] \;}
+$$</p>
+<p>关键点：$A_{t+1}$ 是<strong>用与 $A_t$ 相同的策略（行为策略）实际执行的动作</strong>。
+也就是说，SARSA 估计的是"<strong>在当前行为策略下</strong>每个动作的价值"——这就是
+<strong>on-policy（同策略）</strong>的含义。</p>
+<h3 id="32-sutton-barto-64">3.2 伪代码（Sutton &amp; Barto 算法 6.4 风格）</h3>
+<pre><code>算法：SARSA（on-policy TD 控制）
+对每个回合：
+    初始化 S
+    用 ε-greedy 从 Q 选出动作 A
+    对回合中的每一步：
+        执行 A，观测 R, S'
+        用 ε-greedy 从 Q 选出动作 A'（行为策略，ε 探索）
+        Q(S, A) ← Q(S, A) + α [ R + γ Q(S', A') − Q(S, A) ]
+        S ← S';  A ← A'
+    直到 S 为终止状态
+</code></pre>
+<p>注意伪代码里 <code>A'</code> 的选取与 <code>A</code> 完全对称——<strong>同一把 ε-greedy 既产生行为、
+也参与更新目标</strong>。这是 on-policy 的签名特征。</p>
+<h3 id="33-cliff-walkingon-policy">3.3 Cliff Walking：on-policy 的经典试金石</h3>
+<p><strong>Cliff Walking</strong>（Sutton &amp; Barto 例 6.6）是展示 on-policy / off-policy
+差异的标准环境：</p>
+<table>
+<thead>
+<tr>
+<th>规则项</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网格</td>
+<td>$4 \times 12$，共 48 个格子</td>
+</tr>
+<tr>
+<td>起点 S</td>
+<td>$(3, 0)$（左下角）</td>
+</tr>
+<tr>
+<td>终点 G</td>
+<td>$(3, 11)$（右下角）</td>
+</tr>
+<tr>
+<td>悬崖</td>
+<td>$(3, 1)$ 至 $(3, 10)$ 共 10 格</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>上、下、左、右（确定性转移）</td>
+</tr>
+<tr>
+<td>掉崖</td>
+<td>进入悬崖格：奖励 $-100$，立即回到起点 S</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>每走一步奖励 $-1$；撞墙（越界）原地不动</td>
+</tr>
+<tr>
+<td>折扣</td>
+<td>$\gamma = 1$</td>
+</tr>
+</tbody>
+</table>
+<pre><code>        列 0   1   2   3   4   5   6   7   8   9  10  11
+行 0   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+行 1   ├───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┤
+行 2   ├───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┤
+行 3   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+        S   █   █   █   █   █   █   █   █   █   █   G
+            └────────────── 悬崖 █ ──────────────┘
+</code></pre>
+<p>两种典型路线：</p>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>走法</th>
+<th>步数</th>
+<th>总奖励</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>最优路线</strong></td>
+<td>沿悬崖边（行 2）一路向右</td>
+<td>13 步</td>
+<td>$-13$（最优）</td>
+</tr>
+<tr>
+<td><strong>保守路线</strong></td>
+<td>向上绕到行 1，再向右，最后向下</td>
+<td>14~16 步</td>
+<td>约 $-14 \sim -16$</td>
+</tr>
+</tbody>
+</table>
+<p>直觉上最优路线贴着悬崖，但只要 $\varepsilon$ 探索存在，走在悬崖边上就有
+概率一步踩空掉崖（$-100$）。<strong>SARSA 学的是"带着探索的行为策略"的价值</strong>，
+因此悬崖边的格子价值被掉崖风险压低，最终学出的策略会<strong>主动绕开悬崖</strong>。</p>
+<h3 id="34-python">3.4 Python 实现</h3>
+<pre><code class="language-python">import numpy as np
+
+class CliffWalking:
+    &quot;&quot;&quot;Cliff Walking：4×12 网格。起点 (3,0)，终点 (3,11)，悬崖 (3,1)-(3,10)。
+    动作：0=上, 1=右, 2=下, 3=左。掉下悬崖奖励 -100 并回到起点，
+    其余每步奖励 -1；撞墙（越界）原地不动。&quot;&quot;&quot;
+    def __init__(self, rows=4, cols=12):
+        self.rows, self.cols = rows, cols
+        self.start = (rows - 1, 0)
+        self.goal = (rows - 1, cols - 1)
+        self.cliff = set((rows - 1, c) for c in range(1, cols - 1))
+        self.actions = [0, 1, 2, 3]
+        self.s = None
+    def reset(self):
+        self.s = self.start
+        return self.s
+    def step(self, a):
+        r, c = self.s
+        dr, dc = [(-1, 0), (0, 1), (1, 0), (0, -1)][a]
+        nr, nc = r + dr, c + dc
+        if not (0 &lt;= nr &lt; self.rows and 0 &lt;= nc &lt; self.cols):
+            nr, nc = r, c            # 撞墙：原地不动
+        if (nr, nc) in self.cliff:
+            self.s = self.start
+            return self.s, -100.0, True
+        self.s = (nr, nc)
+        if self.s == self.goal:
+            return self.s, -1.0, True
+        return self.s, -1.0, False
+
+def sarsa(env, episodes=500, alpha=0.1, gamma=1.0, eps=0.1):
+    Q = np.zeros((env.rows, env.cols, 4))
+    rewards = []
+    for _ in range(episodes):
+        s = env.reset()
+        a = np.random.randint(4) if np.random.random() &lt; eps else int(np.argmax(Q[s]))
+        total = 0.0; done = False
+        while not done:
+            s2, r, done = env.step(a)
+            a2 = np.random.randint(4) if np.random.random() &lt; eps else int(np.argmax(Q[s2]))
+            Q[s][a] += alpha * (r + (0.0 if done else Q[s2][a2]) - Q[s][a])
+            s, a = s2, a2
+            total += r
+        rewards.append(total)
+    return Q, rewards
+
+def greedy_path(env, Q):
+    &quot;&quot;&quot;沿贪心策略走，返回 (路径, 步数, 是否到达终点)&quot;&quot;&quot;
+    s = env.reset(); path = [s]; done = False; steps = 0
+    while not done and steps &lt; 200:
+        a = int(np.argmax(Q[s]))
+        s2, r, done = env.step(a)
+        s = s2; path.append(s); steps += 1
+    return path, steps, done
+
+np.random.seed(1)
+env = CliffWalking()
+Q_s, rew_s = sarsa(env)
+p, steps, ok = greedy_path(env, Q_s)
+print(&quot;SARSA 后 100 回合平均奖励:&quot;, round(np.mean(rew_s[-100:]), 2))
+print(&quot;SARSA 贪心路径长度:&quot;, steps, &quot;到达终点:&quot;, ok)
+print(&quot;SARSA 前 5 回合奖励:&quot;, [int(x) for x in rew_s[:5]])
+
+# 预期输出:
+# SARSA 后 100 回合平均奖励: -23.05
+# SARSA 贪心路径长度: 15 到达终点: True
+# SARSA 前 5 回合奖励: [-110, -101, -142, -121, -104]
+</code></pre>
+<p>训练 500 回合后，SARSA 学到的贪心路线（用训练好的 $Q$ 表走出来的路径）：</p>
+<pre><code>行 0   .  .  .  .  .  .  .  .  .  .  .  .
+行 1   →  →  →  →  →  →  →  →  →  →  →  ↓
+行 2   ↑  .  .  .  .  .  .  .  .  .  .  ↓
+行 3   ↑  █  █  █  █  █  █  █  █  █  █  G
+</code></pre>
+<p>SARSA 最终选择<strong>向上绕行两行</strong>、从行 1 横穿的保守路线（15 步），而不是
+贴着悬崖的最优路线（13 步）。</p>
+<h3 id="35-on-policy">3.5 为什么 on-policy 学出"保守"策略</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>悬崖边的格子（行 2）价值为什么低？</td>
+<td>行为策略有 $\varepsilon = 0.1$ 的探索概率，站在行 2 时可能"向下"踩进悬崖（$-100$）；SARSA 的更新目标 $r + \gamma Q(S', A')$ 里 $A'$ 也来自行为策略，因此 $Q(\text{行 2}, \cdot)$ 被掉崖风险压低</td>
+</tr>
+<tr>
+<td>保守路线为什么"正确"？</td>
+<td>在 $\varepsilon$ 探索持续存在的前提下，贴着悬崖走的<strong>期望回报</strong>确实低于绕行——SARSA 估计的正是这个"带探索的期望"，所以它学到的策略对探索是<strong>稳健</strong>的</td>
+</tr>
+<tr>
+<td>换成贪心执行后呢？</td>
+<td>即使训练结束后用贪心（$\varepsilon = 0$）执行，SARSA 学到的 $Q$ 仍是"保守"的，路径依然绕行</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：on-policy 方法回答的问题是"<strong>在我当前这种（带探索的）
+行为方式下，每个动作值多少</strong>"。因此它学到的策略天然考虑了探索的代价。
+这是优点（对探索稳健），也是局限（学到的不是真正的最优策略 $\pi_*$）。</p>
+</blockquote>
+<hr />
+<h2 id="q-learningoff-policy">四、Q-Learning：off-policy 时序差分控制</h2>
+<h3 id="41-off-policy">4.1 更新公式与 off-policy 思想</h3>
+<p><strong>Q-Learning</strong>（Watkins, 1989）的更新公式只改了一处：把 $Q(S', A')$
+换成 $\max_{a'} Q(S', a')$：</p>
+<p>$$
+\boxed{\; Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a') - Q(S_t, A_t) \right] \;}
+$$</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>SARSA</th>
+<th>Q-Learning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新目标里的 $S'$ 动作</td>
+<td>$A'$：行为策略实际执行的动作</td>
+<td>$\max_{a'} Q(S', a')$：<strong>贪心目标策略</strong>的动作</td>
+</tr>
+<tr>
+<td>行为策略与目标策略</td>
+<td>相同（on-policy）</td>
+<td>不同（off-policy）</td>
+</tr>
+</tbody>
+</table>
+<p>Q-Learning 的更新目标<strong>完全由 $Q$ 表自身决定</strong>（取最大），与"行为策略
+实际怎么选动作"无关。这意味着：<strong>行为策略可以任意（哪怕很差），更新
+仍然在朝"最优动作价值 $q_*$"的方向走</strong>——这就是 <strong>off-policy（异策略）</strong>
+学习。</p>
+<h3 id="42-sutton-barto-65">4.2 伪代码（Sutton &amp; Barto 算法 6.5 风格）</h3>
+<pre><code>算法：Q-Learning（off-policy TD 控制）
+对每个回合：
+    初始化 S
+    对回合中的每一步：
+        用 ε-greedy 从 Q 选出动作 A（行为策略，只影响探索）
+        执行 A，观测 R, S'
+        Q(S, A) ← Q(S, A) + α [ R + γ max_{a'} Q(S', a') − Q(S, A) ]
+        S ← S'
+    直到 S 为终止状态
+</code></pre>
+<p>对比 3.2 节的 SARSA 伪代码：Q-Learning 在更新时<strong>不需要选出 $A'$</strong>，
+行为策略与目标策略被显式分离——行为策略负责"去哪里收集数据"，目标
+策略（贪心）负责"朝什么方向更新"。</p>
+<h3 id="43-q-learning">4.3 为什么 Q-Learning 学到最优策略</h3>
+<ol>
+<li><strong>更新目标独立于行为策略</strong>：$R + \gamma \max_{a'} Q(S', a')$ 是贝尔曼
+   最优性方程
+   $$q_<em>(s, a) = \mathbb{E}\left[ R + \gamma \max_{a'} q_</em>(S', a') \mid S = s, A = a \right]$$
+   的采样形式。每次更新都在把 $Q$ 拉向 $q_<em>$，</em><em>与探索策略无关</em>*。</li>
+<li><strong>收敛性保证</strong>：在表格型设定下，只要每个 $(s, a)$ 被无限次访问、
+   $\alpha$ 满足 Robbins-Monro 条件（$\sum \alpha = \infty$，$\sum \alpha^2 &lt; \infty$），
+   则 $Q \to q_<em>$（Watkins &amp; Dayan, 1992）。SARSA 只能保证收敛到
+   </em><em>行为策略下的</em>*最优 $q_\pi$。</li>
+<li><strong>贪心导出</strong>：学得 $Q \approx q_*$ 后，$\pi(s) = \arg\max_a Q(s, a)$
+   即最优策略。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：off-policy 的本质是"<strong>用任何策略收集数据，学最优策略</strong>"。
+这带来两个工程红利：① 数据可以来自<strong>旧策略的回放</strong>（经验回放，第 5 章
+DQN 的关键组件）；② 行为策略可以独立设计（如人工示范、安全策略）。</p>
+</blockquote>
+<h3 id="44-sarsa-q-learning">4.4 SARSA 与 Q-Learning 对比表</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>SARSA</th>
+<th>Q-Learning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>更新目标</strong></td>
+<td>$R + \gamma Q(S', A')$（$A'$ 来自行为策略）</td>
+<td>$R + \gamma \max_{a'} Q(S', a')$（来自贪心目标策略）</td>
+</tr>
+<tr>
+<td><strong>探索策略</strong></td>
+<td>与目标策略相同（on-policy）</td>
+<td>可独立设计（off-policy），通常 ε-greedy</td>
+</tr>
+<tr>
+<td><strong>学到的最优策略</strong></td>
+<td>行为策略下的最优（含探索代价的保守策略）</td>
+<td>真正的贪心最优策略 $\pi_*$</td>
+</tr>
+<tr>
+<td><strong>悬崖场景行为</strong></td>
+<td>绕行安全路线，平均约 $-24$ / 回合</td>
+<td>走最优路线，但探索期常掉崖，平均约 $-37$ / 回合</td>
+</tr>
+<tr>
+<td><strong>方差 / 偏差</strong></td>
+<td>目标更贴近实际行为，方差较低</td>
+<td>max 运算引入正偏差（最大化偏差，见 5.2 节），方差较高</td>
+</tr>
+<tr>
+<td><strong>收敛对象</strong></td>
+<td>$q_\pi$（$\pi$ 为行为策略）</td>
+<td>$q_*$（与行为策略无关）</td>
+</tr>
+<tr>
+<td><strong>典型应用</strong></td>
+<td>需对探索稳健的场景、在线学习</td>
+<td>DQN 家族、绝大多数现代深度 RL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-python">4.5 Python 实现与两条路线对比</h3>
+<pre><code class="language-python">def q_learning(env, episodes=500, alpha=0.1, gamma=1.0, eps=0.1):
+    &quot;&quot;&quot;Q-Learning：更新目标取 max，与行为策略解耦（off-policy）。
+    环境类 CliffWalking 与 greedy_path 见 3.4 节。&quot;&quot;&quot;
+    Q = np.zeros((env.rows, env.cols, 4))
+    rewards = []
+    for _ in range(episodes):
+        s = env.reset()
+        total = 0.0; done = False
+        while not done:
+            a = np.random.randint(4) if np.random.random() &lt; eps else int(np.argmax(Q[s]))
+            s2, r, done = env.step(a)
+            Q[s][a] += alpha * (r + (0.0 if done else np.max(Q[s2])) - Q[s][a])
+            s = s2
+            total += r
+        rewards.append(total)
+    return Q, rewards
+
+np.random.seed(1)
+Q_q, rew_q = q_learning(env)
+p2, steps2, ok2 = greedy_path(env, Q_q)
+print(&quot;Q-Learning 后 100 回合平均奖励:&quot;, round(np.mean(rew_q[-100:]), 2))
+print(&quot;Q-Learning 贪心路径长度:&quot;, steps2, &quot;到达终点:&quot;, ok2)
+print(&quot;Q-Learning 前 5 回合奖励:&quot;, [int(x) for x in rew_q[:5]])
+
+# 预期输出:
+# Q-Learning 后 100 回合平均奖励: -36.5
+# Q-Learning 贪心路径长度: 13 到达终点: True
+# Q-Learning 前 5 回合奖励: [-103, -100, -107, -101, -143]
+</code></pre>
+<p>同一随机种子下，Q-Learning 学到的贪心路线（与 3.4 节 SARSA 的路线对比）：</p>
+<pre><code>SARSA（保守路线，15 步）                Q-Learning（最优路线，13 步）
+行 0   .  .  .  .  .  .  .  .  .  .  .  .      行 0   .  .  .  .  .  .  .  .  .  .  .  .
+行 1   →  →  →  →  →  →  →  →  →  →  →  ↓     行 1   .  .  .  .  .  .  .  .  .  .  .  .
+行 2   ↑  .  .  .  .  .  .  .  .  .  .  ↓      行 2   →  →  →  →  →  →  →  →  →  →  →  ↓
+行 3   ↑  █  █  █  █  █  █  █  █  █  █  G     行 3   ↑  █  █  █  █  █  █  █  █  █  █  G
+</code></pre>
+<p>Q-Learning 学出了贴着悬崖的<strong>最优 13 步路线</strong>；但训练过程中（ε = 0.1）
+它频繁掉崖（前 5 回合平均奖励约 $-110$，几乎每回合都掉），而 SARSA 在
+训练后期几乎不再掉崖。<strong>"学到最优"与"过程安全"是两个不同的目标</strong>——这是
+第 8 节综合实验要量化对比的核心。</p>
+<h3 id="46-on-policy-off-policy">4.6 on-policy 与 off-policy 的工程意义</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>on-policy（SARSA）</th>
+<th>off-policy（Q-Learning）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据复用</td>
+<td>数据必须来自当前策略，旧数据作废</td>
+<td>旧策略数据可复用（经验回放的前提）</td>
+</tr>
+<tr>
+<td>样本效率</td>
+<td>低（策略一变，数据就过期）</td>
+<td>高（可反复利用历史数据）</td>
+</tr>
+<tr>
+<td>探索安全性</td>
+<td>策略自动规避探索风险</td>
+<td>行为策略需单独设计安全机制</td>
+</tr>
+<tr>
+<td>收敛目标</td>
+<td>行为策略下的最优</td>
+<td>全局最优 $q_*$</td>
+</tr>
+<tr>
+<td>现代深度 RL</td>
+<td>PPO 等（第 6 章）</td>
+<td>DQN 家族（第 5 章）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="expected-sarsa-double-q-learning">五、Expected SARSA 与 Double Q-Learning</h2>
+<h3 id="51-expected-sarsa-max">5.1 Expected SARSA：把 max 换成期望</h3>
+<p><strong>Expected SARSA</strong>（Van Seijen et al., 2009）的更新目标是对 $S'$ 处的
+动作价值<strong>按策略 $\pi$ 求期望</strong>，而不是取 max：</p>
+<p>$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma \sum_a \pi(a \mid S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t) \right]
+$$</p>
+<p>当行为策略是 ε-greedy 时，期望项可以展开为：</p>
+<p>$$\sum_a \pi(a \mid S') Q(S', a) = (1 - \varepsilon) \max_a Q(S', a) + \frac{\varepsilon}{|A|} \sum_a Q(S', a)$$</p>
+<table>
+<thead>
+<tr>
+<th>性质</th>
+<th>Expected SARSA</th>
+<th>SARSA</th>
+<th>Q-Learning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新目标</td>
+<td>按 $\pi$ 求期望</td>
+<td>$Q(S', A')$（单样本）</td>
+<td>$\max_a Q(S', a)$</td>
+</tr>
+<tr>
+<td>目标方差</td>
+<td><strong>最低</strong>（期望消除单样本噪声）</td>
+<td>高（含 $A'$ 采样噪声）</td>
+<td>中（max 无采样噪声但引入偏差）</td>
+</tr>
+<tr>
+<td>on / off-policy</td>
+<td>两者皆可（$\pi$ 取贪心即 off-policy）</td>
+<td>on-policy</td>
+<td>off-policy</td>
+</tr>
+<tr>
+<td>计算量</td>
+<td>需遍历 $S'$ 的所有动作</td>
+<td>最小</td>
+<td>最小</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：Expected SARSA 用"确定性期望"替换 SARSA 的"随机采样"，
+在<strong>不增加偏差</strong>的前提下把目标方差降到最低——同样的 $\alpha$ 下它比
+SARSA 学得更稳。代价只是每步多算一次期望（表格型下遍历 $|A|$ 个动作）。</p>
+</blockquote>
+<pre><code class="language-python">def expected_sarsa(env, episodes=500, alpha=0.1, gamma=1.0, eps=0.1):
+    &quot;&quot;&quot;Expected SARSA：更新目标按 ε-greedy 策略求期望，方差低于 SARSA。&quot;&quot;&quot;
+    Q = np.zeros((env.rows, env.cols, 4))
+    rewards = []
+    for _ in range(episodes):
+        s = env.reset(); total = 0.0; done = False
+        while not done:
+            a = np.random.randint(4) if np.random.random() &lt; eps else int(np.argmax(Q[s]))
+            s2, r, done = env.step(a)
+            pi = np.full(4, eps / 4.0)               # ε-greedy 概率分布
+            pi[np.argmax(Q[s2])] += 1.0 - eps
+            target = r + (0.0 if done else np.dot(pi, Q[s2]))
+            Q[s][a] += alpha * (target - Q[s][a])
+            s = s2; total += r
+        rewards.append(total)
+    return Q, rewards
+
+np.random.seed(1)
+Q_e, rew_e = expected_sarsa(env)
+print(&quot;Expected SARSA 后 100 回合平均奖励:&quot;, round(np.mean(rew_e[-100:]), 2))
+
+# 预期输出:
+# Expected SARSA 后 100 回合平均奖励: -22.01
+</code></pre>
+<p>（环境类与 $\alpha, \varepsilon$ 等参数同 3.4 节；与 SARSA 的 $-23.05$
+相比，Expected SARSA 在相同设置下略优且更稳。）</p>
+<h3 id="52-maximization-biasmax">5.2 最大化偏差（Maximization Bias）：max 的陷阱</h3>
+<p>Q-Learning 的 $\max$ 运算有一个隐藏缺陷。设 $X_1, \dots, X_n$ 是对
+$n$ 个动作价值的<strong>带噪声估计</strong>，则</p>
+<p>$$\mathbb{E}!\left[\max_a X_a\right] \;\ge\; \max_a \mathbb{E}[X_a]$$</p>
+<p>只要估计有噪声，"取最大"就会<strong>系统性高估</strong>——因为噪声只会把某个动作
+"顶"到最大，而不会"压"下去。这种<strong>最大化偏差（maximization bias）</strong>
+在动作数多、噪声大时尤为严重，是深度 RL 中 Q 值过估计（overestimation）
+的根源之一（第 5 章 Double DQN 的动机）。</p>
+<p>一个小例子（Sutton &amp; Barto 例 6.7 简化版）：</p>
+<pre><code>状态 A：两个动作
+  左 → 奖励 0，终止
+  右 → 进入状态 B（奖励 0）
+状态 B：100 个动作，每个奖励 ~ N(-0.1, 1)，然后终止
+
+真值：V*(A) = max(0, -0.1) = 0
+</code></pre>
+<p>B 的 100 个动作真值都是 $-0.1$，但 Q-Learning 每访问一次 B 就取一次
+100 个噪声估计的 max——早期几乎必然得到一个<strong>正的</strong>最大值，于是
+$Q(A, \text{右})$ 被系统性高估，$V(A)$ 偏离真值 0。</p>
+<h3 id="53-double-q-learning-q">5.3 Double Q-Learning：两套 Q 表解耦"选择"与"评估"</h3>
+<p><strong>Double Q-Learning</strong>（Hasselt, 2010）的思路：把"选出最大动作"与"读取
+该动作的价值"交给<strong>两套独立维护的 Q 表</strong>完成。用 $Q_A$ 选动作、用
+$Q_B$ 估值（反之亦然），使噪声无法"自肥"：</p>
+<p>$$
+Q_A(S_t, A_t) \leftarrow Q_A(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma Q_B!\left(S_{t+1}, \arg\max_a Q_A(S_{t+1}, a)\right) - Q_A(S_t, A_t) \right]
+$$</p>
+<p>以 0.5 概率更新 $Q_A$，否则对称地更新 $Q_B$；动作选择用两表的和
+（或均值）。伪代码：</p>
+<pre><code>算法：Double Q-Learning
+对每个回合：
+    初始化 S
+    对每一步：
+        用 ε-greedy（基于 QA + QB）选出动作 A，执行，观测 R, S'
+        以 0.5 概率：
+            QA(S,A) ← QA(S,A) + α [ R + γ·QB(S', argmax_a QA(S',a)) − QA(S,A) ]
+        否则：
+            QB(S,A) ← QB(S,A) + α [ R + γ·QA(S', argmax_a QB(S',a)) − QB(S,A) ]
+        S ← S'
+    直到 S 为终止状态
+</code></pre>
+<p><strong>为什么有效</strong>：$Q_B$ 与 $Q_A$ 由<strong>不相交的经验</strong>更新，相互独立。当
+$Q_A$ 因噪声把某个动作"顶"成最大时，$Q_B$ 在该动作上的值仍是<strong>无偏的
+估计</strong>——"选择"的噪声与"评估"的噪声互不相关，正偏差被消除。</p>
+<pre><code class="language-python">def demo_max_bias(seeds=100, episodes=300, alpha=0.1):
+    &quot;&quot;&quot;最大化偏差演示：状态 A 两个动作——左：奖励 0 并终止；
+    右：进入 B。状态 B 有 100 个动作，奖励 ~ N(-0.1, 1) 后终止。
+    真实 V*(A) = max(0, -0.1) = 0。返回两种算法的 V(A) 学习曲线均值。&quot;&quot;&quot;
+    q_curve = np.zeros(episodes); dq_curve = np.zeros(episodes)
+    for seed in range(seeds):
+        rng = np.random.default_rng(seed)
+        Q = np.zeros(101)               # 0-99: B 的动作；100: A 的&quot;右&quot;
+        QA = np.zeros(101); QB = np.zeros(101)
+        for t in range(episodes):
+            # --- Q-Learning ---
+            if rng.random() &lt; 0.1:
+                a = 1 if rng.random() &lt; 0.5 else 0
+            else:
+                a = 1 if Q[100] &gt;= 0 else 0      # 贪心：Q[100]&gt;=0 时选&quot;右&quot;
+            if a == 1:                            # 进入 B
+                if rng.random() &lt; 0.1:
+                    b = rng.integers(100)
+                else:
+                    b = int(np.argmax(Q[:100]))
+                r = rng.normal(-0.1, 1.0)
+                Q[b] += alpha * (r - Q[b])
+                Q[100] += alpha * (np.max(Q[:100]) - Q[100])
+            q_curve[t] += max(0.0, Q[100])
+            # --- Double Q-Learning ---
+            if rng.random() &lt; 0.1:
+                a = 1 if rng.random() &lt; 0.5 else 0
+            else:
+                a = 1 if (QA[100] + QB[100]) / 2 &gt;= 0 else 0
+            if a == 1:
+                if rng.random() &lt; 0.1:
+                    b = rng.integers(100)
+                else:
+                    b = int(np.argmax(QA[:100]))
+                r = rng.normal(-0.1, 1.0)
+                if rng.random() &lt; 0.5:
+                    # 索引取 QA 的 argmax，值读 QB（独立估计，消除正偏差）
+                    QA[b] += alpha * (r - QA[b])
+                    QA[100] += alpha * (QB[int(np.argmax(QA[:100]))] - QA[100])
+                else:
+                    QB[b] += alpha * (r - QB[b])
+                    QB[100] += alpha * (QA[int(np.argmax(QB[:100]))] - QB[100])
+            dq_curve[t] += max(0.0, (QA[100] + QB[100]) / 2)
+    return q_curve / seeds, dq_curve / seeds
+
+q_c, dq_c = demo_max_bias()
+print(&quot;episode :      1      10      50     100     200     300&quot;)
+print(&quot;Q-Learn :&quot;, &quot; &quot;.join(f&quot;{q_c[i]:7.3f}&quot; for i in [0, 9, 49, 99, 199, 299]))
+print(&quot;DoubleQ :&quot;, &quot; &quot;.join(f&quot;{dq_c[i]:7.3f}&quot; for i in [0, 9, 49, 99, 199, 299]))
+
+# 预期输出（100 个随机种子平均的 V(A) 估计，真值 0）:
+# episode :      1      10      50     100     200     300
+# Q-Learn :   0.003   0.062   0.133   0.125   0.123   0.128
+# DoubleQ :   0.000   0.006   0.006   0.002   0.002   0.001
+</code></pre>
+<p>结果解读：Q-Learning 的 $V(A)$ 被最大化偏差抬高到约 $0.13$（真值为 0，
+相对高估 13%）；Double Q-Learning 的估计始终贴着 0 附近（约 $0.001 \sim
+0.006$），正偏差基本被消除。<strong>代价</strong>是两套 Q 表使每个 $(s,a)$ 的更新
+频率减半，前期收敛略慢。</p>
+<h3 id="54-td">5.4 四种表格型 TD 控制算法横向对比</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>更新目标（$S'$ 处）</th>
+<th>on/off-policy</th>
+<th>目标方差</th>
+<th>最大化偏差</th>
+<th>悬崖场景表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SARSA</strong></td>
+<td>$Q(S', A')$（行为动作）</td>
+<td>on</td>
+<td>高</td>
+<td>无（不自举到 max）</td>
+<td>保守路线（约 $-23$）</td>
+</tr>
+<tr>
+<td><strong>Expected SARSA</strong></td>
+<td>$\sum_a \pi(a|S') Q(S', a)$</td>
+<td>均可</td>
+<td><strong>最低</strong></td>
+<td>无（用期望）</td>
+<td>保守路线（约 $-22$）</td>
+</tr>
+<tr>
+<td><strong>Q-Learning</strong></td>
+<td>$\max_a Q(S', a)$</td>
+<td>off</td>
+<td>中</td>
+<td><strong>有</strong></td>
+<td>最优路线但训练期掉崖多（约 $-37$）</td>
+</tr>
+<tr>
+<td><strong>Double Q-Learning</strong></td>
+<td>另一表的 $\arg\max$ 值</td>
+<td>off</td>
+<td>中</td>
+<td><strong>基本消除</strong></td>
+<td>最优路线，估值更准</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：这四种算法构成一张"<strong>目标怎么构造</strong>"的设计空间图——
+用行为动作（SARSA）、用期望（Expected SARSA）、用贪心 max（Q-Learning）、
+用解耦的 max（Double Q-Learning）。选择标准取决于：探索是否安全
+（on-policy 更稳）、方差是否敏感（期望最优）、估值是否会被高估
+（Double Q 最准）。</p>
+</blockquote>
+<hr />
+<h2 id="n-step-td">六、n-step TD：单步与整回合之间的连续谱</h2>
+<h3 id="61-td">6.1 TD 方法家族图谱</h3>
+<p>前文所有方法（TD(0)、SARSA、Q-Learning、Expected SARSA）都属于"一步
+自举"家族；MC 属于"整回合"家族。<strong>n-step TD</strong> 在两者之间连续插值——
+用 $n$ 步真实奖励 + 第 $n+1$ 步起用估计：</p>
+<p><img alt="TD 方法家族" src="../assets/04-td-family.png" /></p>
+<table>
+<thead>
+<tr>
+<th>参数 $n$</th>
+<th>$n = 1$（TD(0)）</th>
+<th>中间值（如 $n = 3$）</th>
+<th>$n \to \infty$（MC）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自举程度</td>
+<td>完全自举（1 步）</td>
+<td>部分自举（$n$ 步后）</td>
+<td>不自举（用完整回报）</td>
+</tr>
+<tr>
+<td>偏差</td>
+<td>大（初始估计不准）</td>
+<td>中</td>
+<td><strong>无</strong></td>
+</tr>
+<tr>
+<td>方差</td>
+<td><strong>小</strong>（1 步随机性）</td>
+<td>中</td>
+<td>大（整回合累加）</td>
+</tr>
+<tr>
+<td>需等多少步</td>
+<td>1 步</td>
+<td>$n$ 步</td>
+<td>回合结束</td>
+</tr>
+<tr>
+<td>典型算法</td>
+<td>SARSA、Q-Learning</td>
+<td>n-step SARSA</td>
+<td>首次访问 MC</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：$n$ 是一个"<strong>偏差-方差旋钮</strong>"：$n$ 越小越像 TD（低方差、
+高偏差、学习快），$n$ 越大越像 MC（无偏、高方差、学习慢）。没有普适
+最优的 $n$，取决于任务——这正是 TD(λ)（第 7 节）用加权平均"同时拥有
+所有 $n$"的动机。</p>
+</blockquote>
+<h3 id="62-n-step-return">6.2 n-step return 定义</h3>
+<p><strong>n-step return</strong>（截断回报）定义为前 $n$ 步真实奖励加上第 $n$ 步之后的
+估计价值：</p>
+<p>$$
+G_t^{(n)} = R_{t+1} + \gamma R_{t+2} + \cdots + \gamma^{n-1} R_{t+n} + \gamma^n V(S_{t+n})
+$$</p>
+<p>当 $t + n \ge T$（超出回合末尾）时，$G_t^{(n)} = G_t$（整回合回报）。
+两个极端：$G_t^{(1)} = R_{t+1} + \gamma V(S_{t+1})$ 即 TD 目标；
+$G_t^{(\infty)} = G_t$ 即 MC 回报。</p>
+<p>数值示例：设奖励序列为 $+2, -1, +3, +5$（回合第 4 步结束），$\gamma = 0.9$：</p>
+<pre><code class="language-python">import numpy as np
+
+r = np.array([2.0, -1.0, 3.0, 5.0])   # 从 t=0 起的奖励序列，回合在第 4 步结束
+gamma = 0.9
+for n in [1, 2, 3, 4]:
+    G = sum(gamma ** i * r[i] for i in range(n))
+    print(f&quot;G(0)^({n}) = {G:.3f}&quot;)
+G_inf = sum(gamma ** i * r[i] for i in range(len(r)))
+print(f&quot;G(0)^(∞) = {G_inf:.3f}  （回合在第 4 步终止，与 n=4 相同）&quot;)
+
+# 预期输出:
+# G(0)^(1) = 2.000
+# G(0)^(2) = 1.100
+# G(0)^(3) = 3.530
+# G(0)^(4) = 7.175
+# G(0)^(∞) = 7.175  （回合在第 4 步终止，与 n=4 相同）
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>$n$</th>
+<th>$G_0^{(n)}$ 的计算</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>$+2$</td>
+<td>2.000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$+2 + 0.9 \times (-1)$</td>
+<td>1.100</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$1.1 + 0.9^2 \times 3$</td>
+<td>3.530</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$3.53 + 0.9^3 \times 5$</td>
+<td>7.175</td>
+</tr>
+<tr>
+<td>$\infty$</td>
+<td>回合在第 4 步结束，$G_0^{(\infty)} = G_0^{(4)}$</td>
+<td>7.175</td>
+</tr>
+</tbody>
+</table>
+<p>同一个 $t$ 下，不同 $n$ 的 return 差异巨大——<strong>$n$ 的选择直接决定更新
+目标</strong>。</p>
+<h3 id="63-n-step-td-n-step-sarsa">6.3 n-step TD 预测与 n-step SARSA</h3>
+<p><strong>n-step TD 预测</strong>（每 $n$ 步更新一次）：</p>
+<p>$$V(S_t) \leftarrow V(S_t) + \alpha \left[ G_t^{(n)} - V(S_t) \right]$$</p>
+<p><strong>n-step SARSA</strong>（Sutton &amp; Barto 算法 7.4 风格）把 $V$ 换成 $Q$，
+return 中的末项用 $Q(S_{t+n}, A_{t+n})$：</p>
+<p>$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ G_{t:t+n} - Q(S_t, A_t) \right], \qquad
+G_{t:t+n} = \sum_{i=1}^{n} \gamma^{i-1} R_{t+i} + \gamma^n Q(S_{t+n}, A_{t+n})
+$$</p>
+<p>实现要点：维护状态/动作/奖励三个缓冲，每走一步"补发"一次对 $n$ 步前
+那个 $(S, A)$ 的更新（延迟更新机制）。</p>
+<p>在 Cliff Walking 上运行 n-step SARSA（$\alpha = 0.1$，$\varepsilon = 0.1$，
+500 回合，5 个随机种子平均的后 100 回合均值）：</p>
+<table>
+<thead>
+<tr>
+<th>$n$</th>
+<th>1</th>
+<th>3</th>
+<th>5</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>后 100 回合平均奖励</td>
+<td>$-21.5$</td>
+<td>$-21.4$</td>
+<td>$-23.2$</td>
+<td>$-31.1$</td>
+</tr>
+</tbody>
+</table>
+<p>解读：$n$ 较小时（1~3）表现接近且良好；$n = 10$ 明显变差——悬崖的
+$-100$ 惩罚需要<strong>及时</strong>传导进价值，$n$ 太大时"掉崖信息"要在 $n$ 步之后
+才进入更新目标，学习被拖慢。<strong>n-step 的超参 $n$ 需要根据任务的时间尺度
+调节</strong>：奖励稀疏、延迟长时选大 $n$，奖励密集、风险即时时选小 $n$。</p>
+<h3 id="64">6.4 优缺点小结</h3>
+<table>
+<thead>
+<tr>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在偏差与方差之间可调，往往比 TD(0) 收敛更快</td>
+<td>需要缓冲 $n$ 步经验，实现更复杂</td>
+</tr>
+<tr>
+<td>比 MC 支持在线学习与持续任务</td>
+<td>$n$ 是额外超参，需调</td>
+</tr>
+<tr>
+<td>比 TD(0) 对"奖励延迟"更宽容</td>
+<td>奖励极端（如 $-100$）时大 $n$ 传播慢</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：n-step 方法在现代深度 RL 中有重要化身——第 6 章 PPO 的
+GAE（广义优势估计）本质上就是"<strong>带权重的无穷 n-step 平均</strong>"，即
+TD(λ) 思想在深度时代的回归（见 7.5 节）。</p>
+</blockquote>
+<hr />
+<h2 id="td_1">七、TD(λ) 与资格迹（进阶选读）</h2>
+<blockquote>
+<p>本节内容在表格型 RL 中地位极高（TD-Gammon 即用 TD(λ) 战胜人类冠军），
+但在现代深度 RL 中已较少直接使用。建议理解<strong>思想</strong>（λ-return 加权、
+资格迹的"信用回溯"），不必纠结实现细节。</p>
+</blockquote>
+<h3 id="71-returnn-step-return">7.1 λ-return：n-step return 的加权平均</h3>
+<p>TD(λ) 的思路：<strong>不要选某一个 $n$，而是把所有的 $G_t^{(n)}$ 加权平均</strong>。
+<strong>λ-return</strong> 定义为：</p>
+<p>$$
+G_t^\lambda = (1 - \lambda) \sum_{n=1}^{\infty} \lambda^{n-1} G_t^{(n)}
+$$</p>
+<p>权重 $(1-\lambda)\lambda^{n-1}$ 随 $n$ 几何衰减、总和为 1。对终止于
+$T$ 的回合，最后一项（$n = T - t$）的权重改为 $\lambda^{T-t-1}$（不再乘
+$1-\lambda$）。</p>
+<table>
+<thead>
+<tr>
+<th>$\lambda$</th>
+<th>权重分配</th>
+<th>退化为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\lambda = 0$</td>
+<td>全部权重给 $n = 1$</td>
+<td>TD(0)（一步自举）</td>
+</tr>
+<tr>
+<td>$0 &lt; \lambda &lt; 1$</td>
+<td>指数衰减地混合所有 $n$</td>
+<td>中间方法</td>
+</tr>
+<tr>
+<td>$\lambda = 1$</td>
+<td>权重全部给 $n \to \infty$（末项）</td>
+<td>MC（整回合回报）</td>
+</tr>
+</tbody>
+</table>
+<p>三步步长的回合（$T - t = 3$）各 $n$ 的权重示例：</p>
+<table>
+<thead>
+<tr>
+<th>$n$</th>
+<th>$\lambda = 0$</th>
+<th>$\lambda = 0.5$</th>
+<th>$\lambda = 0.9$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1.000</td>
+<td>0.500</td>
+<td>0.100</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.000</td>
+<td>0.250</td>
+<td>0.090</td>
+</tr>
+<tr>
+<td>3（末项）</td>
+<td>0.000</td>
+<td>0.250</td>
+<td>0.810</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：λ-return 是"<strong>所有 n-step return 的几何加权平均</strong>"。
+$\lambda$ 与 $n$ 一样是偏差-方差旋钮，但它<strong>同时包含所有时间尺度</strong>，
+避免了"选错单一 $n$"的风险。理论上 $\lambda$ 越大越无偏、方差越大。</p>
+</blockquote>
+<h3 id="72">7.2 前向视角与后向视角</h3>
+<p><strong>前向视角（forward view）</strong>：站在时刻 $t$，要"看向未来"直到回合结束才能
+算出 $G_t^\lambda$——这使 λ-return 无法在线使用，只能离线（offline）更新。</p>
+<p><strong>后向视角（backward view）</strong>：资格迹方法把同样的更新<strong>分散</strong>到每一步：
+每走一步，把 TD 误差 $\delta_t$ 按"资格"比例分摊给<strong>所有过去访问过的
+状态</strong>。两者在离线情形下数学等价：</p>
+<pre><code>前向视角（离线）：             后向视角（在线）：
+  t 时刻需要整个未来            每步只用一个 δ_t，回放给过去
+
+  S_t ──► ... ──► 回合结束       e(s) 记录&quot;s 被多久前访问过&quot;
+  G_t^λ 算出来后才更新 V(S_t)    V(s) ← V(s) + α·δ_t·e(s)  对所有 s
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>视角</th>
+<th>何时能更新</th>
+<th>需要的信息</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前向（λ-return）</td>
+<td>回合结束后</td>
+<td>完整未来轨迹</td>
+<td>离线 / 批处理</td>
+</tr>
+<tr>
+<td>后向（资格迹）</td>
+<td><strong>每步</strong></td>
+<td>资格迹表 $e$</td>
+<td>在线学习（TD(λ) 实际实现）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-eligibility-traces-td">7.3 资格迹（Eligibility Traces）与 TD(λ) 更新</h3>
+<p><strong>资格迹</strong> $e_t(s)$ 记录"状态 $s$ 最近被访问得多频繁"——它是"信用"的
+载体：越久远的状态，越不该为当前的 TD 误差负责。累积迹（accumulating
+trace）的更新：</p>
+<p>$$
+e_t(s) = \gamma \lambda \, e_{t-1}(s) + \mathbf{1}{S_t = s}
+$$</p>
+<p>即：每步先把所有迹衰减 $\gamma\lambda$ 倍，再把当前访问的状态的迹加 1。
+于是 TD(λ) 的更新是<strong>对所有状态同时进行</strong>的：</p>
+<p>$$
+\boxed{\; V(s) \leftarrow V(s) + \alpha \, \delta_t \, e_t(s), \qquad \forall s \;}
+$$</p>
+<pre><code>资格迹的演变（状态访问序列 A → A → B → C）：
+
+时刻       A        B        C
+ 0 访问 A: e(A)=1
+ 1 访问 A: e(A)=1+γλ        （再次访问，迹叠加）
+ 2 访问 B: e(A)=γλ, e(B)=1
+ 3 访问 C: e(A)=(γλ)², e(B)=γλ, e(C)=1
+           └──────────┬──────────┘
+          δ_3 按迹的强度分摊给 A、B、C：离得越近，分得越多
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>迹的类型</th>
+<th>更新规则</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>累积迹（accumulating）</td>
+<td>$e(s) \leftarrow \gamma\lambda\, e(s) + 1$</td>
+<td>反复访问同一状态会叠加；长回合中可能过大</td>
+</tr>
+<tr>
+<td>替换迹（replacing）</td>
+<td>访问时 $e(s) \leftarrow 1$（先置 1 再衰减）</td>
+<td>防止叠加爆炸，常更稳健</td>
+</tr>
+</tbody>
+</table>
+<p>在随机游走上实现 TD(λ)（$\gamma = 1$，100 回合）：</p>
+<pre><code class="language-python">import numpy as np
+
+def td_lambda(env, episodes=100, alpha=0.1, lam=0.5, gamma=1.0):
+    &quot;&quot;&quot;TD(λ)：资格迹后向视角。env 与 rms 复用 2.2 节的 RandomWalk。&quot;&quot;&quot;
+    V = np.zeros(env.n)
+    for _ in range(episodes):
+        e = np.zeros(env.n)            # 资格迹，每回合重置
+        s = env.reset(); done = False
+        while not done:
+            s2, r, done = env.step(0)
+            delta = r + gamma * (0.0 if done else V[s2]) - V[s]
+            e[s] += 1.0                # 访问状态：迹 +1（累积迹）
+            V += alpha * delta * e     # 所有状态按迹的强度分摊更新
+            e *= gamma * lam           # 迹随时间衰减
+            s = s2
+    return V
+
+for lam, alpha in [(0.0, 0.1), (0.5, 0.05), (0.9, 0.02)]:
+    acc = 0.0
+    for seed in range(100):
+        np.random.seed(seed)
+        acc += rms(td_lambda(RandomWalk(), 100, alpha, lam))
+    print(f&quot;λ={lam:.1f}, α={alpha:.2f}: 100 次运行平均 RMS = {acc/100:.4f}&quot;)
+
+# 预期输出（随机游走，100 回合，各 λ 取较优 α）:
+# λ=0.0, α=0.10: 100 次运行平均 RMS = 0.0602
+# λ=0.5, α=0.05: 100 次运行平均 RMS = 0.0632
+# λ=0.9, α=0.02: 100 次运行平均 RMS = 0.0830
+</code></pre>
+<p>（注意代码里 $\lambda$ 越大配的 $\alpha$ 越小——大 $\lambda$ 等价于长
+return，方差大，需要更小的步长。$\lambda$ 与 $\alpha$ 必须联合调参。）</p>
+<h3 id="74">7.4 λ 与 α 的联合调参表</h3>
+<p>随机游走 100 回合、100 次运行平均 RMS 误差（$\lambda \times \alpha$ 网格，
+<strong>固定 $\alpha$ 时 $\lambda$ 越大越差；$\lambda$ 大必须配小 $\alpha$</strong>）：</p>
+<table>
+<thead>
+<tr>
+<th>$\lambda \backslash \alpha$</th>
+<th>0.10</th>
+<th>0.05</th>
+<th>0.02</th>
+<th>0.01</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.00</td>
+<td><strong>0.0616</strong></td>
+<td>0.1490</td>
+<td>0.3261</td>
+<td>0.4239</td>
+</tr>
+<tr>
+<td>0.30</td>
+<td>0.0581</td>
+<td>0.0971</td>
+<td>0.2726</td>
+<td>0.3869</td>
+</tr>
+<tr>
+<td>0.50</td>
+<td>0.0643</td>
+<td>0.0656</td>
+<td>0.2225</td>
+<td>0.3493</td>
+</tr>
+<tr>
+<td>0.70</td>
+<td>0.0777</td>
+<td><strong>0.0551</strong></td>
+<td>0.1555</td>
+<td>0.2918</td>
+</tr>
+<tr>
+<td>0.90</td>
+<td>0.1148</td>
+<td>0.0778</td>
+<td>0.0844</td>
+<td>0.1988</td>
+</tr>
+<tr>
+<td>0.99</td>
+<td>0.1691</td>
+<td>0.1124</td>
+<td>0.0825</td>
+<td>0.1520</td>
+</tr>
+</tbody>
+</table>
+<p>两个结论：① 对角线上（$\lambda$ 大配 $\alpha$ 小）各 $\lambda$ 表现接近，
+最优约在 $\lambda \approx 0.3 \sim 0.7$；② <strong>固定 $\alpha$ 时，$\lambda$
+从 0 增大会显著变差</strong>——因为大 $\lambda$ 的 return 方差大。调参时应
+"$\lambda$ 与 $\alpha$ 反着调"。</p>
+<h3 id="75-rl-td">7.5 为什么现代深度 RL 很少直接用 TD(λ)</h3>
+<table>
+<thead>
+<tr>
+<th>TD(λ) 的假设</th>
+<th>深度 RL 的现实</th>
+<th>冲突</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态可枚举，才能维护逐状态迹 $e(s)$</td>
+<td>状态是高维连续向量（像素、传感器）</td>
+<td>迹表无法存储</td>
+</tr>
+<tr>
+<td>表格更新 $V(s)$</td>
+<td>用神经网络参数化 $V_\theta(s)$</td>
+<td>迹无法"按状态"回溯到参数</td>
+</tr>
+<tr>
+<td>单条轨迹在线更新</td>
+<td>需要经验回放（打破相关性）</td>
+<td>迹与回放不兼容</td>
+</tr>
+<tr>
+<td>无函数逼近的稳定性问题</td>
+<td>自举 + 函数逼近可能发散</td>
+<td>需额外技巧（第 5 章）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：TD(λ) 的<strong>思想</strong>没有过时——它被深度化改造为
+<strong>GAE（Generalized Advantage Estimation, 第 6 章）</strong>：GAE 用
+$\lambda$ 加权平均多步 TD 误差来估计优势函数，公式
+$\hat{A}<em>t = \sum</em>{l=0}^{\infty}(\gamma\lambda)^l \delta_{t+l}$
+正是"λ-return 的优势版本"。PPO 等现代算法的 $\lambda$ 超参
+（通常 0.95）就源自这里。</p>
+</blockquote>
+<h3 id="76-td">7.6 TD(λ) 优缺点表</h3>
+<table>
+<thead>
+<tr>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>统一 TD(0) 与 MC，消除"选 $n$"的尴尬</td>
+<td>表格型才能维护迹；高维状态不可行</td>
+</tr>
+<tr>
+<td>后向视角支持<strong>在线</strong>更新（前向不行）</td>
+<td>$\lambda$ 与 $\alpha$ 强耦合，调参成本高</td>
+</tr>
+<tr>
+<td>收敛速度通常优于固定 $n$ 的方法</td>
+<td>累积迹在长回合中可能数值过大</td>
+</tr>
+<tr>
+<td>理论优雅：前向/后向等价</td>
+<td>深度时代被 GAE 取代</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cliff-walking-sarsa-vs-q-learning">八、综合实验：Cliff Walking 上 SARSA vs Q-Learning</h2>
+<h3 id="81">8.1 实验设置</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>取值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>环境</td>
+<td>Cliff Walking（3.4 节实现，$4 \times 12$）</td>
+</tr>
+<tr>
+<td>算法</td>
+<td>SARSA（on-policy）vs Q-Learning（off-policy）</td>
+</tr>
+<tr>
+<td>学习率 $\alpha$</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>折扣 $\gamma$</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>探索率 $\varepsilon$</td>
+<td>0.1（ε-greedy，固定不衰减）</td>
+</tr>
+<tr>
+<td>训练回合数</td>
+<td>500</td>
+</tr>
+<tr>
+<td>随机种子</td>
+<td>5 个（0~4），结果取平均</td>
+</tr>
+<tr>
+<td>评估指标</td>
+<td>每回合奖励和、贪心路径长度、掉崖次数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82">8.2 训练循环与统计</h3>
+<pre><code class="language-python">import numpy as np
+
+# 复用 3.4 节的环境类 CliffWalking、sarsa，以及 4.5 节的 q_learning
+
+def run_experiment(algo_fn, env, episodes=500, seeds=5):
+    &quot;&quot;&quot;运行 seeds 个随机种子，返回分桶均值与全部奖励序列。&quot;&quot;&quot;
+    buckets = np.zeros(5); all_rewards = []
+    for seed in range(seeds):
+        np.random.seed(seed)
+        _, rew = algo_fn(env, episodes)
+        all_rewards.append(rew)
+        for b in range(5):
+            buckets[b] += np.mean(rew[b * 100:(b + 1) * 100])
+    return buckets / seeds, all_rewards
+
+env = CliffWalking()
+for name, fn in [(&quot;SARSA&quot;, sarsa), (&quot;Q-Learning&quot;, q_learning)]:
+    buckets, all_r = run_experiment(fn, env)
+    print(f&quot;{name:10s} 分桶均值: {[f'{x:.1f}' for x in buckets]}&quot;)
+    print(f&quot;{'':10s} 全程平均: {np.mean(all_r):.1f}&quot;)
+
+np.random.seed(1)
+Q_s2, rew_s2 = sarsa(env); Q_q2, rew_q2 = q_learning(env)
+p_s, st_s, _ = greedy_path(env, Q_s2)
+p_q, st_q, _ = greedy_path(env, Q_q2)
+print(f&quot;SARSA      贪心路径: {st_s} 步&quot;)
+print(f&quot;Q-Learning 贪心路径: {st_q} 步&quot;)
+falls_s = [sum(1 for r in rew_s2[b*100:(b+1)*100] if r &lt; -50) for b in range(5)]
+falls_q = [sum(1 for r in rew_q2[b*100:(b+1)*100] if r &lt; -50) for b in range(5)]
+print(&quot;SARSA      掉崖次数(每100回合):&quot;, falls_s)
+print(&quot;Q-Learning 掉崖次数(每100回合):&quot;, falls_q)
+
+# 预期输出（5 个随机种子平均；掉崖次数为 seed=1 单次运行）:
+# SARSA      分桶均值: ['-108.7', '-52.2', '-34.5', '-26.2', '-24.3']
+#            全程平均: -49.2
+# Q-Learning 分桶均值: ['-111.0', '-57.7', '-41.6', '-35.6', '-37.0']
+#            全程平均: -56.6
+# SARSA      贪心路径: 15 步
+# Q-Learning 贪心路径: 13 步
+# SARSA      掉崖次数(每100回合): [89, 33, 12, 7, 6]
+# Q-Learning 掉崖次数(每100回合): [88, 38, 21, 23, 21]
+</code></pre>
+<h3 id="83">8.3 学习曲线与最终对比</h3>
+<p><strong>学习曲线</strong>（每 100 回合的平均每回合奖励，5 个随机种子平均；条形长度
+∝ 奖励高低，满格对应奖励 0）：</p>
+<pre><code>回合区间      0-99     100-199   200-299   300-399   400-499
+SARSA      ████      ███████████████████████  █████████████████████████████  ███████████████████████████████  ████████████████████████████████
+           -108.7    -52.2      -34.5      -26.2      -24.3
+
+Q-Learning ███       █████████████████████  ██████████████████████████  ████████████████████████████  ████████████████████████████
+           -111.0    -57.7      -41.6      -35.6      -37.0
+</code></pre>
+<p>两条曲线的完整学习过程（图见下）：</p>
+<p><img alt="SARSA 与 Q-Learning 对比" src="../assets/04-sarsa-qlearning.png" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>SARSA</th>
+<th>Q-Learning</th>
+<th>差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前 100 回合平均奖励</td>
+<td>$-108.7$</td>
+<td>$-111.0$</td>
+<td>几乎相同（都在密集掉崖探索）</td>
+</tr>
+<tr>
+<td>后 100 回合平均奖励</td>
+<td><strong>$-24.3$</strong></td>
+<td>$-37.0$</td>
+<td>SARSA 高约 34%</td>
+</tr>
+<tr>
+<td>全程平均</td>
+<td>$-49.2$</td>
+<td>$-56.6$</td>
+<td>SARSA 略优</td>
+</tr>
+<tr>
+<td>贪心路径长度</td>
+<td>15 步（保守）</td>
+<td><strong>13 步（最优）</strong></td>
+<td>Q-Learning 学到更优策略</td>
+</tr>
+<tr>
+<td>训练后期掉崖次数（400-499 回合）</td>
+<td><strong>6 次</strong></td>
+<td>21 次</td>
+<td>SARSA 掉崖少 3.5 倍</td>
+</tr>
+</tbody>
+</table>
+<h3 id="84">8.4 结果分析：没有免费午餐</h3>
+<ol>
+<li><strong>Q-Learning 学到了更好的策略，但过程更危险</strong>：它的贪心路径是贴崖的
+   最优 13 步；但训练全程 $\varepsilon = 0.1$ 的探索使它后期仍频繁掉崖
+   （400-499 回合掉 21 次），把平均奖励拖到 $-37.0$。</li>
+<li><strong>SARSA 用"次优策略"换"过程安全"</strong>：它学出绕行 15 步的保守路线，
+   后期掉崖仅 6 次，平均奖励 $-24.3$ 反而更高——<strong>在探索持续存在的
+   前提下，保守策略的期望回报确实更高</strong>。</li>
+<li><strong>两者的差距来自对探索的不同态度</strong>：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>SARSA 的答案</th>
+<th>Q-Learning 的答案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"带着 ε 探索，怎么走最好？"</td>
+<td>绕开悬崖（稳健）</td>
+<td>（不回答这个问题）</td>
+</tr>
+<tr>
+<td>"如果 ε → 0，怎么走最好？"</td>
+<td>仍是保守路线</td>
+<td>贴崖最优路线</td>
+</tr>
+<tr>
+<td>适合的场景</td>
+<td>训练期就部署 / 风险敏感</td>
+<td>先离线训练、后部署 / 追求极致最优</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：on-policy 与 off-policy 没有绝对优劣——<strong>Q-Learning 的
+目标函数是"最终学到的策略有多好"，SARSA 的目标函数是"训练过程有多
+安全高效"</strong>。工程上常见组合：用 Q-Learning（或 DQN）离线训练到收敛，
+部署时再关掉探索；或训练中动态衰减 $\varepsilon$，让 SARSA 的保守性
+逐步让位给最优性。</p>
+</blockquote>
+<h3 id="85">8.5 动手练习</h3>
+<ol>
+<li><strong>衰减探索率</strong>：把 $\varepsilon$ 从固定 0.1 改为线性衰减到 0（500 回合）。
+   重新运行对比实验，观察 SARSA 与 Q-Learning 的后 100 回合差距如何变化
+   （提示：探索消失后，Q-Learning 的掉崖惩罚大幅下降，可能反超 SARSA）。</li>
+<li><strong>修改 $\alpha$</strong>：分别用 $\alpha = 0.01, 0.05, 0.2$ 重跑，绘制两种算法
+   的后 100 回合平均奖励随 $\alpha$ 的变化曲线，找出各自的最优 $\alpha$。</li>
+<li><strong>实现 Expected SARSA</strong>：把 Q-Learning 的 max 换成 ε-greedy 期望
+   （5.1 节公式），在相同设置下对比三者。验证 Expected SARSA 的方差
+   是否确实最低（比较 5 个种子间的波动）。</li>
+<li><strong>实现 n-step SARSA</strong>：在 6.3 节基础上实现 $n \in {1, 3, 5, 10}$，
+   验证 $n = 10$ 在悬崖环境上变差的现象，并解释原因。</li>
+<li><strong>Double Q-Learning 上悬崖</strong>：把 5.3 节的 Double Q-Learning 应用到
+   Cliff Walking，对比它与 Q-Learning 的贪心路径与估值（可检查学到的
+   $Q$ 值是否明显低于 Q-Learning 的高估值）。</li>
+</ol>
+<hr />
+<h2 id="_1">附：本章速查表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>一句话定义</th>
+<th>关键公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TD 目标</td>
+<td>一步奖励 + 后继状态估计</td>
+<td>$R_{t+1} + \gamma V(S_{t+1})$</td>
+</tr>
+<tr>
+<td>TD 误差</td>
+<td>目标与当前估计之差</td>
+<td>$\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$</td>
+</tr>
+<tr>
+<td>TD(0) 预测</td>
+<td>单步自举更新</td>
+<td>$V(S_t) \leftarrow V(S_t) + \alpha\delta_t$</td>
+</tr>
+<tr>
+<td>SARSA</td>
+<td>on-policy，用行为动作自举</td>
+<td>$Q(S,A) \leftarrow Q(S,A) + \alpha[R + \gamma Q(S',A') - Q(S,A)]$</td>
+</tr>
+<tr>
+<td>Q-Learning</td>
+<td>off-policy，用贪心 max 自举</td>
+<td>$Q(S,A) \leftarrow Q(S,A) + \alpha[R + \gamma \max_{a'} Q(S',a') - Q(S,A)]$</td>
+</tr>
+<tr>
+<td>Expected SARSA</td>
+<td>目标取期望，方差最低</td>
+<td>$Q(S,A) \leftarrow Q(S,A) + \alpha[R + \gamma \sum_a \pi(a|S')Q(S',a) - Q(S,A)]$</td>
+</tr>
+<tr>
+<td>Double Q-Learning</td>
+<td>两表解耦选择与评估，消除最大化偏差</td>
+<td>$Q_A \leftarrow Q_A + \alpha[R + \gamma Q_B(S', \arg\max_a Q_A(S',a)) - Q_A]$</td>
+</tr>
+<tr>
+<td>n-step return</td>
+<td>$n$ 步奖励 + 截断估计</td>
+<td>$G_t^{(n)} = \sum_{i=1}^{n}\gamma^{i-1}R_{t+i} + \gamma^n V(S_{t+n})$</td>
+</tr>
+<tr>
+<td>λ-return</td>
+<td>所有 n-step return 加权平均</td>
+<td>$G_t^\lambda = (1-\lambda)\sum_n \lambda^{n-1} G_t^{(n)}$</td>
+</tr>
+<tr>
+<td>资格迹</td>
+<td>状态的"信用"强度</td>
+<td>$e_t(s) = \gamma\lambda\, e_{t-1}(s) + \mathbf{1}{S_t = s}$</td>
+</tr>
+<tr>
+<td>TD(λ) 更新</td>
+<td>用迹把 $\delta_t$ 分摊给所有状态</td>
+<td>$V(s) \leftarrow V(s) + \alpha\,\delta_t\, e_t(s)$</td>
+</tr>
+<tr>
+<td>偏差-方差权衡</td>
+<td>TD 有偏低方差，MC 无偏高方差</td>
+<td>$n$（或 $\lambda$）是调节旋钮</td>
+</tr>
+<tr>
+<td>最大化偏差</td>
+<td>$\mathbb{E}[\max X] \ge \max \mathbb{E}[X]$</td>
+<td>Double Q-Learning 消除</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p><strong>下一步</strong>：本章的所有算法都是<strong>表格型</strong>的——价值存成表，每个状态
+独立更新。一旦状态空间变大（图像、连续状态），表格就会爆炸，必须用
+<strong>函数逼近</strong>把"查表"换成"拟合"。下一章 <a href="../05-value-approximation/">值函数逼近与 DQN</a>
+将进入深度强化学习：用神经网络逼近 $Q$ 函数，并解决自举 + 函数逼近
+带来的不稳定问题（经验回放、目标网络），其中 Double DQN 正是本章
+最大化偏差思想的直接继承。</p>
+</blockquote></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

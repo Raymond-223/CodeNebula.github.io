@@ -5,28 +5,28 @@ site_url: https://CodeNebula.github.io/
 nav:
   - Home: index.md
   - 软件开发:
-    - 概览: software-development/index.md
-    - 前端开发: software-development/01-frontend.md
-    - 后端开发: software-development/02-backend.md
-    - 数据库与存储: software-development/03-database.md
-    - 版本控制: software-development/04-version-control.md
-    - DevOps与部署: software-development/05-devops.md
-    - 软件架构: software-development/06-architecture.md
-    - 测试与质量: software-development/07-testing.md
-    - 安全基础: software-development/08-security.md
+    - 概览: assets/software-development/index.md
+    - 前端开发: assets/software-development/01-frontend.md
+    - 后端开发: assets/software-development/02-backend.md
+    - 数据库与存储: assets/software-development/03-database.md
+    - 版本控制: assets/software-development/04-version-control.md
+    - DevOps与部署: assets/software-development/05-devops.md
+    - 软件架构: assets/software-development/06-architecture.md
+    - 测试与质量: assets/software-development/07-testing.md
+    - 安全基础: assets/software-development/08-security.md
   - 强化学习:
-    - 概览: reinforcement-learning/index.md
-    - 多臂老虎机: reinforcement-learning/00-bandit.md
-    - MDP与数学基础: reinforcement-learning/01-mdp-foundations.md
-    - 动态规划: reinforcement-learning/02-dynamic-programming.md
-    - 蒙特卡洛方法: reinforcement-learning/03-monte-carlo-methods.md
-    - 时序差分学习: reinforcement-learning/04-temporal-difference.md
-    - 值函数逼近与DQN: reinforcement-learning/05-value-approximation.md
-    - 策略梯度与Actor-Critic: reinforcement-learning/06-policy-gradient.md
-    - 连续控制: reinforcement-learning/07-continuous-control.md
-    - 环境与工具链: reinforcement-learning/08-tools-environments.md
-    - 进阶专题: reinforcement-learning/09-advanced-topics.md
-    - 工程实践: reinforcement-learning/10-engineering-practice.md
+    - 概览: assets/reinforcement-learning/index.md
+    - 多臂老虎机: assets/reinforcement-learning/00-bandit.md
+    - MDP与数学基础: assets/reinforcement-learning/01-mdp-foundations.md
+    - 动态规划: assets/reinforcement-learning/02-dynamic-programming.md
+    - 蒙特卡洛方法: assets/reinforcement-learning/03-monte-carlo-methods.md
+    - 时序差分学习: assets/reinforcement-learning/04-temporal-difference.md
+    - 值函数逼近与DQN: assets/reinforcement-learning/05-value-approximation.md
+    - 策略梯度与Actor-Critic: assets/reinforcement-learning/06-policy-gradient.md
+    - 连续控制: assets/reinforcement-learning/07-continuous-control.md
+    - 环境与工具链: assets/reinforcement-learning/08-tools-environments.md
+    - 进阶专题: assets/reinforcement-learning/09-advanced-topics.md
+    - 工程实践: assets/reinforcement-learning/10-engineering-practice.md
   - Algorithm: inex.md
   - Paper Interpretion: idex.md
   - Mathematics: 

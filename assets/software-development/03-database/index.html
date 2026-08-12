@@ -1,0 +1,4467 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://CodeNebula.github.io/assets/software-development/03-database/">
+      
+      
+        <link rel="prev" href="../02-backend/">
+      
+      
+        <link rel="next" href="../04-version-control/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>数据库与存储 - CodeNebula</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              数据库与存储
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reinforcement-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、数据库基础理论
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、数据库基础理论">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 ACID 特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 CAP 定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 BASE 理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 隔离级别与并发问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、关系型数据库
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、关系型数据库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 MySQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 MySQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#innodb-vs-myisam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InnoDB vs MyISAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#btree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B+Tree 索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        复制架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分区表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 PostgreSQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 PostgreSQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mvcc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MVCC 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONB 与全文搜索
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展生态
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CTE 与窗口函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 三大关系型数据库对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、SQL 进阶
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、SQL 进阶">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 连接（JOIN）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 子查询
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 窗口函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-cte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 CTE（公用表表达式）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 事务与保存点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 索引进阶
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 查询优化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-vs-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 存储过程 vs 函数 vs 触发器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nosql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、NoSQL 数据库
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、NoSQL 数据库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mongodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MongoDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 MongoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文档模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        聚合管道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        副本集与分片
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Redis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Redis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        缓存策略模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分布式锁
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pubsub" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pub/Sub
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-elasticsearch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Elasticsearch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Elasticsearch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        倒排索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分析器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-dsl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query DSL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、ORM 深入
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、ORM 深入">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-sqlalchemypython" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 SQLAlchemy（Python）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-prismatypescriptnodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Prisma（TypeScript/Node.js）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-typeormtypescriptnodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 TypeORM（TypeScript/Node.js）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-n1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 N+1 问题与解决方案
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、数据库设计
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、数据库设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 范式化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 反范式化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 ER 建模
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 连接池
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 迁移策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 备份与恢复
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、缓存策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、缓存策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 缓存模式对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 缓存失效策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 分布式缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-cdn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 CDN 缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 浏览器缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reinforcement-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、数据库基础理论
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、数据库基础理论">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-acid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 ACID 特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 CAP 定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 BASE 理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 隔离级别与并发问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、关系型数据库
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、关系型数据库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 MySQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1 MySQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#innodb-vs-myisam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InnoDB vs MyISAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#btree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B+Tree 索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        复制架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分区表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 PostgreSQL
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 PostgreSQL">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mvcc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MVCC 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONB 与全文搜索
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展生态
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CTE 与窗口函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 三大关系型数据库对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、SQL 进阶
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、SQL 进阶">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 连接（JOIN）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 子查询
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 窗口函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-cte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 CTE（公用表表达式）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 事务与保存点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 索引进阶
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 查询优化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-vs-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 存储过程 vs 函数 vs 触发器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nosql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、NoSQL 数据库
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、NoSQL 数据库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mongodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 MongoDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 MongoDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文档模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        聚合管道
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        副本集与分片
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Redis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Redis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        缓存策略模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分布式锁
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pubsub" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pub/Sub
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-elasticsearch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Elasticsearch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Elasticsearch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        倒排索引
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分析器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-dsl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query DSL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、ORM 深入
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、ORM 深入">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-sqlalchemypython" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 SQLAlchemy（Python）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-prismatypescriptnodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Prisma（TypeScript/Node.js）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-typeormtypescriptnodejs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 TypeORM（TypeScript/Node.js）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-n1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 N+1 问题与解决方案
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、数据库设计
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、数据库设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 范式化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 反范式化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 ER 建模
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 连接池
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 迁移策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 备份与恢复
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、缓存策略
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、缓存策略">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 缓存模式对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 缓存失效策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 分布式缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-cdn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 CDN 缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 浏览器缓存
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    软件开发
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="_1">数据库与存储</h1>
+<blockquote>
+<p>数据库是软件系统的基石。本文从理论到实践，覆盖关系型数据库、NoSQL、ORM、数据库设计、缓存策略等核心知识领域，帮助你建立完整的数据库知识体系。</p>
+</blockquote>
+<hr />
+<h2 id="_2">一、数据库基础理论</h2>
+<h3 id="11-acid">1.1 ACID 特性</h3>
+<p>ACID 是关系型数据库事务的四大特性，保证数据可靠性。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>英文</th>
+<th>含义</th>
+<th>反面例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>原子性</strong></td>
+<td>Atomicity</td>
+<td>事务要么全部成功，要么全部回滚</td>
+<td>银行转账：扣款成功但加款失败</td>
+</tr>
+<tr>
+<td><strong>一致性</strong></td>
+<td>Consistency</td>
+<td>事务前后数据满足所有约束</td>
+<td>账户总余额在转账前后保持不变</td>
+</tr>
+<tr>
+<td><strong>隔离性</strong></td>
+<td>Isolation</td>
+<td>并发事务互不干扰</td>
+<td>两个用户同时修改同一条记录</td>
+</tr>
+<tr>
+<td><strong>持久性</strong></td>
+<td>Durability</td>
+<td>提交后的事务永久保存</td>
+<td>系统崩溃后数据不丢失</td>
+</tr>
+</tbody>
+</table>
+<p><strong>原子性示例</strong>：
+<div class="highlight"><pre><span></span><code><span class="c1">-- 如果第二个 UPDATE 失败，第一个也会回滚</span>
+<span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div></p>
+<p><strong>持久性的实现</strong>：MySQL 通过 Redo Log（重做日志）保证持久性。事务提交时，先写 Redo Log（磁盘顺序写），再写数据页（随机写）。崩溃恢复时，通过 Redo Log 重放未完成的操作。</p>
+<h3 id="12-cap">1.2 CAP 定理</h3>
+<p>分布式系统中的三个属性无法同时完美满足，最多只能兼顾两个：</p>
+<div class="highlight"><pre><span></span><code>          Consistency (一致性)
+               │
+               │
+               ├── CP 系统：ZooKeeper、etcd
+               │
+               ├── AP 系统：Cassandra、DynamoDB
+               │
+               └── CA 系统：传统单机数据库（无分区容忍）
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>偏向</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MySQL 主从</strong></td>
+<td>CA</td>
+<td>网络分区时停止写入以保证一致性</td>
+</tr>
+<tr>
+<td><strong>Cassandra</strong></td>
+<td>AP</td>
+<td>分区时仍可写入，但数据可能不一致</td>
+</tr>
+<tr>
+<td><strong>ZooKeeper</strong></td>
+<td>CP</td>
+<td>分区时多数派节点继续服务，少数派停止服务</td>
+</tr>
+<tr>
+<td><strong>Redis Cluster</strong></td>
+<td>CP（多数场景）</td>
+<td>分区时少数分区不可写入</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>重要理解</strong>：网络分区（P）是分布式系统中的必然事件，因此实际上我们只能在 CP 和 AP 之间选择。CA 系统在网络分区发生时只能牺牲 C 或 A。</p>
+</blockquote>
+<h3 id="13-base">1.3 BASE 理论</h3>
+<p>BASE 是 NoSQL 系统常用的弱一致性模型：</p>
+<ul>
+<li><strong>Basically Available</strong>（基本可用）：系统在故障时仍可响应请求，可能返回降级结果</li>
+<li><strong>Soft State</strong>（软状态）：系统状态可以随时间变化，不要求时刻一致</li>
+<li><strong>Eventually Consistent</strong>（最终一致）：经过足够长的时间，所有副本最终会达到一致</li>
+</ul>
+<p><strong>举例</strong>：DNS 系统就是 BASE 的典型——你更新了一个域名记录，全球 DNS 服务器可能需要几个小时才能全部更新，但最终会一致。</p>
+<h3 id="14">1.4 隔离级别与并发问题</h3>
+<p>SQL 标准定义了四个隔离级别，每个级别解决了特定的并发问题：</p>
+<div class="highlight"><pre><span></span><code>                       ┌─────────────────────┐
+                       │                     │
+    Serializable ───────┤  Phantom Read      │ ← 最高隔离，性能最差
+                       │  (幻读)             │
+    Repeatable Read ────┤  Non-repeatable    │
+                       │  Read (不可重复读)   │
+    Read Committed ─────┤  Dirty Read        │
+                       │  (脏读)             │
+    Read Uncommitted ───┤                    │ ← 性能最好，问题最多
+                       └─────────────────────┘
+</code></pre></div>
+<p><strong>三种并发问题</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>定义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>脏读</strong></td>
+<td>读到另一个事务未提交的数据</td>
+<td>A 转给 B 100 元，事务未提交，B 看到余额已增加</td>
+</tr>
+<tr>
+<td><strong>不可重复读</strong></td>
+<td>同一事务内两次读取同一行，结果不同（行更新）</td>
+<td>第一次查 price=100，第二次查 price=150</td>
+</tr>
+<tr>
+<td><strong>幻读</strong></td>
+<td>同一事务内两次查询，结果集不同（行插入/删除）</td>
+<td>第一次查 count=10，第二次查 count=11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MySQL 语法</strong>：
+<div class="highlight"><pre><span></span><code><span class="c1">-- 查看和设置隔离级别</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="n">transaction_isolation</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">SESSION</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">REPEATABLE</span><span class="w"> </span><span class="k">READ</span><span class="p">;</span>
+</code></pre></div></p>
+<blockquote>
+<p><strong>MySQL 的 REPEATABLE READ</strong>：通过 MVCC（多版本并发控制）解决了幻读问题。但严格来说，只在快照读（普通 SELECT）上解决了幻读，当前读（SELECT ... FOR UPDATE）仍可能产生幻读。</p>
+</blockquote>
+<hr />
+<h2 id="_3">二、关系型数据库</h2>
+<h3 id="21-mysql">2.1 MySQL</h3>
+<h4 id="innodb-vs-myisam">InnoDB vs MyISAM</h4>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>InnoDB</th>
+<th>MyISAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>事务</strong></td>
+<td>✅ ACID 事务</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>外键</strong></td>
+<td>✅ 支持</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>锁粒度</strong></td>
+<td>行级锁</td>
+<td>表级锁</td>
+</tr>
+<tr>
+<td><strong>全文索引</strong></td>
+<td>✅（5.6+ 支持）</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>聚集索引</strong></td>
+<td>✅（必须）</td>
+<td>❌（堆表）</td>
+</tr>
+<tr>
+<td><strong>崩溃恢复</strong></td>
+<td>✅（Redo Log）</td>
+<td>❌（需修复）</td>
+</tr>
+<tr>
+<td><strong>MVCC</strong></td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<p><strong>何时选择 MyISAM</strong>？几乎不需要了。InnoDB 在 MySQL 5.6+ 已是默认引擎，功能全面超越 MyISAM。</p>
+<h4 id="btree">B+Tree 索引</h4>
+<p>MySQL InnoDB 使用 B+Tree 作为默认索引结构：</p>
+<div class="highlight"><pre><span></span><code>                    [根节点: 50, 120]
+                   /        |         \
+           [30, 40]    [70, 90]    [150, 180]
+          /    |    \    /   |   \     |    \
+        (10) (35) (45) (55)(75)(95)  (130)(160)
+</code></pre></div>
+<p><strong>特点</strong>：
+- 所有数据存在叶子节点，非叶子节点只存键值
+- 叶子节点形成有序链表，支持范围查询
+- 树高通常 3-4 层，IO 次数极少</p>
+<p><strong>聚集索引 vs 二级索引</strong>：
+- 聚集索引：主键即索引，叶子节点存整行数据
+- 二级索引（普通索引）：叶子节点存主键值，需要回表查询</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 创建索引</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_email</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_phone</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">phone</span><span class="p">);</span>
+<span class="c1">-- 复合索引（最左前缀原则）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_name_age</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">);</span>
+<span class="c1">-- 上述索引能匹配: WHERE name=?, WHERE name=? AND age=?</span>
+<span class="c1">-- 不能匹配: WHERE age=?（没有 name 前缀）</span>
+</code></pre></div>
+<h4 id="_4">复制架构</h4>
+<p><strong>主从复制（Master-Slave）</strong>：
+<div class="highlight"><pre><span></span><code>Application
+    │   写请求 → Master ──→ Binary Log ──→ Slave 1 (只读)
+    │   读请求 → Slave 2 (只读)
+    └──────────→ Slave 3 (只读/备份)
+</code></pre></div></p>
+<p><strong>半同步复制</strong>：Master 至少等待一个 Slave 确认收到 Binlog 才返回客户端，兼顾性能和数据安全。</p>
+<p><strong>组复制（Group Replication）</strong>：MySQL 5.7+ 引入的多主复制方案，基于 Paxos 协议，提供强一致性。</p>
+<h4 id="_5">分区表</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 范围分区</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">order_date</span><span class="w"> </span><span class="nb">DATE</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="k">YEAR</span><span class="p">(</span><span class="n">order_date</span><span class="p">))</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">p2022</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">LESS</span><span class="w"> </span><span class="k">THAN</span><span class="w"> </span><span class="p">(</span><span class="mi">2023</span><span class="p">),</span>
+<span class="w">    </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">p2023</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">LESS</span><span class="w"> </span><span class="k">THAN</span><span class="w"> </span><span class="p">(</span><span class="mi">2024</span><span class="p">),</span>
+<span class="w">    </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">p2024</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">LESS</span><span class="w"> </span><span class="k">THAN</span><span class="w"> </span><span class="p">(</span><span class="mi">2025</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="c1">-- 哈希分区</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">HASH</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="n">PARTITIONS</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>分区表的优势</strong>：分区裁剪（Partition Pruning）可以跳过不相关的分区，提高查询效率；方便归档和删除历史数据。</p>
+<h3 id="22-postgresql">2.2 PostgreSQL</h3>
+<p>PostgreSQL 是"最先进的开源关系型数据库"，以扩展性和标准兼容性著称。</p>
+<h4 id="mvcc">MVCC 实现</h4>
+<p>PostgreSQL 的 MVCC 通过 <strong>元组版本</strong> 实现——每个 UPDATE 产生一个新版本的元组，旧版本保留在表中（直到 VACUUM 清理）。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 查看事务快照信息</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">xmin</span><span class="p">,</span><span class="w"> </span><span class="n">xmax</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">;</span>
+</code></pre></div>
+<p>与 MySQL 的差异：
+- MySQL InnoDB 的 MVCC 将旧版本存在 Undo Log 中
+- PostgreSQL 的旧版本直接留在数据表中，需要定期 VACUUM</p>
+<h4 id="jsonb">JSONB 与全文搜索</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">-- JSONB 数据类型</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSONB</span>
+<span class="p">);</span>
+
+<span class="c1">-- GIN 索引加速 JSONB 查询</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_metadata</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIN</span><span class="w"> </span><span class="p">(</span><span class="n">metadata</span><span class="p">);</span>
+
+<span class="c1">-- JSONB 查询</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">metadata</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">&#39;{&quot;brand&quot;: &quot;Apple&quot;}&#39;</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">metadata</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s1">&#39;specs&#39;</span><span class="w"> </span><span class="o">-&gt;&gt;</span><span class="w"> </span><span class="s1">&#39;ram&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;16GB&#39;</span><span class="p">;</span>
+
+<span class="c1">-- 全文搜索</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_search</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIN</span><span class="w"> </span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">));</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">articles</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">)</span><span class="w"> </span><span class="o">@@</span><span class="w"> </span><span class="n">to_tsquery</span><span class="p">(</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;database &amp; optimization&#39;</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="_6">扩展生态</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">-- PostGIS (地理信息)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">postgis</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">ST_Distance</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="mi">116</span><span class="p">.</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">39</span><span class="p">.</span><span class="mi">9</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w">  </span><span class="c1">-- 北京</span>
+<span class="w">    </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="mi">121</span><span class="p">.</span><span class="mi">47</span><span class="p">,</span><span class="w"> </span><span class="mi">31</span><span class="p">.</span><span class="mi">23</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)</span><span class="w">  </span><span class="c1">-- 上海</span>
+<span class="p">);</span>
+
+<span class="c1">-- pg_stat_statements (SQL 性能统计)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">pg_stat_statements</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">calls</span><span class="p">,</span><span class="w"> </span><span class="n">total_time</span><span class="p">,</span><span class="w"> </span><span class="n">mean_time</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_statements</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_time</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="cte">CTE 与窗口函数</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">-- CTE (Common Table Expression)</span>
+<span class="k">WITH</span><span class="w"> </span><span class="n">regional_sales</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">region</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_sales</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">region</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">region</span><span class="p">,</span><span class="w"> </span><span class="n">total_sales</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">regional_sales</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">total_sales</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">total_sales</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">regional_sales</span><span class="p">);</span>
+
+<span class="c1">-- 递归 CTE (适用于树形数据)</span>
+<span class="k">WITH</span><span class="w"> </span><span class="k">RECURSIVE</span><span class="w"> </span><span class="n">org_tree</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">parent_id</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">level</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">parent_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+<span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">parent_id</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="k">level</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">org_tree</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">parent_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">id</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">org_tree</span><span class="p">;</span>
+
+<span class="c1">-- 窗口函数</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="n">name</span><span class="p">,</span>
+<span class="w">    </span><span class="n">department</span><span class="p">,</span>
+<span class="w">    </span><span class="n">salary</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RANK</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">department</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">salary</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dept_rank</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">salary</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">department</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dept_total</span><span class="p">,</span>
+<span class="w">    </span><span class="k">AVG</span><span class="p">(</span><span class="n">salary</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">department</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dept_avg</span><span class="p">,</span>
+<span class="w">    </span><span class="n">salary</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">salary</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">department</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">diff_from_avg</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="23-sqlite">2.3 SQLite</h3>
+<p><strong>当使用 SQLite</strong>：
+- 移动端应用（Android/iOS 本地数据存储）
+- 桌面应用的本地数据库
+- 嵌入式设备
+- 开发和测试环境
+- 原型验证阶段</p>
+<p><strong>当不使用 SQLite</strong>：
+- 高并发写入场景（SQLite 写操作串行化）
+- 需要用户管理的访问控制
+- 需要网络访问的 C/S 架构
+- 超大数据集（超过 140TB 有限制，但实际几十 GB 以上建议换 PG）</p>
+<p><strong>WAL 模式（Write-Ahead Logging）</strong>：
+<div class="highlight"><pre><span></span><code><span class="c1">-- 提升并发读性能</span>
+<span class="n">PRAGMA</span><span class="w"> </span><span class="n">journal_mode</span><span class="o">=</span><span class="n">WAL</span><span class="p">;</span>
+<span class="c1">-- 写入性能优化</span>
+<span class="n">PRAGMA</span><span class="w"> </span><span class="n">synchronous</span><span class="o">=</span><span class="n">NORMAL</span><span class="p">;</span>
+<span class="n">PRAGMA</span><span class="w"> </span><span class="n">cache_size</span><span class="o">=-</span><span class="mi">64000</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 64MB 缓存</span>
+</code></pre></div></p>
+<h3 id="24">2.4 三大关系型数据库对比</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+<th>SQLite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>架构</strong></td>
+<td>客户端-服务器</td>
+<td>客户端-服务器</td>
+<td>嵌入式</td>
+</tr>
+<tr>
+<td><strong>ACID</strong></td>
+<td>✅（InnoDB）</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>SQL 标准</strong></td>
+<td>部分兼容</td>
+<td>⭐ 高度兼容</td>
+<td>核心标准</td>
+</tr>
+<tr>
+<td><strong>并发控制</strong></td>
+<td>MVCC（行级锁）</td>
+<td>MVCC（行级锁）</td>
+<td>读写锁/WAL</td>
+</tr>
+<tr>
+<td><strong>索引类型</strong></td>
+<td>B+Tree, Hash, Full-Text</td>
+<td>B+Tree, Hash, GiST, GIN, BRIN, SP-GiST</td>
+<td>B-Tree</td>
+</tr>
+<tr>
+<td><strong>JSON</strong></td>
+<td>JSON 数据类型（5.7+）</td>
+<td>⭐ JSONB（性能更好）</td>
+<td>❌ 有限支持</td>
+</tr>
+<tr>
+<td><strong>窗口函数</strong></td>
+<td>8.0+ 支持</td>
+<td>✅ 原生支持</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>插件有限</td>
+<td>⭐ 极其丰富</td>
+<td>有限</td>
+</tr>
+<tr>
+<td><strong>复制</strong></td>
+<td>主从/组复制/Galera</td>
+<td>流复制/逻辑复制</td>
+<td>❌ 无</td>
+</tr>
+<tr>
+<td><strong>使用场景</strong></td>
+<td>Web 应用主力</td>
+<td>复杂查询/地理/金融</td>
+<td>移动端/嵌入式</td>
+</tr>
+<tr>
+<td><strong>许可证</strong></td>
+<td>GPL / 商业版</td>
+<td>PostgreSQL 授权</td>
+<td>Public Domain</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sql">三、SQL 进阶</h2>
+<h3 id="31-join">3.1 连接（JOIN）</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 建表</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">);</span>
+
+<span class="c1">-- INNER JOIN: 两表都匹配的记录</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">amount</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- LEFT JOIN: 左表全部 + 右表匹配的记录（无匹配则为 NULL）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">amount</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- RIGHT JOIN: 右表全部 + 左表匹配的记录</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">amount</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">RIGHT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- FULL JOIN: 两表的全部记录（MySQL 不支持，用 UNION 模拟）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">UNION</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">RIGHT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span><span class="p">;</span>
+
+<span class="c1">-- CROSS JOIN: 笛卡尔积（慎用！）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">product_name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+
+<span class="c1">-- SELF JOIN: 自连接，查找上下级关系</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">employee</span><span class="p">,</span><span class="w"> </span><span class="n">e2</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">manager</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e1</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e2</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">manager_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e2</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+
+<span class="c1">-- LATERAL JOIN (PostgreSQL): 右侧子查询可以引用左侧的列</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">recent</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="n">recent</span><span class="p">.</span><span class="n">amount</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">LATERAL</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span>
+<span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span>
+<span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">)</span><span class="w"> </span><span class="n">recent</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="32">3.2 子查询</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 非关联子查询（独立执行一次）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span>
+
+<span class="c1">-- 关联子查询（外层每行执行一次）</span>
+<span class="c1">-- 查找工资高于部门平均的员工</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">salary</span><span class="p">,</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">department</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e1</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">salary</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">e2</span><span class="p">.</span><span class="n">salary</span><span class="p">)</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e2</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">e2</span><span class="p">.</span><span class="n">department</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e1</span><span class="p">.</span><span class="n">department</span>
+<span class="p">);</span>
+
+<span class="c1">-- EXISTS（半连接语义，找到即停止）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">departments</span><span class="w"> </span><span class="n">d</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="w"> </span><span class="n">e</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">department_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">salary</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100000</span>
+<span class="p">);</span>
+
+<span class="c1">-- ANY / ALL</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">products</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Budget&#39;</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="33">3.3 窗口函数</h3>
+<p>窗口函数在不聚合行的情况下进行计算，是 SQL 进阶的核心技能。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- ROW_NUMBER: 唯一行号</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">department</span><span class="p">,</span><span class="w"> </span><span class="n">salary</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ROW_NUMBER</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">department</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">salary</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">rank_seq</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">employees</span><span class="p">;</span>
+
+<span class="c1">-- RANK / DENSE_RANK: 排名（区别在于并列处理）</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="n">score</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RANK</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w">           </span><span class="c1">-- 1, 2, 2, 4</span>
+<span class="w">    </span><span class="n">DENSE_RANK</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">dense_rank</span><span class="w"> </span><span class="c1">-- 1, 2, 2, 3</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">exam_scores</span><span class="p">;</span>
+
+<span class="c1">-- LAG / LEAD: 前后行值</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span>
+<span class="w">    </span><span class="n">LAG</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">prev_day</span><span class="p">,</span>
+<span class="w">    </span><span class="n">LEAD</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">next_day</span><span class="p">,</span>
+<span class="w">    </span><span class="n">amount</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">LAG</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">change</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">daily_sales</span><span class="p">;</span>
+
+<span class="c1">-- NTILE: 分桶（例如分成 4 组等分）</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">sales</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NTILE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">sales</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">quartile</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">salespeople</span><span class="p">;</span>
+
+<span class="c1">-- 累计和/移动平均</span>
+<span class="k">SELECT</span>
+<span class="w">    </span><span class="nb">date</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">running_total</span><span class="p">,</span>
+<span class="w">    </span><span class="k">AVG</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="k">ROWS</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">PRECEDING</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">CURRENT</span><span class="w"> </span><span class="k">ROW</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">moving_avg_7d</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">daily_sales</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="34-cte">3.4 CTE（公用表表达式）</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- WITH 子句，使复杂查询更清晰</span>
+<span class="k">WITH</span>
+<span class="n">high_value</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span>
+<span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">user_id</span>
+<span class="w">    </span><span class="k">HAVING</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10000</span>
+<span class="p">),</span>
+<span class="n">top_customers</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">total</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">high_value</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">user_id</span>
+<span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">total</span><span class="w"> </span><span class="k">DESC</span>
+<span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">top_customers</span><span class="p">;</span>
+
+<span class="c1">-- 递归 CTE: 遍历树形结构</span>
+<span class="k">WITH</span><span class="w"> </span><span class="k">RECURSIVE</span><span class="w"> </span><span class="n">menu_tree</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="c1">-- 基础情况：根节点</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">parent_id</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">depth</span><span class="p">,</span>
+<span class="w">           </span><span class="k">CAST</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">path</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">menu_items</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">parent_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span>
+
+<span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span>
+
+<span class="w">    </span><span class="c1">-- 递归步骤：子节点</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">parent_id</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">depth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">           </span><span class="k">CAST</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">path</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; → &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">menu_items</span><span class="w"> </span><span class="n">m</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">menu_tree</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">parent_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">id</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">menu_tree</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">path</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="35">3.5 事务与保存点</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 基本事务</span>
+<span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">inventory</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">quantity</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">product_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">order_items</span><span class="w"> </span><span class="p">(</span><span class="n">order_id</span><span class="p">,</span><span class="w"> </span><span class="n">product_id</span><span class="p">,</span><span class="w"> </span><span class="n">quantity</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+<span class="c1">-- 或 ROLLBACK;</span>
+
+<span class="c1">-- 保存点：部分回滚</span>
+<span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">logs</span><span class="w"> </span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Step 1 completed&#39;</span><span class="p">);</span>
+<span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">step1</span><span class="p">;</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">logs</span><span class="w"> </span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Step 2 completed&#39;</span><span class="p">);</span>
+<span class="c1">-- 如果 Step 2 失败，回滚到 step1</span>
+<span class="k">ROLLBACK</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">SAVEPOINT</span><span class="w"> </span><span class="n">step1</span><span class="p">;</span>
+<span class="c1">-- Step 1 的插入还在，Step 2 被撤销</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="36">3.6 索引进阶</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 复合索引（最左前缀）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_city_age</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">city</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">);</span>
+<span class="c1">-- 匹配: WHERE city=&#39;Beijing&#39; AND age=30</span>
+<span class="c1">-- 匹配: WHERE city=&#39;Beijing&#39;</span>
+<span class="c1">-- 不匹配: WHERE age=30（跳过了 city）</span>
+
+<span class="c1">-- 部分索引（PostgreSQL）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_active_users</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;active&#39;</span><span class="p">;</span>
+
+<span class="c1">-- 覆盖索引（索引包含查询所需所有列，避免回表）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_covering</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">orders</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">);</span>
+<span class="c1">-- 查询可以直接从索引获取数据：</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+
+<span class="c1">-- 全文索引</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">FULLTEXT</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_content</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">articles</span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="k">MATCH</span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">)</span><span class="w"> </span><span class="n">AGAINST</span><span class="p">(</span><span class="s1">&#39;database optimization&#39;</span><span class="p">);</span>
+
+<span class="c1">-- GiST/GIN 索引（PostgreSQL 高级索引）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_geo</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="w"> </span><span class="p">(</span><span class="n">coord</span><span class="p">);</span><span class="w">  </span><span class="c1">-- 地理空间</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_tags</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">posts</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIN</span><span class="w"> </span><span class="p">(</span><span class="n">tags</span><span class="p">);</span><span class="w">        </span><span class="c1">-- 数组/JSON</span>
+</code></pre></div>
+<h3 id="37">3.7 查询优化</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- EXPLAIN ANALYZE: 实际执行计划（最常用的分析工具）</span>
+<span class="k">EXPLAIN</span><span class="w"> </span><span class="k">ANALYZE</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">order_count</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="s1">&#39;2024-01-01&#39;</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">name</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- 慢查询日志（MySQL）</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">slow_query_log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">long_query_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 超过 1 秒的记录</span>
+<span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">log_queries_not_using_indexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>优化原则</strong>：
+1. <strong>用小结果集驱动大结果集</strong>：先过滤再 JOIN
+2. <strong>避免 SELECT *</strong>：只取必要字段，利用覆盖索引
+3. <strong>避免函数包裹索引列</strong>：<code>WHERE DATE(created_at) = '2024-01-01'</code> 导致索引失效，应改为 <code>WHERE created_at &gt;= '2024-01-01' AND created_at &lt; '2024-01-02'</code>
+4. <strong>合理使用 LIMIT</strong>：减少数据传输量
+5. <strong>分析慢查询</strong>：使用 EXPLAIN ANALYZE 定位瓶颈</p>
+<h3 id="38-vs-vs">3.8 存储过程 vs 函数 vs 触发器</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>存储过程</th>
+<th>函数</th>
+<th>触发器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>返回值</strong></td>
+<td>可有可无（OUT 参数）</td>
+<td>必有一个返回值</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>事务控制</strong></td>
+<td>✅ 支持 COMMIT/ROLLBACK</td>
+<td>❌ 不支持</td>
+<td>继承父事务</td>
+</tr>
+<tr>
+<td><strong>SQL 调用</strong></td>
+<td>CALL proc()</td>
+<td>SELECT func()</td>
+<td>自动触发</td>
+</tr>
+<tr>
+<td><strong>参数</strong></td>
+<td>IN/OUT/INOUT</td>
+<td>IN</td>
+<td>无（通过 NEW/OLD 访问）</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 函数示例（PostgreSQL）</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_user_order_count</span><span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="c1">-- 触发器示例</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TRIGGER</span><span class="w"> </span><span class="n">update_timestamp</span>
+<span class="k">BEFORE</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span>
+<span class="k">FOR</span><span class="w"> </span><span class="k">EACH</span><span class="w"> </span><span class="k">ROW</span>
+<span class="k">EXECUTE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">set_updated_at</span><span class="p">();</span>
+</code></pre></div>
+<hr />
+<h2 id="nosql">四、NoSQL 数据库</h2>
+<h3 id="41-mongodb">4.1 MongoDB</h3>
+<h4 id="_7">文档模型</h4>
+<p>MongoDB 以 BSON（二进制 JSON）格式存储文档，Schema 灵活：</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">Objec</span><span class="kc">t</span><span class="err">Id(</span><span class="s2">&quot;...&quot;</span><span class="err">)</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alice@example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;address&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;city&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Beijing&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;district&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Haidian&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;premium&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;vip&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;orders&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;product&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Laptop&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9999</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;qty&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="_8">聚合管道</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// 聚合管道示例</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$group</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">_id</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$customer_id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$sum</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$amount&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$sum</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$sort</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$limit</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$lookup</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">from</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;customers&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">localField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;_id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">foreignField</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;_id&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="kr">as</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;customer&quot;</span>
+<span class="w">  </span><span class="p">}},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$unwind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$customer&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">$project</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">customer_name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$customer.name&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">total</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">count</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="w">  </span><span class="p">}}</span>
+<span class="p">]);</span>
+</code></pre></div>
+<h4 id="_9">索引</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// 单字段索引</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 复合索引</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="nx">created_at</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 文本索引</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">articles</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="w"> </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="w"> </span><span class="p">});</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">articles</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="w"> </span><span class="nx">$text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">$search</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;database optimization&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// TTL 索引（自动过期）</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">({</span><span class="w"> </span><span class="nx">last_access</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">expireAfterSeconds</span><span class="o">:</span><span class="w"> </span><span class="mf">3600</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// 部分索引</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">createIndex</span><span class="p">(</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">partialFilterExpression</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div>
+<h4 id="_10">副本集与分片</h4>
+<p><strong>副本集（Replica Set）</strong>：一个 Primary 节点（处理写请求）+ 多个 Secondary 节点（数据复制，可承担读请求）。Primary 故障时自动选举新的 Primary。</p>
+<p><strong>分片（Sharding）</strong>：
+- <strong>分片键</strong>决定数据分布策略（范围分片/哈希分片）
+- <strong>mongos</strong> 路由节点，应用层通过 mongos 访问
+- <strong>Config Server</strong> 存储集群元数据</p>
+<h3 id="42-redis">4.2 Redis</h3>
+<p>Redis 是内存中的数据存储，以极高性能著称（单实例可达 10万+ QPS）。</p>
+<h4 id="_11">数据结构</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># String（缓存、计数器）</span>
+SET<span class="w"> </span>user:1000:name<span class="w"> </span><span class="s2">&quot;Alice&quot;</span>
+INCR<span class="w"> </span>page_view:homepage
+SETEX<span class="w"> </span>session:abc123<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="s2">&quot;user_data&quot;</span><span class="w">  </span><span class="c1"># 带过期时间</span>
+
+<span class="c1"># List（消息队列、最新列表）</span>
+LPUSH<span class="w"> </span>notifications:user1<span class="w"> </span><span class="s2">&quot;new_message&quot;</span>
+BRPOP<span class="w"> </span>queues:email<span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># 阻塞弹出</span>
+
+<span class="c1"># Set（标签、去重）</span>
+SADD<span class="w"> </span>user:1000:tags<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span><span class="s2">&quot;redis&quot;</span><span class="w"> </span><span class="s2">&quot;database&quot;</span>
+SINTER<span class="w"> </span>user:1000:tags<span class="w"> </span>user:2000:tags<span class="w">  </span><span class="c1"># 共同标签</span>
+
+<span class="c1"># Sorted Set（排行榜、延迟队列）</span>
+ZADD<span class="w"> </span>leaderboard<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="s2">&quot;player1&quot;</span><span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="s2">&quot;player2&quot;</span>
+ZREVRANGE<span class="w"> </span>leaderboard<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">9</span><span class="w"> </span>WITHSCORES<span class="w">  </span><span class="c1"># Top 10</span>
+
+<span class="c1"># Hash（对象存储）</span>
+HSET<span class="w"> </span>user:1000<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;Alice&quot;</span><span class="w"> </span>age<span class="w"> </span><span class="m">30</span><span class="w"> </span>email<span class="w"> </span><span class="s2">&quot;alice@example.com&quot;</span>
+HGETALL<span class="w"> </span>user:1000
+
+<span class="c1"># Stream（消息队列，类似 Kafka）</span>
+XADD<span class="w"> </span>events<span class="w"> </span>*<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="s2">&quot;login&quot;</span><span class="w"> </span>user_id<span class="w"> </span><span class="m">1000</span>
+XREAD<span class="w"> </span>COUNT<span class="w"> </span><span class="m">10</span><span class="w"> </span>BLOCK<span class="w"> </span><span class="m">5000</span><span class="w"> </span>STREAMS<span class="w"> </span>events<span class="w"> </span><span class="m">0</span>
+
+<span class="c1"># Geospatial（地理位置）</span>
+GEOADD<span class="w"> </span>cities<span class="w"> </span><span class="m">116</span>.4<span class="w"> </span><span class="m">39</span>.9<span class="w"> </span><span class="s2">&quot;Beijing&quot;</span>
+GEORADIUS<span class="w"> </span>cities<span class="w"> </span><span class="m">116</span>.4<span class="w"> </span><span class="m">39</span>.9<span class="w"> </span><span class="m">100</span><span class="w"> </span>km<span class="w">  </span><span class="c1"># 方圆 100km</span>
+</code></pre></div>
+<h4 id="_12">缓存策略模式</h4>
+<p><strong>Cache Aside（旁路缓存）</strong>：
+<div class="highlight"><pre><span></span><code>读：先查缓存 → 命中返回 | 未命中查DB → 写缓存 → 返回
+写：先更新DB → 再删除缓存（或更新缓存）
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Cache Aside 读</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">user</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users WHERE id = ?&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
+        <span class="n">redis</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user</span>
+
+<span class="c1"># Cache Aside 写</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET ... WHERE id = ?&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+    <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># 删除缓存，而不是更新</span>
+</code></pre></div>
+<blockquote>
+<p><strong>为什么写时删除缓存而不是更新？</strong> 更新缓存存在并发问题——两个写操作乱序可能导致缓存中出现旧数据。而删除缓存+下次读取时重建，是更安全的做法。</p>
+</blockquote>
+<p><strong>Read-Through（穿透读）</strong>：应用层只操作缓存，缓存负责从数据库加载数据（需要缓存中间件支持）。</p>
+<p><strong>Write-Through（穿透写）</strong>：数据同时写入缓存和数据库，保证一致性但增加写延迟。</p>
+<p><strong>Write-Behind（异步写）</strong>：先写入缓存，后台异步批量写入数据库，牺牲一致性换取高吞吐。</p>
+<h4 id="_13">分布式锁</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Redlock 简化版：使用 SET NX EX</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">acquire_lock</span><span class="p">(</span><span class="n">redis</span><span class="p">,</span> <span class="n">lock_name</span><span class="p">,</span> <span class="n">ttl_ms</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">lock_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;lock:</span><span class="si">{</span><span class="n">lock_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">lock_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>  <span class="c1"># 唯一标识</span>
+    <span class="k">if</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">lock_key</span><span class="p">,</span> <span class="n">lock_value</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">px</span><span class="o">=</span><span class="n">ttl_ms</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lock_value</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">release_lock</span><span class="p">(</span><span class="n">redis</span><span class="p">,</span> <span class="n">lock_name</span><span class="p">,</span> <span class="n">lock_value</span><span class="p">):</span>
+    <span class="n">lock_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;lock:</span><span class="si">{</span><span class="n">lock_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># 使用 Lua 脚本保证原子性：只释放自己持有的锁</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    if redis.call(&quot;get&quot;, KEYS[1]) == ARGV[1] then</span>
+<span class="s2">        return redis.call(&quot;del&quot;, KEYS[1])</span>
+<span class="s2">    else</span>
+<span class="s2">        return 0</span>
+<span class="s2">    end</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">redis</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lock_key</span><span class="p">,</span> <span class="n">lock_value</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="pubsub">Pub/Sub</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># 发布者</span>
+PUBLISH<span class="w"> </span>channel:notifications<span class="w"> </span><span class="s2">&quot;Hello, everyone!&quot;</span>
+
+<span class="c1"># 订阅者</span>
+SUBSCRIBE<span class="w"> </span>channel:notifications
+</code></pre></div>
+<h3 id="43-elasticsearch">4.3 Elasticsearch</h3>
+<h4 id="_14">倒排索引</h4>
+<p>Elasticsearch 的核心是倒排索引（Inverted Index）：</p>
+<div class="highlight"><pre><span></span><code>文档内容: &quot;The quick brown fox jumps over the lazy dog&quot;
+             ↓
+倒排索引:
+  term    →  [doc_id, position]
+  &quot;the&quot;   →  [(1,0), (1,7)]
+  &quot;quick&quot; →  [(1,1)]
+  &quot;brown&quot; →  [(1,2)]
+  &quot;fox&quot;   →  [(1,3)]
+</code></pre></div>
+<h4 id="_15">分析器</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// 自定义分析器</span>
+<span class="err">PUT</span><span class="w"> </span><span class="err">/my_i</span><span class="kc">n</span><span class="err">dex</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;analysis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;analyzer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;my_analyzer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;tokenizer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;lowercase&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;stop&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;snowball&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="query-dsl">Query DSL</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// 全文搜索</span>
+<span class="err">GET</span><span class="w"> </span><span class="err">/ar</span><span class="kc">t</span><span class="err">icles/_search</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;database optimization&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 复合查询</span>
+<span class="err">GET</span><span class="w"> </span><span class="err">/produc</span><span class="kc">ts</span><span class="err">/_search</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;bool&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;must&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;laptop&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;lte&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;sort&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asc&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;aggs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;by_brand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;terms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;brand.keyword&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>集群架构</strong>：
+- <strong>Node</strong>：单个 ES 实例
+- <strong>Index</strong>：等同于关系型数据库的"表"
+- <strong>Shard</strong>：索引的分片（每个分片是一个 Lucene 实例）
+- <strong>Replica</strong>：分片的副本
+- <strong>Cluster</strong>：多个 Node 组成的集群</p>
+<hr />
+<h2 id="orm">五、ORM 深入</h2>
+<h3 id="51-sqlalchemypython">5.1 SQLAlchemy（Python）</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">declarative_base</span><span class="p">,</span> <span class="n">relationship</span><span class="p">,</span> <span class="n">Session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">joinedload</span><span class="p">,</span> <span class="n">selectinload</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="c1"># 模型定义</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">posts</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Post&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;author&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Post</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Text</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;users.id&quot;</span><span class="p">))</span>
+
+    <span class="n">author</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;posts&quot;</span><span class="p">)</span>
+
+<span class="c1"># Session 生命周期</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;postgresql://user:pass@localhost/db&quot;</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="c1"># 加载策略</span>
+<span class="c1"># 懒加载（默认）：访问 posts 时才查询</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>  <span class="c1"># 此时执行 SELECT</span>
+
+<span class="c1"># 预加载：一次 JOIN 查询</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+    <span class="n">joinedload</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+<span class="c1"># 子查询预加载：两次查询但避免笛卡尔积</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span>
+    <span class="n">selectinload</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">posts</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Alembic 迁移</strong>：
+<div class="highlight"><pre><span></span><code>alembic<span class="w"> </span>init<span class="w"> </span>alembic
+alembic<span class="w"> </span>revision<span class="w"> </span>--autogenerate<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;add user table&quot;</span>
+alembic<span class="w"> </span>upgrade<span class="w"> </span>head
+</code></pre></div></p>
+<h3 id="52-prismatypescriptnodejs">5.2 Prisma（TypeScript/Node.js）</h3>
+<div class="highlight"><pre><span></span><code>// schema.prisma
+generator client {
+  provider = &quot;prisma-client-js&quot;
+}
+
+datasource db {
+  provider = &quot;postgresql&quot;
+  url      = env(&quot;DATABASE_URL&quot;)
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// 客户端使用</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@prisma/client&#39;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">()</span>
+
+<span class="c1">// 查询</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">contains</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;example.com&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">include</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">posts</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createdAt</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;desc&#39;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">take</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">skip</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span>
+<span class="p">})</span>
+
+<span class="c1">// 分页：游标分页</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">take</span><span class="o">:</span><span class="w"> </span><span class="kt">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">cursor</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">lastUserId</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">skip</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span><span class="w">  </span><span class="c1">// 跳过游标本身</span>
+<span class="w">  </span><span class="nx">orderBy</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;asc&#39;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+<h3 id="53-typeormtypescriptnodejs">5.3 TypeORM（TypeScript/Node.js）</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// 实体定义</span>
+<span class="kd">@Entity</span><span class="p">()</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">@PrimaryGeneratedColumn</span><span class="p">()</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">@Column</span><span class="p">({</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">@Column</span><span class="p">()</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">@OneToMany</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">Post</span><span class="p">,</span><span class="w"> </span><span class="nx">post</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">post</span><span class="p">.</span><span class="nx">author</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">posts</span><span class="o">:</span><span class="w"> </span><span class="kt">Post</span><span class="p">[];</span>
+
+<span class="w">    </span><span class="kd">@CreateDateColumn</span><span class="p">()</span>
+<span class="w">    </span><span class="nx">createdAt</span><span class="o">:</span><span class="w"> </span><span class="kt">Date</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Query Builder</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">dataSource</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">getRepository</span><span class="p">(</span><span class="nx">User</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">createQueryBuilder</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">leftJoinAndSelect</span><span class="p">(</span><span class="s2">&quot;user.posts&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;post&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">where</span><span class="p">(</span><span class="s2">&quot;user.email LIKE :email&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;%@example.com&quot;</span><span class="w"> </span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">orderBy</span><span class="p">(</span><span class="s2">&quot;user.createdAt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;DESC&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">take</span><span class="p">(</span><span class="mf">10</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">getMany</span><span class="p">();</span>
+
+<span class="c1">// 迁移</span>
+<span class="nx">typeorm</span><span class="w"> </span><span class="nx">migration</span><span class="o">:</span><span class="kt">create</span><span class="w"> </span><span class="o">-</span><span class="nx">n</span><span class="w"> </span><span class="nx">CreateUserTable</span>
+<span class="nx">typeorm</span><span class="w"> </span><span class="nx">migration</span><span class="o">:</span><span class="kt">run</span>
+</code></pre></div>
+<h3 id="54-n1">5.4 N+1 问题与解决方案</h3>
+<p><strong>N+1 问题</strong>：查询 1 次主表 + N 次关联查询。例如查询 100 个用户及其订单，如果懒加载，会执行 1 次 <code>SELECT * FROM users</code> + 100 次 <code>SELECT * FROM orders WHERE user_id = ?</code>。</p>
+<p><strong>解决方案</strong>：</p>
+<ol>
+<li>
+<p><strong>Eager Loading（预加载）</strong>：
+<div class="highlight"><pre><span></span><code><span class="c1"># SQLAlchemy</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">joinedload</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">orders</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="c1"># TypeORM</span>
+<span class="n">const</span> <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">userRepository</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="n">relations</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;orders&#39;</span><span class="p">]</span> <span class="p">});</span>
+
+<span class="c1"># Prisma（自动使用 IN 查询）</span>
+<span class="n">const</span> <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">prisma</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">findMany</span><span class="p">({</span> <span class="n">include</span><span class="p">:</span> <span class="p">{</span> <span class="n">orders</span><span class="p">:</span> <span class="n">true</span> <span class="p">}</span> <span class="p">});</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Batch Loading（批量加载）</strong>：
+<div class="highlight"><pre><span></span><code><span class="c1"># 手动批量加载</span>
+<span class="n">user_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">]</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Order</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Order</span><span class="o">.</span><span class="n">user_id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">user_ids</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="c1"># 然后按 user_id 分组</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>DataLoader</strong>（Facebook 的方案）：
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">DataLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dataloader&#39;</span><span class="p">);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">batchUsers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">ids</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findAll</span><span class="p">({</span><span class="w"> </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nx">ids</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ids</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">id</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">u</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">u</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">));</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">userLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DataLoader</span><span class="p">(</span><span class="nx">batchUsers</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">user1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">userLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">user2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">userLoader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+<span class="c1">// 合并成一次查询</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="_16">六、数据库设计</h2>
+<h3 id="61">6.1 范式化</h3>
+<p><strong>第一范式（1NF）</strong>：每个字段不可再分（原子性）。</p>
+<p>❌ 违反 1NF：
+| id | name | phones |
+|----|------|--------|
+| 1 | Alice | 138xxx, 139xxx |</p>
+<p>✅ 符合 1NF：
+| id | name | phone |
+|----|------|-------|
+| 1 | Alice | 138xxx |
+| 2 | Alice | 139xxx |</p>
+<p><strong>第二范式（2NF）</strong>：在 1NF 基础上，每个非主键字段完全依赖于主键（消除部分依赖）。</p>
+<p>❌ 违反 2NF（复合主键 <code>(order_id, product_id)</code>，但 <code>product_name</code> 只依赖于 <code>product_id</code>）：
+| order_id | product_id | product_name | quantity |
+|----------|-----------|-------------|----------|
+| 1 | 100 | Laptop | 1 |
+| 1 | 101 | Mouse | 2 |</p>
+<p>✅ 符合 2NF：将 <code>product_name</code> 移到 <code>products</code> 表。</p>
+<p><strong>第三范式（3NF）</strong>：在 2NF 基础上，非主键字段不传递依赖于主键。</p>
+<p>❌ 违反 3NF（<code>city</code> 通过 <code>zip_code</code> 与主键传递依赖）：
+| id | name | zip_code | city |
+|----|------|---------|------|
+| 1 | Alice | 100000 | Beijing |</p>
+<p>✅ 符合 3NF：将 <code>zip_code → city</code> 关系分离到 <code>zip_codes</code> 表。</p>
+<p><strong>BCNF（Boyce-Codd Normal Form）</strong>：3NF 的强化版——所有决定因素必须是候选键。大多数情况下满足 3NF 就足够了。</p>
+<h3 id="62">6.2 反范式化</h3>
+<p><strong>何时反范式化</strong>：
+- 读多写少的场景（如报表、数据仓库）
+- 需要避免 JOIN 的查询热点
+- 实时性要求高，无法承受 JOIN 开销</p>
+<p><strong>权衡</strong>：
+<div class="highlight"><pre><span></span><code>范式化 → 存储少、更新快、数据一致 ← 写优化
+反范式化 → 查询快、读性能好、冗余多 ← 读优化
+</code></pre></div></p>
+<p><strong>常见反范式化手段</strong>：
+- 在订单表中冗余「用户名」（避免 JOIN users 表）
+- 在文章表中冗余「评论数」（避免 COUNT 查询）
+- 反范式化需要应用程序维护数据一致，或通过触发器/事件同步</p>
+<h3 id="63-er">6.3 ER 建模</h3>
+<p><strong>实体-关系图（ERD）</strong> 的核心元素：</p>
+<ul>
+<li><strong>实体</strong>（Entity）：矩形，如 User、Order</li>
+<li><strong>属性</strong>（Attribute）：椭圆，如 name、email</li>
+<li><strong>关系</strong>（Relationship）：菱形，如 "创建"</li>
+<li><strong>基数</strong>（Cardinality）：</li>
+<li><code>1:1</code>：一个人对应一个身份证号</li>
+<li><code>1:N</code>：一个用户有多个订单</li>
+<li><code>M:N</code>：一个学生可选多门课程，一门课程有多个学生</li>
+</ul>
+<p><strong>设计模式示例</strong>：
+<div class="highlight"><pre><span></span><code>┌──────────┐    1:N    ┌──────────┐    M:N    ┌──────────┐
+│  User    │───────────│  Order   │───────────│ Product  │
+├──────────┤           ├──────────┤           ├──────────┤
+│ id (PK)  │           │ id (PK)  │           │ id (PK)  │
+│ name     │           │ user_id  │           │ name     │
+│ email    │           │ total    │           │ price    │
+└──────────┘           │ status   │           └──────────┘
+                       └──────────┘
+</code></pre></div></p>
+<h3 id="64">6.4 连接池</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># HikariCP (Java) - 默认配置即优秀</span>
+<span class="n">HikariConfig</span> <span class="n">config</span> <span class="o">=</span> <span class="n">new</span> <span class="n">HikariConfig</span><span class="p">();</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setJdbcUrl</span><span class="p">(</span><span class="s2">&quot;jdbc:postgresql://localhost/db&quot;</span><span class="p">);</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setMaximumPoolSize</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setMinimumIdle</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setConnectionTimeout</span><span class="p">(</span><span class="mi">30000</span><span class="p">);</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setIdleTimeout</span><span class="p">(</span><span class="mi">600000</span><span class="p">);</span>
+<span class="n">config</span><span class="o">.</span><span class="n">setMaxLifetime</span><span class="p">(</span><span class="mi">1800000</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="n">pgBouncer</span> <span class="p">(</span><span class="n">PostgreSQL</span> <span class="n">连接池代理</span><span class="p">)</span>
+<span class="o">//</span> <span class="n">pgBouncer</span><span class="o">.</span><span class="n">ini</span>
+<span class="p">[</span><span class="n">databases</span><span class="p">]</span>
+<span class="n">mydb</span> <span class="o">=</span> <span class="n">host</span><span class="o">=</span><span class="mf">127.0.0.1</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span>
+
+<span class="p">[</span><span class="n">pgbouncer</span><span class="p">]</span>
+<span class="n">pool_mode</span> <span class="o">=</span> <span class="n">transaction</span>  <span class="o">--</span> <span class="n">事务级复用</span>
+<span class="n">default_pool_size</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">max_client_conn</span> <span class="o">=</span> <span class="mi">100</span>
+</code></pre></div>
+<p><strong>连接池推荐大小</strong>：<code>(core_count * 2) + effective_spindle_count</code>。对于大多数应用，10-30 个连接就足够了。过多的连接反而会导致数据库上下文切换开销。</p>
+<h3 id="65">6.5 迁移策略</h3>
+<p><strong>可逆迁移</strong>：每个迁移必须提供 <code>up</code> 和 <code>down</code>（回滚）操作。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Alembic 迁移示例</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upgrade</span><span class="p">():</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;phone&#39;</span><span class="p">,</span> <span class="n">sa</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">20</span><span class="p">)))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">downgrade</span><span class="p">():</span>
+    <span class="n">op</span><span class="o">.</span><span class="n">drop_column</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="s1">&#39;phone&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>零停机迁移原则</strong>：
+1. <strong>加列</strong>：安全，旧代码忽略新列
+2. <strong>删列</strong>：先修改代码不再引用该列，部署后再删除
+3. <strong>重命名列</strong>：分三步——加新列 → 双写（新旧同时更新） → 切换读取新列 → 删旧列
+4. <strong>大表加索引</strong>：使用 <code>CONCURRENTLY</code>（PostgreSQL）避免锁表
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">idx_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">big_table</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</code></pre></div></p>
+<h3 id="66">6.6 备份与恢复</h3>
+<table>
+<thead>
+<tr>
+<th>备份类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>逻辑备份</strong>（mysqldump/pg_dump）</td>
+<td>生成 SQL 文件，可移植，恢复慢</td>
+<td>小数据库、迁移</td>
+</tr>
+<tr>
+<td><strong>物理备份</strong>（文件拷贝/XtraBackup）</td>
+<td>二进制拷贝，恢复快，体积大</td>
+<td>大数据库、PITR</td>
+</tr>
+<tr>
+<td><strong>快照备份</strong>（LVM/ZFS）</td>
+<td>秒级完成，文件系统级别</td>
+<td>需要快速恢复</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PITR（时间点恢复）</strong>：全量备份 + WAL 归档（连续归档日志），可恢复到任意时间点。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL PITR</span>
+<span class="c1"># 1. 开启归档</span>
+<span class="nv">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>on
+<span class="nv">archive_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cp %p /backup/%f&#39;</span>
+
+<span class="c1"># 2. 全量备份</span>
+pg_basebackup<span class="w"> </span>-D<span class="w"> </span>/backup/base<span class="w"> </span>-F<span class="w"> </span>t<span class="w"> </span>-z
+
+<span class="c1"># 3. 恢复：使用全量备份 + 回放到指定时间</span>
+<span class="c1"># recovery.conf</span>
+<span class="nv">restore_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;cp /backup/%f %p&#39;</span>
+<span class="nv">recovery_target_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;2024-03-15 14:30:00&#39;</span>
+</code></pre></div>
+<hr />
+<h2 id="_17">七、缓存策略</h2>
+<h3 id="71">7.1 缓存模式对比</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>读流程</th>
+<th>写流程</th>
+<th>一致性</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cache Aside</strong></td>
+<td>先查缓存→未命中查DB→写缓存</td>
+<td>写DB→删缓存</td>
+<td>最终一致（有窗口期）</td>
+<td>⭐ 低</td>
+</tr>
+<tr>
+<td><strong>Read-Through</strong></td>
+<td>缓存层负责加载</td>
+<td>写DB→删缓存</td>
+<td>最终一致</td>
+<td>⭐⭐ 中</td>
+</tr>
+<tr>
+<td><strong>Write-Through</strong></td>
+<td>同上</td>
+<td>同时写缓存+DB</td>
+<td>强一致</td>
+<td>⭐⭐ 中</td>
+</tr>
+<tr>
+<td><strong>Write-Behind</strong></td>
+<td>同上</td>
+<td>只写缓存，异步写DB</td>
+<td>弱一致（有丢数据风险）</td>
+<td>⭐⭐⭐ 高</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cache Aside 的缓存击穿问题</strong>：
+<div class="highlight"><pre><span></span><code>场景：热点 key 刚好过期，大量请求同时涌入
+问题：所有请求都去查数据库，DB 被打垮
+方案：互斥锁（只让一个请求查 DB 重建缓存）
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_hot_data</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="c1"># 互斥锁重建缓存</span>
+    <span class="n">lock_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;lock:</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">redis</span><span class="o">.</span><span class="n">setnx</span><span class="p">(</span><span class="n">lock_key</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>  <span class="c1"># 获取锁</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SELECT ...&quot;</span><span class="p">)</span>
+            <span class="n">redis</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">lock_key</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_hot_data</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>  <span class="c1"># 重试</span>
+</code></pre></div>
+<h3 id="72">7.2 缓存失效策略</h3>
+<p><strong>TTL（Time-To-Live）</strong>：
+- 最简单的失效方式，设置过期时间
+- 问题：同一时刻大量缓存过期导致缓存雪崩
+- 解决：过期时间加随机偏移 <code>TTL + random(0, 300)</code></p>
+<p><strong>事件驱动失效</strong>：
+- 数据变更时主动删除/更新缓存
+- 使用消息队列解耦（更新DB→发消息→删缓存）
+- 问题：消息可能丢失或延迟</p>
+<p><strong>写穿透</strong>：
+- 每次写操作同时更新缓存和DB
+- 保证缓存始终最新
+- 问题：写延迟增加，不频繁读的数据也在缓存中</p>
+<h3 id="73">7.3 分布式缓存</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>架构</th>
+<th>数据分布</th>
+<th>高可用</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Redis Cluster</strong></td>
+<td>去中心化</td>
+<td>哈希槽（16384个槽）</td>
+<td>主从切换</td>
+<td>大型缓存、高写入</td>
+</tr>
+<tr>
+<td><strong>Redis Sentinel</strong></td>
+<td>主从+哨兵</td>
+<td>单主写入</td>
+<td>自动故障转移</td>
+<td>中小规模、读多写少</td>
+</tr>
+<tr>
+<td><strong>Memcached</strong></td>
+<td>分布式客户端分片</td>
+<td>一致性哈希</td>
+<td>无复制（节点挂了丢数据）</td>
+<td>纯 KV、简单缓存</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># Redis Cluster 创建</span>
+redis-cli<span class="w"> </span>--cluster<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="m">192</span>.168.1.1:7000<span class="w"> </span><span class="m">192</span>.168.1.1:7001<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="m">192</span>.168.1.2:7000<span class="w"> </span><span class="m">192</span>.168.1.2:7001<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="m">192</span>.168.1.3:7000<span class="w"> </span><span class="m">192</span>.168.1.3:7001<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cluster-replicas<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<h3 id="74-cdn">7.4 CDN 缓存</h3>
+<p>CDN（Content Delivery Network）将静态资源缓存到全球边缘节点：</p>
+<ul>
+<li>用户请求 → DNS 解析到最近的 CDN 节点</li>
+<li>节点有缓存 → 直接返回</li>
+<li>节点无缓存 → 回源站拉取 → 缓存并返回</li>
+</ul>
+<p><strong>缓存控制</strong>：
+<div class="highlight"><pre><span></span><code>Edge-Control: max-age=86400  # CDN 缓存 1 天
+CDN-Cache-Control: no-cache  # CDN 不缓存
+</code></pre></div></p>
+<h3 id="75">7.5 浏览器缓存</h3>
+<p><strong>强缓存</strong>（不请求服务器）：
+<div class="highlight"><pre><span></span><code><span class="err">Cache-Control: max-age=3600          # HTTP/1.1 标准</span>
+<span class="err">Expires: Wed, 21 Oct 2024 07:28:00   # HTTP/1.0，已被 Cache-Control 替代</span>
+</code></pre></div></p>
+<p><strong>协商缓存</strong>（请求服务器，304 Not Modified 则复用缓存）：
+<div class="highlight"><pre><span></span><code><span class="err"># 方式一：基于时间</span>
+<span class="err">Last-Modified: Wed, 21 Oct 2024 07:00:00 GMT  # 服务器返回</span>
+<span class="err">If-Modified-Since: Wed, 21 Oct 2024 07:00:00 GMT  # 客户端请求</span>
+
+<span class="err"># 方式二：基于内容哈希（推荐）</span>
+<span class="err">ETag: &quot;33a64df551425fcc55e4d42a148795d9f25f89d4&quot;  # 服务器返回</span>
+<span class="err">If-None-Match: &quot;33a64df551425fcc55e4d42a148795d9f25f89d4&quot;  # 客户端请求</span>
+</code></pre></div></p>
+<p><strong>最佳实践</strong>：
+- 静态资源（JS/CSS/图片）使用强缓存 + 文件名带内容哈希
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;/static/app.a1b2c3d4.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+- HTML 页面使用协商缓存（<code>no-cache</code>）
+- 敏感数据不缓存（<code>no-store</code>）</p>
+<hr />
+<blockquote>
+<p><strong>本系列下一章</strong>：<a href="../04-version-control/">版本控制 →</a> — Git 深入</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

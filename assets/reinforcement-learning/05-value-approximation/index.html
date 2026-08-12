@@ -1,0 +1,4697 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://CodeNebula.github.io/assets/reinforcement-learning/05-value-approximation/">
+      
+      
+        <link rel="prev" href="../04-temporal-difference/">
+      
+      
+        <link rel="next" href="../06-policy-gradient/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>值函数逼近与DQN - CodeNebula</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dqn-value-approximation-dqn-family" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              值函数逼近与DQN
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../software-development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../software-development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、从表格到函数逼近
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、从表格到函数逼近">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 维度灾难：表格方法的极限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 为什么需要函数逼近：泛化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 参数化价值函数：学习目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 线性 vs 非线性：两种函数族
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 表格还是函数逼近：工程决策指南
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、线性值函数逼近
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、线性值函数逼近">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-feature-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 特征表示（Feature Representation）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-td-semi-gradient-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 半梯度 TD 更新（Semi-gradient TD）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 收敛性质：什么情况下有保证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-one-hot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 查表法 = one-hot 特例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-td0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 代码：线性半梯度 TD(0) 预测
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、DQN 开山之作
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、DQN 开山之作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-rl-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 背景：从经典 RL 到深度 RL 的跃迁
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-cnn-atari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 网络结构：CNN 处理 Atari 像素
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cnn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 为什么用 CNN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 输入预处理流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 实验结果与历史意义
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、DQN 两大神器：经验回放与目标网络
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、DQN 两大神器：经验回放与目标网络">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-experience-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 经验回放（Experience Replay）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-target-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 目标网络（Target Network）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 硬更新 vs 软更新
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、DQN 训练流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、DQN 训练流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 完整循环
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 损失函数与梯度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-nature-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 伪代码（Nature DQN）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 超参数与训练细节
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、DQN 家族演进
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、DQN 家族演进">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-double-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Double DQN：对抗过估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-dueling-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Dueling DQN：优势分解
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-prioritized-experience-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Prioritized Experience Replay：按重要性采样
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 其他三个组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-rainbow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Rainbow：七组件集成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 DQN 家族演进总览表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、收敛性与挑战：deadly triad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、收敛性与挑战：deadly triad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 致命三要素（Deadly Triad）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-baird" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 失败模式：Baird 反例与误差自我强化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 缓解手段表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 实践观察：为什么 DQN 在实践中稳定
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numpy-dqn-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、综合实验：纯 NumPy DQN 玩转 GridWorld
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、综合实验：纯 NumPy DQN 玩转 GridWorld">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 实验设计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-q-numpy-mlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Q 网络：NumPy 手写两层 MLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 超参数表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 完整可运行代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 结果分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 动手练习
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：本章速查表
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、从表格到函数逼近
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、从表格到函数逼近">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 维度灾难：表格方法的极限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 为什么需要函数逼近：泛化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 参数化价值函数：学习目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 线性 vs 非线性：两种函数族
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 表格还是函数逼近：工程决策指南
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、线性值函数逼近
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、线性值函数逼近">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-feature-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 特征表示（Feature Representation）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-td-semi-gradient-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 半梯度 TD 更新（Semi-gradient TD）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 收敛性质：什么情况下有保证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-one-hot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 查表法 = one-hot 特例
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-td0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 代码：线性半梯度 TD(0) 预测
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、DQN 开山之作
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、DQN 开山之作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-rl-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 背景：从经典 RL 到深度 RL 的跃迁
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-cnn-atari" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 网络结构：CNN 处理 Atari 像素
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cnn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 为什么用 CNN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 输入预处理流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 实验结果与历史意义
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、DQN 两大神器：经验回放与目标网络
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、DQN 两大神器：经验回放与目标网络">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-experience-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 经验回放（Experience Replay）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-target-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 目标网络（Target Network）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 硬更新 vs 软更新
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、DQN 训练流程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、DQN 训练流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 完整循环
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 损失函数与梯度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-nature-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 伪代码（Nature DQN）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 超参数与训练细节
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dqn_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、DQN 家族演进
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、DQN 家族演进">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-double-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Double DQN：对抗过估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-dueling-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Dueling DQN：优势分解
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-prioritized-experience-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Prioritized Experience Replay：按重要性采样
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 其他三个组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-rainbow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Rainbow：七组件集成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 DQN 家族演进总览表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、收敛性与挑战：deadly triad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、收敛性与挑战：deadly triad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 致命三要素（Deadly Triad）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-baird" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 失败模式：Baird 反例与误差自我强化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 缓解手段表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 实践观察：为什么 DQN 在实践中稳定
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numpy-dqn-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、综合实验：纯 NumPy DQN 玩转 GridWorld
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、综合实验：纯 NumPy DQN 玩转 GridWorld">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 实验设计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-q-numpy-mlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Q 网络：NumPy 手写两层 MLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 超参数表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 完整可运行代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 结果分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 动手练习
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：本章速查表
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    强化学习
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="dqn-value-approximation-dqn-family">值函数逼近与 DQN 家族（Value Approximation &amp; DQN Family）</h1>
+<blockquote>
+<p>第 4 章的 SARSA、Q-Learning、TD(λ) 都是<strong>表格型（tabular）</strong>算法：
+价值函数以查表方式存储，每个状态独立更新，在有限状态空间下有严格的
+收敛保证。但表格方法有一个不可回避的天花板——<strong>维度灾难（curse of
+dimensionality）</strong>。状态是图像（Atari 像素）、连续向量（机器人关节角）
+或高维组合（围棋盘面）时，表格以指数速度爆炸，绝大多数状态甚至永远
+不会被访问。出路只有一条：用<strong>函数逼近（function approximation）</strong>
+把"查表"换成"拟合"，用参数化函数 <span class="arithmatex">\(V_w(s)\)</span>、<span class="arithmatex">\(Q_w(s,a)\)</span> 在有限参数下
+表示任意大规模的价值函数，并通过参数共享实现<strong>泛化（generalization）</strong>。
+本章先建立线性值函数逼近的理论地基（特征表示、半梯度 TD、收敛性质），
+再进入深度强化学习的开山之作 DQN（Deep Q-Network）：CNN 网络结构、
+经验回放与目标网络两大稳定机制、完整训练流程，随后展开 Double DQN、
+Dueling DQN、Prioritized Replay、Rainbow 等整个 DQN 家族，最后讨论
+deadly triad（函数逼近 + 自举 + off-policy）带来的收敛性挑战，并以一个
+纯 NumPy 实现的 GridWorld DQN 实验收尾。全文假设读者已掌握第 2~4 章
+（DP / MC / TD）的内容；所有代码均为可运行的 Python 3 + NumPy 实现，
+不依赖任何深度学习框架。</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、从表格到函数逼近</h2>
+<h3 id="11">1.1 维度灾难：表格方法的极限</h3>
+<p>表格型方法把价值函数存为一张表：状态价值是 <span class="arithmatex">\(|S|\)</span> 维向量，动作价值是
+<span class="arithmatex">\(|S| \times |A|\)</span> 矩阵。表的大小随状态空间<strong>线性</strong>增长，而状态空间本身
+通常随维度<strong>指数</strong>增长：</p>
+<div class="arithmatex">\[N = k^d\]</div>
+<p>其中 <span class="arithmatex">\(d\)</span> 是状态表示的维度，<span class="arithmatex">\(k\)</span> 是每个维度的取值个数。几个具体量级：</p>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>状态表示</th>
+<th>状态空间量级</th>
+<th>表格可行性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4×4 GridWorld</td>
+<td>2 维离散坐标</td>
+<td><span class="arithmatex">\(16\)</span></td>
+<td>完全可行</td>
+</tr>
+<tr>
+<td>20×20 迷宫</td>
+<td>2 维离散坐标</td>
+<td><span class="arithmatex">\(400\)</span></td>
+<td>可行</td>
+</tr>
+<tr>
+<td>机器人关节控制</td>
+<td>6 维连续向量</td>
+<td>无穷（连续）</td>
+<td><strong>不可行</strong></td>
+</tr>
+<tr>
+<td>围棋</td>
+<td>19×19 棋盘</td>
+<td><span class="arithmatex">\(10^{170}\)</span> 量级</td>
+<td><strong>不可行</strong></td>
+</tr>
+<tr>
+<td>Atari 2600 游戏</td>
+<td>210×160 像素 × 128 色</td>
+<td><span class="arithmatex">\(128^{33600}\)</span></td>
+<td><strong>不可行</strong></td>
+</tr>
+</tbody>
+</table>
+<p>以 Atari 为例：即使把画面降到 84×84 灰度（256 色阶），状态数仍是
+<span class="arithmatex">\(256^{7056}\)</span>，远超宇宙中原子总数（约 <span class="arithmatex">\(10^{80}\)</span>）。表格连"存下所有状态"
+都做不到，更谈不上为每个状态维护独立的更新统计量。</p>
+<p>除了容量问题，表格方法还有第二个结构性缺陷：<strong>访问稀疏性（sparsity）</strong>。
+智能体在训练中只访问状态空间的一个极小流形，绝大多数状态从未被访问，
+它们的表条目永远是初始值。这意味着表格方法<strong>无法从已访问状态推广到
+未访问状态</strong>——每个状态都必须被单独访问足够多次才能学准。</p>
+<blockquote>
+<p><strong>核心思想</strong>：维度灾难的本质不是"存储不够"，而是"信息不够"——经验
+只能覆盖状态空间的极小部分。函数逼近用<strong>参数共享</strong>让一次经验同时
+更新所有"相似状态"的参数，把"必须访问每个状态"变成"只需访问每个
+状态区域"，这是它对抗维度灾难的根本机制。</p>
+</blockquote>
+<h3 id="12">1.2 为什么需要函数逼近：泛化</h3>
+<p>函数逼近（function approximation）把价值函数限制在一个<strong>参数化函数族</strong>
+内：</p>
+<div class="arithmatex">\[V_w(s) \approx v_\pi(s), \qquad Q_w(s, a) \approx q_\pi(s, a)\]</div>
+<p>其中 <span class="arithmatex">\(w\)</span> 是参数向量（线性系数或神经网络权重），参数数量<strong>远小于</strong>状态
+数量。学习的目标不再是"填表"，而是<strong>找一组参数 <span class="arithmatex">\(w\)</span> 使近似误差最小</strong>。</p>
+<p>函数逼近带来的三个核心收益：</p>
+<ol>
+<li><strong>泛化（generalization）</strong>：相似状态共享参数，访问 <span class="arithmatex">\(s\)</span> 的经验会
+   改善所有与 <span class="arithmatex">\(s\)</span> 相似状态的估值。这是样本效率提升的根本来源；</li>
+<li><strong>固定容量</strong>：参数数量与状态规模解耦，内存占用不随 <span class="arithmatex">\(|S|\)</span> 增长；</li>
+<li><strong>连续插值</strong>：对连续状态空间，函数逼近天然给出连续的价值曲面，
+   无需离散化。</li>
+</ol>
+<p>代价是<strong>收敛保证的丧失</strong>：表格方法在 on-policy + 适当步长下几乎必然
+收敛，而函数逼近（尤其非线性 + 自举 + off-policy 组合）可能震荡甚至
+发散。这一矛盾贯穿本章全部内容。</p>
+<p>表格方法与函数逼近的全面对比：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>表格方法（查表）</th>
+<th>函数逼近（拟合）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>参数数量</td>
+<td>$</td>
+<td>S</td>
+</tr>
+<tr>
+<td>泛化能力</td>
+<td>无：未访问状态无信息</td>
+<td>有：相似状态共享参数</td>
+</tr>
+<tr>
+<td>连续状态</td>
+<td>需离散化，精度受网格限制</td>
+<td>天然支持，输出连续曲面</td>
+</tr>
+<tr>
+<td>存储与计算</td>
+<td>随规模线性增长，可精确存取</td>
+<td>恒定，但每次更新要前向/反向计算</td>
+</tr>
+<tr>
+<td>收敛保证</td>
+<td>on-policy 下严格收敛</td>
+<td>视函数族与算法而定，可能发散</td>
+</tr>
+<tr>
+<td>样本效率</td>
+<td>低：每个状态须被多次访问</td>
+<td>高：一次经验惠及整个状态区域</td>
+</tr>
+<tr>
+<td>典型算法</td>
+<td>表格 TD、Q-Learning、TD(λ)</td>
+<td>半梯度 TD、DQN 及家族</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13">1.3 参数化价值函数：学习目标</h3>
+<p>函数逼近的"监督信号"来自哪里？值函数本身没有现成标签，标签来自
+RL 自身的三种目标：</p>
+<table>
+<thead>
+<tr>
+<th>学习信号</th>
+<th>目标公式</th>
+<th>性质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MC 目标</td>
+<td><span class="arithmatex">\(w \leftarrow w + \alpha\left[G_t - V_w(S_t)\right]\nabla_w V_w(S_t)\)</span></td>
+<td>无偏，高方差，回合结束才能用</td>
+</tr>
+<tr>
+<td>TD(0) 目标</td>
+<td><span class="arithmatex">\(w \leftarrow w + \alpha\left[R_{t+1} + \gamma V_w(S_{t+1}) - V_w(S_t)\right]\nabla_w V_w(S_t)\)</span></td>
+<td>有偏，低方差，每步可用</td>
+</tr>
+<tr>
+<td>n-step 目标</td>
+<td><span class="arithmatex">\(w \leftarrow w + \alpha\left[G_{t:t+n} - V_w(S_t)\right]\nabla_w V_w(S_t)\)</span></td>
+<td>偏差-方差可调</td>
+</tr>
+</tbody>
+</table>
+<p>在预测问题中，衡量参数质量的标准是<strong>加权均方误差</strong>：</p>
+<div class="arithmatex">\[\overline{VE}(w) = \sum_{s \in \mathcal{S}} \mu(s)\left[v_\pi(s) - V_w(s)\right]^2\]</div>
+<p>其中 <span class="arithmatex">\(\mu(s)\)</span> 是 on-policy 分布（策略 <span class="arithmatex">\(\pi\)</span> 下各状态被访问的稳态频率）。
+注意 <span class="arithmatex">\(\overline{VE}\)</span> 的定义依赖未知的 <span class="arithmatex">\(v_\pi\)</span>——函数逼近的优化是一个
+<strong>"用估计更新估计"</strong>的过程，这正是自举（bootstrapping）在参数空间的
+延伸，也是后续所有稳定性问题的根源。</p>
+<h3 id="14-vs">1.4 线性 vs 非线性：两种函数族</h3>
+<p>函数逼近按 <span class="arithmatex">\(V_w(s)\)</span> 对 <span class="arithmatex">\(w\)</span> 的依赖方式分为两大类：</p>
+<ul>
+<li><strong>线性逼近（linear approximation）</strong>：<span class="arithmatex">\(V_w(s) = w^\top x(s)\)</span>，价值是
+  特征向量 <span class="arithmatex">\(x(s)\)</span> 的线性函数；</li>
+<li><strong>非线性逼近（nonlinear approximation）</strong>：典型如多层神经网络，
+  价值是输入的复合非线性函数。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>线性逼近</th>
+<th>非线性逼近（神经网络）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表示能力</td>
+<td>限于特征的线性组合，受特征质量制约</td>
+<td>通用近似定理保证可逼近任意连续函数</td>
+</tr>
+<tr>
+<td>特征工程</td>
+<td>依赖人工设计特征（瓦片编码、RBF、傅里叶等）</td>
+<td>端到端学习，特征由网络自动提取</td>
+</tr>
+<tr>
+<td>收敛保证</td>
+<td>on-policy 半梯度 TD 可证明收敛到 TD 不动点</td>
+<td>无一般性保证，需工程手段稳定</td>
+</tr>
+<tr>
+<td>训练稳定性</td>
+<td>高：目标函数通常是凸的</td>
+<td>低：非凸优化 + 自举易震荡</td>
+</tr>
+<tr>
+<td>参数数量</td>
+<td><span class="arithmatex">\(d\)</span>（特征维度）</td>
+<td>可达数百万</td>
+</tr>
+<tr>
+<td>梯度计算</td>
+<td><span class="arithmatex">\(\nabla_w V_w(s) = x(s)\)</span>，解析简单</td>
+<td>反向传播（backpropagation）</td>
+</tr>
+<tr>
+<td>典型场景</td>
+<td>经典 RL 教学、线性控制、大规模推荐</td>
+<td>Atari、围棋、机器人等大规模任务</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：线性与非线性不是"谁更好"的关系，而是<strong>理论完备性与
+表示能力之间的取舍</strong>。线性方法有收敛定理背书，但表达力受限于特征；
+神经网络表达力强，却把收敛问题从"数学"移交给了"工程"。DQN 的贡献
+之一，就是用一套工程机制（回放 + 目标网络）让非线性逼近在实践中
+变得可用。</p>
+</blockquote>
+<h3 id="15">1.5 表格还是函数逼近：工程决策指南</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐方案</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态可穷举（<span class="arithmatex">\(10^6\)</span> 量级内）且被频繁访问</td>
+<td>表格方法</td>
+<td>有严格收敛保证，实现简单，无特征工程负担</td>
+</tr>
+<tr>
+<td>状态空间大但低维连续、结构已知</td>
+<td>线性逼近（瓦片编码 / RBF）</td>
+<td>收敛有界，单次更新开销极小</td>
+</tr>
+<tr>
+<td>状态是高维原始输入（图像、音频）</td>
+<td>非线性深度网络</td>
+<td>特征自动学习，表示能力强</td>
+</tr>
+<tr>
+<td>实时性要求极高（嵌入式控制）</td>
+<td>线性逼近</td>
+<td>前向计算只有一次矩阵乘法</td>
+</tr>
+<tr>
+<td>离线训练 + 大规模仿真（游戏、机器人）</td>
+<td>深度网络 + 经验回放</td>
+<td>样本效率与容量优势明显</td>
+</tr>
+</tbody>
+</table>
+<p>几点工程经验：</p>
+<ol>
+<li>表格与函数逼近并非互斥——大规模问题常采用<strong>分层策略</strong>：函数逼近
+   提供全局粗估值，表格（或细粒度特征）在关键局部区域精修；</li>
+<li>选择函数族时先问"<strong>状态结构是什么</strong>"：离散 ID 用 one-hot/embedding，
+   连续低维用瓦片编码，原始像素用 CNN，序列用 RNN/Transformer——
+   特征化方式必须匹配状态结构，而非一味追求更深的网络；</li>
+<li>判断"该不该上深度 RL"的实用标准：<strong>线性基线（如线性 Q-Learning +
+   瓦片编码）是否已经够用</strong>。大量实际任务中线性基线已接近上限，
+   此时深度网络带来的只是边际收益和大量调参成本。</li>
+</ol>
+<hr />
+<h2 id="_2">二、线性值函数逼近</h2>
+<h3 id="21-feature-representation">2.1 特征表示（Feature Representation）</h3>
+<p>线性逼近的第一步是把状态 <span class="arithmatex">\(s\)</span> 映射为<strong>特征向量（feature vector）</strong>
+<span class="arithmatex">\(x(s) = (x_1(s), x_2(s), \ldots, x_d(s))^\top \in \mathbb{R}^d\)</span>，然后：</p>
+<div class="arithmatex">\[V_w(s) = w^\top x(s) = \sum_{i=1}^{d} w_i \, x_i(s)\]</div>
+<p>特征的选择直接决定表示能力。常用特征构造方法：</p>
+<table>
+<thead>
+<tr>
+<th>特征类型</th>
+<th>定义</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>one-hot 编码</td>
+<td><span class="arithmatex">\(x_i(s) = \mathbf{1}\{s = s_i\}\)</span></td>
+<td>每个状态一个特征，等价于查表；无泛化</td>
+<td>状态可穷举的小规模问题</td>
+</tr>
+<tr>
+<td>多项式特征</td>
+<td>状态分量的幂与交叉项 <span class="arithmatex">\(s_1^2, s_1 s_2, \ldots\)</span></td>
+<td>全局光滑，能拟合非线性关系</td>
+<td>低维连续状态</td>
+</tr>
+<tr>
+<td>傅里叶特征</td>
+<td><span class="arithmatex">\(\cos(\pi c^\top s)\)</span>，<span class="arithmatex">\(c\)</span> 为频率向量</td>
+<td>频率分解，基函数正交性好</td>
+<td>周期/平滑价值函数</td>
+</tr>
+<tr>
+<td>径向基函数（RBF）</td>
+<td><span class="arithmatex">\(\exp\left(-\frac{\|s - c_i\|^2}{2\sigma^2}\right)\)</span></td>
+<td>局部响应，每个基函数只影响局部区域</td>
+<td>中低维连续状态</td>
+</tr>
+<tr>
+<td>瓦片编码（Tile Coding）</td>
+<td>多套偏移网格的 one-hot 叠加</td>
+<td>局部泛化 + 计算高效 + 可增量式</td>
+<td>经典 RL 连续状态的标准选择</td>
+</tr>
+</tbody>
+</table>
+<p>瓦片编码值得多说一句：它用 <span class="arithmatex">\(k\)</span> 套互相偏移的网格覆盖状态空间，每个状态
+同时落在 <span class="arithmatex">\(k\)</span> 个"瓦片"上，特征向量为这 <span class="arithmatex">\(k\)</span> 个瓦片的 one-hot 叠加。
+相邻状态共享大部分瓦片 → 获得<strong>局部泛化</strong>；瓦片数量决定分辨率与
+泛化粒度的权衡。它是深度学习流行之前连续状态 RL 的事实标准。</p>
+<h3 id="22-td-semi-gradient-td">2.2 半梯度 TD 更新（Semi-gradient TD）</h3>
+<p>把表格 TD(0) 的更新对象从"表条目"换成"参数 <span class="arithmatex">\(w\)</span>"，得到线性半梯度
+TD(0)：</p>
+<div class="arithmatex">\[
+\delta_t = R_{t+1} + \gamma V_w(S_{t+1}) - V_w(S_t)
+\]</div>
+<div class="arithmatex">\[
+w \leftarrow w + \alpha \, \delta_t \, \nabla_w V_w(S_t)
+\]</div>
+<p>线性情况下 <span class="arithmatex">\(\nabla_w V_w(S_t) = x(S_t)\)</span>，展开为：</p>
+<div class="arithmatex">\[
+\boxed{\; w \leftarrow w + \alpha \left[ R_{t+1} + \gamma w^\top x(S_{t+1}) - w^\top x(S_t) \right] x(S_t) \;}
+\]</div>
+<p><strong>为什么叫"半梯度"（semi-gradient）？</strong> 完整的梯度下降要求对目标
+<span class="arithmatex">\(\frac{1}{2}\left[v_\pi(S_t) - V_w(S_t)\right]^2\)</span> 求梯度。但 TD 目标
+<span class="arithmatex">\(R_{t+1} + \gamma V_w(S_{t+1})\)</span> 本身也依赖 <span class="arithmatex">\(w\)</span>——严格求导应包含
+<span class="arithmatex">\(\nabla_w V_w(S_{t+1})\)</span> 项。半梯度把 TD 目标当作<strong>常数</strong>处理，只对
+<span class="arithmatex">\(V_w(S_t)\)</span> 求导，丢弃了 <span class="arithmatex">\(\gamma \nabla_w V_w(S_{t+1})\)</span> 这一项。</p>
+<table>
+<thead>
+<tr>
+<th>更新方式</th>
+<th>对目标的处理</th>
+<th>性质</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>完整梯度（residual gradient）</td>
+<td>对 <span class="arithmatex">\(V_w(S_{t+1})\)</span> 也求导</td>
+<td>收敛到贝尔曼误差最小解，但收敛慢、可能收敛到错误解</td>
+</tr>
+<tr>
+<td><strong>半梯度</strong></td>
+<td>目标当常数，只对 <span class="arithmatex">\(V_w(S_t)\)</span> 求导</td>
+<td>表格型下退化为标准 TD(0)，收敛快，on-policy 下收敛到 TD 不动点</td>
+</tr>
+<tr>
+<td>MC 梯度</td>
+<td>目标 <span class="arithmatex">\(G_t\)</span> 不含 <span class="arithmatex">\(w\)</span>，天然是完整梯度</td>
+<td>无偏，高方差</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：半梯度是"丢弃一项梯度"换来的稳定性与速度。它不最小化
+任何显式目标函数，却在实际中表现更好——因为完整梯度会同时移动
+"目标端"，相当于在两个方向上拉扯参数。半梯度固定目标、只移动
+预测端，本质是<strong>自举的工程化妥协</strong>。</p>
+</blockquote>
+<h3 id="23">2.3 收敛性质：什么情况下有保证</h3>
+<p>线性函数逼近 + 半梯度 TD 的收敛理论是经典 RL 最漂亮的结论之一，
+同时也是 off-policy 灾难的开始：</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>算法</th>
+<th>收敛性结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表格型 + on-policy</td>
+<td>TD(0)、SARSA</td>
+<td>以概率 1 收敛到真值 <span class="arithmatex">\(v_\pi\)</span></td>
+</tr>
+<tr>
+<td>表格型 + off-policy</td>
+<td>Q-Learning</td>
+<td>以概率 1 收敛到 <span class="arithmatex">\(q_*\)</span>（有限状态、GLIE 探索）</td>
+</tr>
+<tr>
+<td>线性 + on-policy</td>
+<td>半梯度 TD(0)</td>
+<td>收敛到 <strong>TD 不动点</strong> <span class="arithmatex">\(w_\infty\)</span></td>
+</tr>
+<tr>
+<td>线性 + off-policy</td>
+<td>半梯度 TD(0)</td>
+<td><strong>可能发散</strong>（Baird 反例，见第 7 章）</td>
+</tr>
+<tr>
+<td>非线性 + 任意</td>
+<td>半梯度 TD</td>
+<td>无一般性保证</td>
+</tr>
+</tbody>
+</table>
+<p>on-policy 线性半梯度 TD(0) 的收敛结论有精确表述：<span class="arithmatex">\(w_t\)</span> 收敛到 TD
+不动点 <span class="arithmatex">\(w_\infty\)</span>，且其渐近均方误差有上界：</p>
+<div class="arithmatex">\[
+\overline{VE}(w_\infty) \le \frac{1}{1 - \gamma} \min_w \overline{VE}(w)
+\]</div>
+<p>即：线性半梯度 TD 找到的解，其误差不超过<strong>最优线性解误差的
+<span class="arithmatex">\(\frac{1}{1-\gamma}\)</span> 倍</strong>。当 <span class="arithmatex">\(\gamma\)</span> 接近 1 时这个界变松，但至少保证
+<strong>不发散</strong>。这个"有界但不最优"的结论，与非线性 + off-policy 下的
+"可能彻底发散"形成鲜明对比。</p>
+<h3 id="24-one-hot">2.4 查表法 = one-hot 特例</h3>
+<p>表格方法其实是线性函数逼近的<strong>特例</strong>：取特征为 one-hot 编码
+<span class="arithmatex">\(x(s) = e_s\)</span>（第 <span class="arithmatex">\(s\)</span> 位为 1 的单位向量），则：</p>
+<div class="arithmatex">\[V_w(s) = w^\top e_s = w_s\]</div>
+<p>每个状态恰好对应一个独立参数 <span class="arithmatex">\(w_s\)</span>，更新退化为：</p>
+<div class="arithmatex">\[w_s \leftarrow w_s + \alpha\left[R_{t+1} + \gamma w_{s'} - w_s\right]\]</div>
+<p>这正是表格 TD(0)。因此本章的所有分析都<strong>向下兼容</strong>第 4 章：表格方法
+的一切结论是线性逼近在"每状态一个特征"下的特例。反过来说，任何
+线性逼近都可以看作"在特征空间里做表格方法"——特征定义了状态空间的
+<strong>压缩表示</strong>，泛化就发生在压缩丢失信息的那个维度上。</p>
+<h3 id="25-td0">2.5 代码：线性半梯度 TD(0) 预测</h3>
+<p>用第 4 章的随机游走环境（5 个非终止状态，两端终止）对比三种特征：
+one-hot（= 表格 TD）、RBF 特征（泛化）。真值
+<span class="arithmatex">\(v_\pi = [1/6, 2/6, 3/6, 4/6, 5/6]\)</span>。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomWalk</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;5 个非终止状态 A-E，左右两端为终止（左端奖励 0，右端奖励 +1）&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>          <span class="c1"># 从中间状态 C 出发</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">ns</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">True</span>       <span class="c1"># 左端终止：奖励 0</span>
+        <span class="k">if</span> <span class="n">ns</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="kc">True</span>       <span class="c1"># 右端终止：奖励 +1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">ns</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">False</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">onehot_features</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;one-hot 特征：等价于表格方法&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rbf_features</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RBF 特征：以每个状态为高斯中心，产生平滑的局部响应&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">centers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">centers</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">semi_gradient_td</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">feature_fn</span><span class="p">,</span> <span class="n">episodes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_fn</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">episodes</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">();</span> <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="n">s2</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">x_s</span>  <span class="o">=</span> <span class="n">feature_fn</span><span class="p">(</span><span class="n">s</span><span class="p">,</span>  <span class="n">env</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">x_s2</span> <span class="o">=</span> <span class="n">feature_fn</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">x_s2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">x_s</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">+=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">x_s</span>          <span class="c1"># 半梯度更新：w ← w + α·δ·x(s)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s2</span>
+    <span class="k">return</span> <span class="n">w</span>
+
+<span class="n">true_v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span> <span class="o">/</span> <span class="mf">6.0</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># 1) one-hot 特征：应复现表格 TD(0) 的结果</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="n">semi_gradient_td</span><span class="p">(</span><span class="n">RandomWalk</span><span class="p">(),</span> <span class="n">onehot_features</span><span class="p">,</span> <span class="n">episodes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one-hot 特征  V:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">w1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;表格 TD(0) 真值:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">true_v</span><span class="p">])</span>
+
+<span class="c1"># 2) RBF 特征：参数更少（5 个），靠泛化逼近同一真值</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="n">semi_gradient_td</span><span class="p">(</span><span class="n">RandomWalk</span><span class="p">(),</span> <span class="n">rbf_features</span><span class="p">,</span> <span class="n">episodes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">V_rbf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">w2</span> <span class="o">@</span> <span class="n">rbf_features</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RBF 特征     V:&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">V_rbf</span><span class="p">],</span> <span class="s2">&quot; (参数 w 只有 5 个)&quot;</span><span class="p">)</span>
+
+<span class="c1"># 预期输出（np.random.seed(42) 已固定，可复现）:</span>
+<span class="c1"># one-hot 特征  V: [&#39;0.128&#39;, &#39;0.249&#39;, &#39;0.432&#39;, &#39;0.682&#39;, &#39;0.826&#39;]</span>
+<span class="c1"># 表格 TD(0) 真值: [&#39;0.167&#39;, &#39;0.333&#39;, &#39;0.500&#39;, &#39;0.667&#39;, &#39;0.833&#39;]</span>
+<span class="c1"># RBF 特征     V: [&#39;0.152&#39;, &#39;0.266&#39;, &#39;0.433&#39;, &#39;0.633&#39;, &#39;0.811&#39;]  (参数 w 只有 5 个)</span>
+</code></pre></div>
+<p>代码要点：</p>
+<ol>
+<li><strong>半梯度更新</strong> <code>w += alpha * delta * x_s</code> 与 2.2 节公式逐项对应，
+   终止状态的特征向量取零向量（<span class="arithmatex">\(V_w(\text{终止}) = 0\)</span>）；</li>
+<li><strong>one-hot 特征</strong>下每个状态一个独立参数，更新互不干扰，等价于
+   表格 TD(0)，但 100 回合内只收敛到近似值（与第 4 章结论一致）；</li>
+<li><strong>RBF 特征</strong>下 5 个参数同时服务所有状态：访问 <span class="arithmatex">\(C\)</span> 的经验通过
+   高斯核的邻近性同时改善 <span class="arithmatex">\(B\)</span>、<span class="arithmatex">\(D\)</span> 的估值——这就是泛化，也是
+   RBF 版本收敛更接近真值的原因（信息在状态间流动）。</li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：线性函数逼近虽然理论优美，但特征工程是硬伤——瓦片编码、
+RBF 都需要人工设计且在高维空间失效。深度学习取代线性逼近的根本原因，
+不是"非线性更强"，而是<strong>特征可以自动从原始输入学出来</strong>。这正是
+本章第 3 节 DQN 做的事情。</p>
+</blockquote>
+<hr />
+<h2 id="dqn">三、DQN 开山之作</h2>
+<h3 id="31-rl-rl">3.1 背景：从经典 RL 到深度 RL 的跃迁</h3>
+<p>2013 年 Mnih 等人发表《Playing Atari with Deep Reinforcement Learning》，
+2015 年在 Nature 发表《Human-level control through deep reinforcement
+learning》。这是深度强化学习（Deep RL）的奠基工作：一个<strong>网络结构固定、
+不针对任何游戏定制</strong>的智能体，仅凭原始像素帧和奖励信号，在 49 个
+Atari 2600 游戏中达到超越人类专家的水平（2015 版为 57 个游戏）。</p>
+<p>DQN 之前，"Q-Learning + 深度网络"被认为不可行：第 4 章的 Q-Learning
+换成非线性函数逼近后，训练几乎必然震荡或发散（deadly triad，见本章
+第 7 节）。DQN 的贡献不是新的学习原理，而是<strong>两个工程机制</strong>让深度
+Q-Learning 第一次稳定可用：</p>
+<ol>
+<li><strong>经验回放（experience replay）</strong>：打破样本间的时序相关性；</li>
+<li><strong>目标网络（target network）</strong>：冻结 TD 目标，抑制自举的自我强化。</li>
+</ol>
+<p>其余部分（<span class="arithmatex">\(\epsilon\)</span>-greedy、Q-Learning 更新、贝尔曼方程）都是第 4 章
+的直接继承。理解 DQN 的关键，是分清"哪些是旧思想、哪些是新机制"。</p>
+<h3 id="32-cnn-atari">3.2 网络结构：CNN 处理 Atari 像素</h3>
+<p>DQN 的输入不是单个画面，而是<strong>最近 4 帧灰度图的堆叠</strong>（84×84×4）——
+单帧无法区分运动方向，帧堆叠把"速度/方向"编码进状态表示。网络主体是
+三层卷积（convolutional layer）+ 两层全连接：</p>
+<div class="highlight"><pre><span></span><code>输入: 最近 4 帧灰度图堆叠 (84 × 84 × 4)
+   │
+   ▼
+┌────────────────────────────────────────────────────────┐
+│ Conv1: 32 个 8×8 卷积核, stride=4, ReLU    → 20×20×32  │
+│ Conv2: 64 个 4×4 卷积核, stride=2, ReLU    →  9×9×64   │
+│ Conv3: 64 个 3×3 卷积核, stride=1, ReLU    →  7×7×64   │
+│ 展平 (flatten)                                        │
+│ FC: 512 个神经元, ReLU                     → 512      │
+│ 输出层: |A| 个线性单元（无激活）            → Q(s,·)   │
+└────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p><img alt="DQN 网络结构" src="../../img/05-dqn-network.png" /></p>
+<p>输出层的设计有一个关键决策：<strong>输出层为每个动作输出一个 Q 值</strong>
+<span class="arithmatex">\(Q_w(s, a)\)</span>，而不是"输入 (s, a) 对、输出单个 Q 值"。原因：</p>
+<table>
+<thead>
+<tr>
+<th>设计</th>
+<th>一次前向</th>
+<th><span class="arithmatex">\(\arg\max_a Q(s,a)\)</span></th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输出全部动作的 Q（DQN 方案）</td>
+<td>得到 $</td>
+<td>A</td>
+<td>$ 个 Q 值</td>
+</tr>
+<tr>
+<td>输入 (s,a) 输出单个 Q</td>
+<td>只得到 1 个 Q 值</td>
+<td>需 $</td>
+<td>A</td>
+</tr>
+</tbody>
+</table>
+<p>Atari 每个游戏的动作数通常 4~18 个，输出全部动作的方案让贪心动作选择
+从"18 次前向"降到"1 次前向"，且共享特征提取器。</p>
+<h3 id="33-cnn">3.3 为什么用 CNN</h3>
+<p>卷积网络（Convolutional Neural Network）天然适配像素输入：</p>
+<ol>
+<li><strong>局部感受野</strong>：卷积核只看局部邻域，符合图像"邻近像素相关"的先验；</li>
+<li><strong>参数共享</strong>：同一卷积核滑过整幅图像，参数量远小于全连接层
+   （84×84×4 全连接到 512 单元需要约 1450 万参数，三层卷积仅约
+   4.4 万参数）；</li>
+<li><strong>平移等变性</strong>：物体在画面中移动，其局部特征响应不变，利于
+   "乒乓球的球拍位置"这类空间不变特征的提取。</li>
+</ol>
+<h3 id="34">3.4 输入预处理流程</h3>
+<p>原始 210×160 彩色帧 → 网络输入 84×84×4 灰度帧，中间经过四步：</p>
+<div class="highlight"><pre><span></span><code>210×160 RGB ──► 灰度化 ──► 下采样到 84×84 ──► 取两帧逐像素 max（消闪）
+   ──► 最近 4 帧堆叠（84×84×4）──► 网络
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>预处理</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>灰度化</td>
+<td>颜色对游戏策略几乎无信息量，降为单通道减少计算</td>
+</tr>
+<tr>
+<td>下采样到 84×84</td>
+<td>降低分辨率，控制输入规模</td>
+</tr>
+<tr>
+<td>两帧逐像素取 max</td>
+<td>Atari 显示有闪烁（隔行渲染），取 max 消除闪烁伪影</td>
+</tr>
+<tr>
+<td>最近 4 帧堆叠</td>
+<td>编码运动信息（方向、速度）</td>
+</tr>
+<tr>
+<td>跳帧（frame skipping）</td>
+<td>每 4 帧选一次动作并重复执行，降低决策频率</td>
+</tr>
+<tr>
+<td><strong>奖励裁剪</strong>（reward clipping）</td>
+<td>奖励裁剪到 <span class="arithmatex">\([-1, +1]\)</span>：不同游戏奖励量纲差异巨大（乒乓 ±1，拳击 ±100），裁剪统一梯度尺度</td>
+</tr>
+</tbody>
+</table>
+<p>奖励裁剪是一个容易被低估的关键细节：它把"学习最优策略"与"学习
+奖励的量纲"解耦，让同一套超参数（学习率等）跨游戏通用。</p>
+<h3 id="35">3.5 实验结果与历史意义</h3>
+<p>Nature 2015 论文在 49 个 Atari 游戏中训练 DQN，超参数对所有游戏
+<strong>完全相同</strong>（2015 版扩展到 57 个游戏）。结果要点：</p>
+<table>
+<thead>
+<tr>
+<th>结果</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人类水平</td>
+<td>49 个游戏中 29 个超过人类专家（2015 版 57 个中 43 个）</td>
+</tr>
+<tr>
+<td>与既有方法对比</td>
+<td>显著超过此前所有学习方法（含线性逼近变体）</td>
+</tr>
+<tr>
+<td>训练成本</td>
+<td>单个游戏约 3800 万帧，训练数天（当时硬件）</td>
+</tr>
+</tbody>
+</table>
+<p>论文的两组关键消融直接验证了本章第 4 节两个机制的必要性：</p>
+<table>
+<thead>
+<tr>
+<th>消融</th>
+<th>现象</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>去掉经验回放（改在线更新）</td>
+<td>多数游戏分数大幅下降</td>
+<td>回放是稳定训练的必要组件</td>
+</tr>
+<tr>
+<td>去掉目标网络（目标用在线网络计算）</td>
+<td>部分游戏训练发散</td>
+<td>目标网络抑制自举失稳</td>
+</tr>
+<tr>
+<td>用线性逼近替代 CNN</td>
+<td>平均分数显著低于 CNN 版本</td>
+<td>特征自动学习带来实质收益</td>
+</tr>
+</tbody>
+</table>
+<p>历史意义：DQN 是第一个"<strong>输入原始感官信号、输出动作、跨任务通用</strong>"
+的深度 RL 系统。它的"卷积网络 + 经验回放 + 目标网络"三件套成为
+后续所有深度 value-based 方法的标准骨架，并直接启发了 DDPG、TD3、
+SAC 等连续控制算法（第 7 章）——后者沿用回放与目标网络，只是把
+<span class="arithmatex">\(\arg\max\)</span> 换成了策略网络。</p>
+<hr />
+<h2 id="dqn_1">四、DQN 两大神器：经验回放与目标网络</h2>
+<h3 id="41-experience-replay">4.1 经验回放（Experience Replay）</h3>
+<p><strong>问题：样本相关性。</strong> 在线 TD 学习按时间顺序消费经验，相邻样本
+<span class="arithmatex">\((s_t, a_t, r_t, s_{t+1})\)</span> 与 <span class="arithmatex">\((s_{t+1}, a_{t+1}, r_{t+1}, s_{t+2})\)</span>
+高度相关（自相关）。用强相关的 mini-batch 做梯度下降，更新方向彼此
+抵消，等效于在高方差噪声中优化，训练震荡。</p>
+<p><strong>问题：样本效率。</strong> 在线学习每条经验只用一次即丢弃。而一条
+"到达宝藏"的稀有经验可能价值极高，值得反复学习。</p>
+<p><strong>问题：非平稳数据分布。</strong> 策略在变、价值估计在变，在线数据的分布
+也在变，违背了监督学习对数据 i.i.d. 的假设。</p>
+<p><strong>方案：</strong> 维护一个经验池（replay buffer）<span class="arithmatex">\(\mathcal{D}\)</span>，把每条经验
+<span class="arithmatex">\((s, a, r, s', \text{done})\)</span> 存入；训练时从池中<strong>均匀随机采样</strong>
+mini-batch。这同时解决三个问题：随机采样打断时序相关性（近似 i.i.d.）、
+每条经验可被多次使用（样本效率）、训练分布相对稳定（平稳性）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ReplayBuffer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;经验回放缓冲：环形队列（cap 条），均匀随机采样 mini-batch&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buf</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">capacity</span><span class="p">)</span>   <span class="c1"># 超容量自动丢弃最旧经验</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;存入一条经验 (状态, 动作, 奖励, 下一状态, 是否终止)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;均匀随机采样 batch_size 条经验，按字段拆成数组返回&quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+        <span class="n">s</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">a</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">r</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">s2</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">)</span>
+
+<span class="c1"># 预期输出: 无（类定义）；第 8 章实验将直接使用本类</span>
+</code></pre></div>
+<p>注意：均匀采样是<strong>uniform replay</strong>，即"不加选择地随机回放"。它的局限
+是忽略了经验之间的信息量差异——这正是本章第 6 节 Prioritized Replay
+的改进动机。</p>
+<blockquote>
+<p><strong>核心思想</strong>：经验回放把"强化学习问题"改造成"监督学习问题"——数据
+从"策略实时产生的时序流"变成"从固定池中的均匀抽样"。这一改造牺牲了
+在线性（off-policy 训练成为必需），换来了深度学习的稳定性前提。</p>
+</blockquote>
+<h3 id="42-target-network">4.2 目标网络（Target Network）</h3>
+<p><strong>问题：追着移动的靶子。</strong> DQN 的 TD 目标是：</p>
+<div class="arithmatex">\[y_t = r + \gamma \max_{a'} Q_w(s', a')\]</div>
+<p>目标 <span class="arithmatex">\(y_t\)</span> 依赖当前参数 <span class="arithmatex">\(w\)</span>。每步更新 <span class="arithmatex">\(w\)</span>，所有目标 <span class="arithmatex">\(y_t\)</span> 也随之
+移动——优化目标本身非平稳。梯度下降在"自己移动的靶子"上优化，
+容易震荡甚至发散。</p>
+<p><strong>方案：</strong> 维护<strong>两份参数</strong>：在线网络 <span class="arithmatex">\(Q_w\)</span>（负责选动作、被训练）与
+目标网络 <span class="arithmatex">\(Q_{w^-}\)</span>（负责计算 TD 目标）。目标网络不参与训练，只是
+每 <span class="arithmatex">\(C\)</span> 步（如 10000 步）把在线网络的参数<strong>硬复制</strong>过去：</p>
+<div class="arithmatex">\[y_t = r + \gamma \max_{a'} Q_{w^-}(s', a')\]</div>
+<p>梯度只流向 <span class="arithmatex">\(Q_w(s, a)\)</span> 一侧，<span class="arithmatex">\(Q_{w^-}\)</span> 在两次复制之间保持冻结。这使
+TD 目标在 <span class="arithmatex">\(C\)</span> 步内<strong>近似恒定</strong>，训练变成"对固定目标做监督学习"，
+大幅降低自举的自我强化效应。</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>解决的相关性</th>
+<th>机制细节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经验回放</td>
+<td>样本间<strong>时序</strong>相关性</td>
+<td>均匀采样打乱顺序，近似 i.i.d.</td>
+</tr>
+<tr>
+<td>目标网络</td>
+<td>目标与预测的<strong>耦合</strong></td>
+<td>冻结目标网络 <span class="arithmatex">\(Q_{w^-}\)</span>，每 <span class="arithmatex">\(C\)</span> 步复制参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-vs">4.3 硬更新 vs 软更新</h3>
+<p>DQN 原版采用<strong>硬更新（hard update）</strong>：每 <span class="arithmatex">\(C\)</span> 步整体复制
+<span class="arithmatex">\(w^- \leftarrow w\)</span>。后续算法（DDPG、TD3、SAC）常用<strong>软更新（soft
+update / Polyak averaging）</strong>：每步做指数滑动平均
+<span class="arithmatex">\(w^- \leftarrow \tau w + (1-\tau) w^-\)</span>。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>硬更新（DQN 原版）</th>
+<th>软更新（Polyak 平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新公式</td>
+<td><span class="arithmatex">\(w^- \leftarrow w\)</span>（每 <span class="arithmatex">\(C\)</span> 步）</td>
+<td><span class="arithmatex">\(w^- \leftarrow \tau w + (1-\tau) w^-\)</span>（每步）</td>
+</tr>
+<tr>
+<td>目标变化方式</td>
+<td>阶梯式突变，周期内恒定</td>
+<td>平滑渐进，每步微小移动</td>
+</tr>
+<tr>
+<td>关键超参数</td>
+<td>复制周期 <span class="arithmatex">\(C\)</span>（Nature 取 10000）</td>
+<td>插值系数 <span class="arithmatex">\(\tau\)</span>（常取 0.005）</td>
+</tr>
+<tr>
+<td>目标滞后程度</td>
+<td>滞后 <span class="arithmatex">\(C\)</span> 步（目标陈旧但稳定）</td>
+<td>滞后约 <span class="arithmatex">\(1/\tau\)</span> 步（目标新鲜但总在动）</td>
+</tr>
+<tr>
+<td>训练稳定性</td>
+<td>周期内目标恒定，稳定</td>
+<td>目标缓慢漂移，需更小学习率配合</td>
+</tr>
+<tr>
+<td>收敛速度</td>
+<td>目标陈旧可能拖慢学习</td>
+<td>目标跟踪更紧，通常收敛更快</td>
+</tr>
+<tr>
+<td>典型使用者</td>
+<td>DQN 及家族（Double/Dueling/Rainbow）</td>
+<td>DDPG、TD3、SAC 等连续控制算法</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：硬更新与软更新是"目标稳定性"与"目标新鲜度"之间的
+同一个旋钮。目标越陈旧越稳定（但学得慢），越新鲜越跟手（但易震荡）。
+<span class="arithmatex">\(C\)</span> 与 <span class="arithmatex">\(\tau\)</span> 分别控制这两种更新在时间轴上的滞后尺度。</p>
+</blockquote>
+<hr />
+<h2 id="dqn_2">五、DQN 训练流程</h2>
+<h3 id="51">5.1 完整循环</h3>
+<p>DQN 的完整数据流把环境交互、经验存储、离线训练、目标同步组织成
+一个闭环：</p>
+<div class="highlight"><pre><span></span><code>                    ┌────────────────────────────────────┐
+                    │            环境（Atari 模拟器）      │
+                    └───────▲───────────────────┬────────┘
+                            │ 状态 s_t          │ 动作 a_t
+                            │ (84×84×4 帧堆叠)  │ (ε-greedy 采样)
+                            ▼                   │
+        ┌──────────────────────────┐            │
+        │  经验回放缓冲 D          │◄───────────┤
+        │  (s, a, r, s&#39;, done)     │  push 每条经验
+        └───────────▲──────────────┘            │
+                    │                            │
+                    │ 每 4 步: 均匀采样 batch    │
+                    │                           ▼
+        ┌───────────┴──────────────┐   ┌────────────────────────┐
+        │  在线网络 Q_w            │   │  目标网络 Q_{w^-}      │
+        │  ① 前向: Q_w(s,a)        │   │  ② 前向: max_{a&#39;}     │
+        │  ③ 对 (y - Q_w)² 求梯度  │   │     Q_{w^-}(s&#39;,a&#39;)    │
+        │  ④ SGD/Adam 更新 w       │   │                        │
+        └───────────┬──────────────┘   └───────────▲────────────┘
+                    │                              │
+                    └── 每 C 步: w^- ← w (硬复制) ──┘
+</code></pre></div>
+<p>四个环节的分工：<strong>环境</strong>产生经验 → <strong>回放池</strong>存储并打乱经验 →
+<strong>在线网络</strong>是唯一被训练的对象 → <strong>目标网络</strong>提供稳定的 TD 目标并
+周期性同步。</p>
+<h3 id="52">5.2 损失函数与梯度</h3>
+<p>DQN 在 mini-batch 上最小化<strong>时序差分均方误差</strong>（TD MSE）：</p>
+<div class="arithmatex">\[
+\mathcal{L}(w) = \mathbb{E}_{(s, a, r, s') \sim \mathcal{D}}
+\left[
+\left(
+\underbrace{r + \gamma \max_{a'} Q_{w^-}(s', a')}_{y \; \text{（TD 目标，用冻结的 } w^- \text{ 计算）}}
+- Q_w(s, a)
+\right)^2
+\right]
+\]</div>
+<p>对 <span class="arithmatex">\(w\)</span> 求梯度（目标 <span class="arithmatex">\(y\)</span> 视为常数，不反向传播——这是 2.2 节半梯度
+思想在深度网络中的直接延续）：</p>
+<div class="arithmatex">\[
+\nabla_w \mathcal{L}(w) =
+-2\, \mathbb{E}_{(s, a, r, s') \sim \mathcal{D}}
+\left[
+\left(y - Q_w(s, a)\right) \nabla_w Q_w(s, a)
+\right]
+\]</div>
+<p>两个实现细节：</p>
+<ol>
+<li><strong>只更新选中动作的输出</strong>：梯度 <span class="arithmatex">\(\nabla_w Q_w(s,a)\)</span> 只针对 batch 中
+   实际执行的动作 <span class="arithmatex">\(a\)</span>；其他动作的输出单元不产生梯度（<span class="arithmatex">\(\arg\max\)</span>
+   操作不可微，且无需微）；</li>
+<li><strong>终止状态处理</strong>：若 <span class="arithmatex">\(s'\)</span> 是终止状态，目标退化为 <span class="arithmatex">\(y = r\)</span>
+   （<span class="arithmatex">\(V(\text{终止}) = 0\)</span>），对应伪代码中的 <code>if done: y = r</code> 分支。</li>
+</ol>
+<p>实际实现常把 MSE 换成 <strong>Huber loss</strong>（<span class="arithmatex">\(\delta=1\)</span> 时对残差分段线性），
+对离群 TD 误差更鲁棒：</p>
+<div class="arithmatex">\[
+L_{\text{Huber}}(y, \hat{y}) =
+\begin{cases}
+\frac{1}{2}(y - \hat{y})^2, &amp; |y - \hat{y}| \le 1 \\
+|y - \hat{y}| - \frac{1}{2}, &amp; \text{otherwise}
+\end{cases}
+\]</div>
+<h3 id="53-nature-dqn">5.3 伪代码（Nature DQN）</h3>
+<div class="highlight"><pre><span></span><code>算法: Deep Q-Network（Nature 2015 版）
+──────────────────────────────────────────────────────────────
+输入: 学习率 α，折扣 γ，回放容量 N，目标更新周期 C，batch 大小 B
+ 1. 初始化在线网络参数 w，目标网络参数 w⁻ ← w
+ 2. 初始化回放缓冲 D（容量 N），ε = 1.0
+ 3. for episode = 1, 2, ... do
+ 4.    重置环境，预处理得到初始帧堆叠 s
+ 5.    for t = 1, 2, ... do
+ 6.        以概率 ε 随机选动作 a；否则 a = argmax_a Q_w(s, a)
+ 7.        执行 a，观测奖励 r 与下一帧；预处理得到 s&#39;
+ 8.        r ← clip(r, -1, 1)                     # 奖励裁剪
+ 9.        D.push(s, a, r, s&#39;, done)              # 存入回放池
+10.        s ← s&#39;
+11.        if t 是 4 的倍数 且 |D| ≥ B:            # 每 4 步训练一次
+12.            从 D 均匀采样 mini-batch (s_j, a_j, r_j, s&#39;_j, done_j)
+13.            y_j = r_j                          # 若 done_j 为真
+14.            否则 y_j = r_j + γ · max_{a&#39;} Q_{w⁻}(s&#39;_j, a&#39;)
+15.            对损失 (1/B)·Σ_j (y_j - Q_w(s_j, a_j))² 做一步梯度下降
+16.        if t 是 C 的倍数: w⁻ ← w               # 硬更新目标网络
+17.        if done: break
+18.    ε ← max(0.1, ε - 退火步长)                 # ε 线性退火到 0.1
+</code></pre></div>
+<h3 id="54">5.4 超参数与训练细节</h3>
+<p>Nature DQN 的超参数设置（这套参数跨 49 个游戏通用，是"通用性"的
+重要体现）：</p>
+<table>
+<thead>
+<tr>
+<th>超参数</th>
+<th>取值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回放容量 <span class="arithmatex">\(N\)</span></td>
+<td>1,000,000</td>
+<td>环形缓冲，满后覆盖最旧经验</td>
+</tr>
+<tr>
+<td>探索 ε</td>
+<td>1.0 → 0.1 线性退火</td>
+<td>前 1,000,000 帧完成退火</td>
+</tr>
+<tr>
+<td>训练频率</td>
+<td>每 4 步</td>
+<td>与跳帧配合，降低计算量</td>
+</tr>
+<tr>
+<td>mini-batch 大小 <span class="arithmatex">\(B\)</span></td>
+<td>32</td>
+<td></td>
+</tr>
+<tr>
+<td>优化器与学习率</td>
+<td>RMSProp, 0.00025（2015）；Adam, 0.00025（2013）</td>
+<td>梯度裁剪到 <span class="arithmatex">\([-1,1]\)</span></td>
+</tr>
+<tr>
+<td>折扣因子 <span class="arithmatex">\(\gamma\)</span></td>
+<td>0.99</td>
+<td></td>
+</tr>
+<tr>
+<td>目标网络更新周期 <span class="arithmatex">\(C\)</span></td>
+<td>10,000 步</td>
+<td>硬复制</td>
+</tr>
+<tr>
+<td>奖励裁剪</td>
+<td><span class="arithmatex">\(\text{clip}(r, -1, 1)\)</span></td>
+<td>统一量纲</td>
+</tr>
+<tr>
+<td>跳帧</td>
+<td>4 帧</td>
+<td>每 4 帧选一次动作</td>
+</tr>
+<tr>
+<td>热身（warm-up）</td>
+<td>前 50,000 步只采样不训练</td>
+<td>先填满回放池</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：DQN 的训练循环是"第 4 章 Q-Learning 骨架 + 回放池 +
+目标网络"的组合。理解它的最好方式不是背伪代码，而是追踪一条经验
+的完整生命周期：<strong>产生（环境）→ 存储（回放池）→ 采样（均匀随机）
+→ 打目标（目标网络）→ 学梯度（在线网络）→ 同步（硬复制）</strong>。</p>
+</blockquote>
+<hr />
+<h2 id="dqn_3">六、DQN 家族演进</h2>
+<p>DQN 之后三年内出现了一系列针对性改进，每个改进解决一个具体缺陷，
+最终在 Rainbow（2018）中集成。理解这个家族的正确姿势是：<strong>先明确
+每个算法解决什么问题，再看它改动了训练循环的哪个环节</strong>。</p>
+<h3 id="61-double-dqn">6.1 Double DQN：对抗过估计</h3>
+<p><strong>问题：过估计（overestimation）。</strong> 第 4 章 5.2 节已经讲过最大化偏差：
+<span class="arithmatex">\(\mathbb{E}[\max X] \ge \max \mathbb{E}[X]\)</span>。Q-Learning 的
+<span class="arithmatex">\(\max_{a'} Q(s', a')\)</span> 在估计噪声存在时系统性<strong>高估</strong>价值。深度版本
+更严重：函数逼近误差 + 自举让过估计在训练中<strong>自我放大</strong>——高估的
+动作被更频繁地选择，其高估又被进一步学习，形成恶性循环，最终导致
+策略退化（选择实际劣质的动作）。</p>
+<p><strong>方案：解耦"选择"与"评估"。</strong> 第 4 章的 Double Q-Learning 用两套
+独立 Q 表；Double DQN（van Hasselt et al., 2016）发现 DQN 已有的
+<strong>两个网络</strong>（在线 + 目标）恰好可以承担这个角色，无需额外参数：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>TD 目标 <span class="arithmatex">\(y\)</span></th>
+<th>谁选动作</th>
+<th>谁评估</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DQN</td>
+<td><span class="arithmatex">\(r + \gamma \max_{a'} Q_{w^-}(s', a')\)</span></td>
+<td>目标网络（max 内含选择）</td>
+<td>目标网络</td>
+</tr>
+<tr>
+<td><strong>Double DQN</strong></td>
+<td><span class="arithmatex">\(r + \gamma Q_{w^-}\!\left(s', \arg\max_{a'} Q_w(s', a')\right)\)</span></td>
+<td><strong>在线网络</strong> <span class="arithmatex">\(Q_w\)</span></td>
+<td><strong>目标网络</strong> <span class="arithmatex">\(Q_{w^-}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>展开对比：</p>
+<div class="arithmatex">\[
+y^{\text{DQN}} = r + \gamma \max_{a'} Q_{w^-}(s', a')
+\]</div>
+<div class="arithmatex">\[
+\boxed{\; y^{\text{DDQN}} = r + \gamma \, Q_{w^-}\!\left(s', \arg\max_{a'} Q_w(s', a')\right) \;}
+\]</div>
+<p>在线网络 <span class="arithmatex">\(Q_w\)</span> 选择"它认为最优"的动作，目标网络 <span class="arithmatex">\(Q_{w^-}\)</span> 对该动作
+给出<strong>独立的估值</strong>。两个网络的估计误差近似独立，过估计的正偏差被
+期望上抵消。实现改动极小（一行公式），在 Atari 上估值更准、分数
+普遍提升，且对 DQN 是<strong>免费午餐</strong>——不增加任何计算或超参数。</p>
+<blockquote>
+<p><strong>核心思想</strong>：过估计的根源是"用同一个估计器既选择又评估"。Double
+DQN 的洞察是 DQN 本来就有两个网络，让它们分工即可——这也是
+"最大化偏差"理论（第 4 章）在深度 RL 中的直接应用。</p>
+</blockquote>
+<h3 id="62-dueling-dqn">6.2 Dueling DQN：优势分解</h3>
+<p><strong>问题：价值被"动作无关"的部分主导。</strong> 在很多状态下，动作选择对
+回报几乎没有影响（例如 Atari 游戏里屏幕上没有敌人时，左右移动都
+一样）。此时 <span class="arithmatex">\(Q(s,a)\)</span> 中"状态价值" <span class="arithmatex">\(V(s)\)</span> 占主导，而"动作优势"
+<span class="arithmatex">\(A(s,a) = Q(s,a) - V(s)\)</span> 很小。标准 DQN 为每个动作分别估计 Q 值，
+把大量容量浪费在重复学习 <span class="arithmatex">\(V(s)\)</span> 上。</p>
+<p><strong>方案：双头分解。</strong> Dueling DQN（Wang et al., 2016）把网络输出层
+拆成两个头：状态价值头 <span class="arithmatex">\(V(s)\)</span> 与优势头 <span class="arithmatex">\(A(s,a)\)</span>，再合成 Q 值：</p>
+<div class="arithmatex">\[
+Q(s, a) = V(s) + A(s, a)
+\]</div>
+<p>直接相加存在<strong>可辨识性问题</strong>：<span class="arithmatex">\(V\)</span> 与 <span class="arithmatex">\(A\)</span> 的分解不唯一（给 <span class="arithmatex">\(V\)</span> 加
+常数、给 <span class="arithmatex">\(A\)</span> 减同一常数，Q 不变）。强制优势头对动作取零均值：</p>
+<div class="arithmatex">\[
+Q(s, a) = V(s) + \left[ A(s, a) - \max_{a'} A(s, a') \right]
+\]</div>
+<p>实际实现常用均值形式（训练更稳）：</p>
+<div class="arithmatex">\[
+Q(s, a) = V(s) + \left[ A(s, a) - \frac{1}{|\mathcal{A}|}\sum_{a'} A(s, a') \right]
+\]</div>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>标准 DQN</th>
+<th>Dueling DQN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输出头</td>
+<td>单一 Q 头，$</td>
+<td>A</td>
+</tr>
+<tr>
+<td>学习内容</td>
+<td>每个动作独立学 Q</td>
+<td><span class="arithmatex">\(V\)</span> 头学状态价值，<span class="arithmatex">\(A\)</span> 头学相对优势</td>
+</tr>
+<tr>
+<td>动作无关状态</td>
+<td>各动作重复学习相同 <span class="arithmatex">\(V\)</span></td>
+<td><span class="arithmatex">\(V\)</span> 头一次性捕获，容量高效</td>
+</tr>
+<tr>
+<td>理论保证</td>
+<td>—</td>
+<td>与 DQN 同框架，无额外假设</td>
+</tr>
+<tr>
+<td>效果</td>
+<td>基线</td>
+<td>动作冗余场景（如 Enduro）显著提升</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-prioritized-experience-replay">6.3 Prioritized Experience Replay：按重要性采样</h3>
+<p><strong>问题：均匀采样浪费算力。</strong> 回放池里不同经验的"学习价值"差异巨大：
+TD 误差 <span class="arithmatex">\(|\delta|\)</span> 大的经验（如"意外发现宝藏"）离当前估计最远，
+信息量最大；误差接近零的经验（已被学透）几乎不提供新信息。均匀采样
+对两者一视同仁，导致高频重放"已学透"的经验。</p>
+<p><strong>方案：按 TD 误差优先采样。</strong> Prioritized Replay（Schaul et al.,
+2016）给每条经验 <span class="arithmatex">\(i\)</span> 分配采样概率：</p>
+<div class="arithmatex">\[
+P(i) = \frac{p_i^{\alpha}}{\sum_j p_j^{\alpha}}, \qquad
+p_i = |\delta_i| + \epsilon
+\]</div>
+<p>其中 <span class="arithmatex">\(\alpha \in [0, 1]\)</span> 控制优先程度（<span class="arithmatex">\(\alpha = 0\)</span> 退化为均匀采样），
+<span class="arithmatex">\(\epsilon\)</span> 是防止零概率的小常数。为稳定性常用<strong>排名版</strong>：
+<span class="arithmatex">\(p_i = 1/\text{rank}(i)\)</span>（按 <span class="arithmatex">\(|\delta_i|\)</span> 降序排名），对离群误差更鲁棒。</p>
+<p><strong>偏差修正：重要性采样权重。</strong> 优先采样改变了数据分布（不再是均匀），
+引入估计偏差。用重要性采样（importance sampling, IS）权重修正：</p>
+<div class="arithmatex">\[
+w_i = \left(N \cdot P(i)\right)^{-\beta}
+\]</div>
+<p><span class="arithmatex">\(\beta\)</span> 从 0.4 线性退火到 1.0——训练初期允许一定偏差（加速学习），
+后期 <span class="arithmatex">\(\beta \to 1\)</span> 完全修正（保证收敛）。权重在梯度更新时乘到损失上，
+且归一化（除以 <span class="arithmatex">\(\max_i w_i\)</span>）保持梯度尺度稳定。</p>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>均匀回放（DQN）</th>
+<th>优先回放（PER）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>采样分布</td>
+<td>均匀</td>
+<td>$P(i) \propto</td>
+</tr>
+<tr>
+<td>新经验入池</td>
+<td>无特殊处理</td>
+<td>$</td>
+</tr>
+<tr>
+<td>误差更新</td>
+<td>无</td>
+<td>每次训练后更新对应经验的 <span class="arithmatex">\(p_i\)</span>（或排名）</td>
+</tr>
+<tr>
+<td>分布偏差</td>
+<td>无</td>
+<td>用 IS 权重 <span class="arithmatex">\(w_i\)</span> 修正</td>
+</tr>
+<tr>
+<td>额外超参数</td>
+<td>无</td>
+<td><span class="arithmatex">\(\alpha\)</span>、<span class="arithmatex">\(\beta\)</span>、<span class="arithmatex">\(\epsilon\)</span></td>
+</tr>
+<tr>
+<td>效果</td>
+<td>基线</td>
+<td>样本效率与最终分数显著提升</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64">6.4 其他三个组件</h3>
+<p><strong>Multi-step Learning（n 步目标）。</strong> 把单步 TD 目标换成 n 步回报
+（第 4 章 6.2 节）：</p>
+<div class="arithmatex">\[
+y = \sum_{k=0}^{n-1} \gamma^k r_{t+k} + \gamma^n \max_{a'} Q_{w^-}(s_{t+n}, a')
+\]</div>
+<p>n 步目标让奖励信号沿轨迹传播得更快，加速信用分配；代价是偏差上升、
+且 off-policy 下目标不再严格正确（行为策略与目标策略在 n 步内可能
+不一致）。<span class="arithmatex">\(n = 3\)</span> 左右是 Atari 上的经验最优。</p>
+<p><strong>Distributional RL（分布 RL）。</strong> 标准 DQN 只预测回报的<strong>期望</strong>
+<span class="arithmatex">\(Q(s,a)\)</span>，把分布的丰富信息压缩成一个标量。Distributional DQN
+（C51，Bellemare et al., 2017）改为预测回报的<strong>完整分布</strong>：把价值
+轴离散成 51 个桶，网络输出每个桶上的概率，用分布间距离（如 KL
+散度）做损失。随机转移下分布比期望稳定得多，且期望可从分布恢复
+（<span class="arithmatex">\(\mathbb{E}[Z] = \sum_i z_i p_i\)</span>）。<strong>为什么有效</strong>：期望运算会
+"破坏"非对称分布的信息，而分布学习保留了不确定性结构，实际表现
+更强、更稳。</p>
+<p><strong>Noisy Nets（噪声网络）。</strong> <span class="arithmatex">\(\epsilon\)</span>-greedy 的探索是"盲目随机"，
+且 <span class="arithmatex">\(\epsilon\)</span> 退火是手动设定的。Noisy Nets（Fortunato et al., 2018）
+把探索<strong>参数化</strong>：网络权重叠加可学习的高斯噪声
+<span class="arithmatex">\(w = \mu + \sigma \odot \epsilon\)</span>，噪声幅度 <span class="arithmatex">\(\sigma\)</span> 由梯度学习。
+网络会自动学会"什么时候该探索、探索多大"——训练初期噪声大（探索），
+后期噪声被压小（利用），探索随训练<strong>自适应衰减</strong>，无需 <span class="arithmatex">\(\epsilon\)</span>
+调度。</p>
+<h3 id="65-rainbow">6.5 Rainbow：七组件集成</h3>
+<p>Rainbow（Hessel et al., 2018）把上述六个组件与 DQN 本身集成：
+<strong>DDQN + Dueling + Prioritized Replay + Multi-step + Distributional
+(Distributional DQN) + Noisy Nets</strong>，共六个改进 + 基线 DQN。论文做了
+系统的<strong>消融实验（ablation study）</strong>：逐一移除组件，确认每个组件
+独立有效、且组件间有正交互作用（移除任一组件都会掉分，但不同组件
+的贡献因游戏而异）。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>解决的问题</th>
+<th>在 Rainbow 中的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Double DQN</td>
+<td>过估计</td>
+<td>解耦动作选择与评估</td>
+</tr>
+<tr>
+<td>Dueling</td>
+<td>动作无关状态下的容量浪费</td>
+<td><span class="arithmatex">\(V\)</span> / <span class="arithmatex">\(A\)</span> 双头分解</td>
+</tr>
+<tr>
+<td>Prioritized Replay</td>
+<td>均匀采样低效</td>
+<td>按 $</td>
+</tr>
+<tr>
+<td>Multi-step</td>
+<td>单步信用分配慢</td>
+<td><span class="arithmatex">\(n\)</span> 步回报加速传播</td>
+</tr>
+<tr>
+<td>Distributional</td>
+<td>只学期望丢失分布信息</td>
+<td>51 桶分布输出 + KL 损失</td>
+</tr>
+<tr>
+<td>Noisy Nets</td>
+<td><span class="arithmatex">\(\epsilon\)</span>-greedy 探索不自适应</td>
+<td>参数化噪声探索</td>
+</tr>
+</tbody>
+</table>
+<p>Rainbow 在 Atari 57 个游戏上的平均分与样本效率远超单一组件，是
+2018 年 value-based 方法的 SOTA，也是 DQN 家族演进的终点站
+（之后 value-based 研究转向分布式与离线 RL）。</p>
+<p><img alt="DQN 家族演进" src="../../img/05-dqn-family.png" /></p>
+<h3 id="66-dqn">6.6 DQN 家族演进总览表</h3>
+<table>
+<thead>
+<tr>
+<th>算法（年份）</th>
+<th>解决的问题</th>
+<th>核心改动</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DQN（2013/2015）</td>
+<td>深度网络 + Q-Learning 不稳定</td>
+<td>经验回放 + 目标网络 + CNN</td>
+<td>首个 Atari 人类水平智能体</td>
+</tr>
+<tr>
+<td>Double DQN（2016）</td>
+<td>max 导致系统性过估计</td>
+<td>在线网络选动作、目标网络估值</td>
+<td>估值更准，分数普遍提升，零额外成本</td>
+</tr>
+<tr>
+<td>Dueling DQN（2016）</td>
+<td>动作无关状态浪费容量</td>
+<td><span class="arithmatex">\(Q = V + A\)</span> 双头分解</td>
+<td>动作冗余游戏显著提升</td>
+</tr>
+<tr>
+<td>Prioritized Replay（2016）</td>
+<td>均匀采样忽略信息量差异</td>
+<td>按 $</td>
+<td>\delta</td>
+</tr>
+<tr>
+<td>Multi-step（2017 用于 DQN）</td>
+<td>单步目标信用传播慢</td>
+<td><span class="arithmatex">\(n\)</span> 步回报目标</td>
+<td>加速学习，<span class="arithmatex">\(n=3\)</span> 最优</td>
+</tr>
+<tr>
+<td>Distributional DQN（2017）</td>
+<td>期望压缩丢失分布信息</td>
+<td>输出回报分布（51 桶）+ KL 损失</td>
+<td>更稳更强</td>
+</tr>
+<tr>
+<td>Noisy Nets（2018）</td>
+<td><span class="arithmatex">\(\epsilon\)</span>-greedy 探索不自适应</td>
+<td>权重加可学习噪声</td>
+<td>探索自适应，无需 <span class="arithmatex">\(\epsilon\)</span> 调度</td>
+</tr>
+<tr>
+<td>Rainbow（2018）</td>
+<td>单一改进各有短板</td>
+<td>六组件集成 + 消融验证</td>
+<td>当时 value-based SOTA</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：DQN 家族演进的每一步都是"<strong>定位一个具体缺陷 → 在训练
+循环的某个环节做最小改动</strong>"：Double 改目标公式、Dueling 改网络结构、
+PER 改采样器、Multi-step 改目标跨度、Distributional 改输出层、
+Noisy 改探索机制。它们互不冲突、可以叠加——这正是 Rainbow 能集成的
+原因，也是理解整个家族的纲。</p>
+</blockquote>
+<hr />
+<h2 id="deadly-triad">七、收敛性与挑战：deadly triad</h2>
+<h3 id="71-deadly-triad">7.1 致命三要素（Deadly Triad）</h3>
+<p>Sutton &amp; Barto 指出：当以下三个条件<strong>同时</strong>满足时，强化学习可能发散：</p>
+<ol>
+<li><strong>函数逼近（function approximation）</strong>：价值用参数化函数表示，
+   而非查表；</li>
+<li><strong>自举（bootstrapping）</strong>：更新目标包含自身的估计
+   （<span class="arithmatex">\(r + \gamma \hat{V}(s')\)</span> 依赖 <span class="arithmatex">\(\hat{V}\)</span>）；</li>
+<li><strong>off-policy 训练</strong>：行为策略（采样数据的策略）与目标策略
+   （评估/优化的策略）不一致。</li>
+</ol>
+<p>三要素的缺失与收敛性的关系：</p>
+<table>
+<thead>
+<tr>
+<th>组合</th>
+<th>缺失要素</th>
+<th>收敛性</th>
+<th>代表方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表格 + 自举 + on-policy</td>
+<td>函数逼近</td>
+<td>以概率 1 收敛</td>
+<td>表格 TD(0)、SARSA</td>
+</tr>
+<tr>
+<td>表格 + 自举 + off-policy</td>
+<td>函数逼近</td>
+<td>收敛（有限状态 + GLIE）</td>
+<td>Q-Learning、Double Q-Learning</td>
+</tr>
+<tr>
+<td>线性 + 自举 + on-policy</td>
+<td>off-policy</td>
+<td>收敛到 TD 不动点（有界误差）</td>
+<td>半梯度 TD(0)（本章第 2 节）</td>
+</tr>
+<tr>
+<td>线性 + 自举 + off-policy</td>
+<td>无</td>
+<td><strong>可能发散</strong>（Baird 反例）</td>
+<td>线性 off-policy 半梯度 TD</td>
+</tr>
+<tr>
+<td>非线性 + 自举 + off-policy</td>
+<td>无</td>
+<td><strong>可能发散</strong>，无理论保证</td>
+<td>原始 DQN（未加回放/目标网络时）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：第 2~4 章的所有收敛定理都建立在"至少缺一个要素"之上。
+深度 RL（DQN 及其家族）是<strong>三项全占</strong>的配置——因此没有任何收敛
+定理背书，稳定训练完全依赖工程手段。这就是"为什么 DQN 需要那么多
+技巧"的根本答案。</p>
+</blockquote>
+<h3 id="72-baird">7.2 失败模式：Baird 反例与误差自我强化</h3>
+<p><strong>Baird 反例（Baird's counterexample）</strong>是线性 off-policy 半梯度 TD
+发散的经典构造：一个 7 状态、2 动作的 MDP，目标策略把 6 个状态
+（<span class="arithmatex">\(s_2 \sim s_7\)</span>）映射到同一动作，行为策略则偶尔选另一个动作。在
+该设置下，线性半梯度 TD(0) 的参数 <span class="arithmatex">\(w\)</span> <strong>指数级发散</strong>——即使步长
+<span class="arithmatex">\(\alpha\)</span> 任意小。这个反例证明了：off-policy + 自举 + 函数逼近的组合
+下，"半梯度"更新<strong>不是任何目标函数的梯度下降</strong>，可能沿错误方向
+持续放大误差。</p>
+<p>失败模式的共性机制可以归纳为<strong>误差自我强化循环</strong>：</p>
+<div class="highlight"><pre><span></span><code>估计误差放大价值偏差
+      ▲                  │
+      │                  ▼
+行为策略选择被高估的动作 ──► 该动作被更频繁采样 ──► 高估被进一步学习
+</code></pre></div>
+<p>off-policy 让"被高估的动作"获得更多数据（分布偏移），自举让高估
+通过 TD 目标传播到所有前驱状态，函数逼近让误差在参数空间叠加——
+三者在循环中互相放大，最终数值溢出。</p>
+<h3 id="73">7.3 缓解手段表</h3>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>缓解的环节</th>
+<th>作用机制</th>
+<th>代表算法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经验回放</td>
+<td>分布偏移</td>
+<td>打乱时序相关性，稳定数据分布</td>
+<td>DQN</td>
+</tr>
+<tr>
+<td>目标网络</td>
+<td>自举目标移动</td>
+<td>冻结 TD 目标，切断误差即时反馈</td>
+<td>DQN、DDPG</td>
+</tr>
+<tr>
+<td>梯度裁剪 / Huber loss</td>
+<td>更新幅度失控</td>
+<td>限制单步更新的梯度范数</td>
+<td>DQN 实现细节</td>
+</tr>
+<tr>
+<td>双估计（Double）</td>
+<td>最大化偏差</td>
+<td>解耦选择与评估，消除正偏差</td>
+<td>Double DQN、TD3</td>
+</tr>
+<tr>
+<td>缩小 <span class="arithmatex">\(\gamma\)</span></td>
+<td>误差传播距离</td>
+<td>减少远期误差的累积放大</td>
+<td>调参手段</td>
+</tr>
+<tr>
+<td>权重衰减 / 正则化</td>
+<td>参数空间失稳</td>
+<td>约束参数范数，抑制爆炸</td>
+<td>各类深度 RL</td>
+</tr>
+<tr>
+<td>重要性采样加权</td>
+<td>分布偏移</td>
+<td>修正非均匀采样的偏差</td>
+<td>PER、离线 RL</td>
+</tr>
+<tr>
+<td>缩小更新频率</td>
+<td>目标-预测耦合</td>
+<td>降低更新对数据分布的冲击</td>
+<td>每 4 步训练、软更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="74-dqn">7.4 实践观察：为什么 DQN 在实践中稳定</h3>
+<p>严格说，"DQN 为什么在 Atari 上不发散"至今没有统一理论解释，但实践
+共识指向几个因素：</p>
+<ol>
+<li><strong>回放池使数据分布缓慢变化</strong>：均匀采样让 mini-batch 近似来自
+   "历史混合分布"，在线网络参数突变不会立刻反馈到采样分布；</li>
+<li><strong>目标网络引入滞后</strong>：TD 目标滞后 <span class="arithmatex">\(C\)</span> 步，误差的自我强化被
+   时间延迟切断；</li>
+<li><strong>奖励裁剪限制误差量级</strong>：<span class="arithmatex">\(|\delta|\)</span> 被限制在 <span class="arithmatex">\(O(1)\)</span> 量级，
+   梯度爆炸被结构性抑制；</li>
+<li><strong>CNN 特征的平滑性</strong>：卷积特征的局部性使相近状态输出相近 Q 值，
+   函数逼近的"尖峰"难以形成。</li>
+</ol>
+<p>这些机制都不是收敛定理，而是<strong>经验性的稳定性工程</strong>。理解 deadly
+triad 的意义在于：当你设计新算法或调试训练发散时，第一反应应是
+"我是否同时满足了三个要素？我打破了哪一个？"——而不是盲目调学习率。</p>
+<hr />
+<hr />
+<h2 id="numpy-dqn-gridworld">八、综合实验：纯 NumPy DQN 玩转 GridWorld</h2>
+<h3 id="81">8.1 实验设计</h3>
+<p>真实 Atari 环境需要模拟器与深度学习框架，无法在纯 NumPy 下复现。
+本实验用<strong>玩具环境 + 纯 NumPy 手写网络</strong>复现 DQN 的<strong>全部核心机制</strong>，
+保证每个组件都能被直接观察和修改：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>对应 DQN 原版</th>
+<th>本实验实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>状态表示</td>
+<td>84×84×4 像素帧（CNN 特征）</td>
+<td>6×6 网格的 one-hot 向量（36 维）</td>
+</tr>
+<tr>
+<td>Q 网络</td>
+<td>三层 CNN + 两层 FC</td>
+<td>两层全连接（36 → 32 → 4），手写反向传播</td>
+</tr>
+<tr>
+<td>经验回放</td>
+<td>容量 10⁶ 的环形缓冲</td>
+<td>容量 20000 的环形缓冲（第 4 章 4.1 节的类）</td>
+</tr>
+<tr>
+<td>目标网络</td>
+<td>每 10000 步硬复制</td>
+<td>每 200 步硬复制</td>
+</tr>
+<tr>
+<td>探索</td>
+<td>ε 从 1.0 线性退火到 0.1</td>
+<td>ε 从 1.0 指数退火到 0.05</td>
+</tr>
+<tr>
+<td>训练频率</td>
+<td>每 4 帧一次</td>
+<td>每 4 步一次</td>
+</tr>
+<tr>
+<td>优化器</td>
+<td>RMSProp/Adam</td>
+<td>SGD（学习率 0.01）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>环境定义：</strong> 6×6 网格世界，起点 <span class="arithmatex">\((0,0)\)</span>、终点 <span class="arithmatex">\((5,5)\)</span>。动作空间
+<span class="arithmatex">\(\mathcal{A} = \{\)</span>上, 下, 左, 右<span class="arithmatex">\(\}\)</span>，共 4 个动作。</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>奖励</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>到达终点 <span class="arithmatex">\((5,5)\)</span></td>
+<td><span class="arithmatex">\(+10\)</span></td>
+<td>回合结束</td>
+</tr>
+<tr>
+<td>试图越界（撞墙）</td>
+<td><span class="arithmatex">\(-0.5\)</span></td>
+<td>位置不变</td>
+</tr>
+<tr>
+<td>普通一步</td>
+<td><span class="arithmatex">\(-0.1\)</span></td>
+<td>鼓励最短路径</td>
+</tr>
+</tbody>
+</table>
+<p>理论最优：从 <span class="arithmatex">\((0,0)\)</span> 到 <span class="arithmatex">\((5,5)\)</span> 的最短路径 10 步（5 下 + 5 右），
+总回报 <span class="arithmatex">\(10 - 0.1 \times 9 = 9.1\)</span>。学习的目标是让平均回报逼近 9.1。</p>
+<h3 id="82-q-numpy-mlp">8.2 Q 网络：NumPy 手写两层 MLP</h3>
+<p>本实验的 Q 网络是第 3 节图 5-1 网络结构的<strong>全连接简化版</strong>——CNN
+换成两层全连接，输入从像素帧换成 one-hot 状态向量，其余机制
+（前向、反向、双网络、回放）完全一致：</p>
+<p><img alt="DQN 网络结构" src="../../img/05-dqn-network.png" /></p>
+<p>网络结构：<code>输入 36（one-hot 状态）→ 隐层 32（ReLU）→ 输出 4（Q 值）</code>。
+手写反向传播只有三个关键公式（对 batch 中的每条样本）：</p>
+<div class="arithmatex">\[
+h = \text{ReLU}(x W_1 + b_1), \qquad q = h W_2 + b_2
+\]</div>
+<div class="arithmatex">\[
+\frac{\partial \mathcal{L}}{\partial W_2} = h^\top g, \qquad
+\frac{\partial \mathcal{L}}{\partial W_1} = x^\top \left( g W_2^\top \odot \mathbf{1}\{h &gt; 0\} \right)
+\]</div>
+<p>其中 <span class="arithmatex">\(g\)</span> 是输出层梯度：<strong>只对选中动作 <span class="arithmatex">\((s, a)\)</span> 有值，其余动作置零</strong>
+（对应 5.2 节的"只更新选中动作的输出"）。</p>
+<h3 id="83">8.3 超参数表</h3>
+<table>
+<thead>
+<tr>
+<th>超参数</th>
+<th>取值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网格大小</td>
+<td>6×6（36 状态）</td>
+<td>可改 8×8 观察维度灾难</td>
+</tr>
+<tr>
+<td>隐层宽度</td>
+<td>32</td>
+<td>ReLU</td>
+</tr>
+<tr>
+<td>回放容量</td>
+<td>20000</td>
+<td>环形缓冲</td>
+</tr>
+<tr>
+<td>mini-batch</td>
+<td>32</td>
+<td>均匀采样</td>
+</tr>
+<tr>
+<td>学习率</td>
+<td>0.01</td>
+<td>SGD</td>
+</tr>
+<tr>
+<td>折扣 <span class="arithmatex">\(\gamma\)</span></td>
+<td>0.99</td>
+<td></td>
+</tr>
+<tr>
+<td>ε 退火</td>
+<td><span class="arithmatex">\(1.0 \to 0.05\)</span>，每回合 ×0.995</td>
+<td>指数退火</td>
+</tr>
+<tr>
+<td>目标网络更新</td>
+<td>每 200 步硬复制</td>
+<td>对应原版 10000 步</td>
+</tr>
+<tr>
+<td>训练频率</td>
+<td>每 4 步</td>
+<td>对应原版"每 4 帧"</td>
+</tr>
+<tr>
+<td>回合最大步数</td>
+<td>100</td>
+<td>防止死循环</td>
+</tr>
+</tbody>
+</table>
+<h3 id="84">8.4 完整可运行代码</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+
+<span class="c1"># ---------- 1. GridWorld 环境 ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridWorld</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;6×6 网格世界：起点 (0,0)，终点 (5,5)。动作: 0=上 1=下 2=左 3=右&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sid</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;状态 (x, y) → 状态编号 x*size + y&quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">y</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span>
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>   <span class="n">nx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>              <span class="c1"># 上</span>
+        <span class="k">elif</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="n">nx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 下</span>
+        <span class="k">elif</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="n">ny</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>              <span class="c1"># 左</span>
+        <span class="k">else</span><span class="p">:</span>        <span class="n">ny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 右</span>
+        <span class="n">hit_wall</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>                <span class="c1"># 试图越界</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="k">if</span> <span class="n">done</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="k">if</span> <span class="n">hit_wall</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sid</span><span class="p">(),</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span>
+
+<span class="c1"># ---------- 2. 经验回放（第 4 章 4.1 节的类） ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReplayBuffer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;环形经验池：均匀随机采样&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buf</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">capacity</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span><span class="p">))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+        <span class="n">s</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">a</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">r</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">s2</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">e</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buf</span><span class="p">)</span>
+
+<span class="c1"># ---------- 3. Q 网络：NumPy 手写两层 MLP ----------</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">QNet</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;两层全连接网络（ReLU 隐层 + 线性输出），手写前向/反向传播。</span>
+<span class="sd">    对应 8.2 节图 5-1 的 DQN 网络：CNN 换成全连接，输入为 one-hot 状态。&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_in</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">d_out</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="c1"># He 初始化：ReLU 网络的标准初始化</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">d_in</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">d_in</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">h</span><span class="p">,</span> <span class="n">d_out</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">d_out</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;x: (batch, d_in) → Q 值 (batch, d_out)，返回 (q, 缓存)&quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">x</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="p">)</span>   <span class="c1"># ReLU 激活</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">h</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b2</span>
+        <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">grad_q</span><span class="p">,</span> <span class="n">lr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;对输出梯度 grad_q 做一步 SGD 更新（反向传播）&quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">cache</span>
+        <span class="n">gW2</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">grad_q</span>
+        <span class="n">gb2</span> <span class="o">=</span> <span class="n">grad_q</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">gh</span> <span class="o">=</span> <span class="n">grad_q</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">gh</span><span class="p">[</span><span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>                             <span class="c1"># ReLU 导数：负区间置零</span>
+        <span class="n">gW1</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">gh</span>
+        <span class="n">gb1</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gW2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gb2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gW1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">gb1</span>
+
+<span class="c1"># ---------- 4. 工具函数 ----------</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onehot</span><span class="p">(</span><span class="n">s_id</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;状态编号 → one-hot 向量（s_id 可能是 float，转 int 索引）&quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">v</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">s_id</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">v</span>
+
+<span class="c1"># ---------- 5. DQN 训练主循环 ----------</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train_dqn</span><span class="p">(</span><span class="n">episodes</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>                      <span class="c1"># 同时固定 np.random.choice（采样）</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">GridWorld</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">nS</span><span class="p">,</span> <span class="n">nA</span> <span class="o">=</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">4</span>
+    <span class="n">online</span> <span class="o">=</span> <span class="n">QNet</span><span class="p">(</span><span class="n">nS</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>      <span class="c1"># 在线网络（被训练）</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">QNet</span><span class="p">(</span><span class="n">nS</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>      <span class="c1"># 目标网络（同种子 ⇒ 初始 w⁻ = w）</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">ReplayBuffer</span><span class="p">(</span><span class="mi">20000</span><span class="p">)</span>
+    <span class="n">gamma</span><span class="p">,</span> <span class="n">lr</span> <span class="o">=</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.01</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">batch_size</span><span class="p">,</span> <span class="n">train_every</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">4</span>
+    <span class="n">update_target_every</span><span class="p">,</span> <span class="n">max_steps</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">episodes</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">G</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">max_steps</span><span class="p">:</span>
+            <span class="c1"># ε-greedy 动作选择</span>
+            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">nA</span><span class="p">))</span>            <span class="c1"># 探索：随机动作</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">onehot</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">nS</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>             <span class="c1"># 利用：贪心动作</span>
+            <span class="n">s2</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">buf</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>              <span class="c1"># 经验入池</span>
+            <span class="n">G</span> <span class="o">+=</span> <span class="n">r</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s2</span>
+            <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">steps</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># 每 train_every 步训练一次（对应 5.4 节&quot;每 4 步训练&quot;）</span>
+            <span class="k">if</span> <span class="n">steps</span> <span class="o">%</span> <span class="n">train_every</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">batch_size</span><span class="p">:</span>
+                <span class="n">sb</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="n">rb</span><span class="p">,</span> <span class="n">s2b</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+                <span class="c1"># 状态编号 → one-hot 向量（batch 化）</span>
+                <span class="n">sb</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">onehot</span><span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">nS</span><span class="p">)</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">sb</span><span class="p">])</span>
+                <span class="n">s2b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">onehot</span><span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">nS</span><span class="p">)</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">s2b</span><span class="p">])</span>
+                <span class="n">q_all</span><span class="p">,</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">sb</span><span class="p">)</span>    <span class="c1"># 在线网络前向</span>
+                <span class="n">q_next</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">s2b</span><span class="p">)</span>      <span class="c1"># 目标网络前向</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">rb</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">q_next</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">db</span><span class="p">)</span>   <span class="c1"># TD 目标</span>
+                <span class="c1"># 半梯度：目标 y 不反向传播；只对选中动作 (s,a) 回传梯度</span>
+                <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">q_all</span><span class="p">)</span>
+                <span class="n">grad</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">ab</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">q_all</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">ab</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch_size</span>
+                <span class="n">online</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">lr</span><span class="p">)</span>     <span class="c1"># SGD 一步</span>
+
+            <span class="c1"># 硬更新目标网络：w⁻ ← w（每 update_target_every 步）</span>
+            <span class="k">if</span> <span class="n">steps</span> <span class="o">%</span> <span class="n">update_target_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">W1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">b1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">W2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">b2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">eps</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">eps</span> <span class="o">*</span> <span class="mf">0.995</span><span class="p">)</span>                 <span class="c1"># ε 指数退火</span>
+        <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">200</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">returns</span><span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">:])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;episode </span><span class="si">{</span><span class="n">ep</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2">  eps=</span><span class="si">{</span><span class="n">eps</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">  最近100回合平均回报=</span><span class="si">{</span><span class="n">avg</span><span class="si">:</span><span class="s2">+6.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># 训练后打印起点 Q 值：最优策略应偏爱&quot;下&quot;与&quot;右&quot;</span>
+    <span class="n">q</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">online</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">onehot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nS</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">训练结束。起点 (0,0) 的 Q 值: 上/下/左/右 =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">online</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">train_dqn</span><span class="p">(</span><span class="n">episodes</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+
+<span class="c1"># 预期输出（seed=42，双 RNG 均已固定，输出可复现；不同 NumPy 版本可能略有浮动）:</span>
+<span class="c1"># episode   200  eps=0.367  最近100回合平均回报= +5.82</span>
+<span class="c1"># episode   400  eps=0.135  最近100回合平均回报= +4.58</span>
+<span class="c1"># episode   600  eps=0.050  最近100回合平均回报= +2.85</span>
+<span class="c1"># episode   800  eps=0.050  最近100回合平均回报= +9.02</span>
+<span class="c1"># episode  1000  eps=0.050  最近100回合平均回报= +8.98</span>
+<span class="c1"># episode  1200  eps=0.050  最近100回合平均回报= +9.02</span>
+<span class="c1"># episode  1400  eps=0.050  最近100回合平均回报= +8.97</span>
+<span class="c1"># episode  1600  eps=0.050  最近100回合平均回报= +9.04</span>
+<span class="c1"># episode  1800  eps=0.050  最近100回合平均回报= +8.96</span>
+<span class="c1"># episode  2000  eps=0.050  最近100回合平均回报= +9.03</span>
+<span class="c1">#</span>
+<span class="c1"># 训练结束。起点 (0,0) 的 Q 值: 上/下/左/右 = [7.79 8.34 7.79 8.28]</span>
+</code></pre></div>
+<h3 id="85">8.5 结果分析</h3>
+<ol>
+<li><strong>收敛到近似最优</strong>：稳定后平均回报约 <span class="arithmatex">\(+9.03\)</span>，接近理论上限 <span class="arithmatex">\(9.1\)</span>
+   （10 步最短路径）。约 <span class="arithmatex">\(0.07\)</span> 的缺口来自 <span class="arithmatex">\(\epsilon = 0.05\)</span> 的持续探索
+   （5% 的随机动作偶尔绕路）；</li>
+<li><strong>起点 Q 值与最优策略一致</strong>：<span class="arithmatex">\(Q(\text{起点}, \text{下}) = 8.34\)</span>、
+   <span class="arithmatex">\(Q(\text{起点}, \text{右}) = 8.28\)</span> 明显高于"上/左"（7.79/7.79）——
+   网络学会了"向终点方向走"；</li>
+<li><strong>训练中段出现回撤</strong>：episode 600 附近平均回报从 <span class="arithmatex">\(+4.58\)</span> 回落到
+   <span class="arithmatex">\(+2.85\)</span>，随后快速恢复到 <span class="arithmatex">\(+9.0\)</span> 以上。回撤发生在 <span class="arithmatex">\(\epsilon\)</span> 退火到
+   下限（0.05）之后、目标网络多次硬复制 <span class="arithmatex">\(w^- \leftarrow w\)</span> 的时段——
+   TD 目标的突变让刚收敛的估值短期失稳。这是 4.3 节"硬更新是阶梯式
+   突变"的直接实验证据，也解释了为什么软更新（DDPG 等）会更平滑；</li>
+<li><strong>回放池的作用</strong>：训练前 200 回合（ε 大、探索充分）积累的经验在
+   后续被反复采样，起点附近的"到达终点 +10"经验被多次学习，这是
+   DQN 样本效率高于在线 Q-Learning 的来源。</li>
+</ol>
+<h3 id="86">8.6 动手练习</h3>
+<ol>
+<li><strong>去掉目标网络</strong>（把 <code>target</code> 换成 <code>online</code>）：观察训练是否震荡或
+   发散，验证 4.2 节"追着移动的靶子"的论断；</li>
+<li><strong>去掉经验回放</strong>（在线更新）：对比样本效率与稳定性，体会 4.1 节
+   三个问题的实际表现；</li>
+<li><strong>换成 Double DQN 目标</strong>：把 <code>q_next.max(axis=1)</code> 改为
+   <code>q_next[np.arange(batch), q_all.argmax(axis=1)]</code>，对比估值是否更
+   保守、训练是否更稳（对应 6.1 节）；</li>
+<li><strong>放大网格</strong>（<code>GridWorld(10)</code>）：观察收敛速度下降，体会维度灾难；</li>
+<li><strong>把 MSE 换成 Huber loss</strong>（5.2 节公式），对比训练曲线平滑度。</li>
+</ol>
+<hr />
+<h2 id="_3">附：本章速查表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>一句话定义</th>
+<th>关键公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>维度灾难</td>
+<td>状态空间随维度指数增长，经验只能覆盖极小流形</td>
+<td><span class="arithmatex">\(N = k^d\)</span></td>
+</tr>
+<tr>
+<td>函数逼近</td>
+<td>用参数化函数代替查表，靠参数共享实现泛化</td>
+<td><span class="arithmatex">\(V_w(s) \approx v_\pi(s)\)</span></td>
+</tr>
+<tr>
+<td>线性逼近</td>
+<td>价值是特征的线性函数</td>
+<td><span class="arithmatex">\(V_w(s) = w^\top x(s)\)</span></td>
+</tr>
+<tr>
+<td>半梯度 TD</td>
+<td>把 TD 目标当常数，只对预测端求导</td>
+<td><span class="arithmatex">\(w \leftarrow w + \alpha\delta_t x(S_t)\)</span></td>
+</tr>
+<tr>
+<td>TD 不动点</td>
+<td>on-policy 线性半梯度的收敛点</td>
+<td><span class="arithmatex">\(\overline{VE}(w_\infty) \le \frac{1}{1-\gamma}\min_w\overline{VE}(w)\)</span></td>
+</tr>
+<tr>
+<td>查表法</td>
+<td>one-hot 特征下的线性逼近特例</td>
+<td><span class="arithmatex">\(V_w(s) = w_s\)</span></td>
+</tr>
+<tr>
+<td>经验回放</td>
+<td>环形缓冲 + 均匀采样，打破时序相关性</td>
+<td><span class="arithmatex">\((s,a,r,s') \sim \text{Uniform}(\mathcal{D})\)</span></td>
+</tr>
+<tr>
+<td>目标网络</td>
+<td>冻结的 <span class="arithmatex">\(Q_{w^-}\)</span> 计算 TD 目标，每 <span class="arithmatex">\(C\)</span> 步同步</td>
+<td><span class="arithmatex">\(y = r + \gamma\max_{a'}Q_{w^-}(s',a')\)</span></td>
+</tr>
+<tr>
+<td>硬/软更新</td>
+<td>整体复制 vs Polyak 平均</td>
+<td><span class="arithmatex">\(w^- \leftarrow w\)</span> / <span class="arithmatex">\(w^- \leftarrow \tau w + (1-\tau)w^-\)</span></td>
+</tr>
+<tr>
+<td>DQN 损失</td>
+<td>目标与预测的 TD MSE（半梯度）</td>
+<td><span class="arithmatex">\(\mathcal{L} = \mathbb{E}[(y - Q_w(s,a))^2]\)</span></td>
+</tr>
+<tr>
+<td>Double DQN</td>
+<td>解耦选择与评估，消除过估计</td>
+<td><span class="arithmatex">\(y = r + \gamma Q_{w^-}(s', \arg\max_{a'}Q_w(s',a'))\)</span></td>
+</tr>
+<tr>
+<td>Dueling DQN</td>
+<td>双头分解，容量高效</td>
+<td><span class="arithmatex">\(Q = V + A - \max_{a'}A\)</span>（或均值形式）</td>
+</tr>
+<tr>
+<td>Prioritized Replay</td>
+<td>按 $</td>
+<td>\delta</td>
+</tr>
+<tr>
+<td>Rainbow</td>
+<td>六组件集成 + 消融验证</td>
+<td>DDQN + Dueling + PER + n-step + Dist. + Noisy</td>
+</tr>
+<tr>
+<td>deadly triad</td>
+<td>函数逼近 + 自举 + off-policy 三者同现可能发散</td>
+<td>深度 RL 三项全占，靠工程手段稳定</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p><strong>下一步</strong>：本章的 DQN 家族把"基于价值"路线推到了深度时代——用
+神经网络逼近 <span class="arithmatex">\(Q\)</span> 函数，通过 <span class="arithmatex">\(\arg\max_a Q(s,a)\)</span> 隐式导出策略。但
+value-based 方法有三个结构性限制：<strong>无法直接处理连续动作空间</strong>
+（<span class="arithmatex">\(\arg\max\)</span> 在无穷动作上不可行）、<strong>无法表达随机最优策略</strong>
+（<span class="arithmatex">\(\epsilon\)</span>-greedy 是带噪声的确定性策略）、以及<strong>策略改进依赖
+价值估计的精度</strong>（价值误差会传导为策略误差）。下一章
+<a href="../06-policy-gradient/">策略梯度与 Actor-Critic</a> 将换一条路线：
+直接参数化策略 <span class="arithmatex">\(\pi_\theta(a|s)\)</span>，对期望回报求梯度——REINFORCE、
+Actor-Critic、TRPO 与 PPO 依次登场，其中 Actor-Critic 的价值网络
+正是本章 <span class="arithmatex">\(V_w\)</span>/<span class="arithmatex">\(Q_w\)</span> 思想的直接延续。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

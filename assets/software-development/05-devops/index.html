@@ -1,0 +1,4699 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://CodeNebula.github.io/assets/software-development/05-devops/">
+      
+      
+        <link rel="prev" href="../04-version-control/">
+      
+      
+        <link rel="next" href="../06-architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>DevOps与部署 - CodeNebula</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#devops" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DevOps与部署
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reinforcement-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#devops_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、DevOps 文化
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、DevOps 文化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-devops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 什么是 DevOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-devops-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 DevOps vs 传统运维
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-dora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 DORA 指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、容器化：Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、容器化：Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-image-vs-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Image vs Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Dockerfile 编写
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Docker Compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 镜像仓库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 安全实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、容器编排：Kubernetes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、容器编排：Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 核心概念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-kubectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 kubectl 常用命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Service 类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 滚动更新与回滚
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-helm-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Helm Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 可观测性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、CI/CD 流水线
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、CI/CD 流水线">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-ci-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 CI 与 CD 的区别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 GitHub Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-gitlab-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 GitLab CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Jenkins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 CI/CD 平台对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、云服务
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、云服务">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 云服务模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 AWS 核心服务
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 部署策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 基础设施即代码 (IaC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 配置管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、监控与告警
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、监控与告警">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 可观测性三大支柱
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-prometheus-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Prometheus + Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-elk-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 ELK Stack（日志管理）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 分布式追踪
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 告警最佳实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、数据库部署
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、数据库部署">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 数据库迁移自动化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 备份策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 读写分离（读副本）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 连接池
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reinforcement-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#devops_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、DevOps 文化
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、DevOps 文化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-devops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 什么是 DevOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-devops-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 DevOps vs 传统运维
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-dora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 DORA 指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、容器化：Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、容器化：Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-image-vs-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Image vs Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-dockerfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Dockerfile 编写
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Docker Compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 镜像仓库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 安全实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、容器编排：Kubernetes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、容器编排：Kubernetes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 核心概念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-kubectl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 kubectl 常用命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Service 类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 滚动更新与回滚
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-helm-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Helm Charts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 可观测性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、CI/CD 流水线
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、CI/CD 流水线">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-ci-cd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 CI 与 CD 的区别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 GitHub Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-gitlab-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 GitLab CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Jenkins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 CI/CD 平台对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、云服务
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、云服务">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 云服务模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 AWS 核心服务
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 部署策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-iac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 基础设施即代码 (IaC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 配置管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、监控与告警
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、监控与告警">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 可观测性三大支柱
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-prometheus-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Prometheus + Grafana
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-elk-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 ELK Stack（日志管理）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 分布式追踪
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 告警最佳实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、数据库部署
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、数据库部署">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 数据库迁移自动化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 备份策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 读写分离（读副本）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 连接池
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    软件开发
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="devops">DevOps 与部署</h1>
+<blockquote>
+<p>DevOps 不只是工具链，更是一种文化变革——打破开发与运维之间的壁垒，让软件从提交到生产的过程变得快速、可靠、可重复。本文从文化理念到工程实践，覆盖容器化、编排、CI/CD、云服务、监控等核心领域。</p>
+</blockquote>
+<hr />
+<h2 id="devops_1">一、DevOps 文化</h2>
+<h3 id="11-devops">1.1 什么是 DevOps</h3>
+<p>DevOps 是 Development（开发）与 Operations（运维）的融合，核心目标是通过<strong>文化、自动化、精益、测量和共享</strong>（CALMS）来缩短交付周期、提高部署频率、保证系统可靠性。</p>
+<p><strong>CALMS 框架</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>英文</th>
+<th>含义</th>
+<th>实践</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>文化</strong></td>
+<td>Culture</td>
+<td>协作而非对立，共享目标与责任</td>
+<td>打破 Silos，开发与运维共同 On-Call</td>
+</tr>
+<tr>
+<td><strong>自动化</strong></td>
+<td>Automation</td>
+<td>一切重复性工作由工具完成</td>
+<td>CI/CD、基础设施即代码、自动化测试</td>
+</tr>
+<tr>
+<td><strong>精益</strong></td>
+<td>Lean</td>
+<td>消除浪费，专注价值流</td>
+<td>限制 WIP、小批量交付、持续改进</td>
+</tr>
+<tr>
+<td><strong>测量</strong></td>
+<td>Measurement</td>
+<td>用数据驱动决策</td>
+<td>DORA 指标、监控仪表盘、SLO 追踪</td>
+</tr>
+<tr>
+<td><strong>共享</strong></td>
+<td>Sharing</td>
+<td>知识、工具、责任的共享</td>
+<td>共享 Runbook、事后复盘、内部分享</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心转变</strong>：传统模式中，开发"扔过墙"把代码交给运维；DevOps 模式下，开发参与部署和运维，运维参与设计和测试。</p>
+</blockquote>
+<h3 id="12-devops-vs">1.2 DevOps vs 传统运维</h3>
+<div class="highlight"><pre><span></span><code>传统模式：
+开发: 写代码 → 构建 → 交给运维
+运维: 收到包 → 手动配置 → 部署 → 祈祷别出事
+                                    ↑
+                          沟通效率低、部署慢、易出错
+
+DevOps 模式：
+开发 + 运维 (同一团队)
+  ├── 代码提交 → 自动构建 → 自动测试 → 自动部署
+  ├── 基础设施代码化 (IaC)
+  ├── 监控告警 → 自动修复 / 快速回滚
+  └── 事后复盘 → 持续改进
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>传统运维</th>
+<th>DevOps</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>部署频率</strong></td>
+<td>每月/每季度一次</td>
+<td>每天多次甚至每次提交</td>
+</tr>
+<tr>
+<td><strong>团队关系</strong></td>
+<td>开发与运维分离，互相指责</td>
+<td>同一团队或紧密协作</td>
+</tr>
+<tr>
+<td><strong>部署方式</strong></td>
+<td>手动操作，变更管理工单</td>
+<td>自动化流水线，自助部署</td>
+</tr>
+<tr>
+<td><strong>故障处理</strong></td>
+<td>开发帮查日志，运维重启</td>
+<td>开发 On-Call，可自愈系统</td>
+</tr>
+<tr>
+<td><strong>基础设施</strong></td>
+<td>物理服务器，手动配置</td>
+<td>云资源，基础设施即代码</td>
+</tr>
+<tr>
+<td><strong>文档</strong></td>
+<td>静态 Word 文档，过期快</td>
+<td>Runbook + 代码注释，随代码更新</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-dora">1.3 DORA 指标</h3>
+<p>Google DORA 团队通过多年研究，定义了四个关键指标来衡量 DevOps 效能：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>高水平（Elite）</th>
+<th>低水平（Low）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>部署频率</strong></td>
+<td>多久部署一次代码到生产</td>
+<td>每天多次</td>
+<td>每月一次到每季度一次</td>
+</tr>
+<tr>
+<td><strong>变更前置时间</strong></td>
+<td>从代码提交到成功部署的时间</td>
+<td>小于1小时</td>
+<td>1周到1个月</td>
+</tr>
+<tr>
+<td><strong>变更失败率</strong></td>
+<td>部署导致服务退化或故障的比例</td>
+<td>&lt;5%</td>
+<td>46-60%</td>
+</tr>
+<tr>
+<td><strong>故障恢复时间 (MTTR)</strong></td>
+<td>从服务故障到恢复的时间</td>
+<td>&lt;1小时</td>
+<td>1周到1个月</td>
+</tr>
+</tbody>
+</table>
+<p><strong>如何测量</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 部署频率：统计 git log 中的部署 tag</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--since<span class="o">=</span><span class="s2">&quot;2024-01-01&quot;</span><span class="w"> </span>--grep<span class="o">=</span><span class="s2">&quot;deploy&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+
+<span class="c1"># 前置时间：commit 到 deploy 的时间差</span>
+<span class="c1"># 可在 CI/CD 中记录两个时间戳，计算差值</span>
+</code></pre></div>
+<blockquote>
+<p><strong>不要追求指标而忘了目标</strong>：高部署频率不等于高价值交付。指标是改进的工具，不是考核的枷锁。</p>
+</blockquote>
+<hr />
+<h2 id="docker">二、容器化：Docker</h2>
+<h3 id="21-image-vs-container">2.1 Image vs Container</h3>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────┐
+│                    Docker                     │
+│                                               │
+│  Image (镜像)         Container (容器)          │
+│  ┌──────────┐        ┌──────────┐             │
+│  │ 只读模板  │        │ Image 的 │             │
+│  │ OS + 环境 │ ──运行→│ 运行实例  │             │
+│  │ + 代码    │        │ + 可写层  │             │
+│  └──────────┘        └──────────┘             │
+│                                               │
+│ 类比：Class/对象     类比：进程实例              │
+└──────────────────────────────────────────────┘
+</code></pre></div>
+<ul>
+<li><strong>Image</strong>：不可变的只读模板，包含操作系统层、依赖、代码和配置</li>
+<li><strong>Container</strong>：Image 的运行实例，拥有自己的文件系统、网络和进程空间，上层有可写层</li>
+</ul>
+<h3 id="22-dockerfile">2.2 Dockerfile 编写</h3>
+<p><strong>多阶段构建（Multi-stage Build）</strong>：在一个 Dockerfile 中使用多个 FROM 语句，构建阶段包含编译工具，运行阶段只保留产物。</p>
+<div class="highlight"><pre><span></span><code><span class="c"># ===== 构建阶段 =====</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.22-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>go.mod<span class="w"> </span>go.sum<span class="w"> </span>./
+<span class="k">RUN</span><span class="w"> </span>go<span class="w"> </span>mod<span class="w"> </span>download
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span><span class="nv">CGO_ENABLED</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">GOOS</span><span class="o">=</span>linux<span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>/app/server<span class="w"> </span>.
+
+<span class="c"># ===== 运行阶段 =====</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span>
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>--no-cache<span class="w"> </span>add<span class="w"> </span>ca-certificates<span class="w"> </span>tzdata
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/server<span class="w"> </span>/server
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/app/config<span class="w"> </span>/config
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">1001</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>最佳实践</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c"># 1. 减少层数：合并 RUN 命令</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>curl<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>git<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>ca-certificates<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+
+<span class="c"># 2. .dockerignore 排除无关文件</span>
+<span class="c"># .dockerignore 内容：</span>
+<span class="c"># node_modules</span>
+<span class="c"># .git</span>
+<span class="c"># .env</span>
+<span class="c"># *.md</span>
+<span class="c"># Dockerfile</span>
+
+<span class="c"># 3. 使用非 root 用户运行</span>
+<span class="k">RUN</span><span class="w"> </span>groupadd<span class="w"> </span>-r<span class="w"> </span>app<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>useradd<span class="w"> </span>-r<span class="w"> </span>-g<span class="w"> </span>app<span class="w"> </span>app
+<span class="k">USER</span><span class="w"> </span><span class="s">app</span>
+
+<span class="c"># 4. 指定精确的基础镜像版本，不用 latest</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim-bookworm</span>
+
+<span class="c"># 5. 利用构建缓存：不常变动的先 COPY</span>
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+</code></pre></div>
+<h3 id="23-docker-compose">2.3 Docker Compose</h3>
+<p>Docker Compose 用 YAML 定义多容器应用，适合开发环境和中小型部署。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST=db</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDIS_HOST=redis</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APP_ENV=production</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">      </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_started</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app_data:/app/data</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;curl&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;-f&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;http://localhost:8080/health&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASSWORD}</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pg_data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">app&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7-alpine</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis_data:/data</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis-server --appendonly yes</span>
+
+<span class="w">  </span><span class="nt">nginx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./nginx.conf:/etc/nginx/conf.d/default.conf</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pg_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">redis_data</span><span class="p">:</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+</code></pre></div>
+<p><strong>常用命令</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 启动所有服务（后台）</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># 查看日志</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>app
+
+<span class="c1"># 重新构建并启动</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+
+<span class="c1"># 查看服务状态</span>
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+
+<span class="c1"># 停止并删除</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-v<span class="w">  </span><span class="c1"># -v 会删除卷</span>
+</code></pre></div>
+<h3 id="24">2.4 镜像仓库</h3>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>类型</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Docker Hub</strong></td>
+<td>公共/私有</td>
+<td>最大生态，免费公共仓库</td>
+<td>开源项目、个人测试</td>
+</tr>
+<tr>
+<td><strong>Harbor</strong></td>
+<td>私有（开源）</td>
+<td>安全扫描、RBAC、复制策略、漏洞扫描</td>
+<td>企业级私有仓库</td>
+</tr>
+<tr>
+<td><strong>AWS ECR</strong></td>
+<td>云托管</td>
+<td>与 IAM 集成，自动镜像扫描</td>
+<td>AWS 原生部署</td>
+</tr>
+<tr>
+<td><strong>GitHub Container Registry</strong></td>
+<td>云托管</td>
+<td>与 GitHub Actions 集成</td>
+<td>GitHub 生态</td>
+</tr>
+<tr>
+<td><strong>GitLab Container Registry</strong></td>
+<td>云托管/自托管</td>
+<td>与 GitLab CI 集成</td>
+<td>GitLab 生态</td>
+</tr>
+</tbody>
+</table>
+<p><strong>拉取与推送</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 登录</span>
+docker<span class="w"> </span>login<span class="w"> </span>registry.example.com
+
+<span class="c1"># 打标签</span>
+docker<span class="w"> </span>tag<span class="w"> </span>my-app:latest<span class="w"> </span>registry.example.com/my-app:v1.2.3
+
+<span class="c1"># 推送</span>
+docker<span class="w"> </span>push<span class="w"> </span>registry.example.com/my-app:v1.2.3
+
+<span class="c1"># 拉取</span>
+docker<span class="w"> </span>pull<span class="w"> </span>registry.example.com/my-app:v1.2.3
+</code></pre></div>
+<h3 id="25">2.5 安全实践</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Rootless 模式运行 Docker 守护进程</span>
+dockerd-rootless-setuptool.sh<span class="w"> </span>install
+
+<span class="c1"># 2. 运行时限制权限</span>
+docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>seccomp-profile.json<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>--cap-drop<span class="o">=</span>ALL<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>--cap-add<span class="o">=</span>NET_BIND_SERVICE<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>--read-only<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>my-app
+
+<span class="c1"># 3. 镜像漏洞扫描</span>
+docker<span class="w"> </span>scout<span class="w"> </span>cves<span class="w"> </span>my-app:latest
+trivy<span class="w"> </span>image<span class="w"> </span>my-app:latest
+
+<span class="c1"># 4. 不要将敏感信息写入镜像</span>
+<span class="c1"># ❌ 错误：密码写在 Dockerfile</span>
+ENV<span class="w"> </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>supersecret
+
+<span class="c1"># ✅ 正确：运行时注入</span>
+docker<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span><span class="nv">DB_PASSWORD</span><span class="o">=</span><span class="nv">$DB_PASSWORD</span><span class="w"> </span>my-app
+<span class="c1"># 或使用 Docker Secrets（Swarm 模式）</span>
+</code></pre></div>
+<hr />
+<h2 id="kubernetes">三、容器编排：Kubernetes</h2>
+<h3 id="31">3.1 核心概念</h3>
+<div class="highlight"><pre><span></span><code>┌───────────────────────────────────────────────────┐
+│                   Kubernetes Cluster              │
+│                                                   │
+│  ┌──── Control Plane ────┐                        │
+│  │  API Server  etcd     │                        │
+│  │  Scheduler  Controller│                        │
+│  └───────────────────────┘                        │
+│                                                   │
+│  ┌──── Node 1 ────┐    ┌──── Node 2 ────┐        │
+│  │  ┌─Pod─┐ ┌─Pod─┐│    │  ┌─Pod─┐ ┌─Pod─┐│       │
+│  │  │Ctr 1│ │Ctr 1││    │  │Ctr 1│ │Ctr 1││       │
+│  │  └─────┘ └─────┘│    │  └─────┘ └─────┘│       │
+│  │  ┌─Pod───┐       │    │  ┌─Pod───┐      │       │
+│  │  │Ctr 1  │       │    │  │Ctr 1  │      │       │
+│  │  │Ctr 2  │       │    │  │Ctr 2  │      │       │
+│  │  └───────┘       │    │  └───────┘      │       │
+│  └──────────────────┘    └──────────────────┘       │
+└───────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>作用</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pod</strong></td>
+<td>最小的部署单元，一个或多个容器共享网络和存储</td>
+<td>Pod 是"逻辑主机"</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>管理 Pod 副本数和滚动更新</td>
+<td>无状态应用的标准方式</td>
+</tr>
+<tr>
+<td><strong>Service</strong></td>
+<td>提供稳定的网络端点访问一组 Pod</td>
+<td>解耦 Pod 变化与客户端</td>
+</tr>
+<tr>
+<td><strong>ConfigMap</strong></td>
+<td>将配置与镜像分离</td>
+<td>存储非敏感配置</td>
+</tr>
+<tr>
+<td><strong>Secret</strong></td>
+<td>存储敏感数据（base64 编码 + 加密）</td>
+<td>密码、Token、证书</td>
+</tr>
+<tr>
+<td><strong>Ingress</strong></td>
+<td>七层负载均衡，HTTP/HTTPS 路由</td>
+<td>域名 + 路径转发</td>
+</tr>
+<tr>
+<td><strong>PersistentVolume (PV) / PersistentVolumeClaim (PVC)</strong></td>
+<td>持久化存储供给与消费</td>
+<td>数据库等有状态应用</td>
+</tr>
+<tr>
+<td><strong>Namespace</strong></td>
+<td>逻辑隔离不同环境或团队</td>
+<td>多租户管理</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-kubectl">3.2 kubectl 常用命令</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pod 操作</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>my-namespace
+kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>my-pod
+kubectl<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>deployment/my-app
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>my-pod<span class="w"> </span>--<span class="w"> </span>/bin/sh
+
+<span class="c1"># Deployment 操作</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>deployments
+kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>my-app<span class="w"> </span>--replicas<span class="o">=</span><span class="m">5</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/my-app
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/my-app
+
+<span class="c1"># Service 操作</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/my-app<span class="w"> </span><span class="m">8080</span>:80
+
+<span class="c1"># 调试与排查</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>nodes<span class="w">                    </span><span class="c1"># 节点资源使用</span>
+kubectl<span class="w"> </span>top<span class="w"> </span>pods<span class="w">                     </span><span class="c1"># Pod 资源使用</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.lastTimestamp&#39;</span>
+kubectl<span class="w"> </span>auth<span class="w"> </span>can-i<span class="w"> </span>create<span class="w"> </span>deployments<span class="w">  </span><span class="c1"># RBAC 检查</span>
+
+<span class="c1"># 上下文切换</span>
+kubectl<span class="w"> </span>config<span class="w"> </span>get-contexts
+kubectl<span class="w"> </span>config<span class="w"> </span>use-context<span class="w"> </span>my-cluster
+</code></pre></div>
+<h3 id="33-service">3.3 Service 类型</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ClusterIP：集群内部访问（默认）</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-svc</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="nn">---</span>
+<span class="c1"># NodePort：外部可通过节点 IP + 端口访问</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-nodeport</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NodePort</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">      </span><span class="nt">nodePort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30080</span>
+<span class="nn">---</span>
+<span class="c1"># LoadBalancer：云厂商提供外部负载均衡器</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app-lb</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="nn">---</span>
+<span class="c1"># ExternalName：映射到外部 DNS 名称</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-db</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExternalName</span>
+<span class="w">  </span><span class="nt">externalName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mydb.example.com</span>
+</code></pre></div>
+<h3 id="34">3.4 滚动更新与回滚</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deployment 配置更新策略</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
+<span class="w">    </span><span class="nt">rollingUpdate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maxSurge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">        </span><span class="c1"># 最多可以多启动几个 Pod</span>
+<span class="w">      </span><span class="nt">maxUnavailable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">  </span><span class="c1"># 最多可以有多少 Pod 不可用</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.example.com/my-app:v1.2.3</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">httpGet</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<span class="w">              </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">            </span><span class="nt">initialDelaySeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">            </span><span class="nt">periodSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 更新镜像</span>
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>deployment/my-app<span class="w"> </span><span class="nv">app</span><span class="o">=</span>registry.example.com/my-app:v1.2.4
+
+<span class="c1"># 查看更新状态</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/my-app
+
+<span class="c1"># 回滚到上一个版本</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/my-app
+
+<span class="c1"># 回滚到指定版本</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>undo<span class="w"> </span>deployment/my-app<span class="w"> </span>--to-revision<span class="o">=</span><span class="m">3</span>
+
+<span class="c1"># 查看历史版本</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span><span class="nb">history</span><span class="w"> </span>deployment/my-app
+</code></pre></div>
+<h3 id="35-helm-charts">3.5 Helm Charts</h3>
+<p>Helm 是 Kubernetes 的包管理器，将 K8s YAML 打包为可复用、可配置的 Chart。</p>
+<p><strong>Chart 目录结构</strong>：</p>
+<div class="highlight"><pre><span></span><code>my-app/
+├── Chart.yaml          # 元数据：名称、版本、依赖
+├── values.yaml         # 默认配置值
+├── values-production.yaml  # 不同环境的覆盖
+├── templates/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── configmap.yaml
+│   ├── _helpers.tpl    # 可复用模板函数
+│   └── NOTES.txt       # 安装后提示信息
+└── charts/             # 子 Chart（依赖）
+</code></pre></div>
+<p><strong>模板示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># templates/deployment.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;my-app.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;my-app.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.replicaCount</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.strategy.type</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;my-app.selectorLabels&quot; . | nindent 6</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;my-app.selectorLabels&quot; . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Chart.Name</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.Values.image.repository</span><span class="nv"> </span><span class="s">}}:{{</span><span class="nv"> </span><span class="s">.Values.image.tag</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">default</span><span class="nv"> </span><span class="s">.Chart.AppVersion</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.port</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_HOST</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.db.host</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_PORT</span>
+<span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.Values.db.port</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.resources | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># values.yaml</span>
+<span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="nt">strategy</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RollingUpdate</span>
+<span class="nt">image</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.example.com/my-app</span>
+<span class="w">  </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="nt">service</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="nt">db</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres-cluster</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+<span class="nt">ingress</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<p><strong>常用命令</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 安装 Chart</span>
+helm<span class="w"> </span>install<span class="w"> </span>my-app<span class="w"> </span>./my-app<span class="w"> </span>-f<span class="w"> </span>values-production.yaml
+
+<span class="c1"># 升级</span>
+helm<span class="w"> </span>upgrade<span class="w"> </span>my-app<span class="w"> </span>./my-app<span class="w"> </span>--set<span class="w"> </span>image.tag<span class="o">=</span>v1.2.4
+
+<span class="c1"># 回滚</span>
+helm<span class="w"> </span>rollback<span class="w"> </span>my-app<span class="w"> </span><span class="m">2</span>
+
+<span class="c1"># 查看历史</span>
+helm<span class="w"> </span><span class="nb">history</span><span class="w"> </span>my-app
+
+<span class="c1"># 模板渲染预览（不安装）</span>
+helm<span class="w"> </span>template<span class="w"> </span>./my-app<span class="w"> </span>--debug
+</code></pre></div>
+<h3 id="36">3.6 可观测性</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>工具</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>资源指标</strong></td>
+<td>Metrics Server + Prometheus</td>
+<td>CPU、内存、网络、存储</td>
+</tr>
+<tr>
+<td><strong>日志</strong></td>
+<td>Loki / ELK + Fluentd/Fluent Bit</td>
+<td>集中日志采集与查询</td>
+</tr>
+<tr>
+<td><strong>链路追踪</strong></td>
+<td>Jaeger / OpenTelemetry</td>
+<td>请求在服务间的完整路径</td>
+</tr>
+<tr>
+<td><strong>事件</strong></td>
+<td>Kubernetes Events</td>
+<td>Pod 调度、拉取失败等事件</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># 部署 Metrics Server（必须，否则 kubectl top 不可用）</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+<span class="c1"># 使用 Prometheus Operator 一键部署监控栈</span>
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>prometheus-community<span class="w"> </span>https://prometheus-community.github.io/helm-charts
+helm<span class="w"> </span>install<span class="w"> </span>prometheus<span class="w"> </span>prometheus-community/kube-prometheus-stack
+</code></pre></div>
+<hr />
+<h2 id="cicd">四、CI/CD 流水线</h2>
+<h3 id="41-ci-cd">4.1 CI 与 CD 的区别</h3>
+<div class="highlight"><pre><span></span><code>代码提交
+  │
+  ▼
+┌─────────────────────────────────────────────────────┐
+│  CI (持续集成)                                       │
+│  ├── 代码检查（Lint）                                 │
+│  ├── 单元测试                                        │
+│  ├── 构建（编译/打包）                                │
+│  ├── 镜像构建                                        │
+│  └── 推送镜像到仓库                                   │
+└─────────────────────────────────────────────────────┘
+  │
+  ▼（触发部署）
+┌─────────────────────────────────────────────────────┐
+│  CD (持续交付/持续部署)                              │
+│  ├── 部署到测试环境 → 集成测试 → 验收测试              │
+│  ├── 部署到预发布环境 → 冒烟测试                       │
+│  └── 部署到生产环境（持续部署是自动的，持续交付需手动审批） │
+└─────────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+<th>人工介入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>持续集成 (CI)</strong></td>
+<td>频繁将代码合并到主干，每次合并自动构建和测试</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>持续交付 (CD)</strong></td>
+<td>CI + 自动部署到类生产环境，但部署到生产需人工审批</td>
+<td>生产部署需审批</td>
+</tr>
+<tr>
+<td><strong>持续部署 (CD)</strong></td>
+<td>CI + 完全自动化部署到生产环境</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-github-actions">4.2 GitHub Actions</h3>
+<p><strong>核心概念</strong>：</p>
+<div class="highlight"><pre><span></span><code>Workflow (.github/workflows/*.yml)
+  └── Job (运行在同一个 Runner 上，共享文件系统)
+       ├── Step 1: actions/checkout@v4
+       ├── Step 2: 运行脚本
+       └── Step 3: actions/upload-artifact@v4
+</code></pre></div>
+<p><strong>完整示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/deploy.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI/CD Pipeline</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">paths-ignore</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;README.md&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;docs/**&#39;</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+
+<span class="nt">env</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">REGISTRY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io</span>
+<span class="w">  </span><span class="nt">IMAGE_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.repository }}</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lint-and-test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">strategy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">matrix</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">18</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">20</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-node@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">node-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ matrix.node-version }}</span>
+<span class="w">          </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;npm&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run lint</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test:coverage</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage-report</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/</span>
+
+<span class="w">  </span><span class="nt">build-and-push</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lint-and-test</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github.ref == &#39;refs/heads/main&#39;</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
+<span class="w">      </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log in to Container Registry</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/login-action@v3</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">registry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ env.REGISTRY }}</span>
+<span class="w">          </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.actor }}</span>
+<span class="w">          </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.GITHUB_TOKEN }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and Push Docker Image</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/build-push-action@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">          </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest</span>
+<span class="w">            </span><span class="no">${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}</span>
+
+<span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build-and-push</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to K8s</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">echo &quot;Connecting to cluster...&quot;</span>
+<span class="w">          </span><span class="no"># 实际部署命令（使用 kubectl 或 helm）</span>
+<span class="w">          </span><span class="no">kubectl set image deployment/my-app \</span>
+<span class="w">            </span><span class="no">app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}</span>
+</code></pre></div>
+<p><strong>Events 与 Runners</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 常用事件</span>
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">                         </span><span class="c1"># 代码推送</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">                 </span><span class="c1"># PR 创建/更新</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w">                     </span><span class="c1"># 定时任务</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&#39;</span><span class="w">        </span><span class="c1"># 每天凌晨2点</span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">            </span><span class="c1"># 手动触发</span>
+<span class="w">  </span><span class="nt">release</span><span class="p">:</span><span class="w">                      </span><span class="c1"># 发布 Release</span>
+
+<span class="c1"># 自托管 Runner 标签</span>
+<span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">self-hosted</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">linux</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">gpu</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p><strong>部署环境与审批</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">deploy-production</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://myapp.com</span>
+<span class="w">    </span><span class="c1"># 此环境配置了&quot;必需的审阅者&quot;</span>
+<span class="w">    </span><span class="c1"># 只有审阅者批准后才执行</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./deploy.sh</span>
+</code></pre></div>
+<h3 id="43-gitlab-ci">4.3 GitLab CI</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .gitlab-ci.yml</span>
+<span class="nt">stages</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lint</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+
+<span class="nt">variables</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">DOCKER_IMAGE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA</span>
+<span class="w">  </span><span class="nt">DOCKER_DRIVER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">overlay2</span>
+
+<span class="nt">cache</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CI_COMMIT_REF_SLUG}</span>
+<span class="w">  </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_modules/</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.npm/</span>
+
+<span class="nt">lint</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lint</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:20-alpine</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run lint</span>
+
+<span class="nt">test</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node:20-alpine</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres://postgres:password@postgres/test</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm ci</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">npm run test</span>
+<span class="w">  </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/Lines:</span><span class="nv"> </span><span class="s">(\d+\.\d+)%/&#39;</span>
+<span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">reports</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">coverage_report</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">coverage_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cobertura</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coverage/cobertura-coverage.xml</span>
+
+<span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24</span>
+<span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker:24-dind</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker build -t $DOCKER_IMAGE .</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker push $DOCKER_IMAGE</span>
+
+<span class="nt">.deploy_template</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;deploy_job</span>
+<span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alpine/helm:3.14</span>
+<span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helm upgrade --install my-app ./charts/my-app</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">--set image.repository=$CI_REGISTRY_IMAGE</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">--set image.tag=$CI_COMMIT_SHA</span>
+<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$CI_ENVIRONMENT_NAME</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://$CI_ENVIRONMENT_NAME.myapp.com</span>
+
+<span class="nt">deploy-staging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*deploy_job</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">CI_ENVIRONMENT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staging</span>
+<span class="w">  </span><span class="nt">only</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+
+<span class="nt">deploy-production</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*deploy_job</span>
+<span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">CI_ENVIRONMENT_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+<span class="w">  </span><span class="nt">only</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tags</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
+</code></pre></div>
+<h3 id="44-jenkins">4.4 Jenkins</h3>
+<p><strong>Jenkinsfile（声明式流水线）</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+
+<span class="w">    </span><span class="n">environment</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">REGISTRY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;registry.example.com&#39;</span>
+<span class="w">        </span><span class="n">IMAGE_TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(8)}&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Checkout&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">checkout</span><span class="w"> </span><span class="n">scm</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Lint &amp; Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">parallel</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Lint&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm run lint&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">                </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Unit Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;npm run test:ci&#39;</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                        </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                            </span><span class="n">junit</span><span class="w"> </span><span class="s1">&#39;reports/*.xml&#39;</span>
+<span class="w">                        </span><span class="o">}</span>
+<span class="w">                    </span><span class="o">}</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    docker build -t ${REGISTRY}/my-app:${IMAGE_TAG} .</span>
+<span class="s2">                    docker tag ${REGISTRY}/my-app:${IMAGE_TAG} ${REGISTRY}/my-app:latest</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Push&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">withCredentials</span><span class="o">([</span><span class="n">string</span><span class="o">(</span><span class="nl">credentialsId:</span><span class="w"> </span><span class="s1">&#39;registry-password&#39;</span><span class="o">,</span><span class="w"> </span><span class="nl">variable:</span><span class="w"> </span><span class="s1">&#39;PASS&#39;</span><span class="o">)])</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        echo ${PASS} | docker login ${REGISTRY} -u admin --password-stdin</span>
+<span class="s2">                        docker push ${REGISTRY}/my-app:${IMAGE_TAG}</span>
+<span class="s2">                        docker push ${REGISTRY}/my-app:latest</span>
+<span class="s2">                    &quot;&quot;&quot;</span>
+<span class="w">                </span><span class="o">}</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+
+<span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">input</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">message</span><span class="w"> </span><span class="s2">&quot;确认部署到生产环境？&quot;</span>
+<span class="w">                </span><span class="n">ok</span><span class="w"> </span><span class="s2">&quot;确认&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;kubectl set image deployment/my-app app=${REGISTRY}/my-app:${IMAGE_TAG}&quot;</span>
+<span class="w">            </span><span class="o">}</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">slackSend</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;#deploy-alerts&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ 部署失败: ${env.BUILD_URL}&quot;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">        </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+<span class="w">            </span><span class="n">slackSend</span><span class="o">(</span>
+<span class="w">                </span><span class="nl">channel:</span><span class="w"> </span><span class="s1">&#39;#deploy-alerts&#39;</span><span class="o">,</span>
+<span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ 部署成功: ${env.BUILD_URL}&quot;</span>
+<span class="w">            </span><span class="o">)</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><strong>共享库（Shared Libraries）</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// vars/deployToK8s.groovy</span>
+<span class="kt">def</span><span class="w"> </span><span class="nf">call</span><span class="o">(</span><span class="n">String</span><span class="w"> </span><span class="n">image</span><span class="o">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;default&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        kubectl set image deployment/my-app \</span>
+<span class="s2">            app=${image} \</span>
+<span class="s2">            -n ${namespace}</span>
+<span class="s2">        kubectl rollout status deployment/my-app \</span>
+<span class="s2">            -n ${namespace}</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+<span class="o">}</span>
+</code></pre></div>
+<h3 id="45-cicd">4.5 CI/CD 平台对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>GitHub Actions</th>
+<th>GitLab CI</th>
+<th>Jenkins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>托管方式</strong></td>
+<td>SaaS</td>
+<td>SaaS / 自托管</td>
+<td>自托管为主</td>
+</tr>
+<tr>
+<td><strong>配置语法</strong></td>
+<td>YAML</td>
+<td>YAML</td>
+<td>Groovy (DSL)</td>
+</tr>
+<tr>
+<td><strong>并发限制</strong></td>
+<td>免费额度有限</td>
+<td>免费额度有限</td>
+<td>取决于自有资源</td>
+</tr>
+<tr>
+<td><strong>插件生态</strong></td>
+<td>✦ Actions 市场</td>
+<td>✦ 集成度高</td>
+<td>✦✦✦✦✦ 最丰富</td>
+</tr>
+<tr>
+<td><strong>自托管 Runner</strong></td>
+<td>✅ 支持</td>
+<td>✅ 支持</td>
+<td>✅ 原生支持</td>
+</tr>
+<tr>
+<td><strong>矩阵构建</strong></td>
+<td>✅ 原生支持</td>
+<td>✅ parallel</td>
+<td>✅ parallel</td>
+</tr>
+<tr>
+<td><strong>环境管理</strong></td>
+<td>✅ Environments</td>
+<td>✅ Environments</td>
+<td>✦ 插件实现</td>
+</tr>
+<tr>
+<td><strong>Pipeline 即代码</strong></td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>学习曲线</strong></td>
+<td>⭐ 低</td>
+<td>⭐⭐ 中</td>
+<td>⭐⭐⭐⭐ 高</td>
+</tr>
+<tr>
+<td><strong>UI 体验</strong></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>GitHub 开源/私有项目</td>
+<td>GitLab 全生命周期</td>
+<td>复杂流水线/合规要求</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_1">五、云服务</h2>
+<h3 id="51">5.1 云服务模型</h3>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  ┌── On-Premises ──────────────────────────────────┐    │
+│  │  自己管理: 硬件 + OS + 网络 + 中间件 + 应用         │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── IaaS ──────────────────────────────────────────┐    │
+│  │  你管理: OS + 中间件 + 应用                       │    │
+│  │  云管: 计算 + 存储 + 网络                          │    │
+│  │  e.g. AWS EC2, 阿里云 ECS                         │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── PaaS ──────────────────────────────────────────┐    │
+│  │  你管理: 应用代码                                  │    │
+│  │  云管: OS + 运行时 + 中间件 + 扩展                   │    │
+│  │  e.g. Heroku, AWS Elastic Beanstalk               │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── FaaS ──────────────────────────────────────────┐    │
+│  │  你管理: 函数代码                                  │    │
+│  │  云管: 一切服务器细节                               │    │
+│  │  e.g. AWS Lambda, Cloudflare Workers              │    │
+│  └──────────────────────────────────────────────────┘    │
+│                       ↓                                   │
+│  ┌── SaaS ──────────────────────────────────────────┐    │
+│  │  开箱即用, 无需管理任何东西                         │    │
+│  │  e.g. GitHub, Slack, Notion                       │    │
+│  └──────────────────────────────────────────────────┘    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>控制力</th>
+<th>运维负担</th>
+<th>弹性伸缩</th>
+<th>典型示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IaaS</strong></td>
+<td>高（可配置 OS）</td>
+<td>高（需自己维护）</td>
+<td>手动/自动扩展组</td>
+<td>EC2, GCE, ECS</td>
+</tr>
+<tr>
+<td><strong>PaaS</strong></td>
+<td>中（仅应用层）</td>
+<td>中（平台管理 OS）</td>
+<td>自动</td>
+<td>Heroku, App Engine</td>
+</tr>
+<tr>
+<td><strong>FaaS</strong></td>
+<td>低（仅函数）</td>
+<td>低（事件驱动）</td>
+<td>原生弹性</td>
+<td>Lambda, Cloud Functions</td>
+</tr>
+<tr>
+<td><strong>SaaS</strong></td>
+<td>最低（仅配置）</td>
+<td>无</td>
+<td>完全托管</td>
+<td>Gmail, Notion</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-aws">5.2 AWS 核心服务</h3>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>类别</th>
+<th>作用</th>
+<th>替代品</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2</strong></td>
+<td>计算 (IaaS)</td>
+<td>虚拟服务器，完全可控</td>
+<td>GCE, 阿里云 ECS</td>
+</tr>
+<tr>
+<td><strong>S3</strong></td>
+<td>存储</td>
+<td>对象存储，无限容量</td>
+<td>GCS, MinIO</td>
+</tr>
+<tr>
+<td><strong>RDS</strong></td>
+<td>数据库 (PaaS)</td>
+<td>托管关系数据库</td>
+<td>Cloud SQL, Aurora</td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td>计算 (FaaS)</td>
+<td>无服务器函数计算</td>
+<td>Cloud Functions</td>
+</tr>
+<tr>
+<td><strong>ECS/EKS</strong></td>
+<td>容器编排</td>
+<td>托管 Docker/K8s</td>
+<td>GKE, AKS</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td>CDN</td>
+<td>全球内容分发</td>
+<td>Cloudflare, Akamai</td>
+</tr>
+<tr>
+<td><strong>Route53</strong></td>
+<td>DNS</td>
+<td>DNS 解析 + 流量路由</td>
+<td>Cloudflare DNS</td>
+</tr>
+<tr>
+<td><strong>ELB/ALB</strong></td>
+<td>负载均衡</td>
+<td>HTTP/TCP 负载均衡</td>
+<td>GCLB, Nginx</td>
+</tr>
+<tr>
+<td><strong>CloudWatch</strong></td>
+<td>监控</td>
+<td>指标 + 日志 + 告警</td>
+<td>Datadog, Grafana</td>
+</tr>
+<tr>
+<td><strong>IAM</strong></td>
+<td>安全</td>
+<td>用户 + 角色 + 权限</td>
+<td>GCP IAM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53">5.3 部署策略</h3>
+<div class="highlight"><pre><span></span><code>flowchart LR
+    A[当前版本 V1] --&gt; B{选择部署策略}
+    B --&gt; C[滚动更新]
+    B --&gt; D[蓝绿部署]
+    B --&gt; E[金丝雀发布]
+    B --&gt; F[特性开关]
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>原理</th>
+<th>优势</th>
+<th>风险</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>滚动更新</strong></td>
+<td>逐个替换实例</td>
+<td>无需额外资源</td>
+<td>回滚慢</td>
+<td>无状态服务</td>
+</tr>
+<tr>
+<td><strong>蓝绿部署</strong></td>
+<td>维护两套完整环境，切换流量</td>
+<td>瞬间切换/回滚</td>
+<td>成本翻倍</td>
+<td>关键业务</td>
+</tr>
+<tr>
+<td><strong>金丝雀发布</strong></td>
+<td>先升级一小部分实例，逐步扩大</td>
+<td>风险最小，可回退</td>
+<td>时间长</td>
+<td>重大变更</td>
+</tr>
+<tr>
+<td><strong>特性开关</strong></td>
+<td>代码已部署，通过开关控制功能可见性</td>
+<td>细粒度控制</td>
+<td>技术债务</td>
+<td>功能灰度测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>蓝绿部署示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Kubernetes + 蓝绿部署</span>
+<span class="c1"># 当前活跃: service-prod → deployment-blue</span>
+<span class="c1"># 准备就绪: deployment-green</span>
+
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span><span class="w">   </span><span class="c1"># 切换为 green 即可切换流量</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+</code></pre></div>
+<p><strong>金丝雀部署（Istio）</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.istio.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VirtualService</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">  </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">route</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stable</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+<span class="w">            </span><span class="nt">subset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">canary</span>
+<span class="w">          </span><span class="nt">weight</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</code></pre></div>
+<h3 id="54-iac">5.4 基础设施即代码 (IaC)</h3>
+<p>IaC 的核心思想：用代码管理基础设施，而非手动点击控制台。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Terraform：声明式 IaC</span>
+<span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">aws</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hashicorp/aws&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 5.0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;aws&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ap-northeast-1&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;app_name&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;应用名称&quot;</span>
+<span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/16&quot;</span>
+<span class="w">  </span><span class="na">enable_dns_support</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="na">enable_dns_hostnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;${var.app_name}-vpc&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_subnet&quot;</span><span class="w"> </span><span class="nv">&quot;public&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">count</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="w">  </span><span class="na">vpc_id</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_vpc.main.id</span>
+<span class="w">  </span><span class="na">cidr_block</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.${count.index}.0/24&quot;</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.aws_availability_zones.available.names[count.index</span><span class="p">]</span>
+<span class="w">  </span><span class="na">map_public_ip_on_launch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ecs_cluster&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_name</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_ecs_service&quot;</span><span class="w"> </span><span class="nv">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nv">var.app_name</span>
+<span class="w">  </span><span class="na">cluster</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ecs_cluster.main.id</span>
+<span class="w">  </span><span class="na">task_definition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_ecs_task_definition.app.arn</span>
+<span class="w">  </span><span class="na">desired_count</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
+<span class="w">  </span><span class="na">launch_type</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;FARGATE&quot;</span>
+
+<span class="w">  </span><span class="nb">network_configuration</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">subnets</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_subnet.public</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">id</span>
+<span class="w">    </span><span class="na">security_groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">aws_security_group.app.id</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>IaC 工具对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>语言</th>
+<th>状态管理</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Terraform</strong></td>
+<td>HCL</td>
+<td>有状态（state 文件）</td>
+<td>跨云资源编排</td>
+</tr>
+<tr>
+<td><strong>OpenTofu</strong></td>
+<td>HCL</td>
+<td>有状态</td>
+<td>Terraform 开源分支</td>
+</tr>
+<tr>
+<td><strong>Pulumi</strong></td>
+<td>Python/TS/Go/...</td>
+<td>有状态</td>
+<td>开发者友好，代码而非 DSL</td>
+</tr>
+<tr>
+<td><strong>AWS CDK</strong></td>
+<td>TypeScript/Python/...</td>
+<td>CloudFormation</td>
+<td>AWS 生态</td>
+</tr>
+<tr>
+<td><strong>Ansible</strong></td>
+<td>YAML</td>
+<td>无状态（幂等）</td>
+<td>配置管理 + 临时任务</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55">5.5 配置管理</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ansible Playbook: 安装 Nginx 并部署应用</span>
+<span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy Web Application</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">webservers</span>
+<span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.2.3&quot;</span>
+<span class="w">    </span><span class="nt">nginx_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ensure Nginx is installed</span>
+<span class="w">      </span><span class="nt">apt</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Copy Nginx configuration</span>
+<span class="w">      </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx.conf.j2</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/nginx/sites-available/myapp</span>
+<span class="w">      </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restart nginx</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create application directory</span>
+<span class="w">      </span><span class="nt">file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/myapp</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory</span>
+<span class="w">        </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www-data</span>
+<span class="w">        </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www-data</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0755&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy application binary</span>
+<span class="w">      </span><span class="nt">get_url</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://artifacts.example.com/myapp/{{</span><span class="nv"> </span><span class="s">app_version</span><span class="nv"> </span><span class="s">}}/myapp&quot;</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/myapp/myapp</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0755&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Start application service</span>
+<span class="w">      </span><span class="nt">systemd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">started</span>
+<span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+
+<span class="w">  </span><span class="nt">handlers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restart nginx</span>
+<span class="w">      </span><span class="nt">systemd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restarted</span>
+</code></pre></div>
+<hr />
+<h2 id="_2">六、监控与告警</h2>
+<h3 id="61">6.1 可观测性三大支柱</h3>
+<div class="highlight"><pre><span></span><code>                            ┌─────────┐
+                            │  Metrics │
+                            │  (指标)   │
+                            │  CPU/内存 │
+                            │  请求量   │
+                            │  错误率   │
+                            └────┬────┘
+                                 │
+            &quot;什么出了问题？&quot;      │
+                                 │
+      ┌──────────┐               │              ┌──────────┐
+      │  Logging  │◄─────────────┼──────────────►│ Tracing  │
+      │  (日志)   │   &quot;为什么？&quot;  │    &quot;谁导致？&quot;  │  (追踪)   │
+      │  error.log│               │              │  请求链路  │
+      │  access   │               │              │  Span 树  │
+      └──────────┘                              └──────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>作用</th>
+<th>问什么</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Metrics</strong></td>
+<td>聚合的时序数据</td>
+<td>系统当前状态？</td>
+<td>CPU 90%, QPS 5000</td>
+</tr>
+<tr>
+<td><strong>Logs</strong></td>
+<td>离散的事件记录</td>
+<td>具体发生了什么？</td>
+<td>"Connection timeout"</td>
+</tr>
+<tr>
+<td><strong>Traces</strong></td>
+<td>请求在分布式系统中的完整路径</td>
+<td>哪个环节慢了？</td>
+<td>SQL 查询耗时 2s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-prometheus-grafana">6.2 Prometheus + Grafana</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># prometheus.yml</span>
+<span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<span class="w">  </span><span class="nt">evaluation_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;kubernetes-pods&#39;</span>
+<span class="w">    </span><span class="nt">kubernetes_sd_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pod</span>
+<span class="w">    </span><span class="nt">relabel_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_scrape</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep</span>
+<span class="w">        </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_path</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace</span>
+<span class="w">        </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__metrics_path__</span>
+<span class="w">        </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(.+)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__address__</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">__meta_kubernetes_pod_annotation_prometheus_io_port</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">replace</span>
+<span class="w">        </span><span class="nt">regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">([^:]+)(?::\d+)?;(\d+)</span>
+<span class="w">        </span><span class="nt">replacement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$1:$2</span>
+<span class="w">        </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__address__</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;node-exporter&#39;</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;localhost:9100&#39;</span><span class="p p-Indicator">]</span>
+
+<span class="nt">alerting</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">alertmanagers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;alertmanager:9093&#39;</span><span class="p p-Indicator">]</span>
+
+<span class="nt">rule_files</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/prometheus/alert-rules.yml&quot;</span>
+</code></pre></div>
+<p><strong>告警规则</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># alert-rules.yml</span>
+<span class="nt">groups</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">instance-down</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InstanceDown</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">up == 0</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5m</span>
+<span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Instance</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">down&quot;</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">job</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.job</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">down</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">more</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">5</span><span class="nv"> </span><span class="s">minutes.&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high-cpu</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HighCPUUsage</span>
+<span class="w">        </span><span class="nt">expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(100 - (avg by(instance)(rate(node_cpu_seconds_total{mode=&quot;idle&quot;}[5m])) * 100)) &gt; 80</span>
+<span class="w">        </span><span class="nt">for</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10m</span>
+<span class="w">        </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+<span class="w">        </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">summary</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CPU</span><span class="nv"> </span><span class="s">usage</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">80%</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">$labels.instance</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</code></pre></div>
+<p><strong>Grafana 面板示例</strong>：</p>
+<div class="highlight"><pre><span></span><code>┌────────────────────────────────────────────────────┐
+│  [CPU 使用率]  [内存]   [磁盘IO]  [网络流量]         │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                      │
+│  │ 65│ │ 4.2│ │ 45│ │120│                      │
+│  │ %  │ │ GB │ │ MB│ │Mbps│                      │
+│  └────┘ └────┘ └────┘ └────┘                      │
+├────────────────────────────────────────────────────┤
+│  QPS 趋势图                                         │
+│  ╱╲    ╱╲    ╱╲    ╱╲                              │
+│ ╱  ╲  ╱  ╲  ╱  ╲  ╱  ╲                             │
+├────────────────────────────────────────────────────┤
+│  各接口 P99 延迟                                     │
+│  /api/users  ━━━━━━━━━━━━━━━━━── 120ms             │
+│  /api/orders ━━━━━━━━━━━━━━━━━━━━ 350ms            │
+│  /api/pay    ━━━━━━━━━━━━━━━━━━━━━━━━━ 890ms       │
+└────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="63-elk-stack">6.3 ELK Stack（日志管理）</h3>
+<div class="highlight"><pre><span></span><code>Application
+  │
+  ├── Filebeat / Fluent Bit (日志采集器)
+  │     └── 发送到 Logstash
+  │
+  ├── Logstash (日志处理管道)
+  │     ├── 解析 (Grok 正则、JSON 解析)
+  │     ├── 过滤 (移除敏感信息、增加字段)
+  │     └── 输出到 Elasticsearch
+  │
+  ├── Elasticsearch (存储 + 搜索)
+  │     └── 倒排索引，全文搜索
+  │
+  └── Kibana (可视化 + 探索)
+        └── 日志搜索、仪表盘、告警
+</code></pre></div>
+<p><strong>Logstash 配置示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="n">input</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">beats</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">port</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">5044</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># 解析 Nginx 访问日志</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="n">service</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;nginx&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">grok</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;message&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;%{COMBINEDAPACHELOG}&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">date</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">match</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dd/MMM/yyyy:HH:mm:ss Z&quot;</span><span class="o">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1"># 解析 JSON 格式的应用日志</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="n">service</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;app&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">json</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">source</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;message&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1"># 移除敏感字段</span>
+<span class="w">  </span><span class="n">mutate</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">remove_field</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;credit_card&quot;</span><span class="o">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">output</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">elasticsearch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">hosts</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;http://elasticsearch:9200&quot;</span><span class="o">]</span>
+<span class="w">    </span><span class="n">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;%{[@metadata][beat]}-%{+YYYY.MM.dd}&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>结构化日志（应用侧）</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Python 结构化日志示例</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">structlog</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;user_login&quot;</span><span class="p">,</span> 
+    <span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> 
+    <span class="n">ip</span><span class="o">=</span><span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span> 
+    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;mobile&quot;</span><span class="p">,</span>
+    <span class="n">duration_ms</span><span class="o">=</span><span class="mi">45</span>
+<span class="p">)</span>
+<span class="c1"># 输出: {&quot;event&quot;: &quot;user_login&quot;, &quot;user_id&quot;: 123, &quot;ip&quot;: &quot;192.168.1.1&quot;, ...}</span>
+</code></pre></div>
+<h3 id="64">6.4 分布式追踪</h3>
+<p><strong>OpenTelemetry 是 CNCF 的追踪标准</strong>，统一了数据采集和上报协议。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Python + OpenTelemetry 示例</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">trace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.exporter.otlp.proto.grpc.trace_exporter</span><span class="w"> </span><span class="kn">import</span> <span class="n">OTLPSpanExporter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.sdk.trace</span><span class="w"> </span><span class="kn">import</span> <span class="n">TracerProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opentelemetry.sdk.trace.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">BatchSpanProcessor</span>
+
+<span class="n">provider</span> <span class="o">=</span> <span class="n">TracerProvider</span><span class="p">()</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">BatchSpanProcessor</span><span class="p">(</span><span class="n">OTLPSpanExporter</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;http://jaeger-collector:4317&quot;</span>
+<span class="p">))</span>
+<span class="n">provider</span><span class="o">.</span><span class="n">add_span_processor</span><span class="p">(</span><span class="n">processor</span><span class="p">)</span>
+<span class="n">trace</span><span class="o">.</span><span class="n">set_tracer_provider</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+
+<span class="n">tracer</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">get_tracer</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">&quot;process_order&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">span</span><span class="p">:</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;order_id&quot;</span><span class="p">,</span> <span class="mi">12345</span><span class="p">)</span>
+    <span class="n">span</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="s2">&quot;payment_initiated&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">&quot;check_inventory&quot;</span><span class="p">):</span>
+        <span class="c1"># 库存检查逻辑</span>
+        <span class="k">pass</span>
+
+    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">&quot;charge_payment&quot;</span><span class="p">):</span>
+        <span class="c1"># 支付逻辑</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<p><strong>Jaeger UI 中的 Trace 视图</strong>：</p>
+<div class="highlight"><pre><span></span><code>Trace: 8a3f2b1c (257ms)
+  ├── frontend: GET /checkout        (257ms)
+  │   ├── auth: verify_token         (12ms)
+  │   ├── cart: get_cart_items       (45ms)
+  │   │   └── redis: hgetall         (8ms)
+  │   ├── order: create_order        (180ms)  ← 瓶颈在这里
+  │   │   ├── payment: charge        (120ms)
+  │   │   ├── inventory: reserve     (35ms)
+  │   │   └── db: insert             (25ms)
+  │   └── notification: send_email   (20ms)
+</code></pre></div>
+<h3 id="65">6.5 告警最佳实践</h3>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>说明</th>
+<th>坏例子</th>
+<th>好例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>减少噪音</strong></td>
+<td>告警要少而精</td>
+<td>每个 CPU 尖峰都告警</td>
+<td>持续 5 分钟 CPU &gt; 90% 才告警</td>
+</tr>
+<tr>
+<td><strong>可操作</strong></td>
+<td>收到告警能采取行动</td>
+<td>"CPU 高"</td>
+<td>"CPU 持续 10 分钟 &gt; 90%，请扩容或排查死循环"</td>
+</tr>
+<tr>
+<td><strong>分级</strong></td>
+<td>根据影响程度分级</td>
+<td>所有告警都 P0</td>
+<td>P0(核心业务中断)、P1(部分功能受损)、P2(非关键告警)</td>
+</tr>
+<tr>
+<td><strong>Runbook</strong></td>
+<td>每个告警有明确处理流程</td>
+<td>收到告警不知怎么办</td>
+<td>告警消息附带排障步骤链接</td>
+</tr>
+<tr>
+<td><strong>On-Call</strong></td>
+<td>轮值制度 + 升级机制</td>
+<td>长期无人响应</td>
+<td>15min 未确认升级到二级 On-Call</td>
+</tr>
+<tr>
+<td><strong>事后复盘</strong></td>
+<td>从故障中学习，不问责</td>
+<td>追究责任人</td>
+<td>整改 Runbook 和系统</td>
+</tr>
+</tbody>
+</table>
+<p><strong>告警分级示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># PagerDuty / Opsgenie 告警规则</span>
+<span class="nt">Critical (P0)</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">服务完全不可用</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">数据库连接数耗尽</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">支付失败率 &gt; 5%</span>
+<span class="w">  </span><span class="nt">响应时间</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15分钟内确认，1小时内修复</span>
+
+<span class="nt">Warning (P1)</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API P99 延迟 &gt; 500ms</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">错误率 &gt; 1%</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">磁盘使用率 &gt; 85%</span>
+<span class="w">  </span><span class="nt">响应时间</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30分钟内确认，4小时内修复</span>
+
+<span class="nt">Info (P2)</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU &gt; 80%（持续30分钟）</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">证书即将过期（30天内）</span>
+<span class="w">  </span><span class="nt">响应时间</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">下一个工作日处理</span>
+</code></pre></div>
+<hr />
+<h2 id="_3">七、数据库部署</h2>
+<h3 id="71">7.1 数据库迁移自动化</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 使用 golang-migrate 管理迁移</span>
+<span class="c1"># 迁移文件命名：{version}_{description}.{up|down}.sql</span>
+
+<span class="c1"># 创建迁移文件</span>
+migrate<span class="w"> </span>create<span class="w"> </span>-ext<span class="w"> </span>sql<span class="w"> </span>-dir<span class="w"> </span>migrations<span class="w"> </span>-seq<span class="w"> </span>create_users_table
+
+<span class="c1"># 生成的文件：</span>
+<span class="c1"># migrations/</span>
+<span class="c1"># ├── 000001_create_users_table.up.sql</span>
+<span class="c1"># └── 000001_create_users_table.down.sql</span>
+</code></pre></div>
+<p><strong>迁移文件示例</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 000001_create_users_table.up.sql</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w">         </span><span class="n">BIGSERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="w">       </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">email</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">password</span><span class="w">   </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="k">TIME</span><span class="w"> </span><span class="k">ZONE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_users_email</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">email</span><span class="p">);</span>
+
+<span class="c1">-- 000001_create_users_table.down.sql</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">users</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>CI/CD 中的迁移执行</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GitHub Actions 中的数据库迁移</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">migrate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run migrations</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">migrate -path migrations \</span>
+<span class="w">                  </span><span class="no">-database &quot;${{ secrets.DATABASE_URL }}&quot; \</span>
+<span class="w">                  </span><span class="no">up</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify schema</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">migrate -path migrations \</span>
+<span class="w">                  </span><span class="no">-database &quot;${{ secrets.DATABASE_URL }}&quot; \</span>
+<span class="w">                  </span><span class="no">version</span>
+</code></pre></div>
+<h3 id="72">7.2 备份策略</h3>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>方法</th>
+<th>RPO (数据丢失)</th>
+<th>RTO (恢复时间)</th>
+<th>存储成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>每日全量</strong></td>
+<td>pg_dump 每天一次</td>
+<td>24小时</td>
+<td>中（数小时）</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>WAL 归档</strong></td>
+<td>持续归档 WAL 日志</td>
+<td>&lt; 1秒</td>
+<td>低（分钟级）</td>
+<td>低</td>
+</tr>
+<tr>
+<td><strong>快照备份</strong></td>
+<td>存储层面快照（EBS 快照）</td>
+<td>秒级</td>
+<td>低（分钟级）</td>
+<td>中</td>
+</tr>
+<tr>
+<td><strong>物理复制</strong></td>
+<td>流复制搭建从库</td>
+<td>零（同步模式）</td>
+<td>即时</td>
+<td>中</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># 数据库备份脚本 (PostgreSQL)</span>
+
+<span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">&quot;/backups/</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">&quot;</span>
+
+<span class="c1"># 全量备份</span>
+pg_dump<span class="w"> </span>-h<span class="w"> </span><span class="nv">$DB_HOST</span><span class="w"> </span>-U<span class="w"> </span><span class="nv">$DB_USER</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--format<span class="o">=</span>custom<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--compress<span class="o">=</span><span class="m">9</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--file<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">/db_</span><span class="k">$(</span>date<span class="w"> </span>+%H%M<span class="k">)</span><span class="s2">.dump&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">$DB_NAME</span>
+
+<span class="c1"># 保留最近 7 天，删除更早的</span>
+find<span class="w"> </span>/backups<span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+
+<span class="c1"># 上传到 S3（异地备份）</span>
+aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>/backups<span class="w"> </span>s3://myapp-db-backups/
+</code></pre></div>
+<h3 id="73">7.3 读写分离（读副本）</h3>
+<div class="highlight"><pre><span></span><code>Application
+  │
+  ├── 写入 → Primary (主库)
+  │              │
+  │              ├── 流复制 → Replica 1 (只读 + 报表查询)
+  │              ├── 流复制 → Replica 2 (只读 + 分析查询)
+  │              └── 流复制 → Replica 3 (灾备)
+  │
+  └── 读取 → Load Balancer → Replicas (轮询/权重)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 应用层读写分离（Django ORM 示例）</span>
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>           <span class="c1"># 写库</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;myapp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HOST&#39;</span><span class="p">:</span> <span class="s1">&#39;primary.cluster.example.com&#39;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;replica&#39;</span><span class="p">:</span> <span class="p">{</span>           <span class="c1"># 读库</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;myapp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HOST&#39;</span><span class="p">:</span> <span class="s1">&#39;replica.cluster.example.com&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">DATABASE_ROUTERS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;myapp.db_router.PrimaryReplicaRouter&#39;</span><span class="p">]</span>
+
+<span class="c1"># db_router.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PrimaryReplicaRouter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">db_for_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;replica&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">db_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;default&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">allow_relation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+<h3 id="74">7.4 连接池</h3>
+<p>数据库连接池是应用层与数据库之间的中间层，复用连接以减少创建开销。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># PgBouncer 配置</span>
+<span class="c1"># pgbouncer.ini</span>
+<span class="o">[</span>databases<span class="o">]</span>
+<span class="nv">myapp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">host</span><span class="o">=</span>primary.cluster.example.com<span class="w"> </span><span class="nv">port</span><span class="o">=</span><span class="m">5432</span><span class="w"> </span><span class="nv">dbname</span><span class="o">=</span>myapp
+
+<span class="o">[</span>pgbouncer<span class="o">]</span>
+<span class="nv">listen_addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.0.0.0
+<span class="nv">listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6432</span>
+<span class="nv">auth_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>md5
+<span class="nv">auth_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/etc/pgbouncer/userlist.txt
+
+<span class="c1"># 连接池模式</span>
+<span class="c1"># session: 每个会话一个连接（默认）</span>
+<span class="c1"># transaction: 每个事务一个连接（推荐用于 Web 应用）</span>
+<span class="c1"># statement: 每个语句一个连接</span>
+<span class="nv">pool_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>transaction
+
+<span class="c1"># 池大小</span>
+<span class="nv">default_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">50</span>
+<span class="nv">max_client_conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+<span class="nv">reserve_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
+<span class="nv">reserve_pool_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span>
+
+<span class="c1"># 超时</span>
+<span class="nv">server_idle_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span>
+<span class="nv">client_idle_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">600</span>
+<span class="nv">query_timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 应用层连接池（SQLAlchemy 示例）</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.pool</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueuePool</span>
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
+    <span class="s1">&#39;postgresql://user:pass@pgbouncer:6432/myapp&#39;</span><span class="p">,</span>
+    <span class="n">poolclass</span><span class="o">=</span><span class="n">QueuePool</span><span class="p">,</span>
+    <span class="n">pool_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>           <span class="c1"># 连接池大小</span>
+    <span class="n">max_overflow</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>        <span class="c1"># 超过 pool_size 时最多创建多少额外连接</span>
+    <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>     <span class="c1"># 每次使用前检查连接是否有效</span>
+    <span class="n">pool_recycle</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>      <span class="c1"># 连接超过1小时重新连接</span>
+<span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>连接池工具</th>
+<th>部署位置</th>
+<th>特点</th>
+<th>适用数据库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PgBouncer</strong></td>
+<td>独立服务（Sidecar/Proxy）</td>
+<td>轻量、事务池模式</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><strong>ProxySQL</strong></td>
+<td>独立服务</td>
+<td>SQL 路由、查询重写、读写分离</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td><strong>HikariCP</strong></td>
+<td>应用内库</td>
+<td>Java 生态最快</td>
+<td>通用（JDBC）</td>
+</tr>
+<tr>
+<td><strong>Druid</strong></td>
+<td>应用内库</td>
+<td>监控完善、慢查询日志</td>
+<td>通用（JDBC）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>关键要点</strong>：连接池的大小不是越大越好。每个连接消耗内存和 CPU，超过数据库的 max_connections 反而会降低性能。通常 CPU 核心数 × 2~4 是合理的起始点。</p>
+</blockquote>
+<hr />
+<h2 id="_4">总结</h2>
+<p>DevOps 是一套理念、实践和工具的结合体，核心目标是将软件从构思到交付的周期缩到最短，同时保证质量与可靠性。</p>
+<table>
+<thead>
+<tr>
+<th>领域</th>
+<th>核心思想</th>
+<th>关键工具</th>
+<th>进阶方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>文化</strong></td>
+<td>协作、自动化、持续改进</td>
+<td>CALMS 框架、DORA 指标</td>
+<td>平台工程、开发者体验</td>
+</tr>
+<tr>
+<td><strong>容器</strong></td>
+<td>不可变基础设施、环境一致</td>
+<td>Docker、Docker Compose</td>
+<td>containerd、WASM</td>
+</tr>
+<tr>
+<td><strong>编排</strong></td>
+<td>声明式管理、自愈、弹性</td>
+<td>Kubernetes、Helm</td>
+<td>服务网格 (Istio/Linkerd)</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>自动化流水线、快速反馈</td>
+<td>GitHub Actions、GitLab CI</td>
+<td>ArgoCD、Flux (GitOps)</td>
+</tr>
+<tr>
+<td><strong>云服务</strong></td>
+<td>按需付费、弹性伸缩</td>
+<td>AWS、Terraform</td>
+<td>Multi-Cloud、FinOps</td>
+</tr>
+<tr>
+<td><strong>监控</strong></td>
+<td>可观测性、数据驱动决策</td>
+<td>Prometheus、Grafana、ELK</td>
+<td>eBPF、OpenTelemetry</td>
+</tr>
+<tr>
+<td><strong>数据库部署</strong></td>
+<td>高可用、数据安全</td>
+<td>PgBouncer、ProxySQL</td>
+<td>分布式数据库 (TiDB/CockroachDB)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>DevOps 的最终目标是让开发者能专注于<strong>交付业务价值</strong>，而不是被部署流程和运维杂事拖慢。工具和流程只是手段，文化和持续改进才是核心。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4903 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://CodeNebula.github.io/assets/reinforcement-learning/02-dynamic-programming/">
+      
+      
+        <link rel="prev" href="../01-mdp-foundations/">
+      
+      
+        <link rel="next" href="../03-monte-carlo-methods/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>动态规划 - CodeNebula</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dynamic-programming" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              动态规划
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../software-development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../software-development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、动态规划在强化学习中的定位
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、动态规划在强化学习中的定位">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 "动态规划"这个名字从何而来
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 DP 的两个前提条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-dp-mc-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 DP 与 MC / TD 的定位对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 经典适用场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 贝尔曼方程的递归结构：DP 的引擎
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 符号约定与本章路线图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、策略评估（Policy Evaluation）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、策略评估（Policy Evaluation）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 问题定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 迭代策略评估：公式与推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 收敛性：不动点视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 一个小例子：三状态链的逐轮迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-44-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 实验环境：4×4 GridWorld
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Python 实现：随机策略的迭代评估
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 工程细节：收敛判据与实现选择
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、策略改进（Policy Improvement）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、策略改进（Policy Improvement）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 从评估到改进：贪心的一步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-policy-improvement-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 策略改进定理（Policy Improvement Theorem）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 为什么"贪心"不会变差：一个直观类比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 等号情形：最优策略的判定条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 示例：对随机策略价值做一次贪心改进
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、策略迭代（Policy Iteration）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、策略迭代（Policy Iteration）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 完整流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 收敛性与复杂度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-python-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Python 实现：GridWorld 策略迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 一个工程优化：截断策略评估
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、价值迭代（Value Iteration）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、价值迭代（Value Iteration）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 合并评估与改进：一步到位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 两种理解方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 与策略迭代的对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-python-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Python 实现：GridWorld 价值迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、广义策略迭代（GPI）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、广义策略迭代（GPI）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 统一视角：评估与改进的交替
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 经典图示：两条互相牵引的箭头
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 为什么这个视角重要
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 GPI 视角下的常见误解澄清
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、DP 的扩展与局限
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、DP 的扩展与局限">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-in-place-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 就地更新（In-place Updates）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-asynchronous-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 异步动态规划（Asynchronous DP）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-prioritized-sweeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 优先扫除（Prioritized Sweeping）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-curse-of-dimensionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 维度灾难（Curse of Dimensionality）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 最大局限：需要完整模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-alphazero-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 现代意义：AlphaZero 与 DP 的血缘
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、完整实验：经典 4×4 GridWorld
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、完整实验：经典 4×4 GridWorld">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 实验目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 完整代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 结果对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 最优策略的可视化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 动手练习
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：本章速查表
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、动态规划在强化学习中的定位
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、动态规划在强化学习中的定位">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 "动态规划"这个名字从何而来
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 DP 的两个前提条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-dp-mc-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 DP 与 MC / TD 的定位对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 经典适用场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 贝尔曼方程的递归结构：DP 的引擎
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 符号约定与本章路线图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、策略评估（Policy Evaluation）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、策略评估（Policy Evaluation）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 问题定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 迭代策略评估：公式与推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 收敛性：不动点视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 一个小例子：三状态链的逐轮迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-44-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 实验环境：4×4 GridWorld
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Python 实现：随机策略的迭代评估
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 工程细节：收敛判据与实现选择
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、策略改进（Policy Improvement）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、策略改进（Policy Improvement）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 从评估到改进：贪心的一步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-policy-improvement-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 策略改进定理（Policy Improvement Theorem）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 为什么"贪心"不会变差：一个直观类比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 等号情形：最优策略的判定条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 示例：对随机策略价值做一次贪心改进
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#policy-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、策略迭代（Policy Iteration）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、策略迭代（Policy Iteration）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 完整流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 收敛性与复杂度
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-python-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Python 实现：GridWorld 策略迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 一个工程优化：截断策略评估
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、价值迭代（Value Iteration）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、价值迭代（Value Iteration）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 合并评估与改进：一步到位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 两种理解方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 与策略迭代的对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-python-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Python 实现：GridWorld 价值迭代
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 输出解读
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、广义策略迭代（GPI）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、广义策略迭代（GPI）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 统一视角：评估与改进的交替
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 经典图示：两条互相牵引的箭头
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 为什么这个视角重要
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 GPI 视角下的常见误解澄清
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、DP 的扩展与局限
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、DP 的扩展与局限">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-in-place-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 就地更新（In-place Updates）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-asynchronous-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 异步动态规划（Asynchronous DP）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-prioritized-sweeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 优先扫除（Prioritized Sweeping）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-curse-of-dimensionality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 维度灾难（Curse of Dimensionality）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 最大局限：需要完整模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-alphazero-dp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 现代意义：AlphaZero 与 DP 的血缘
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#44-gridworld" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、完整实验：经典 4×4 GridWorld
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、完整实验：经典 4×4 GridWorld">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 实验目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 完整代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 结果对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 最优策略的可视化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 动手练习
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：本章速查表
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    强化学习
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="dynamic-programming">动态规划（Dynamic Programming）</h1>
+<blockquote>
+<p>动态规划（Dynamic Programming, DP）是求解马尔可夫决策过程（MDP）的
+第一族完整算法，也是整个强化学习理论的<strong>数学基石</strong>。本章从"已知模型
++ 完美马尔可夫"两个前提出发，系统讲解<strong>策略评估（Policy Evaluation）</strong>、
+<strong>策略改进（Policy Improvement）</strong>、<strong>策略迭代（Policy Iteration）</strong>与
+<strong>价值迭代（Value Iteration）</strong> 四大核心算法，并以<strong>广义策略迭代
+（Generalized Policy Iteration, GPI）</strong> 的统一视角收束全章。全文假设读者
+已掌握第 1 章的 MDP 五要素与贝尔曼方程；所有代码均为可运行的 Python 3
+实现，实验环境为经典 4×4 GridWorld（Sutton &amp; Barto 例 4.1 风格）。</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、动态规划在强化学习中的定位</h2>
+<h3 id="11">1.1 "动态规划"这个名字从何而来</h3>
+<p>"动态规划"一词由 <strong>Richard Bellman</strong> 于 1950 年代提出。Bellman 选用
+"dynamic"一词，一方面因为"动态"准确描述了问题<strong>随时间分阶段决策</strong>的结构，
+另一方面是为了让这个数学方法听起来"足够有吸引力"。</p>
+<p>在强化学习语境下，动态规划指<strong>利用贝尔曼方程递归结构求解最优策略的
+一族算法</strong>：</p>
+<div class="highlight"><pre><span></span><code>动态规划 = 把&quot;大问题&quot;（整个 MDP 的最优策略）分解为
+          &quot;小问题&quot;（每个状态的价值），
+          再用小问题的解递归地组装出大问题的解
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：价值函数满足贝尔曼方程，即"当前状态的价值 = 即时奖励
++ 折扣后的未来状态价值"。这个<strong>自指（self-referential）结构</strong>天然适合
+递归求解——只要把每个状态的价值算出来，最优策略就随之确定。DP 就是
+围绕这个递归结构建立起来的完整算法族。</p>
+</blockquote>
+<h3 id="12-dp">1.2 DP 的两个前提条件</h3>
+<p>DP 不是万能的，它成立需要两个<strong>硬性前提</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>前提</th>
+<th>含义</th>
+<th>如果违反</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>已知环境模型</strong></td>
+<td>转移概率 <span class="arithmatex">\(P(s', r \mid s, a)\)</span> 与奖励函数 <span class="arithmatex">\(R(s, a)\)</span> 完全已知</td>
+<td>无法直接计算期望，必须与真实环境交互采样（→ 第 3、4 章免模型方法）</td>
+</tr>
+<tr>
+<td><strong>完美马尔可夫</strong></td>
+<td>状态完全可观测，转移满足马尔可夫性质</td>
+<td>贝尔曼方程失效，需要 POMDP 框架</td>
+</tr>
+</tbody>
+</table>
+<p>这两个前提决定了 DP 的本质：<strong>DP 是"规划"（planning），不是"学习"
+（learning）</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>规划（Planning）</th>
+<th>学习（Learning）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据来源</td>
+<td>已知模型，直接查 <span class="arithmatex">\(P\)</span> 与 <span class="arithmatex">\(R\)</span></td>
+<td>与环境交互产生的经验轨迹</td>
+</tr>
+<tr>
+<td>是否需要环境</td>
+<td>不需要，纯计算</td>
+<td>必须与环境交互</td>
+</tr>
+<tr>
+<td>典型算法</td>
+<td>策略迭代、价值迭代、MCTS</td>
+<td>MC、TD、Q-Learning、PPO</td>
+</tr>
+<tr>
+<td>误差来源</td>
+<td>数值近似、截断误差</td>
+<td>采样噪声、函数逼近误差</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-dp-mc-td">1.3 DP 与 MC / TD 的定位对比</h3>
+<p>在第 3、4 章展开蒙特卡洛（Monte Carlo, MC）与时序差分（Temporal
+Difference, TD）之前，先给出三者的宏观定位——这是理解后续章节的"地图"：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>动态规划 DP</th>
+<th>蒙特卡洛 MC</th>
+<th>时序差分 TD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>是否需要环境模型</strong></td>
+<td>需要（已知 <span class="arithmatex">\(P, R\)</span>）</td>
+<td>不需要</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td><strong>是否需要交互采样</strong></td>
+<td>不需要（纯计算）</td>
+<td>需要（完整回合）</td>
+<td>需要（单步即可）</td>
+</tr>
+<tr>
+<td><strong>更新方式</strong></td>
+<td>全状态同步扫描（sweep）</td>
+<td>回合结束用整回合回报更新</td>
+<td>每步"奖励 + 下一步估计"更新</td>
+</tr>
+<tr>
+<td><strong>自举（Bootstrapping）</strong></td>
+<td>是（用 <span class="arithmatex">\(v_k(s')\)</span> 更新 <span class="arithmatex">\(v_{k+1}(s)\)</span>）</td>
+<td>否（用真实回报 <span class="arithmatex">\(G_t\)</span>）</td>
+<td>是（用当前估计 <span class="arithmatex">\(V(s')\)</span>）</td>
+</tr>
+<tr>
+<td><strong>偏差 / 方差</strong></td>
+<td>无采样偏差（但需模型）</td>
+<td>无偏、高方差</td>
+<td>有偏、低方差</td>
+</tr>
+<tr>
+<td><strong>代表算法</strong></td>
+<td>策略迭代、价值迭代</td>
+<td>首次访问 / 每次访问 MC</td>
+<td>SARSA、Q-Learning</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：三者都在解同一个贝尔曼方程，区别只在"期望怎么算"——
+DP 用已知模型算精确期望，MC 用整回合采样近似期望，TD 用单步采样 +
+自举折中。<strong>DP 是理论基线，MC 与 TD 是它在模型未知时的"替身"</strong>。</p>
+</blockquote>
+<h3 id="14">1.4 经典适用场景</h3>
+<p>DP 的经典适用场景，共同特征是<strong>模型已知、状态空间有限（或可离散化）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>为什么适合 DP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>棋盘游戏求解</strong>（国际象棋残局、黑白棋、双陆棋、井字棋）</td>
+<td>规则即模型，转移完全已知，状态可枚举</td>
+</tr>
+<tr>
+<td><strong>最短路径 / 图搜索</strong>（Dijkstra、Floyd-Warshall 的思想源头）</td>
+<td>就是确定性的 MDP 求解</td>
+</tr>
+<tr>
+<td><strong>线性二次调节器（LQR）</strong> 等最优控制问题</td>
+<td>系统动力学已知，连续状态可用解析式</td>
+</tr>
+<tr>
+<td><strong>动态资产配置 / 背包问题 / 编辑距离</strong> 等运筹问题</td>
+<td>阶段决策结构天然是 MDP</td>
+</tr>
+<tr>
+<td><strong>现代算法的内部规划器</strong>（AlphaZero 的 MCTS 价值备份）</td>
+<td>在已知规则环境中"想几步"</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：在绝大多数现代深度强化学习任务（像素输入、连续控制）中，
+模型未知或状态空间巨大，DP 无法直接使用。但<strong>理解 DP 是理解一切后续
+算法的前提</strong>——MC、TD、DQN 全部可以看作"用采样代替期望的 DP"。</p>
+</blockquote>
+<h3 id="15-dp">1.5 贝尔曼方程的递归结构：DP 的引擎</h3>
+<p>第 1 章给出的两个核心方程，是本章所有算法的出发点：</p>
+<p><strong>贝尔曼期望方程（Bellman Expectation Equation）</strong>——描述"给定策略
+<span class="arithmatex">\(\pi\)</span> 的价值"：</p>
+<div class="arithmatex">\[v_{\pi}(s) = \sum_{a} \pi(a \mid s) \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_{\pi}(s') \right]\]</div>
+<p><strong>贝尔曼最优性方程（Bellman Optimality Equation）</strong>——描述"最优价值"：</p>
+<div class="arithmatex">\[v_{*}(s) = \max_{a} \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_{*}(s') \right]\]</div>
+<p>两者的共同结构是：<strong><span class="arithmatex">\(v(s)\)</span> 出现在等号两边</strong>，这正是"递归"所在：</p>
+<div class="highlight"><pre><span></span><code>v(s) = r(s, a) + γ · v(s&#39;)     ← 等号右边还有 v
+        ↑ 即时     ↑ 未来的价值（下一个状态的价值）
+</code></pre></div>
+<p>要解开这个自指方程，有三大类思路：</p>
+<table>
+<thead>
+<tr>
+<th>思路</th>
+<th>方法</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>直接求解</strong></td>
+<td>解线性方程组 <span class="arithmatex">\(v = (I - \gamma P_\pi)^{-1} r_\pi\)</span></td>
+<td>精确但 <span class="arithmatex">\(O(\lvert S \rvert^3)\)</span>，只适用于极小状态空间</td>
+</tr>
+<tr>
+<td><strong>迭代求解</strong>（DP 的做法）</td>
+<td>从初始估计出发反复套用贝尔曼方程直到收敛</td>
+<td>每次更新 <span class="arithmatex">\(O(\lvert S \rvert^2 \lvert A \rvert)\)</span>，本章全部内容</td>
+</tr>
+<tr>
+<td><strong>采样求解</strong>（MC/TD 的做法）</td>
+<td>用经验回报代替期望</td>
+<td>模型未知时的替代方案（第 3、4 章）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：DP 选择"迭代求解"——不追求一步到位，而是让价值估计
+<strong>一轮一轮地逼近</strong>真实值。每一轮更新（backup）都在"消费"一次贝尔曼
+方程，这正是"动态"二字的数学含义。</p>
+</blockquote>
+<h3 id="16">1.6 符号约定与本章路线图</h3>
+<p>本章沿用第 1 章符号，为方便查阅集中列出：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(S, A, P, R, \gamma\)</span></td>
+<td>MDP 五要素：状态集、动作集、转移概率、奖励、折扣因子</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\pi(a \mid s)\)</span></td>
+<td>策略：状态到动作的（随机）映射</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(v_\pi(s), q_\pi(s, a)\)</span></td>
+<td>策略 <span class="arithmatex">\(\pi\)</span> 下的状态 / 动作价值函数</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(v_*(s), q_*(s, a), \pi_*\)</span></td>
+<td>最优价值函数与最优策略</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(v_k\)</span></td>
+<td>第 <span class="arithmatex">\(k\)</span> 轮迭代后的价值估计</td>
+</tr>
+<tr>
+<td><strong>sweep（扫描）</strong></td>
+<td>对全部状态完成一轮更新，是 DP 的基本计量单位</td>
+</tr>
+</tbody>
+</table>
+<p>本章的算法路线：</p>
+<div class="highlight"><pre><span></span><code>              ┌─────────────────────────────────────┐
+              │           已知模型 P, R              │
+              └──────────────────┬──────────────────┘
+                                 ▼
+        ┌──────────────────────────────────────────┐
+        │  策略评估（第 2 节）                        │
+        │  任意 π ──► v_π（迭代贝尔曼期望方程）        │
+        └──────────────────┬───────────────────────┘
+                           ▼
+        ┌──────────────────────────────────────────┐
+        │  策略改进（第 3 节）                        │
+        │  v_π ──► 贪心策略 π&#39;（策略改进定理保证不差）  │
+        └──────────────────┬───────────────────────┘
+                           ▼
+        ┌──────────────────────────────────────────┐
+        │  策略迭代（第 4 节）：评估 ⟷ 改进，循环至收敛 │
+        │  价值迭代（第 5 节）：评估与改进合并为 max 备份│
+        └──────────────────────────────────────────┘
+                           ▼
+        ┌──────────────────────────────────────────┐
+        │  广义策略迭代 GPI（第 6 节）：统一视角        │
+        │  扩展与局限（第 7 节）→ 完整实验（第 8 节）    │
+        └──────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="policy-evaluation">二、策略评估（Policy Evaluation）</h2>
+<h3 id="21">2.1 问题定义</h3>
+<p><strong>策略评估</strong>（又称<strong>预测问题，prediction problem</strong>）：给定策略 <span class="arithmatex">\(\pi\)</span>，
+计算它的状态价值函数 <span class="arithmatex">\(v_\pi\)</span>：</p>
+<div class="arithmatex">\[
+v_{\pi}(s) = \mathbb{E}_{\pi}\left[ G_t \,\middle|\, S_t = s \right]
+= \mathbb{E}_{\pi}\left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \,\middle|\, S_t = s \right]
+\]</div>
+<p>这是"评估"而非"求解最优"——我们不问"最好的策略是什么"，只问
+"<strong>这个</strong>策略到底有多好"。</p>
+<blockquote>
+<p><strong>为什么先学评估？</strong> 因为"改进"依赖"评估"：要判断一个策略好不好、
+往哪个方向改进，必须先能量化它的价值。策略评估是所有后续算法
+（策略迭代、价值迭代、乃至 MC/TD 预测）的公共组件。</p>
+</blockquote>
+<h3 id="22">2.2 迭代策略评估：公式与推导</h3>
+<p>直接解 <span class="arithmatex">\(v_\pi\)</span> 需要解 <span class="arithmatex">\(|S|\)</span> 元线性方程组，代价 <span class="arithmatex">\(O(|S|^3)\)</span>。DP 的替代
+方案是<strong>迭代策略评估（Iterative Policy Evaluation）</strong>：从初始估计 <span class="arithmatex">\(v_0\)</span>
+出发，反复应用贝尔曼期望方程：</p>
+<div class="arithmatex">\[
+\boxed{\; v_{k+1}(s) = \sum_{a} \pi(a \mid s) \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_k(s') \right] \;}
+\]</div>
+<p><strong>推导</strong>：贝尔曼期望方程 <span class="arithmatex">\(v_\pi = \mathcal{T}^\pi v_\pi\)</span> 定义了算子
+<span class="arithmatex">\(\mathcal{T}^\pi\)</span>（贝尔曼期望算子）。迭代策略评估就是不动点迭代
+<span class="arithmatex">\(v_{k+1} = \mathcal{T}^\pi v_k\)</span>，而 <span class="arithmatex">\(\mathcal{T}^\pi\)</span> 是<strong>压缩映射
+（contraction mapping）</strong>：对任意 <span class="arithmatex">\(u, v\)</span> 有</p>
+<div class="arithmatex">\[
+\left\| \mathcal{T}^\pi u - \mathcal{T}^\pi v \right\|_\infty \le \gamma \left\| u - v \right\|_\infty, \qquad \gamma &lt; 1
+\]</div>
+<blockquote>
+<p><strong>核心思想</strong>：贝尔曼期望算子每作用一次，价值估计与真实 <span class="arithmatex">\(v_\pi\)</span> 的
+距离至少缩小 <span class="arithmatex">\(\gamma\)</span> 倍。因此无论 <span class="arithmatex">\(v_0\)</span> 取什么初值，迭代都<strong>线性收敛</strong>
+到唯一不动点 <span class="arithmatex">\(v_\pi\)</span>。当 <span class="arithmatex">\(\gamma = 1\)</span> 时，只要策略保证最终到达吸收终止
+状态（如本章 GridWorld），同样收敛。</p>
+</blockquote>
+<p><strong>算法伪代码</strong>（Sutton &amp; Barto 算法 4.1 风格）：</p>
+<div class="highlight"><pre><span></span><code>输入：策略 π，阈值 θ &gt; 0
+初始化：V(s) = 0（非终止状态），V(终止) = 0
+重复：
+    Δ ← 0
+    对每个状态 s ∈ S：
+        v ← V(s)
+        V(s) ← Σ_a π(a|s) Σ_{s&#39;,r} P(s&#39;,r|s,a) [r + γV(s&#39;)]
+        Δ ← max(Δ, |v − V(s)|)
+直到 Δ &lt; θ
+输出：V ≈ v_π
+</code></pre></div>
+<p><strong>一次更新（backup）的图示</strong>——价值从"后继状态"流向"当前状态"：</p>
+<div class="highlight"><pre><span></span><code>              动作 a₁ ──► s&#39;₁ ── r₁
+             ╱
+    s ──●─── 动作 a₂ ──► s&#39;₂ ── r₂   ← 叶子 v_k(s&#39;) 汇聚到根 v_{k+1}(s)
+             ╲
+              动作 a₃ ──► s&#39;₃ ── r₃
+</code></pre></div>
+<h3 id="23">2.3 收敛性：不动点视角</h3>
+<p>为什么"反复套公式"就能收敛？把真实值 <span class="arithmatex">\(v_\pi\)</span> 想成一根弹簧的固定端，
+当前估计 <span class="arithmatex">\(v_k\)</span> 是自由端——每次更新都把估计<strong>往真实值方向拉一把</strong>，
+拉力恰好是 <span class="arithmatex">\(\gamma\)</span> 倍的距离：</p>
+<table>
+<thead>
+<tr>
+<th>迭代轮数</th>
+<th>误差上界（相对初值误差）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(k\)</span></td>
+<td><span class="arithmatex">\(\gamma^k \cdot \lVert v_0 - v_\pi \rVert_\infty\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\gamma = 0.9\)</span>，<span class="arithmatex">\(k = 10\)</span></td>
+<td><span class="arithmatex">\(0.9^{10} \approx 0.35\)</span>（误差降到 1/3）</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\gamma = 0.9\)</span>，<span class="arithmatex">\(k = 50\)</span></td>
+<td><span class="arithmatex">\(0.9^{50} \approx 0.005\)</span>（误差降到 0.5%）</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\gamma = 0.5\)</span>，<span class="arithmatex">\(k = 10\)</span></td>
+<td><span class="arithmatex">\(0.5^{10} \approx 0.001\)</span>（几乎收敛）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：<span class="arithmatex">\(\gamma\)</span> 越小收敛越快（但"看得越近"）；<span class="arithmatex">\(\gamma\)</span> 越大收敛
+越慢（但价值越"有远见"）。<strong>收敛速度与折扣因子直接挂钩</strong>，这是 DP 所有
+迭代算法的共同规律。</p>
+</blockquote>
+<h3 id="24">2.4 一个小例子：三状态链的逐轮迭代</h3>
+<p>用一个最小的三状态 MDP 观察迭代过程。状态 <span class="arithmatex">\(A, B, C\)</span> 构成循环，策略固定
+为"总是走向下一个状态"，每步奖励 <span class="arithmatex">\(+1\)</span>，<span class="arithmatex">\(\gamma = 0.9\)</span>：</p>
+<div class="highlight"><pre><span></span><code>A ──► B ──► C ──► A ──► ...   （循环，无终止状态）
+π：A→B，B→C，C→A；奖励恒为 +1
+</code></pre></div>
+<p>由对称性 <span class="arithmatex">\(v(A) = v(B) = v(C) = v\)</span>，贝尔曼方程给出 <span class="arithmatex">\(v = 1 + 0.9v\)</span>，
+解析解 <span class="arithmatex">\(v = 10\)</span>。从 <span class="arithmatex">\(v_0 = 0\)</span> 出发迭代（真实运行结果）：</p>
+<table>
+<thead>
+<tr>
+<th>轮数 <span class="arithmatex">\(k\)</span></th>
+<th><span class="arithmatex">\(v_k(A) = v_k(B) = v_k(C)\)</span></th>
+<th>与极限 10 的误差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.0000</td>
+<td>10.0000</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1.0000</td>
+<td>9.0000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1.9000</td>
+<td>8.1000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2.7100</td>
+<td>7.2900</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3.4390</td>
+<td>6.5610</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4.0951</td>
+<td>5.9049</td>
+</tr>
+<tr>
+<td>6</td>
+<td>4.6856</td>
+<td>5.3144</td>
+</tr>
+<tr>
+<td>7</td>
+<td>5.2170</td>
+<td>4.7830</td>
+</tr>
+<tr>
+<td>8</td>
+<td>5.6953</td>
+<td>4.3047</td>
+</tr>
+<tr>
+<td>9</td>
+<td>6.1258</td>
+<td>3.8742</td>
+</tr>
+<tr>
+<td>10</td>
+<td>6.5132</td>
+<td>3.4868</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\infty\)</span></td>
+<td>10.0000</td>
+<td>0.0000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>观察</strong>：每轮误差恰好乘以 <span class="arithmatex">\(\gamma = 0.9\)</span>（<span class="arithmatex">\(9.0 \to 8.1 \to 7.29 \to \dots\)</span>），
+这正是压缩映射理论的<strong>数值验证</strong>——误差呈几何级数衰减，衰减率就是 <span class="arithmatex">\(\gamma\)</span>。</p>
+<p>对应代码：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># 三状态链：A=0, B=1, C=2；策略固定为&quot;走向下一个状态&quot;；奖励恒为 +1</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">V_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span>          <span class="c1"># 策略：A→B, B→C, C→A</span>
+        <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;k=</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">: V(A)=</span><span class="si">{</span><span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">  V(B)=</span><span class="si">{</span><span class="n">V</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">  V(C)=</span><span class="si">{</span><span class="n">V</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># k= 1: V(A)=  1.0000  V(B)=  1.0000  V(C)=  1.0000</span>
+<span class="c1"># k= 2: V(A)=  1.9000  V(B)=  1.9000  V(C)=  1.9000</span>
+<span class="c1"># k= 3: V(A)=  2.7100  V(B)=  2.7100  V(C)=  2.7100</span>
+<span class="c1"># k= 4: V(A)=  3.4390  V(B)=  3.4390  V(C)=  3.4390</span>
+<span class="c1"># k= 5: V(A)=  4.0951  V(B)=  4.0951  V(C)=  4.0951</span>
+<span class="c1"># k= 6: V(A)=  4.6856  V(B)=  4.6856  V(C)=  4.6856</span>
+<span class="c1"># k= 7: V(A)=  5.2170  V(B)=  5.2170  V(C)=  5.2170</span>
+<span class="c1"># k= 8: V(A)=  5.6953  V(B)=  5.6953  V(C)=  5.6953</span>
+<span class="c1"># k= 9: V(A)=  6.1258  V(B)=  6.1258  V(C)=  6.1258</span>
+<span class="c1"># k=10: V(A)=  6.5132  V(B)=  6.5132  V(C)=  6.5132</span>
+<span class="c1"># （极限值 = 1 / (1 - 0.9) = 10.0）</span>
+</code></pre></div>
+<h3 id="25-44-gridworld">2.5 实验环境：4×4 GridWorld</h3>
+<p>本章正式实验环境沿用 Sutton &amp; Barto 例 4.1 的 <strong>GridWorld</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>规则项</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>状态空间</strong></td>
+<td><span class="arithmatex">\(4 \times 4\)</span> 网格，编号 0–15</td>
+</tr>
+<tr>
+<td><strong>终止状态</strong></td>
+<td>左上角 0 与右下角 15（奖励 0，永久停留）</td>
+</tr>
+<tr>
+<td><strong>动作空间</strong></td>
+<td>上、下、左、右（确定性转移）</td>
+</tr>
+<tr>
+<td><strong>奖励</strong></td>
+<td>每次非终止转移奖励 <span class="arithmatex">\(-1\)</span>；<strong>撞墙（越界）原地不动，仍奖励 <span class="arithmatex">\(-1\)</span></strong></td>
+</tr>
+<tr>
+<td><strong>折扣因子</strong></td>
+<td><span class="arithmatex">\(\gamma = 1\)</span>（任务必然终止，无需折扣）</td>
+</tr>
+<tr>
+<td><strong>目标</strong></td>
+<td>从任意格子出发，以最少步数到达任一终止状态</td>
+</tr>
+</tbody>
+</table>
+<p>网格布局（<code>T</code> 为终止状态）：</p>
+<div class="highlight"><pre><span></span><code>       列 0    列 1    列 2    列 3
+行 0  ┌─────┬─────┬─────┬─────┐
+      │  0  │  1  │  2  │  3  │
+      │  T  │     │     │     │
+行 1  ├─────┼─────┼─────┼─────┤
+      │  4  │  5  │  6  │  7  │
+行 2  ├─────┼─────┼─────┼─────┤
+      │  8  │  9  │ 10  │ 11  │
+行 3  ├─────┼─────┼─────┼─────┤
+      │ 12  │ 13  │ 14  │ 15  │
+      │     │     │     │  T  │
+      └─────┴─────┴─────┴─────┘
+</code></pre></div>
+<p>环境代码（后续所有实验共用）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">SIZE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">SIZE</span> <span class="o">*</span> <span class="n">SIZE</span>                 <span class="c1"># 16 个状态</span>
+<span class="n">TERMINAL</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">}</span>              <span class="c1"># 终止状态集合</span>
+<span class="n">ORDER</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;↑&#39;</span><span class="p">,</span> <span class="s1">&#39;↓&#39;</span><span class="p">,</span> <span class="s1">&#39;←&#39;</span><span class="p">,</span> <span class="s1">&#39;→&#39;</span><span class="p">]</span>   <span class="c1"># 动作遍历顺序（决定平局时的取舍）</span>
+<span class="n">ACT_DELTA</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;↑&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">SIZE</span><span class="p">,</span> <span class="s1">&#39;↓&#39;</span><span class="p">:</span> <span class="o">+</span><span class="n">SIZE</span><span class="p">,</span> <span class="s1">&#39;←&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;→&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;执行动作 a，返回 (s&#39;, r)。</span>
+<span class="sd">    越界（撞墙）则原地停留；非终止转移奖励 -1；终止状态奖励 0 并停留。&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">ACT_DELTA</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+    <span class="c1"># 撞墙检测：上下越界 / 左右越界</span>
+    <span class="k">if</span> <span class="n">ns</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ns</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">%</span> <span class="n">SIZE</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;←&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">s</span> <span class="o">%</span> <span class="n">SIZE</span> <span class="o">==</span> <span class="n">SIZE</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;→&#39;</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="n">ns</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;把价值向量打印为 4x4 表格&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">),</span> <span class="n">precision</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+                          <span class="n">suppress_small</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">floatmode</span><span class="o">=</span><span class="s1">&#39;fixed&#39;</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;把策略打印为箭头网格（T 表示终止状态）&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;T&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">TERMINAL</span>
+                        <span class="k">else</span> <span class="n">policy</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">)))</span>
+</code></pre></div>
+<h3 id="26-python">2.6 Python 实现：随机策略的迭代评估</h3>
+<p>对 GridWorld 应用<strong>均匀随机策略</strong>（四动作各 <span class="arithmatex">\(0.25\)</span> 概率），用迭代策略
+评估计算 <span class="arithmatex">\(v_\pi\)</span>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 均匀随机策略的迭代策略评估</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">V_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>                    <span class="c1"># 终止状态价值恒为 0</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>                 <span class="c1"># 4 个动作，各 0.25 概率</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>
+        <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+    <span class="n">show</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># --- k=1 ---</span>
+<span class="c1"># [[ 0.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00  0.00]]</span>
+<span class="c1"># --- k=2 ---</span>
+<span class="c1"># [[ 0.00 -1.75 -2.00 -2.00]</span>
+<span class="c1">#  [-1.75 -2.00 -2.00 -2.00]</span>
+<span class="c1">#  [-2.00 -2.00 -2.00 -1.75]</span>
+<span class="c1">#  [-2.00 -2.00 -1.75  0.00]]</span>
+<span class="c1"># --- k=3 ---</span>
+<span class="c1"># [[ 0.00 -2.44 -2.94 -3.00]</span>
+<span class="c1">#  [-2.44 -2.88 -3.00 -2.94]</span>
+<span class="c1">#  [-2.94 -3.00 -2.88 -2.44]</span>
+<span class="c1">#  [-3.00 -2.94 -2.44  0.00]]</span>
+<span class="c1"># --- k=4 ---</span>
+<span class="c1"># [[ 0.00 -3.06 -3.84 -3.97]</span>
+<span class="c1">#  [-3.06 -3.72 -3.91 -3.84]</span>
+<span class="c1">#  [-3.84 -3.91 -3.72 -3.06]</span>
+<span class="c1">#  [-3.97 -3.84 -3.06  0.00]]</span>
+</code></pre></div>
+<p>继续迭代直到收敛（<span class="arithmatex">\(\Delta &lt; 10^{-4}\)</span>），需要 <strong>173 次扫描</strong>，得到 <span class="arithmatex">\(v_\pi\)</span>
+（与 Sutton 教材图 4.1 完全一致）：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 收敛版本：加收敛判据，打印最终结果</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="n">V_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>
+        <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">V_new</span> <span class="o">-</span> <span class="n">V</span><span class="p">))</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+    <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;随机策略评估收敛于第 </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2"> 轮（delta=</span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">）&quot;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># 随机策略评估收敛于第 173 轮（delta=9.89e-05）</span>
+<span class="c1"># [[  0.00 -14.00 -20.00 -22.00]</span>
+<span class="c1">#  [-14.00 -18.00 -20.00 -20.00]</span>
+<span class="c1">#  [-20.00 -20.00 -18.00 -14.00]</span>
+<span class="c1">#  [-22.00 -20.00 -14.00   0.00]]</span>
+</code></pre></div>
+<h3 id="27">2.7 输出解读</h3>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>所有值都为负</td>
+<td>随机策略每步期望收益为负，到达终止前的步数越多越负</td>
+</tr>
+<tr>
+<td>角落附近（状态 1、4）值最大（<span class="arithmatex">\(-14\)</span>）</td>
+<td>靠近终止状态，随机游走很快能撞进去</td>
+</tr>
+<tr>
+<td>中心区域（状态 2、3、7）值最负（<span class="arithmatex">\(-20 \sim -22\)</span>）</td>
+<td>离两个终止状态都远，随机游走耗时最长</td>
+</tr>
+<tr>
+<td>完全对称</td>
+<td>网格关于对角线（0–15 连线）对称，价值也对称</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：价值函数把"策略的远期后果"压缩成一个数——它反映的是
+<strong>在策略 <span class="arithmatex">\(\pi\)</span> 下，从这个状态出发平均还要吃多少苦（负奖励）</strong>。有了
+这个数，就能判断"往哪个方向走更好"——这正是下一节策略改进的输入。</p>
+</blockquote>
+<h3 id="28">2.8 工程细节：收敛判据与实现选择</h3>
+<table>
+<thead>
+<tr>
+<th>实现问题</th>
+<th>标准做法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>何时停止</strong></td>
+<td><span class="arithmatex">\(\max_s \lvert V_{new}(s) - V(s) \rvert &lt; \theta\)</span>（如 <span class="arithmatex">\(10^{-4}\)</span>）</td>
+<td>相邻两轮最大变化量（delta）作收敛度量</td>
+</tr>
+<tr>
+<td><strong>终止状态</strong></td>
+<td>价值恒为 0，不参与更新</td>
+<td>由环境定义保证，是边界条件</td>
+</tr>
+<tr>
+<td><strong>双数组 vs 就地</strong></td>
+<td>双数组与理论公式一一对应；就地更新收敛更快</td>
+<td>就地更新见 7.1 节</td>
+</tr>
+<tr>
+<td><strong><span class="arithmatex">\(\gamma = 1\)</span> 是否安全</strong></td>
+<td>策略保证最终到达终止状态即安全</td>
+<td>否则价值发散（负奖励无限累积）</td>
+</tr>
+<tr>
+<td><strong>复杂度</strong></td>
+<td>每轮 <span class="arithmatex">\(O(\lvert S \rvert^2 \lvert A \rvert)\)</span></td>
+<td>每个状态要遍历所有后继求期望</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="policy-improvement">三、策略改进（Policy Improvement）</h2>
+<h3 id="31">3.1 从评估到改进：贪心的一步</h3>
+<p>有了 <span class="arithmatex">\(v_\pi\)</span>，如何得到<strong>更好的</strong>策略？最自然的想法是<strong>贪心（greedy）</strong>：
+在每个状态，选择使"即时奖励 + 后续价值"最大的动作：</p>
+<div class="arithmatex">\[
+\pi'(s) = \arg\max_{a} \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_{\pi}(s') \right]
+\]</div>
+<blockquote>
+<p><strong>核心思想</strong>：策略改进就是"<strong>站在当前价值函数上做一步贪心</strong>"。它不改
+变价值函数，只根据 <span class="arithmatex">\(v_\pi\)</span> 重新选择动作——把策略从"按 <span class="arithmatex">\(\pi\)</span> 行动"改成
+"每步都选当前看起来最好的动作"。</p>
+</blockquote>
+<h3 id="32-policy-improvement-theorem">3.2 策略改进定理（Policy Improvement Theorem）</h3>
+<p>贪心改进真的能让策略变得<strong>不差</strong>吗？这是本节的<strong>核心定理</strong>：</p>
+<blockquote>
+<p><strong>策略改进定理</strong>：设 <span class="arithmatex">\(\pi\)</span> 与 <span class="arithmatex">\(\pi'\)</span> 是任意两个确定性策略，若对任意
+状态 <span class="arithmatex">\(s\)</span> 有</p>
+<div class="arithmatex">\[q_{\pi}\big(s, \pi'(s)\big) \ge v_{\pi}(s)\]</div>
+<p>则 <span class="arithmatex">\(\pi'\)</span> 至少与 <span class="arithmatex">\(\pi\)</span> 一样好：</p>
+<div class="arithmatex">\[v_{\pi'}(s) \ge v_{\pi}(s), \qquad \forall s \in S\]</div>
+</blockquote>
+<p><strong>直觉论证</strong>：条件说的是"<strong>在状态 <span class="arithmatex">\(s\)</span> 用 <span class="arithmatex">\(\pi'\)</span> 的动作、其余状态仍用
+<span class="arithmatex">\(\pi\)</span></strong>，不比全程用 <span class="arithmatex">\(\pi\)</span> 差"。把 <span class="arithmatex">\(\pi'\)</span> 的"背叛"逐步扩散到所有状态：</p>
+<div class="highlight"><pre><span></span><code>第 1 步：只在 s 用 π&#39; 的动作    → 不差于全程 π        （由条件）
+第 2 步：在 s 与 s&#39; 用 π&#39; 的动作 → 不差于第 1 步       （对 s&#39; 再套条件）
+第 3 步：在 s、s&#39;、s&#39;&#39; 用 π&#39;    → 不差于第 2 步        （依此类推）
+  ⋮
+全程用 π&#39;                     → 不差于全程用 π      （有限状态，有限步扩散完）
+</code></pre></div>
+<p><strong>形式化证明（telescoping）</strong>：设 <span class="arithmatex">\(\pi'\)</span> 满足条件，反复展开：</p>
+<div class="arithmatex">\[
+\begin{aligned}
+v_{\pi}(s) &amp;\le q_{\pi}(s, \pi'(s)) \\
+&amp;= \mathbb{E}\left[ R_{t+1} + \gamma v_{\pi}(S_{t+1}) \,\middle|\, S_t = s, A_t = \pi'(s) \right] \\
+&amp;\le \mathbb{E}_{\pi'}\left[ R_{t+1} + \gamma q_{\pi}(S_{t+1}, \pi'(S_{t+1})) \,\middle|\, S_t = s \right] \\
+&amp;= \mathbb{E}_{\pi'}\left[ R_{t+1} + \gamma R_{t+2} + \gamma^2 v_{\pi}(S_{t+2}) \,\middle|\, S_t = s \right] \\
+&amp;\le \cdots \le \mathbb{E}_{\pi'}\left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \,\middle|\, S_t = s \right] = v_{\pi'}(s)
+\end{aligned}
+\]</div>
+<p>每一步都在"把下一个状态也换成按 <span class="arithmatex">\(\pi'\)</span> 行动"，反复套用条件后得到
+<span class="arithmatex">\(v_\pi(s) \le v_{\pi'}(s)\)</span>。<span class="arithmatex">\(\blacksquare\)</span></p>
+<blockquote>
+<p><strong>注意</strong>：贪心改进 <span class="arithmatex">\(\pi'(s) = \arg\max_a q_\pi(s, a)\)</span> 显然满足定理条件
+（取最大值当然不小于 <span class="arithmatex">\(v_\pi(s)\)</span>），所以<strong>贪心改进后的策略一定不差于原
+策略</strong>。这就是策略迭代能"越改越好"的理论基石。</p>
+</blockquote>
+<h3 id="33">3.3 为什么"贪心"不会变差：一个直观类比</h3>
+<p>把价值函数想成一张"地形图"，<span class="arithmatex">\(v_\pi(s)\)</span> 是每个位置的海拔（越高越好）。
+贪心改进相当于：<strong>在每个位置，朝海拔上升最快的方向迈一步</strong>。因为海拔
+（价值）已经编码了"未来的所有后果"，所以朝最陡方向走，即使暂时绕路，
+长期也不会吃亏。</p>
+<div class="highlight"><pre><span></span><code>地形图视角：
+                v 值等高线（越高越好）
+                 ▲
+                 │  ← 贪心：总是选择&quot;r + γ·v(s&#39;)&quot;最大的方向
+                 │     相当于沿最陡上升方向走
+                 ▼
+    只要 v 是&quot;诚实的&quot;（= v_π），贪心就不会走到更差的地方
+</code></pre></div>
+<h3 id="34">3.4 等号情形：最优策略的判定条件</h3>
+<p>如果改进之后<strong>每个状态都选不出更好的动作</strong>——即 <span class="arithmatex">\(\pi'\)</span> 与 <span class="arithmatex">\(\pi\)</span> 完全
+相同——说明什么？对每个状态 <span class="arithmatex">\(s\)</span>：</p>
+<div class="arithmatex">\[
+v_{\pi}(s) = \max_{a} \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_{\pi}(s') \right]
+\]</div>
+<p>这正是<strong>贝尔曼最优性方程</strong>！因此：</p>
+<blockquote>
+<p><strong>核心思想</strong>：<span class="arithmatex">\(\pi' = \pi\)</span>（改进不动）当且仅当 <span class="arithmatex">\(v_\pi = v_*\)</span>，此时 <span class="arithmatex">\(\pi\)</span>
+就是最优策略 <span class="arithmatex">\(\pi_*\)</span>。<strong>"改进不动"就是最优的判据</strong>——策略迭代正是利用
+这个判据停机的。</p>
+</blockquote>
+<h3 id="35">3.5 示例：对随机策略价值做一次贪心改进</h3>
+<p>用 2.6 节收敛的 <span class="arithmatex">\(v_\pi\)</span>（随机策略）做一次贪心改进。对每个状态计算
+<span class="arithmatex">\(\pi'(s) = \arg\max_a \left[ -1 + v_\pi(s') \right]\)</span>。以状态 1 为例：</p>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>下一状态 <span class="arithmatex">\(s'\)</span></th>
+<th><span class="arithmatex">\(q(s, a) = -1 + v_\pi(s')\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>↑（撞墙）</td>
+<td>1</td>
+<td><span class="arithmatex">\(-1 + (-14) = -15\)</span></td>
+</tr>
+<tr>
+<td>↓</td>
+<td>5</td>
+<td><span class="arithmatex">\(-1 + (-18) = -19\)</span></td>
+</tr>
+<tr>
+<td>←</td>
+<td>0（终止）</td>
+<td><span class="arithmatex">\(-1 + 0 = -1\)</span></td>
+</tr>
+<tr>
+<td>→</td>
+<td>2</td>
+<td><span class="arithmatex">\(-1 + (-20) = -21\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>显然 <span class="arithmatex">\(\pi'(1) = \leftarrow\)</span>——直接走向终止状态。对全部 16 个状态做同样
+计算，得到改进后的策略：</p>
+<div class="highlight"><pre><span></span><code>T  ←  ←  ↓
+↑  ↑  ←  ↓
+↑  ↑  ↓  ↓
+↑  ↓  →  T
+</code></pre></div>
+<p><strong>重要观察</strong>：这个策略<strong>还不是</strong>最优的（状态 13 选 ↓ 会撞墙原地打转，
+正确动作是 →）。原因：<span class="arithmatex">\(v_\pi\)</span> 是随机策略的价值，用它做贪心，在价值相等
+处（状态 13 的 ↓ 与 → 都给出 <span class="arithmatex">\(-15\)</span>）可能选错。<strong>一次改进往往不够</strong>——
+这正是下一节"评估 → 改进 → 再评估 → 再改进"循环的动机。</p>
+<hr />
+<h2 id="policy-iteration">四、策略迭代（Policy Iteration）</h2>
+<h3 id="41">4.1 完整流程</h3>
+<p><strong>策略迭代（Policy Iteration, PI）</strong> 把前两节的组件串成循环：评估当前
+策略 → 贪心改进 → 再评估 → 再改进……直到策略不再变化。</p>
+<div class="highlight"><pre><span></span><code>                    ┌──────────────────────────────────────────┐
+                    │                                          │
+                    ▼                                          │
+        ┌─────────────────────┐                                │
+        │  ① 策略评估          │                                │
+        │  用迭代策略评估       │                                │
+        │  求 v_π（直到收敛）   │                                │
+        └──────────┬──────────┘                                │
+                   │  v_π                                      │
+                   ▼                                           │
+        ┌─────────────────────┐                                │
+        │  ② 策略改进          │                                │
+        │  π&#39; = greedy(v_π)   │                                │
+        └──────────┬──────────┘                                │
+                   │                                           │
+                   ├── π&#39; = π ？──── 是 ────► 输出 π* = π, v* = v_π
+                   │
+                   └── 否：π ← π&#39;，回到 ①（循环）
+</code></pre></div>
+<p><strong>伪代码</strong>（Sutton &amp; Barto 算法 4.3 风格）：</p>
+<div class="highlight"><pre><span></span><code>1. 初始化：任选策略 π（如随机策略）
+2. 策略评估：迭代计算 v_π（见第 2 节），直到收敛
+3. 策略改进：π&#39;(s) = argmax_a Σ P(s&#39;,r|s,a)[r + γv_π(s&#39;)]
+4. 若 π&#39; ≠ π：π ← π&#39;，回到 2；否则输出 π* = π&#39; 与 v* = v_π
+</code></pre></div>
+<h3 id="42">4.2 收敛性与复杂度</h3>
+<table>
+<thead>
+<tr>
+<th>性质</th>
+<th>结论</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>单调性</strong></td>
+<td>每轮改进后策略不差于上一轮</td>
+<td>策略改进定理（3.2 节）</td>
+</tr>
+<tr>
+<td><strong>有限终止</strong></td>
+<td>有限 MDP 中在<strong>有限步</strong>内收敛到 <span class="arithmatex">\(\pi_*\)</span></td>
+<td>确定性策略总数有限（<span class="arithmatex">\(\lvert A \rvert^{\lvert S \rvert}\)</span>），序列严格单调</td>
+</tr>
+<tr>
+<td><strong>改进轮数</strong></td>
+<td>实践中通常很少（往往 3–10 轮）</td>
+<td>每轮是全局贪心，一步能修正大量状态</td>
+</tr>
+<tr>
+<td><strong>单轮代价</strong></td>
+<td>评估 <span class="arithmatex">\(O(k \lvert S \rvert^2 \lvert A \rvert)\)</span>，改进 <span class="arithmatex">\(O(\lvert S \rvert \lvert A \rvert)\)</span></td>
+<td><span class="arithmatex">\(k\)</span> 为评估扫描次数</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：策略迭代每一步都让策略<strong>严格变好</strong>（除非已最优），而策略
+空间有限，所以必然在有限步内停在最优策略上。这与价值迭代"价值单调逼近、
+策略可能来回跳"形成鲜明对比。</p>
+</blockquote>
+<h3 id="43-python-gridworld">4.3 Python 实现：GridWorld 策略迭代</h3>
+<p>初始策略 <span class="arithmatex">\(\pi_0\)</span> 取"<strong>每个状态优先向右，最右一列向下</strong>"（合法但明显
+低效，方便观察改进过程）：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ---------- 策略迭代：完整实现 ----------</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1e-4</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">max_sweeps</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;确定性策略评估：反复扫描直至收敛，返回 (V, 扫描次数)&quot;&quot;&quot;</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sweep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_sweeps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">V_new</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+            <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">-</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">sweep</span>
+    <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">max_sweeps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">improve</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;贪心改进：返回 (新策略, 是否稳定)。平局取动作序中第一个。&quot;&quot;&quot;</span>
+    <span class="n">stable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">new_policy</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">best_a</span><span class="p">,</span> <span class="n">best_q</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>                     <span class="c1"># 严格大于：平局取第一个</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="n">best_q</span><span class="p">:</span>
+                <span class="n">best_q</span><span class="p">,</span> <span class="n">best_a</span> <span class="o">=</span> <span class="n">q</span><span class="p">,</span> <span class="n">a</span>
+        <span class="n">new_policy</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_a</span>
+        <span class="k">if</span> <span class="n">best_a</span> <span class="o">!=</span> <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
+            <span class="n">stable</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">new_policy</span><span class="p">,</span> <span class="n">stable</span>
+
+<span class="c1"># 初始策略：向右走，最右一列向下</span>
+<span class="n">policy</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;→&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">):</span>
+    <span class="n">policy</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;↓&#39;</span>
+
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">total_sweeps</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">pi_round</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">V</span><span class="p">,</span> <span class="n">sweeps</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>           <span class="c1"># ① 策略评估</span>
+    <span class="n">total_sweeps</span> <span class="o">+=</span> <span class="n">sweeps</span>
+    <span class="n">new_policy</span><span class="p">,</span> <span class="n">stable</span> <span class="o">=</span> <span class="n">improve</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>  <span class="c1"># ② 策略改进</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;第 </span><span class="si">{</span><span class="n">pi_round</span><span class="si">}</span><span class="s2"> 轮：评估 </span><span class="si">{</span><span class="n">sweeps</span><span class="si">}</span><span class="s2"> 次扫描；策略</span><span class="si">{</span><span class="s1">&#39;已稳定&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">stable</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;已更新&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;V 表:&quot;</span><span class="p">);</span> <span class="n">show</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;策略:&quot;</span><span class="p">);</span> <span class="n">show_policy</span><span class="p">(</span><span class="n">new_policy</span><span class="p">)</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="n">new_policy</span>
+    <span class="k">if</span> <span class="n">stable</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;评估阶段总扫描次数: </span><span class="si">{</span><span class="n">total_sweeps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># 第 1 轮：评估 6 次扫描；策略已更新</span>
+<span class="c1"># V 表:</span>
+<span class="c1"># [[ 0.00 -5.00 -4.00 -3.00]</span>
+<span class="c1">#  [-5.00 -4.00 -3.00 -2.00]</span>
+<span class="c1">#  [-4.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># 策略:</span>
+<span class="c1"># T  ←  ↓  ↓</span>
+<span class="c1"># ↑  ↓  ↓  ↓</span>
+<span class="c1"># ↓  ↓  ↓  ↓</span>
+<span class="c1"># →  →  →  T</span>
+<span class="c1"># 第 2 轮：评估 2 次扫描；策略已更新</span>
+<span class="c1"># V 表:</span>
+<span class="c1"># [[ 0.00 -1.00 -4.00 -3.00]</span>
+<span class="c1">#  [-1.00 -4.00 -3.00 -2.00]</span>
+<span class="c1">#  [-4.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># 策略:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  ↓  ↓  ↓</span>
+<span class="c1"># →  →  →  T</span>
+<span class="c1"># 第 3 轮：评估 2 次扫描；策略已更新</span>
+<span class="c1"># V 表:</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># 策略:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↑  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  →  →  T</span>
+<span class="c1"># 第 4 轮：评估 1 次扫描；策略已稳定</span>
+<span class="c1"># V 表:</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># 策略:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↑  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  →  →  T</span>
+<span class="c1"># 评估阶段总扫描次数: 11</span>
+</code></pre></div>
+<h3 id="44">4.4 输出解读</h3>
+<table>
+<thead>
+<tr>
+<th>观察点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>收敛轮数</strong></td>
+<td>仅 4 轮（3 次改进 + 1 次确认），评估总扫描仅 11 次</td>
+</tr>
+<tr>
+<td><strong>第 1 轮</strong></td>
+<td>评估 <span class="arithmatex">\(\pi_0\)</span> 用 6 次扫描；改进后策略大改（大量状态转向最近终止状态）</td>
+</tr>
+<tr>
+<td><strong>第 2–3 轮</strong></td>
+<td>评估只需 2 次扫描；改进逐步修正残余错误</td>
+</tr>
+<tr>
+<td><strong>第 4 轮</strong></td>
+<td>评估 1 次扫描即收敛，改进后策略不变 → 停机</td>
+</tr>
+<tr>
+<td><strong>最优价值</strong></td>
+<td><span class="arithmatex">\(v_*(s) = -\text{（到最近终止状态的最短步数）}\)</span>，如 <span class="arithmatex">\(v_*(1) = -1\)</span>、<span class="arithmatex">\(v_*(3) = -3\)</span></td>
+</tr>
+<tr>
+<td><strong>扫描次数递减</strong></td>
+<td><span class="arithmatex">\(6 \to 2 \to 2 \to 1\)</span>：策略越好，评估收敛越快</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：策略迭代的"快"来自<strong>改进的高杠杆</strong>——每次贪心改进都是
+全局性的，一步就能让几乎所有状态的动作同时变对；随后只需少量评估扫描
+确认。<strong>评估次数递减</strong>（<span class="arithmatex">\(6 \to 2 \to 2 \to 1\)</span>）是最直观的效率信号。</p>
+</blockquote>
+<h3 id="45">4.5 一个工程优化：截断策略评估</h3>
+<p>策略评估真的需要收敛到 <span class="arithmatex">\(v_\pi\)</span> 吗？<strong>不需要</strong>。策略改进定理只要求"改进
+不差于原策略"，只要评估足够接近，贪心改进通常仍然有效。于是有<strong>截断策略
+评估（truncated policy evaluation）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>变体</th>
+<th>评估方式</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准策略迭代</td>
+<td>评估到 <span class="arithmatex">\(\Delta &lt; \theta\)</span>（完全收敛）</td>
+<td>理论最干净</td>
+</tr>
+<tr>
+<td><strong>截断评估</strong>（如固定 1 次扫描）</td>
+<td>每轮只做 1 次价值更新就改进</td>
+<td>这就是<strong>价值迭代</strong>（第 5 节），收敛更快</td>
+</tr>
+<tr>
+<td>中间方案</td>
+<td>每轮做 <span class="arithmatex">\(k\)</span> 次扫描（<span class="arithmatex">\(k\)</span> 较小）</td>
+<td>在两者之间权衡</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：策略迭代与价值迭代不是两个割裂的算法，而是<strong>"评估做到
+多彻底"的同一个连续谱的两端</strong>。这个认识是第 6 节 GPI 统一视角的伏笔。</p>
+</blockquote>
+<hr />
+<h2 id="value-iteration">五、价值迭代（Value Iteration）</h2>
+<h3 id="51">5.1 合并评估与改进：一步到位</h3>
+<p>策略迭代每轮都要把评估做到收敛，很"奢侈"。<strong>价值迭代（Value Iteration,
+VI）</strong> 把"一次评估更新"与"一次贪心改进"合并成<strong>一个备份</strong>：更新价值时
+直接取 <span class="arithmatex">\(\max\)</span>，而不是按策略求期望：</p>
+<div class="arithmatex">\[
+\boxed{\; v_{k+1}(s) = \max_{a} \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v_k(s') \right] \;}
+\]</div>
+<p><strong>推导视角</strong>：把贝尔曼最优性方程 <span class="arithmatex">\(v_* = \mathcal{T}^* v_*\)</span> 视为不动点方程，
+最优贝尔曼算子 <span class="arithmatex">\(\mathcal{T}^*\)</span> 定义为</p>
+<div class="arithmatex">\[
+(\mathcal{T}^* v)(s) = \max_{a} \sum_{s', r} P(s', r \mid s, a) \left[ r + \gamma v(s') \right]
+\]</div>
+<p>价值迭代就是对 <span class="arithmatex">\(\mathcal{T}^*\)</span> 做不动点迭代 <span class="arithmatex">\(v_{k+1} = \mathcal{T}^* v_k\)</span>。
+由于 <span class="arithmatex">\(\mathcal{T}^*\)</span> 同样是 <span class="arithmatex">\(\gamma\)</span>-压缩映射，迭代必收敛到 <span class="arithmatex">\(v_*\)</span>。</p>
+<p><strong>与策略迭代的关系</strong>：价值迭代 = <strong>每轮只做一次评估扫描 + 立即改进</strong>
+的策略迭代（截断评估的极端情形）。</p>
+<h3 id="52">5.2 两种理解方式</h3>
+<table>
+<thead>
+<tr>
+<th>理解方式</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>截断策略迭代</strong></td>
+<td>每轮评估只做 1 次扫描就改进 → 改进与评估合并为 max 备份</td>
+</tr>
+<tr>
+<td><strong>反向动态规划</strong></td>
+<td>从终止状态出发"倒着"传播价值：先知道离终止 1 步的状态值，再 2 步……</td>
+</tr>
+</tbody>
+</table>
+<p>第二种理解对 GridWorld 尤其直观：<span class="arithmatex">\(\gamma = 1\)</span> 且每步 <span class="arithmatex">\(-1\)</span> 时，第 <span class="arithmatex">\(k\)</span> 轮
+价值恰好是"<strong>距离终止状态 <span class="arithmatex">\(k\)</span> 步以内</strong>的最优剩余步数（取负）"：</p>
+<div class="highlight"><pre><span></span><code>k=1：价值 -1 的区域 = 一步能到终止的状态（状态 1、4、11、14）
+k=2：价值 -2 的区域 = 两步能到终止的状态
+k=3：价值 -3 的区域 = 三步能到终止的状态（状态 3、6、9、12）
+</code></pre></div>
+<p>价值像<strong>水波一样从两个终止状态向外扩散</strong>，每轮扩散一圈。</p>
+<h3 id="53">5.3 与策略迭代的对比</h3>
+<p>这是本章最重要的对比表，请重点理解：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>策略迭代（PI）</th>
+<th>价值迭代（VI）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>每轮做什么</strong></td>
+<td>完整评估 <span class="arithmatex">\(v_\pi\)</span>（多轮扫描）→ 再改进</td>
+<td>单轮 max 备份（评估 + 改进合并）</td>
+</tr>
+<tr>
+<td><strong>单轮计算代价</strong></td>
+<td>高（评估需多次扫描）</td>
+<td>低（每轮只扫一遍）</td>
+</tr>
+<tr>
+<td><strong>收敛速度（轮数）</strong></td>
+<td>轮数少（通常 3–10 轮），但每轮重</td>
+<td>轮数多（约最短路径长度量级），但每轮轻</td>
+</tr>
+<tr>
+<td><strong>中间结果的意义</strong></td>
+<td>每轮结束对应一个<strong>完整策略</strong>及其价值</td>
+<td>中间 <span class="arithmatex">\(v_k\)</span> 不对应任何完整策略，只是价值估计</td>
+</tr>
+<tr>
+<td><strong>停机判据</strong></td>
+<td>策略不再变化（精确）</td>
+<td>价值变化小于阈值（近似，<span class="arithmatex">\(\theta\)</span> 控制精度）</td>
+</tr>
+<tr>
+<td><strong>是否显式维护策略</strong></td>
+<td>是（每轮改进一次）</td>
+<td>否（只在最后从 <span class="arithmatex">\(v_*\)</span> 提取一次贪心策略）</td>
+</tr>
+<tr>
+<td><strong>典型应用</strong></td>
+<td>需要"每步都有可用策略"的场景</td>
+<td>最短路径类问题、大规模离散 MDP 的默认选择</td>
+</tr>
+<tr>
+<td><strong>GridWorld 实测</strong></td>
+<td>4 轮、11 次扫描</td>
+<td>3 轮价值即精确、第 4 轮 delta = 0</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：PI 是"<strong>少而重</strong>"（轮数少、每轮贵），VI 是"<strong>多而轻</strong>"
+（轮数多、每轮便宜）。状态空间很大时，VI 每轮代价与 PI 单轮评估的一次
+扫描相同，而 VI 总扫描数 ≈ 最长最短路径长度，通常远小于 PI 的评估总
+扫描数——<strong>工程上 VI 往往更快</strong>，也是默认选择。</p>
+</blockquote>
+<h3 id="54-python-gridworld">5.4 Python 实现：GridWorld 价值迭代</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># ---------- 价值迭代：完整实现 ----------</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">1e-4</span>
+
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="n">V_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>                     <span class="c1"># max 备份：评估与改进合并</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>
+        <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">V_new</span> <span class="o">-</span> <span class="n">V</span><span class="p">))</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: max|ΔV| = </span><span class="si">{</span><span class="n">delta</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">show</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;价值迭代收敛于第 </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> 轮&quot;</span><span class="p">)</span>
+
+<span class="c1"># 由 V* 提取最优策略（只在最后做一次贪心）</span>
+<span class="n">policy</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">best_a</span><span class="p">,</span> <span class="n">best_q</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+        <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="n">best_q</span><span class="p">:</span>
+            <span class="n">best_q</span><span class="p">,</span> <span class="n">best_a</span> <span class="o">=</span> <span class="n">q</span><span class="p">,</span> <span class="n">a</span>
+    <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_a</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;最优策略:&quot;</span><span class="p">);</span> <span class="n">show_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># k=1: max|ΔV| = 1.0000</span>
+<span class="c1"># [[ 0.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00 -1.00]</span>
+<span class="c1">#  [-1.00 -1.00 -1.00  0.00]]</span>
+<span class="c1"># k=2: max|ΔV| = 1.0000</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -2.00]</span>
+<span class="c1">#  [-1.00 -2.00 -2.00 -2.00]</span>
+<span class="c1">#  [-2.00 -2.00 -2.00 -1.00]</span>
+<span class="c1">#  [-2.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># k=3: max|ΔV| = 1.0000</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># k=4: max|ΔV| = 0.0000</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1"># 价值迭代收敛于第 4 轮</span>
+<span class="c1"># 最优策略:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↑  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  →  →  T</span>
+</code></pre></div>
+<h3 id="55">5.5 输出解读</h3>
+<table>
+<thead>
+<tr>
+<th>观察点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>扩散过程</strong></td>
+<td><span class="arithmatex">\(k=1\)</span> 时只有离终止 1 步的状态有价值 <span class="arithmatex">\(-1\)</span>；<span class="arithmatex">\(k=2\)</span> 扩散到 2 步；<span class="arithmatex">\(k=3\)</span> 全图价值精确等于 <span class="arithmatex">\(v_*\)</span></td>
+</tr>
+<tr>
+<td><strong>delta 序列</strong></td>
+<td><span class="arithmatex">\(1.0 \to 1.0 \to 1.0 \to 0.0\)</span>：前 3 轮每轮扩散一圈，第 4 轮无变化</td>
+</tr>
+<tr>
+<td><strong>收敛轮数</strong></td>
+<td>第 4 轮满足 <span class="arithmatex">\(\Delta &lt; 10^{-4}\)</span>；实际 <span class="arithmatex">\(v_*\)</span> 第 3 轮就已精确（网格半径 3 步）</td>
+</tr>
+<tr>
+<td><strong>与 PI 的对比</strong></td>
+<td>PI 用 11 次扫描、VI 用 4 次扫描（价值层面）；VI 每轮都是全量 max 计算</td>
+</tr>
+<tr>
+<td><strong>最优策略一致</strong></td>
+<td>VI 与 PI 得到完全相同的 <span class="arithmatex">\(\pi_*\)</span></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：价值迭代在 GridWorld 上的行为就是"<strong>价值波前从终止状态
+向外扩散</strong>"——每轮扩散一层，扩散完整个网格所需轮数 ≈ 网格的"半径"。
+这也是"VI 轮数 ≈ 最长最短路径长度"的直观来源。</p>
+</blockquote>
+<hr />
+<h2 id="gpi">六、广义策略迭代（GPI）</h2>
+<h3 id="61">6.1 统一视角：评估与改进的交替</h3>
+<p>观察前几节的算法，会发现一个惊人的共性：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>评估部分</th>
+<th>改进部分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略迭代</td>
+<td>完整评估 <span class="arithmatex">\(v_\pi\)</span></td>
+<td>完整贪心改进</td>
+</tr>
+<tr>
+<td>价值迭代</td>
+<td>单步评估（max 备份中的期望部分）</td>
+<td>单步改进（max 备份中的 max 部分）</td>
+</tr>
+<tr>
+<td>截断策略迭代</td>
+<td><span class="arithmatex">\(k\)</span> 步评估</td>
+<td>完整贪心改进</td>
+</tr>
+<tr>
+<td>（预告）MC / TD 控制</td>
+<td>采样式评估</td>
+<td>贪心 / ε-贪心改进</td>
+</tr>
+</tbody>
+</table>
+<p><strong>所有</strong>强化学习方法——无论是否已知模型、是否采样——都可以看作
+<strong>"策略评估"与"策略改进"两个过程交替进行</strong>。这就是<strong>广义策略迭代
+（Generalized Policy Iteration, GPI）</strong>：</p>
+<blockquote>
+<p><strong>核心思想</strong>：GPI 指"让策略评估与策略改进相互作用、相互促进"的通用
+思想。评估把价值函数拉向当前策略的真实价值 <span class="arithmatex">\(v_\pi\)</span>，改进把策略拉向
+当前价值函数的贪心策略 <span class="arithmatex">\(\mathrm{greedy}(v)\)</span>。两个过程各自朝自己的目标
+牵引，最终共同收敛到最优策略 <span class="arithmatex">\(\pi_*\)</span> 与最优价值函数 <span class="arithmatex">\(v_*\)</span>。</p>
+</blockquote>
+<h3 id="62">6.2 经典图示：两条互相牵引的箭头</h3>
+<p>Sutton &amp; Barto 用一张著名的图描述 GPI：策略 <span class="arithmatex">\(\pi\)</span> 与价值函数 <span class="arithmatex">\(v\)</span> 像两个
+被绳子牵住的点，<strong>评估</strong>箭头把 <span class="arithmatex">\(v\)</span> 拉向 <span class="arithmatex">\(v_\pi\)</span>，<strong>改进</strong>箭头把 <span class="arithmatex">\(\pi\)</span>
+拉向 <span class="arithmatex">\(\mathrm{greedy}(v)\)</span>——两个目标互相牵引、螺旋逼近交点 <span class="arithmatex">\((\pi_*, v_*)\)</span>：</p>
+<p><img alt="广义策略迭代" src="../../img/02-gpi.png" /></p>
+<table>
+<thead>
+<tr>
+<th>图元素</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>左圆 <strong>π</strong></td>
+<td>当前策略（行为准则）</td>
+</tr>
+<tr>
+<td>右圆 <strong>v</strong></td>
+<td>当前价值函数（状态评估）</td>
+</tr>
+<tr>
+<td>蓝色箭头（评估）</td>
+<td><span class="arithmatex">\(v \leftarrow v_\pi\)</span>：把价值拉向"当前策略的真实价值"</td>
+</tr>
+<tr>
+<td>绿色箭头（改进）</td>
+<td><span class="arithmatex">\(\pi \leftarrow \mathrm{greedy}(v)\)</span>：把策略拉向"当前价值的贪心策略"</td>
+</tr>
+<tr>
+<td>金色交点</td>
+<td>收敛目标 <span class="arithmatex">\((\pi_*, v_*)\)</span>：两条箭头都拉不动时即为最优</td>
+</tr>
+</tbody>
+</table>
+<p>用 ASCII 表达同样的循环：</p>
+<div class="highlight"><pre><span></span><code>     评估：v ← v_π（把 v 拉向 π 的真实价值）
+     ┌──────────────────────────────┐
+     │                              ▼
+   π ● ──────────────────────────► ● v
+     ▲                              │
+     │                              │
+     └──────────────────────────────┘
+     改进：π ← greedy(v)（把 π 拉向 v 的贪心策略）
+</code></pre></div>
+<h3 id="63">6.3 为什么这个视角重要</h3>
+<p><strong>第一，它统一了整个 RL 算法谱系。</strong> 从表格型 DP 到深度强化学习，所有
+方法都是 GPI 的实例，区别只在"评估用什么方式（精确 / 采样 / 函数逼近）"
+与"改进做到多彻底（完整贪心 / ε-贪心 / 策略梯度）"：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>评估（把 v 拉向 v_π）</th>
+<th>改进（把 π 拉向 greedy(v)）</th>
+<th>模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略迭代</td>
+<td>完整迭代评估</td>
+<td>完整贪心</td>
+<td>需要</td>
+</tr>
+<tr>
+<td>价值迭代</td>
+<td>单步 max 备份</td>
+<td>单步（合并）</td>
+<td>需要</td>
+</tr>
+<tr>
+<td>MC 控制（第 3 章）</td>
+<td>回合回报平均</td>
+<td>贪心 / ε-贪心</td>
+<td>免模型</td>
+</tr>
+<tr>
+<td>SARSA（第 4 章）</td>
+<td>单步 TD 更新</td>
+<td>ε-贪心</td>
+<td>免模型</td>
+</tr>
+<tr>
+<td>Q-Learning（第 4 章）</td>
+<td>单步 TD + max</td>
+<td>隐式（max 即改进）</td>
+<td>免模型</td>
+</tr>
+<tr>
+<td>Actor-Critic（第 6 章）</td>
+<td>评论家更新价值</td>
+<td>演员沿策略梯度更新</td>
+<td>免模型</td>
+</tr>
+</tbody>
+</table>
+<p><strong>第二，它解释了"不完美"也能收敛。</strong> GPI 并不要求评估收敛、也不要求
+改进一步到位——两个过程<strong>只要各自朝正确方向挪动</strong>，最终仍会收敛到交点。
+价值迭代就是"评估几乎不做就改进"的极端例子，它照样收敛。这个"宽容性"
+是后面所有实用算法的理论底气：没有人能在真实任务中把评估做到收敛，但
+我们照样训练出了 AlphaGo。</p>
+<p><strong>第三，它为算法设计提供了模板。</strong> 设计任何新 RL 算法，本质上是回答
+两个问题：<em>怎么评估？</em>（用什么替代 <span class="arithmatex">\(v_\pi\)</span> 的期望）<em>怎么改进？</em>（如何把
+策略推向贪心且不破坏探索）。GPI 框架保证：只要这两个答案"方向正确"，
+算法就能工作。</p>
+<blockquote>
+<p><strong>核心思想</strong>：GPI 是本章最重要的概念——它把"策略迭代"与"价值迭代"
+从两个具体算法提升为<strong>整个强化学习的通用原理</strong>。第 3 章以后的每一章，
+都可以用"这是 GPI 的哪个实例"来定位。</p>
+</blockquote>
+<h3 id="64-gpi">6.4 GPI 视角下的常见误解澄清</h3>
+<table>
+<thead>
+<tr>
+<th>误解</th>
+<th>澄清</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"价值迭代不需要策略"</td>
+<td>价值迭代隐式维护贪心策略（max 就是贪心），只是不显式存储</td>
+</tr>
+<tr>
+<td>"策略迭代一定比价值迭代好"</td>
+<td>不一定，VI 往往更快；各有适用场景（见 5.3）</td>
+</tr>
+<tr>
+<td>"评估必须收敛才能改进"</td>
+<td>不需要，GPI 容忍不完整评估（VI 就是证明）</td>
+</tr>
+<tr>
+<td>"改进必须一步到位"</td>
+<td>不需要，ε-贪心、策略梯度都是"部分改进"，照样收敛</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dp">七、DP 的扩展与局限</h2>
+<h3 id="71-in-place-updates">7.1 就地更新（In-place Updates）</h3>
+<p>标准迭代策略评估用<strong>双数组</strong>：先完整计算 <span class="arithmatex">\(V_{new}\)</span> 再整体替换 <span class="arithmatex">\(V\)</span>。
+<strong>就地更新（in-place）</strong> 直接原地修改 <span class="arithmatex">\(V(s)\)</span>，后续状态更新立刻用到新值：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>双数组（同步）</th>
+<th>就地（in-place）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新公式</td>
+<td><span class="arithmatex">\(V_{new}(s) = \sum_a \pi(a\|s) \sum [r + \gamma V_{old}(s')]\)</span></td>
+<td><span class="arithmatex">\(V(s) = \sum_a \pi(a\|s) \sum [r + \gamma V(s')]\)</span></td>
+</tr>
+<tr>
+<td>信息利用</td>
+<td>只用上一轮的值</td>
+<td>立即使用本轮已更新的值（Gauss-Seidel 风格）</td>
+</tr>
+<tr>
+<td>收敛速度</td>
+<td>基准</td>
+<td><strong>通常快一倍左右</strong>（信息传播更快）</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>两个数组</td>
+<td>一个数组</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># 就地更新的价值迭代（去掉 V_new，直接写 V）</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">v_old</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>   <span class="c1"># 注意：V 已被部分更新</span>
+        <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v_old</span> <span class="o">-</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="c1"># 就地更新通常比双数组少用约一半的扫描次数</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：就地更新牺牲一点"理论整洁性"，换来更快的收敛与更少内存。
+工程实现几乎都用就地更新；本章前文用双数组只是为了与理论公式对应。</p>
+</blockquote>
+<h3 id="72-asynchronous-dp">7.2 异步动态规划（Asynchronous DP）</h3>
+<p>同步 DP 每轮必须<strong>按固定顺序扫描全部状态</strong>。<strong>异步 DP（asynchronous DP）</strong>
+放宽要求：可以<strong>任意顺序、任意频率</strong>地更新状态，只要每个状态被更新无穷
+多次，就保证收敛：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>同步 DP</th>
+<th>异步 DP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新顺序</td>
+<td>每轮全量、固定顺序</td>
+<td>任意顺序（随机 / 优先级 / 仅相关状态）</td>
+</tr>
+<tr>
+<td>每轮成本</td>
+<td>必须扫完 <span class="arithmatex">\(\lvert S \rvert\)</span> 个状态</td>
+<td>可只更新一部分状态</td>
+</tr>
+<tr>
+<td>收敛保证</td>
+<td>理论直接</td>
+<td>每个状态被无限次更新即可收敛</td>
+</tr>
+<tr>
+<td>应用价值</td>
+<td>教学、小规模</td>
+<td>大规模问题：聚焦"重要"状态</td>
+</tr>
+</tbody>
+</table>
+<p>异步 DP 的典型用途：<strong>实时规划</strong>——智能体在某个状态附近活动时，优先
+更新<strong>当前相关区域</strong>的价值，而不是把整个状态空间扫一遍。</p>
+<h3 id="73-prioritized-sweeping">7.3 优先扫除（Prioritized Sweeping）</h3>
+<p><strong>优先扫除（Prioritized Sweeping）</strong> 是异步 DP 最著名的变体，思想朴素：
+<strong>价值变化大的状态，值得优先更新</strong>。</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────┐
+│ 优先扫除流程                                  │
+│ 1. 维护优先队列，键 = 该状态最近的 |ΔV|        │
+│ 2. 弹出 |ΔV| 最大的状态 s，更新 V(s)           │
+│ 3. 若 V(s) 变化显著：                          │
+│    把 s 的所有&quot;前驱状态&quot;（能一步到 s 的状态）     │
+│    按新估计的 |ΔV| 插入优先队列                 │
+│ 4. 重复直到队列为空                            │
+└─────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>为什么有效</strong>：价值信息是<strong>沿转移图反向传播</strong>的。终止状态附近的更新会
+引发"涟漪"，优先扫除让涟漪<strong>按强度排序传播</strong>——变化大的先传播，避免把
+计算浪费在几乎不变的状态上。在稀疏奖励的大规模 MDP 上，优先扫除通常比
+全量扫描快<strong>几个数量级</strong>。</p>
+<h3 id="74-curse-of-dimensionality">7.4 维度灾难（Curse of Dimensionality）</h3>
+<p>DP 的最大敌人是<strong>维度灾难（curse of dimensionality）</strong>：状态空间随维度
+<strong>指数增长</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>状态维度</th>
+<th>每维 10 个离散值</th>
+<th>每维 100 个离散值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 维</td>
+<td><span class="arithmatex">\(10^1 = 10\)</span></td>
+<td><span class="arithmatex">\(10^2 = 100\)</span></td>
+</tr>
+<tr>
+<td>2 维</td>
+<td><span class="arithmatex">\(10^2 = 100\)</span></td>
+<td><span class="arithmatex">\(10^4 = 10^4\)</span></td>
+</tr>
+<tr>
+<td>4 维</td>
+<td><span class="arithmatex">\(10^4 = 10^4\)</span></td>
+<td><span class="arithmatex">\(10^8 = 10^8\)</span></td>
+</tr>
+<tr>
+<td>10 维</td>
+<td><span class="arithmatex">\(10^{10}\)</span></td>
+<td><span class="arithmatex">\(10^{20}\)</span></td>
+</tr>
+<tr>
+<td>20 维</td>
+<td><span class="arithmatex">\(10^{20}\)</span></td>
+<td><span class="arithmatex">\(10^{40}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>对 DP 的具体影响</strong>：存储爆炸（每个状态存一个 <span class="arithmatex">\(V(s)\)</span>）、计算爆炸
+（每轮扫描 <span class="arithmatex">\(O(\lvert S \rvert^2 \lvert A \rvert)\)</span>）、表格型方法的终结
+（表格只适用于有限小状态空间，本章 16 个状态毫无压力）。</p>
+<p><strong>出路</strong>（第 5 章详述）：用<strong>函数逼近</strong>（神经网络等）代替表格——用参数
+<span class="arithmatex">\(\theta\)</span> 表示 <span class="arithmatex">\(V_\theta(s) \approx v_\pi(s)\)</span>，把"存储每个状态的值"变成
+"学习一个从状态到值的映射"。这是从"表格型 RL"迈向"深度 RL"的分水岭。</p>
+<h3 id="75">7.5 最大局限：需要完整模型</h3>
+<p>DP 的一切都建立在"已知 <span class="arithmatex">\(P(s', r \mid s, a)\)</span>"之上。但<strong>真实世界的大多数
+问题模型未知</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>模型可知吗？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>下棋（规则明确）</td>
+<td>完全可知（DP 适用）</td>
+</tr>
+<tr>
+<td>机器人行走</td>
+<td>动力学复杂、含噪声，难以精确建模</td>
+</tr>
+<tr>
+<td>自动驾驶</td>
+<td>其他交通参与者的行为不可建模</td>
+</tr>
+<tr>
+<td>对话 / 推荐</td>
+<td>人类偏好本质上不可建模</td>
+</tr>
+</tbody>
+</table>
+<p>模型未知时，只能<strong>从与环境的交互经验中学习</strong>——这正是<strong>免模型
+（model-free）方法</strong>的用武之地：</p>
+<table>
+<thead>
+<tr>
+<th>方法族</th>
+<th>章节</th>
+<th>用经验替代了什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>蒙特卡洛（MC）</td>
+<td>第 3 章</td>
+<td>用整回合真实回报替代期望</td>
+</tr>
+<tr>
+<td>时序差分（TD）</td>
+<td>第 4 章</td>
+<td>用单步奖励 + 自举替代期望</td>
+</tr>
+<tr>
+<td>深度 Q 网络（DQN）</td>
+<td>第 5 章</td>
+<td>TD + 神经网络函数逼近</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：DP 告诉我们"<strong>如果模型已知，最优策略怎么算</strong>"；MC/TD
+回答"<strong>模型未知时，如何用数据逼近同样的答案</strong>"。先理解 DP 的"完美解法"，
+才能理解免模型方法的"近似代价"（偏差、方差、探索需求）。</p>
+</blockquote>
+<h3 id="76-alphazero-dp">7.6 现代意义：AlphaZero 与 DP 的血缘</h3>
+<p>DP 并没有过时——现代最强大的棋类 AI <strong>AlphaZero</strong> 内部就流淌着 DP 的
+思想：</p>
+<table>
+<thead>
+<tr>
+<th>AlphaZero 组件</th>
+<th>对应的 DP 思想</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCTS（蒙特卡洛树搜索）</strong></td>
+<td>每步在已知规则（模型）下"想几步"：模拟 → 价值备份 → 更新节点统计量，本质是<strong>异步、局部化的价值迭代</strong></td>
+</tr>
+<tr>
+<td><strong>价值网络 <span class="arithmatex">\(v_\theta(s)\)</span></strong></td>
+<td>用神经网络逼近 <span class="arithmatex">\(v_*(s)\)</span>，充当价值表的"函数逼近版"</td>
+</tr>
+<tr>
+<td><strong>策略网络 <span class="arithmatex">\(\pi_\theta(a \mid s)\)</span></strong></td>
+<td>用神经网络逼近 <span class="arithmatex">\(\pi_*(a \mid s)\)</span>，充当 MCTS 的先验与改进方向</td>
+</tr>
+<tr>
+<td><strong>自我对弈数据</strong></td>
+<td>免模型式的经验来源（模型用于模拟，数据用于训练网络）</td>
+</tr>
+</tbody>
+</table>
+<p>关键洞察：AlphaZero 的 MCTS 搜索过程，就是在<strong>已知规则（模型）下做带
+函数逼近的异步价值迭代</strong>——每访问一个节点，就用子节点的价值估计更新父
+节点（正是 DP 的 backup）。DP 的"评估-改进"循环在 AlphaZero 中体现为
+"<strong>搜索改进策略 → 自我对弈产生数据 → 训练网络 → 更强的先验 → 更好的
+搜索</strong>"的螺旋上升。</p>
+<blockquote>
+<p><strong>核心思想</strong>：DP 的价值远不止"能解小 GridWorld"。它提供了<strong>"在已知模型
+中规划"的通用计算范式</strong>，这一范式经由 MCTS 与函数逼近的改造，至今仍是
+顶级 AI 系统的核心引擎。</p>
+</blockquote>
+<hr />
+<h2 id="44-gridworld">八、完整实验：经典 4×4 GridWorld</h2>
+<h3 id="81">8.1 实验目标</h3>
+<p>把本章所有组件组装成一个完整实验（Sutton 例 4.1 风格）：</p>
+<ol>
+<li>用<strong>策略迭代</strong>与<strong>价值迭代</strong>分别求解 4×4 GridWorld 的最优策略；</li>
+<li>输出收敛后的最优价值表 <span class="arithmatex">\(v_*\)</span> 与最优策略 <span class="arithmatex">\(\pi_*\)</span>；</li>
+<li>对比两种算法的<strong>迭代轮数</strong>与<strong>扫描次数</strong>；</li>
+<li>用图形化方式展示最优策略（见 8.4 节配图）。</li>
+</ol>
+<h3 id="82">8.2 完整代码</h3>
+<p>以下代码自包含（重复定义了环境，方便直接复制运行）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># ========== 环境：4x4 GridWorld（Sutton 例 4.1） ==========</span>
+<span class="n">SIZE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">SIZE</span> <span class="o">*</span> <span class="n">SIZE</span>
+<span class="n">TERMINAL</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">}</span>
+<span class="n">ORDER</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;↑&#39;</span><span class="p">,</span> <span class="s1">&#39;↓&#39;</span><span class="p">,</span> <span class="s1">&#39;←&#39;</span><span class="p">,</span> <span class="s1">&#39;→&#39;</span><span class="p">]</span>
+<span class="n">ACT_DELTA</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;↑&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">SIZE</span><span class="p">,</span> <span class="s1">&#39;↓&#39;</span><span class="p">:</span> <span class="o">+</span><span class="n">SIZE</span><span class="p">,</span> <span class="s1">&#39;←&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;→&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mi">1</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;越界原地停留；非终止转移奖励 -1；终止状态奖励 0 并停留&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="mf">0.0</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">ACT_DELTA</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ns</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ns</span> <span class="o">&gt;=</span> <span class="n">N</span><span class="p">:</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">%</span> <span class="n">SIZE</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;←&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">s</span> <span class="o">%</span> <span class="n">SIZE</span> <span class="o">==</span> <span class="n">SIZE</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;→&#39;</span><span class="p">):</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="n">ns</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">),</span> <span class="n">precision</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
+                          <span class="n">suppress_small</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">floatmode</span><span class="o">=</span><span class="s1">&#39;fixed&#39;</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;T&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">TERMINAL</span>
+                        <span class="k">else</span> <span class="n">policy</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">)))</span>
+
+<span class="c1"># ========== 策略迭代 ==========</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">policy_iteration</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;→&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">SIZE</span><span class="p">):</span>
+        <span class="n">policy</span><span class="p">[</span><span class="n">r</span> <span class="o">*</span> <span class="n">SIZE</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;↓&#39;</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">total_sweeps</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">rounds</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">rounds</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># 策略评估</span>
+        <span class="n">sweep</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">sweep</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">V_new</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+                <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">-</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">total_sweeps</span> <span class="o">+=</span> <span class="n">sweep</span>
+        <span class="c1"># 策略改进</span>
+        <span class="n">stable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">new_policy</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">best_a</span><span class="p">,</span> <span class="n">best_q</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+                <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="n">best_q</span><span class="p">:</span>
+                    <span class="n">best_q</span><span class="p">,</span> <span class="n">best_a</span> <span class="o">=</span> <span class="n">q</span><span class="p">,</span> <span class="n">a</span>
+            <span class="n">new_policy</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_a</span>
+            <span class="k">if</span> <span class="n">best_a</span> <span class="o">!=</span> <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">]:</span>
+                <span class="n">stable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="n">new_policy</span>
+        <span class="k">if</span> <span class="n">stable</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">rounds</span><span class="p">,</span> <span class="n">total_sweeps</span>
+
+<span class="c1"># ========== 价值迭代 ==========</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">value_iteration</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">V_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+                <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">])</span>
+            <span class="n">V_new</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">V_new</span> <span class="o">-</span> <span class="n">V</span><span class="p">))</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">V_new</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># 提取最优策略</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">N</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">TERMINAL</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">best_a</span><span class="p">,</span> <span class="n">best_q</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ORDER</span><span class="p">:</span>
+            <span class="n">ns</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">V</span><span class="p">[</span><span class="n">ns</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="n">best_q</span><span class="p">:</span>
+                <span class="n">best_q</span><span class="p">,</span> <span class="n">best_a</span> <span class="o">=</span> <span class="n">q</span><span class="p">,</span> <span class="n">a</span>
+        <span class="n">policy</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_a</span>
+    <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">policy</span><span class="p">,</span> <span class="n">k</span>
+
+<span class="c1"># ========== 主程序 ==========</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">V_pi</span><span class="p">,</span> <span class="n">pi_pi</span><span class="p">,</span> <span class="n">rounds</span><span class="p">,</span> <span class="n">sweeps</span> <span class="o">=</span> <span class="n">policy_iteration</span><span class="p">()</span>
+    <span class="n">V_vi</span><span class="p">,</span> <span class="n">pi_vi</span><span class="p">,</span> <span class="n">iters</span> <span class="o">=</span> <span class="n">value_iteration</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;策略迭代结果：&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  迭代轮数（改进次数）: </span><span class="si">{</span><span class="n">rounds</span><span class="si">}</span><span class="s2">，评估总扫描次数: </span><span class="si">{</span><span class="n">sweeps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  最优价值表 v*:&quot;</span><span class="p">);</span> <span class="n">show</span><span class="p">(</span><span class="n">V_pi</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  最优策略 π*:&quot;</span><span class="p">);</span> <span class="n">show_policy</span><span class="p">(</span><span class="n">pi_pi</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">价值迭代结果：&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  迭代轮数: </span><span class="si">{</span><span class="n">iters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  最优价值表 v*:&quot;</span><span class="p">);</span> <span class="n">show</span><span class="p">(</span><span class="n">V_vi</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  最优策略 π*:&quot;</span><span class="p">);</span> <span class="n">show_policy</span><span class="p">(</span><span class="n">pi_vi</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">两种算法得到的最优策略一致:&quot;</span><span class="p">,</span> <span class="n">pi_pi</span> <span class="o">==</span> <span class="n">pi_vi</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># 策略迭代结果：</span>
+<span class="c1">#   迭代轮数（改进次数）: 4，评估总扫描次数: 11</span>
+<span class="c1">#   最优价值表 v*:</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1">#   最优策略 π*:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↑  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  →  →  T</span>
+<span class="c1">#</span>
+<span class="c1"># 价值迭代结果：</span>
+<span class="c1">#   迭代轮数: 4</span>
+<span class="c1">#   最优价值表 v*:</span>
+<span class="c1"># [[ 0.00 -1.00 -2.00 -3.00]</span>
+<span class="c1">#  [-1.00 -2.00 -3.00 -2.00]</span>
+<span class="c1">#  [-2.00 -3.00 -2.00 -1.00]</span>
+<span class="c1">#  [-3.00 -2.00 -1.00  0.00]]</span>
+<span class="c1">#   最优策略 π*:</span>
+<span class="c1"># T  ←  ←  ↓</span>
+<span class="c1"># ↑  ↑  ↑  ↓</span>
+<span class="c1"># ↑  ↑  ↓  ↓</span>
+<span class="c1"># ↑  →  →  T</span>
+<span class="c1">#</span>
+<span class="c1"># 两种算法得到的最优策略一致: True</span>
+</code></pre></div>
+<h3 id="83">8.3 结果对比</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>策略迭代</th>
+<th>价值迭代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>迭代轮数</td>
+<td>4（其中 3 轮产生新策略）</td>
+<td>4（第 3 轮价值已精确）</td>
+</tr>
+<tr>
+<td>价值更新总扫描次数</td>
+<td>11（6 + 2 + 2 + 1）</td>
+<td>4</td>
+</tr>
+<tr>
+<td>每轮工作量</td>
+<td>重（评估要扫到收敛）</td>
+<td>轻（每轮一次全量 max）</td>
+</tr>
+<tr>
+<td>最优价值表</td>
+<td>完全一致</td>
+<td>完全一致</td>
+</tr>
+<tr>
+<td>最优策略</td>
+<td>完全一致</td>
+<td>完全一致</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论</strong>：在本实验（<span class="arithmatex">\(\gamma = 1\)</span>、确定性、终止状态明确）中，两种算法
+殊途同归；价值迭代以更少的扫描次数胜出。<strong>注意这个结论不能外推</strong>——在
+<span class="arithmatex">\(\gamma\)</span> 较小、转移随机、状态空间更大时，两者相对优劣会改变（策略迭代
+的轮数通常远小于价值迭代所需的"扩散轮数"）。</p>
+<h3 id="84">8.4 最优策略的可视化</h3>
+<p>把 8.2 节得到的最优策略画成网格图——每个格子中的箭头表示该状态的最优
+动作，终止状态用橙色标注：</p>
+<p><img alt="4×4 GridWorld 最优策略" src="../../img/02-optimal-policy.png" /></p>
+<table>
+<thead>
+<tr>
+<th>图元素</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>橙色格子（状态 0、15）</td>
+<td>终止状态，<span class="arithmatex">\(v_* = 0\)</span></td>
+</tr>
+<tr>
+<td>灰色格子</td>
+<td>普通状态，右下角标注 <span class="arithmatex">\(v_*\)</span>（= 最短步数的相反数）</td>
+</tr>
+<tr>
+<td>箭头</td>
+<td>该状态的最优动作（<span class="arithmatex">\(\gamma = 1\)</span> 下的贪心最优策略）</td>
+</tr>
+<tr>
+<td>左上角数字</td>
+<td>状态编号</td>
+</tr>
+</tbody>
+</table>
+<p><strong>验证</strong>：从任意格子出发，沿箭头走，步数恰好等于该格 <span class="arithmatex">\(\lvert v_* \rvert\)</span>。
+例如状态 3（<span class="arithmatex">\(v_* = -3\)</span>）：↓ → ↓ → ↓，三步到达终止状态 15。状态 13
+（<span class="arithmatex">\(v_* = -2\)</span>）：→ →，两步到达 15。</p>
+<h3 id="85">8.5 动手练习</h3>
+<ol>
+<li><strong>修改奖励</strong>：把每步奖励从 <span class="arithmatex">\(-1\)</span> 改为 <span class="arithmatex">\(-0.1\)</span> 重新运行。价值表如何变化？
+   最优策略变了吗？（提示：奖励尺度缩放不改变 <span class="arithmatex">\(\arg\max\)</span>，策略不变。）</li>
+<li><strong>修改折扣</strong>：令 <span class="arithmatex">\(\gamma = 0.5\)</span> 重新运行价值迭代。最优策略是否改变？
+   （提示：折扣越小越"短视"，绕远路去近的终止状态可能更优。）</li>
+<li><strong>修改终止状态</strong>：只保留状态 0 为终止，状态 15 变为普通状态。重新求解
+   并画图，观察价值分布如何"以 0 为中心"重新扩散。</li>
+<li><strong>实现优先扫除</strong>：在价值迭代基础上实现 7.3 节的优先扫除，比较两者更新
+   次数（优先扫除应显著减少更新量）。</li>
+<li><strong>对比截断评估</strong>：把策略迭代的评估阈值 <span class="arithmatex">\(\theta\)</span> 从 <span class="arithmatex">\(10^{-4}\)</span> 改为
+   <span class="arithmatex">\(10^{-1}\)</span>（截断评估），观察轮数与总扫描次数的变化。</li>
+</ol>
+<hr />
+<h2 id="_2">附：本章速查表</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>一句话定义</th>
+<th>关键公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略评估</td>
+<td>给定 <span class="arithmatex">\(\pi\)</span> 求 <span class="arithmatex">\(v_\pi\)</span></td>
+<td><span class="arithmatex">\(v_{k+1}(s) = \sum_a \pi(a\|s) \sum_{s',r} P(s',r\|s,a)[r + \gamma v_k(s')]\)</span></td>
+</tr>
+<tr>
+<td>策略改进</td>
+<td>按价值做贪心</td>
+<td><span class="arithmatex">\(\pi'(s) = \arg\max_a \sum_{s',r} P(s',r\|s,a)[r + \gamma v_\pi(s')]\)</span></td>
+</tr>
+<tr>
+<td>策略迭代</td>
+<td>评估⟷改进循环</td>
+<td>评估收敛 → 改进 → 策略不变即最优</td>
+</tr>
+<tr>
+<td>价值迭代</td>
+<td>合并的单步 max 备份</td>
+<td><span class="arithmatex">\(v_{k+1}(s) = \max_a \sum_{s',r} P(s',r\|s,a)[r + \gamma v_k(s')]\)</span></td>
+</tr>
+<tr>
+<td>GPI</td>
+<td>评估与改进相互牵引</td>
+<td>一切 RL 方法的统一抽象</td>
+</tr>
+<tr>
+<td>DP 前提</td>
+<td>已知模型 + 完美马尔可夫</td>
+<td>模型未知 → 用 MC/TD（第 3、4 章）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p><strong>下一步</strong>：动态规划假设环境模型完全已知，而现实往往并非如此。下一章
+进入<strong>免模型</strong>的第一族方法——<a href="../03-monte-carlo-methods/">蒙特卡洛方法</a>：
+不依赖任何模型，仅凭完整的交互回合经验，就能完成策略评估与控制。你将
+看到，MC 方法如何用"采样"替代 DP 中的"期望"，以及它付出的代价（方差）
+与获得的自由（无需模型）。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

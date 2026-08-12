@@ -1,228 +1,2954 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
         <link rel="canonical" href="https://CodeNebula.github.io/software-development/07-testing/">
-        <link rel="shortcut icon" href="../../img/favicon.ico">
+      
+      
+        <link rel="prev" href="../06-architecture/">
+      
+      
+        <link rel="next" href="../08-security/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
         <title>测试与质量 - CodeNebula</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../../css/brands.min.css" rel="stylesheet">
-        <link href="../../css/solid.min.css" rel="stylesheet">
-        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
-        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
-        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script> 
-    </head>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
 
-    <body>
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="../..">CodeNebula</a>
-                <!-- Expander button -->
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item">
-                                <a href="../.." class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../../reinforcement-learning/" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/00-bandit/" class="dropdown-item">多臂老虎机</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/02-dynamic-programming/" class="dropdown-item">动态规划</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/04-temporal-difference/" class="dropdown-item">时序差分学习</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/07-continuous-control/" class="dropdown-item">连续控制</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/08-tools-environments/" class="dropdown-item">环境与工具链</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/09-advanced-topics/" class="dropdown-item">进阶专题</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/10-engineering-practice/" class="dropdown-item">工程实践</a>
-</li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="../01-frontend/" class="dropdown-item">前端开发</a>
-</li>
-                                    
-<li>
-    <a href="../02-backend/" class="dropdown-item">后端开发</a>
-</li>
-                                    
-<li>
-    <a href="../03-database/" class="dropdown-item">数据库与存储</a>
-</li>
-                                    
-<li>
-    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
-</li>
-                                    
-<li>
-    <a href="../05-devops/" class="dropdown-item">DevOps与部署</a>
-</li>
-                                    
-<li>
-    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
-</li>
-                                    
-<li>
-    <a href="./" class="dropdown-item active" aria-current="page">测试与质量</a>
-</li>
-                                    
-<li>
-    <a href="../08-security/" class="dropdown-item">安全基础</a>
-</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav ms-md-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../06-architecture/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../08-security/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
-    </div>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
-        <ul class="nav flex-column">
-            
-            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">测试与质量保障</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">一、测试金字塔</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">二、单元测试</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">三、集成测试</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_5" class="nav-link">四、端到端测试</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#bdd" class="nav-link">五、行为驱动开发（BDD）</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#linting" class="nav-link">六、静态分析 &amp; Linting</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_6" class="nav-link">七、代码审查</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_7" class="nav-link">八、重构</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_8" class="nav-link">九、性能测试</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_9" class="nav-link">十、软件质量度量</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_10" class="nav-link">综合测试策略模板</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_11" class="nav-link">扩展阅读</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-        </ul>
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              测试与质量
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reinforcement-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、测试金字塔
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、测试金字塔">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 经典金字塔模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 反模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-test-trophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 测试奖杯（Test Trophy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、单元测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、单元测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 测什么
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pytestpython" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 pytest（Python）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 pytest（Python）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametrize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametrize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conftest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conftest
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-jestjavascripttypescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Jest（JavaScript/TypeScript）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Jest（JavaScript/TypeScript）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mock_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock 类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot 测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-mockstubfakespydummy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Mock、Stub、Fake、Spy、Dummy 辨析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 测试驱动开发（TDD）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 代码覆盖率
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、集成测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、集成测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 数据库交互测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 API 端点测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 外部服务模拟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 异步代码测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、端到端测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、端到端测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Playwright
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-cypress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Cypress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-selenium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Selenium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-e2e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 E2E 最佳实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、行为驱动开发（BDD）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、行为驱动开发（BDD）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gherkin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Gherkin 语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-python-behave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Python Behave 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-bdd-vs-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 BDD vs TDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、静态分析 &amp; Linting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、静态分析 &amp; Linting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-eslint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 ESLint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-prettier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Prettier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 TypeScript 严格模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Python 类型检查
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 高级静态分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、代码审查
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、代码审查">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 审查清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 审查类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 有效反馈
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 PR 大小与节奏
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、重构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、重构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 何时重构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 重构技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 安全重构的前提
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 遗留代码策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、性能测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、性能测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 负载测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-vs-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 压力测试 vs 尖峰测试 vs 浸泡测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 性能剖析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、软件质量度量
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、软件质量度量">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-dora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 DORA 指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 代码质量指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 技术债务管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        综合测试策略模板
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展阅读
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reinforcement-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、测试金字塔
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、测试金字塔">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 经典金字塔模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 反模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-test-trophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 测试奖杯（Test Trophy）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、单元测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、单元测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 测什么
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-pytestpython" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 pytest（Python）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 pytest（Python）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametrize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parametrize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conftest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conftest
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-jestjavascripttypescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Jest（JavaScript/TypeScript）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Jest（JavaScript/TypeScript）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mock_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock 类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshot 测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-mockstubfakespydummy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Mock、Stub、Fake、Spy、Dummy 辨析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 测试驱动开发（TDD）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 代码覆盖率
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、集成测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、集成测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 数据库交互测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 API 端点测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 外部服务模拟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 异步代码测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、端到端测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、端到端测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-playwright" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Playwright
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-cypress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Cypress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-selenium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Selenium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-e2e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 E2E 最佳实践
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、行为驱动开发（BDD）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、行为驱动开发（BDD）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-gherkin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Gherkin 语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-python-behave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Python Behave 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-bdd-vs-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 BDD vs TDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、静态分析 &amp; Linting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、静态分析 &amp; Linting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-eslint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 ESLint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-prettier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Prettier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 TypeScript 严格模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Python 类型检查
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 高级静态分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、代码审查
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、代码审查">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 审查清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 审查类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 有效反馈
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 PR 大小与节奏
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、重构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、重构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 何时重构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 重构技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 安全重构的前提
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 遗留代码策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、性能测试
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、性能测试">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 负载测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-vs-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 压力测试 vs 尖峰测试 vs 浸泡测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 性能剖析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、软件质量度量
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、软件质量度量">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-dora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 DORA 指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 代码质量指标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 技术债务管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        综合测试策略模板
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展阅读
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    软件开发
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
 
 <h1 id="_1">测试与质量保障</h1>
 <blockquote>
@@ -232,7 +2958,7 @@
 <h2 id="_2">一、测试金字塔</h2>
 <h3 id="11">1.1 经典金字塔模型</h3>
 <p>测试金字塔由 Mike Cohn 在《Succeeding with Agile》中提出，定义了三个层级的比例关系：</p>
-<pre><code>        ┌──────┐
+<div class="highlight"><pre><span></span><code>        ┌──────┐
        /│ E2E  │\       少量端到端测试
       / │      │ \
      /├────────┤ \      ──────────────
@@ -243,7 +2969,7 @@
 /  │   单元测试     │  \  大量单元测试
 │  │               │   │
 └──┴───────────────┴───┘
-</code></pre>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -284,7 +3010,7 @@
 <p><strong>倒金字塔（Inverted Pyramid）</strong>：集成测试过多，单元测试不足。虽然比冰激凌甜筒好一些，但依然导致测试套件脆弱——任何底层改动都会引发大量失败。</p>
 <h3 id="13-test-trophy">1.3 测试奖杯（Test Trophy）</h3>
 <p>Kent C. Dodds 针对前端应用提出测试奖杯模型：</p>
-<pre><code>      ┌──────────┐
+<div class="highlight"><pre><span></span><code>      ┌──────────┐
       │  E2E  │  少量
       ├──────────┤
      /│ 集成测试  │\ 重点
@@ -294,7 +3020,7 @@
    ├──────────────┤
    │   单元测试    │  适量（纯逻辑、工具函数）
    └──────────────┘
-</code></pre>
+</code></pre></div>
 <p>核心观点：<strong>前端测试的重点应该是集成测试</strong>，因为前端最常出 Bug 的地方不在于某个纯函数的逻辑，而在于<strong>组件之间的交互和状态同步</strong>。静态分析（TypeScript、ESLint）能拦截大量低级错误，性价比极高。</p>
 <hr />
 <h2 id="_3">二、单元测试</h2>
@@ -309,95 +3035,95 @@
 <p><strong>不测</strong>：框架行为（Django ORM、React 渲染）、第三方 SDK、配置加载——这些交给集成测试。</p>
 <h3 id="22-pytestpython">2.2 pytest（Python）</h3>
 <h4 id="fixture">Fixture</h4>
-<pre><code class="language-python">import pytest
-from myapp.models import Order
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myapp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span>
 
-@pytest.fixture
-def sample_order():
-    &quot;&quot;&quot;创建测试用的订单对象&quot;&quot;&quot;
-    return Order(user_id=1, total=100.0, items=[{&quot;sku&quot;: &quot;A&quot;, &quot;qty&quot;: 2}])
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_order</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;创建测试用的订单对象&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Order</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;sku&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;qty&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}])</span>
 
-@pytest.fixture
-def db_session(tmp_path):
-    &quot;&quot;&quot;使用内存数据库，测试间隔离&quot;&quot;&quot;
-    from myapp.database import create_test_db
-    session = create_test_db(tmp_path)
-    yield session
-    session.rollback()
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_session</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;使用内存数据库，测试间隔离&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_test_db</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">create_test_db</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">session</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
 
-def test_order_discount(sample_order, db_session):
-    db_session.add(sample_order)
-    result = sample_order.apply_discount(code=&quot;NEW_USER10&quot;)
-    assert result.discounted_total == 90.0
-    assert result.discount_applied == 10.0
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_order_discount</span><span class="p">(</span><span class="n">sample_order</span><span class="p">,</span> <span class="n">db_session</span><span class="p">):</span>
+    <span class="n">db_session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sample_order</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">sample_order</span><span class="o">.</span><span class="n">apply_discount</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">&quot;NEW_USER10&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">discounted_total</span> <span class="o">==</span> <span class="mf">90.0</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">discount_applied</span> <span class="o">==</span> <span class="mf">10.0</span>
+</code></pre></div>
 <h4 id="parametrize">Parametrize</h4>
-<pre><code class="language-python">@pytest.mark.parametrize(&quot;input,expected&quot;, [
-    (&quot;&quot;, 0),
-    (&quot;42&quot;, 42),
-    (&quot;-5&quot;, -5),
-    (&quot;3.14&quot;, 3.14),
-    (&quot;not_a_number&quot;, None),
-])
-def test_safe_parse(input, expected):
-    from myapp.utils import safe_parse
-    assert safe_parse(input) == expected
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;input,expected&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;-5&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;3.14&quot;</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;not_a_number&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_safe_parse</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_parse</span>
+    <span class="k">assert</span> <span class="n">safe_parse</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
+</code></pre></div>
 <h4 id="mock">Mock</h4>
-<pre><code class="language-python">def test_send_welcome_email(mocker):
-    mock_smtp = mocker.patch(&quot;myapp.services.smtplib.SMTP&quot;)
-    from myapp.services import send_email
-    send_email(&quot;user@example.com&quot;, &quot;Welcome!&quot;)
-    mock_smtp.return_value.__enter__.return_value.sendmail.assert_called_once()
-    mock_smtp.return_value.__enter__.return_value.quit.assert_called_once()
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_send_welcome_email</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+    <span class="n">mock_smtp</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;myapp.services.smtplib.SMTP&quot;</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">send_email</span>
+    <span class="n">send_email</span><span class="p">(</span><span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;Welcome!&quot;</span><span class="p">)</span>
+    <span class="n">mock_smtp</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="fm">__enter__</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="n">sendmail</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+    <span class="n">mock_smtp</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="fm">__enter__</span><span class="o">.</span><span class="n">return_value</span><span class="o">.</span><span class="n">quit</span><span class="o">.</span><span class="n">assert_called_once</span><span class="p">()</span>
+</code></pre></div>
 <h4 id="conftest">Conftest</h4>
 <p><code>conftest.py</code> 可以跨模块共享 fixture，是 pytest 组织测试的核心机制。将 <code>db_session</code>、<code>client</code>、<code>auth_headers</code> 等高频 fixture 放在 conftest 中，避免重复定义。</p>
 <h3 id="23-jestjavascripttypescript">2.3 Jest（JavaScript/TypeScript）</h3>
-<pre><code class="language-typescript">// math.test.ts
-import { calculateTax, formatPrice } from &quot;./math&quot;;
+<div class="highlight"><pre><span></span><code><span class="c1">// math.test.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">calculateTax</span><span class="p">,</span><span class="w"> </span><span class="nx">formatPrice</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./math&quot;</span><span class="p">;</span>
 
-describe(&quot;calculateTax&quot;, () =&gt; {
-  it(&quot;计算含税价 - 标准税率&quot;, () =&gt; {
-    expect(calculateTax(100)).toBe(113);
-  });
+<span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;calculateTax&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;计算含税价 - 标准税率&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">calculateTax</span><span class="p">(</span><span class="mf">100</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">113</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
 
-  it(&quot;计算含税价 - 零税率&quot;, () =&gt; {
-    expect(calculateTax(100, 0)).toBe(100);
-  });
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;计算含税价 - 零税率&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">calculateTax</span><span class="p">(</span><span class="mf">100</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">100</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
 
-  it(&quot;边界 - 负值返回 0&quot;, () =&gt; {
-    expect(calculateTax(-10)).toBe(0);
-  });
-});
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;边界 - 负值返回 0&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">calculateTax</span><span class="p">(</span><span class="o">-</span><span class="mf">10</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
 
-describe(&quot;formatPrice&quot;, () =&gt; {
-  it(&quot;格式化价格带货币符号&quot;, () =&gt; {
-    const result = formatPrice(1234.5, &quot;USD&quot;);
-    expect(result).toBe(&quot;$1,234.50&quot;);
-  });
-});
-</code></pre>
+<span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;formatPrice&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;格式化价格带货币符号&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">formatPrice</span><span class="p">(</span><span class="mf">1234.5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;USD&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">&quot;$1,234.50&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
 <h4 id="mock_1">Mock 类型</h4>
-<pre><code class="language-typescript">// Stub — 返回固定值
-jest.spyOn(paymentApi, &quot;getRate&quot;).mockReturnValue(7.2);
+<div class="highlight"><pre><span></span><code><span class="c1">// Stub — 返回固定值</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">paymentApi</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;getRate&quot;</span><span class="p">).</span><span class="nx">mockReturnValue</span><span class="p">(</span><span class="mf">7.2</span><span class="p">);</span>
 
-// Spy — 记录调用
-const logger = jest.spyOn(console, &quot;log&quot;);
-// ... 执行操作
-expect(logger).toHaveBeenCalledWith(&quot;Payment completed&quot;);
+<span class="c1">// Spy — 记录调用</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jest</span><span class="p">.</span><span class="nx">spyOn</span><span class="p">(</span><span class="nx">console</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;log&quot;</span><span class="p">);</span>
+<span class="c1">// ... 执行操作</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">logger</span><span class="p">).</span><span class="nx">toHaveBeenCalledWith</span><span class="p">(</span><span class="s2">&quot;Payment completed&quot;</span><span class="p">);</span>
 
-// Mock 模块
-jest.mock(&quot;../services/payment&quot;, () =&gt; ({
-  charge: jest.fn().mockResolvedValue({ status: &quot;success&quot; }),
-}));
-</code></pre>
+<span class="c1">// Mock 模块</span>
+<span class="nx">jest</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="s2">&quot;../services/payment&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="nx">charge</span><span class="o">:</span><span class="w"> </span><span class="kt">jest.fn</span><span class="p">().</span><span class="nx">mockResolvedValue</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="w"> </span><span class="p">}),</span>
+<span class="p">}));</span>
+</code></pre></div>
 <h4 id="snapshot">Snapshot 测试</h4>
-<pre><code class="language-typescript">it(&quot;渲染用户卡片&quot;, () =&gt; {
-  const tree = renderer.create(&lt;UserCard user={mockUser} /&gt;).toJSON();
-  expect(tree).toMatchSnapshot();
-});
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;渲染用户卡片&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">UserCard</span><span class="w"> </span><span class="nx">user</span><span class="o">=</span><span class="p">{</span><span class="nx">mockUser</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span><span class="p">).</span><span class="nx">toJSON</span><span class="p">();</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">tree</span><span class="p">).</span><span class="nx">toMatchSnapshot</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div>
 <p>Snapshot 适合 UI 防回归。更新时运行 <code>jest --updateSnapshot</code>，但要仔细审查 diff，避免盲目接受。</p>
 <h3 id="24-mockstubfakespydummy">2.4 Mock、Stub、Fake、Spy、Dummy 辨析</h3>
 <table>
@@ -444,24 +3170,24 @@ jest.mock(&quot;../services/payment&quot;, () =&gt; ({
 <li><strong>绿</strong>：用最简实现让测试通过（可以 hardcode）。</li>
 <li><strong>重构</strong>：在测试保护下优化代码质量。</li>
 </ol>
-<pre><code class="language-python"># Step 1: RED — 测试先写
-def test_is_prime():
-    assert is_prime(2) is True
-    assert is_prime(4) is False
+<div class="highlight"><pre><span></span><code><span class="c1"># Step 1: RED — 测试先写</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_is_prime</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">is_prime</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">is_prime</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
 
-# Step 2: GREEN — 最简实现
-def is_prime(n: int) -&gt; bool:
-    return n == 2  # 暂时只通过一个 case
+<span class="c1"># Step 2: GREEN — 最简实现</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_prime</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span>  <span class="c1"># 暂时只通过一个 case</span>
 
-# Step 3: REFACTOR — 正确实现
-def is_prime(n: int) -&gt; bool:
-    if n &lt; 2:
-        return False
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
-</code></pre>
+<span class="c1"># Step 3: REFACTOR — 正确实现</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_prime</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
 <p><strong>何时用 TDD</strong>：
 - 业务逻辑复杂（权限、计算、状态机）
 - 需求明确且稳定
@@ -501,14 +3227,14 @@ def is_prime(n: int) -&gt; bool:
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># Python 覆盖率阈值
-# pytest.ini
-[pytest]
-addopts = --cov=myapp --cov-report=term-missing --cov-fail-under=80
+<div class="highlight"><pre><span></span><code><span class="c1"># Python 覆盖率阈值</span>
+<span class="c1"># pytest.ini</span>
+<span class="o">[</span>pytest<span class="o">]</span>
+<span class="nv">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>--cov<span class="o">=</span>myapp<span class="w"> </span>--cov-report<span class="o">=</span>term-missing<span class="w"> </span>--cov-fail-under<span class="o">=</span><span class="m">80</span>
 
-# 包含分支覆盖
-addopts = --cov-branch --cov-fail-under=75
-</code></pre>
+<span class="c1"># 包含分支覆盖</span>
+<span class="nv">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>--cov-branch<span class="w"> </span>--cov-fail-under<span class="o">=</span><span class="m">75</span>
+</code></pre></div>
 <p><strong>阈值建议</strong>：
 - 新项目：行覆盖率 ≥ 80%，分支覆盖率 ≥ 70%
 - 核心业务模块：行覆盖率 ≥ 90%
@@ -517,151 +3243,151 @@ addopts = --cov-branch --cov-fail-under=75
 <hr />
 <h2 id="_4">三、集成测试</h2>
 <h3 id="31">3.1 数据库交互测试</h3>
-<pre><code class="language-python"># pytest + SQLAlchemy
-@pytest.fixture
-def db_session():
-    engine = create_engine(&quot;sqlite:///:memory:&quot;)
-    Base.metadata.create_all(engine)
-    session = Session(engine)
-    yield session
-    session.rollback()
+<div class="highlight"><pre><span></span><code><span class="c1"># pytest + SQLAlchemy</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_session</span><span class="p">():</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;sqlite:///:memory:&quot;</span><span class="p">)</span>
+    <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">session</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
 
-def test_create_order_item(db_session):
-    order = Order(user_id=1, total=100)
-    db_session.add(order)
-    db_session.flush()
+<span class="k">def</span><span class="w"> </span><span class="nf">test_create_order_item</span><span class="p">(</span><span class="n">db_session</span><span class="p">):</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">db_session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+    <span class="n">db_session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    item = OrderItem(order_id=order.id, sku=&quot;ABC&quot;, qty=2)
-    db_session.add(item)
-    db_session.commit()
+    <span class="n">item</span> <span class="o">=</span> <span class="n">OrderItem</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">sku</span><span class="o">=</span><span class="s2">&quot;ABC&quot;</span><span class="p">,</span> <span class="n">qty</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">db_session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">db_session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
-    assert db_session.query(OrderItem).count() == 1
-    assert order.items[0].sku == &quot;ABC&quot;
-</code></pre>
+    <span class="k">assert</span> <span class="n">db_session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">OrderItem</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sku</span> <span class="o">==</span> <span class="s2">&quot;ABC&quot;</span>
+</code></pre></div>
 <p><strong>回滚策略</strong>：每个测试用例运行在事务中，测试结束后回滚，保证测试间隔离。这种方式比每次重建数据库快 100 倍以上。</p>
 <h3 id="32-api">3.2 API 端点测试</h3>
 <p>Python（使用 <code>requests</code> 和 Flask/FastAPI test client）：</p>
-<pre><code class="language-python">def test_create_user(client):
-    response = client.post(&quot;/api/users&quot;, json={
-        &quot;name&quot;: &quot;张三&quot;,
-        &quot;email&quot;: &quot;zhangsan@example.com&quot;,
-    })
-    assert response.status_code == 201
-    data = response.json()
-    assert data[&quot;name&quot;] == &quot;张三&quot;
-    assert &quot;id&quot; in data
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_create_user</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;张三&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;zhangsan@example.com&quot;</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;张三&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">data</span>
 
-def test_get_nonexistent_user(client):
-    response = client.get(&quot;/api/users/9999&quot;)
-    assert response.status_code == 404
-    assert response.json()[&quot;error&quot;] == &quot;User not found&quot;
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_get_nonexistent_user</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/users/9999&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;User not found&quot;</span>
+</code></pre></div>
 <p>Node.js（使用 Supertest）：</p>
-<pre><code class="language-typescript">import request from &quot;supertest&quot;;
-import app from &quot;../app&quot;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;supertest&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">app</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../app&quot;</span><span class="p">;</span>
 
-describe(&quot;POST /api/users&quot;, () =&gt; {
-  it(&quot;创建用户成功&quot;, async () =&gt; {
-    const res = await request(app)
-      .post(&quot;/api/users&quot;)
-      .send({ name: &quot;李四&quot;, email: &quot;lisi@example.com&quot; })
-      .expect(201);
+<span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;POST /api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;创建用户成功&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;李四&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;lisi@example.com&quot;</span><span class="w"> </span><span class="p">})</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mf">201</span><span class="p">);</span>
 
-    expect(res.body.name).toBe(&quot;李四&quot;);
-  });
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">&quot;李四&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
 
-  it(&quot;邮箱重复返回 409&quot;, async () =&gt; {
-    await request(app)
-      .post(&quot;/api/users&quot;)
-      .send({ name: &quot;重复&quot;, email: &quot;dup@example.com&quot; })
-      .expect(409);
-  });
-});
-</code></pre>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;邮箱重复返回 409&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;重复&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;dup@example.com&quot;</span><span class="w"> </span><span class="p">})</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mf">409</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
 <h3 id="33">3.3 外部服务模拟</h3>
-<pre><code class="language-python"># 使用 WireMock (Java) 或 responses (Python)
-import responses
+<div class="highlight"><pre><span></span><code><span class="c1"># 使用 WireMock (Java) 或 responses (Python)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">responses</span>
 
-@responses.activate
-def test_weather_service():
-    responses.add(
-        responses.GET,
-        &quot;https://api.weather.com/v1/current?city=Beijing&quot;,
-        json={&quot;temp&quot;: 22, &quot;condition&quot;: &quot;Sunny&quot;},
-        status=200,
-    )
-    from myapp.services import get_weather
-    result = get_weather(&quot;Beijing&quot;)
-    assert result.temperature == 22
-</code></pre>
-<pre><code class="language-python"># 使用 Testcontainers（真实 Docker 容器）
-# pip install testcontainers
-from testcontainers.postgres import PostgresContainer
+<span class="nd">@responses</span><span class="o">.</span><span class="n">activate</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_weather_service</span><span class="p">():</span>
+    <span class="n">responses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">responses</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span>
+        <span class="s2">&quot;https://api.weather.com/v1/current?city=Beijing&quot;</span><span class="p">,</span>
+        <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;Sunny&quot;</span><span class="p">},</span>
+        <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_weather</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">get_weather</span><span class="p">(</span><span class="s2">&quot;Beijing&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">temperature</span> <span class="o">==</span> <span class="mi">22</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 使用 Testcontainers（真实 Docker 容器）</span>
+<span class="c1"># pip install testcontainers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">testcontainers.postgres</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostgresContainer</span>
 
-def test_with_real_postgres():
-    with PostgresContainer(&quot;postgres:16-alpine&quot;) as postgres:
-        conn_url = postgres.get_connection_url()
-        # 使用真实 PostgreSQL 运行测试
-        # 比 mock 更可靠，但速度较慢
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_with_real_postgres</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">PostgresContainer</span><span class="p">(</span><span class="s2">&quot;postgres:16-alpine&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">postgres</span><span class="p">:</span>
+        <span class="n">conn_url</span> <span class="o">=</span> <span class="n">postgres</span><span class="o">.</span><span class="n">get_connection_url</span><span class="p">()</span>
+        <span class="c1"># 使用真实 PostgreSQL 运行测试</span>
+        <span class="c1"># 比 mock 更可靠，但速度较慢</span>
+</code></pre></div>
 <p>Testcontainers 相比 Mock 方案更接近生产环境，适合对数据一致性要求高的场景（如事务隔离级别、索引行为验证）。</p>
 <h3 id="34">3.4 异步代码测试</h3>
-<pre><code class="language-python">import pytest
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
-@pytest.mark.asyncio
-async def test_async_fetch():
-    from myapp.services import fetch_data
-    result = await fetch_data(&quot;https://api.example.com/data&quot;)
-    assert result[&quot;status&quot;] == &quot;ok&quot;
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_async_fetch</span><span class="p">():</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_data</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fetch_data</span><span class="p">(</span><span class="s2">&quot;https://api.example.com/data&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
 
-@pytest.mark.asyncio
-async def test_concurrent_requests():
-    import asyncio
-    from myapp.services import fetch_data
-    urls = [f&quot;https://api.example.com/page/{i}&quot; for i in range(5)]
-    results = await asyncio.gather(*[fetch_data(u) for u in urls])
-    assert all(r[&quot;status&quot;] == &quot;ok&quot; for r in results)
-</code></pre>
-<pre><code class="language-typescript">// Jest 原生支持 async
-it(&quot;异步获取用户信息&quot;, async () =&gt; {
-  const user = await userService.getUser(1);
-  expect(user.name).toBeDefined();
-});
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">asyncio</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_concurrent_requests</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">myapp.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_data</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;https://api.example.com/page/</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">fetch_data</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// Jest 原生支持 async</span>
+<span class="nx">it</span><span class="p">(</span><span class="s2">&quot;异步获取用户信息&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">userService</span><span class="p">.</span><span class="nx">getUser</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">).</span><span class="nx">toBeDefined</span><span class="p">();</span>
+<span class="p">});</span>
 
-it(&quot;并发请求限流&quot;, async () =&gt; {
-  const promises = Array(100)
-    .fill(null)
-    .map(() =&gt; userService.getUser(1));
+<span class="nx">it</span><span class="p">(</span><span class="s2">&quot;并发请求限流&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">promises</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Array</span><span class="p">(</span><span class="mf">100</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">fill</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="nx">map</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">userService</span><span class="p">.</span><span class="nx">getUser</span><span class="p">(</span><span class="mf">1</span><span class="p">));</span>
 
-  const results = await Promise.all(promises);
-  // 即使并发 100，服务也不应崩溃
-  expect(results.length).toBe(100);
-});
-</code></pre>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promises</span><span class="p">);</span>
+<span class="w">  </span><span class="c1">// 即使并发 100，服务也不应崩溃</span>
+<span class="w">  </span><span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mf">100</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
 <hr />
 <h2 id="_5">四、端到端测试</h2>
 <h3 id="41-playwright">4.1 Playwright</h3>
 <p>Playwright 是当前最推荐的 E2E 框架，支持多浏览器、多语言，内置自动等待。</p>
-<pre><code class="language-typescript">import { test, expect } from &quot;@playwright/test&quot;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">test</span><span class="p">,</span><span class="w"> </span><span class="nx">expect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@playwright/test&quot;</span><span class="p">;</span>
 
-test(&quot;用户登录流程&quot;, async ({ page }) =&gt; {
-  await page.goto(&quot;https://example.com/login&quot;);
+<span class="nx">test</span><span class="p">(</span><span class="s2">&quot;用户登录流程&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="kr">goto</span><span class="p">(</span><span class="s2">&quot;https://example.com/login&quot;</span><span class="p">);</span>
 
-  // data-testid 选择器（推荐）
-  await page.getByTestId(&quot;username&quot;).fill(&quot;admin&quot;);
-  await page.getByTestId(&quot;password&quot;).fill(&quot;password123&quot;);
-  await page.getByTestId(&quot;login-btn&quot;).click();
+<span class="w">  </span><span class="c1">// data-testid 选择器（推荐）</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">getByTestId</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">getByTestId</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">).</span><span class="nx">fill</span><span class="p">(</span><span class="s2">&quot;password123&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">getByTestId</span><span class="p">(</span><span class="s2">&quot;login-btn&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
 
-  // 等待跳转完成
-  await expect(page).toHaveURL(/dashboard/);
+<span class="w">  </span><span class="c1">// 等待跳转完成</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="nx">page</span><span class="p">).</span><span class="nx">toHaveURL</span><span class="p">(</span><span class="sr">/dashboard/</span><span class="p">);</span>
 
-  // 断言页面元素
-  await expect(page.getByTestId(&quot;welcome-msg&quot;)).toHaveText(&quot;欢迎回来, admin&quot;);
+<span class="w">  </span><span class="c1">// 断言页面元素</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">expect</span><span class="p">(</span><span class="nx">page</span><span class="p">.</span><span class="nx">getByTestId</span><span class="p">(</span><span class="s2">&quot;welcome-msg&quot;</span><span class="p">)).</span><span class="nx">toHaveText</span><span class="p">(</span><span class="s2">&quot;欢迎回来, admin&quot;</span><span class="p">);</span>
 
-  // 截图调试
-  await page.screenshot({ path: &quot;login-result.png&quot; });
-});
-</code></pre>
+<span class="w">  </span><span class="c1">// 截图调试</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">screenshot</span><span class="p">({</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;login-result.png&quot;</span><span class="w"> </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
 <p><strong>核心特性</strong>：</p>
 <table>
 <thead>
@@ -693,32 +3419,32 @@ test(&quot;用户登录流程&quot;, async ({ page }) =&gt; {
 </tr>
 </tbody>
 </table>
-<pre><code class="language-bash"># 安装与运行
-npm init playwright@latest
-npx playwright test --headed    # 可见模式调试
-npx playwright test --ui        # UI 模式
-npx playwright test --project=chromium  # 指定浏览器
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># 安装与运行</span>
+npm<span class="w"> </span>init<span class="w"> </span>playwright@latest
+npx<span class="w"> </span>playwright<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--headed<span class="w">    </span><span class="c1"># 可见模式调试</span>
+npx<span class="w"> </span>playwright<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--ui<span class="w">        </span><span class="c1"># UI 模式</span>
+npx<span class="w"> </span>playwright<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--project<span class="o">=</span>chromium<span class="w">  </span><span class="c1"># 指定浏览器</span>
+</code></pre></div>
 <h3 id="42-cypress">4.2 Cypress</h3>
 <p>Cypress 架构与 Playwright 不同——它直接运行在浏览器中（与应用程序同进程）。</p>
-<pre><code class="language-typescript">describe(&quot;购物车流程&quot;, () =&gt; {
-  beforeEach(() =&gt; {
-    cy.visit(&quot;/products&quot;);
-  });
+<div class="highlight"><pre><span></span><code><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;购物车流程&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">beforeEach</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">&quot;/products&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
 
-  it(&quot;添加商品到购物车&quot;, () =&gt; {
-    cy.get(&quot;[data-testid=product-1]&quot;).click();
-    cy.get(&quot;[data-testid=add-to-cart]&quot;).click();
-    cy.get(&quot;[data-testid=cart-count]&quot;).should(&quot;have.text&quot;, &quot;1&quot;);
-  });
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;添加商品到购物车&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;[data-testid=product-1]&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;[data-testid=add-to-cart]&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;[data-testid=cart-count]&quot;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;have.text&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
 
-  it(&quot;拦截 API 模拟网络&quot;, () =&gt; {
-    cy.intercept(&quot;GET&quot;, &quot;/api/products&quot;, { fixture: &quot;products.json&quot; });
-    cy.visit(&quot;/products&quot;);
-    cy.get(&quot;[data-testid=product-card]&quot;).should(&quot;have.length&quot;, 10);
-  });
-});
-</code></pre>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s2">&quot;拦截 API 模拟网络&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">intercept</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/api/products&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">fixture</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;products.json&quot;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">visit</span><span class="p">(</span><span class="s2">&quot;/products&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cy</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;[data-testid=product-card]&quot;</span><span class="p">).</span><span class="nx">should</span><span class="p">(</span><span class="s2">&quot;have.length&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
 <p><strong>Cypress vs Playwright</strong>：</p>
 <table>
 <thead>
@@ -768,81 +3494,81 @@ npx playwright test --project=chromium  # 指定浏览器
 <li><strong>Java 技术栈</strong>：Selenium 在 Java 生态中集成最成熟</li>
 <li><strong>已有大量 Selenium 脚本</strong>：迁移成本高于维护成本</li>
 </ul>
-<pre><code class="language-python">from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.support.ui</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.support</span><span class="w"> </span><span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
 
-driver = webdriver.Chrome()
-driver.get(&quot;https://example.com/login&quot;)
-driver.find_element(By.CSS_SELECTOR, &quot;[data-testid=username]&quot;).send_keys(&quot;admin&quot;)
-driver.find_element(By.CSS_SELECTOR, &quot;[data-testid=login-btn]&quot;).click()
-WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.CSS_SELECTOR, &quot;[data-testid=dashboard]&quot;))
-)
-driver.quit()
-</code></pre>
+<span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://example.com/login&quot;</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="s2">&quot;[data-testid=username]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="s2">&quot;[data-testid=login-btn]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+<span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+    <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="s2">&quot;[data-testid=dashboard]&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</code></pre></div>
 <h3 id="44-e2e">4.4 E2E 最佳实践</h3>
 <p><strong>1. 使用 <code>data-testid</code> 属性</strong>：避免 CSS class 或文本内容变更导致测试失败。</p>
-<pre><code class="language-html">&lt;button data-testid=&quot;submit-order&quot; class=&quot;btn-primary&quot;&gt;提交订单&lt;/button&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">button</span> <span class="na">data-testid</span><span class="o">=</span><span class="s">&quot;submit-order&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;btn-primary&quot;</span><span class="p">&gt;</span>提交订单<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</code></pre></div>
 <p><strong>2. 测试隔离</strong>：每个测试独立创建数据，不依赖其他测试。使用 <code>beforeEach</code> 重置状态。</p>
 <p><strong>3. 重试机制</strong>：E2E 测试天然有 flakiness（网络波动、渲染时序），配置自动重试。</p>
-<pre><code class="language-typescript">// playwright.config.ts
-export default defineConfig({
-  retries: process.env.CI ? 2 : 0,
-});
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// playwright.config.ts</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">retries</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.CI</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">2</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
 <p><strong>4. 限制 E2E 数量</strong>：只覆盖<strong>核心关键路径</strong>（登录、支付、核心流程），异常路径和边界场景交给下层测试。</p>
 <hr />
 <h2 id="bdd">五、行为驱动开发（BDD）</h2>
 <h3 id="51-gherkin">5.1 Gherkin 语法</h3>
 <p>BDD 的核心是用自然语言描述业务行为，Gherkin 是最常用的 DSL：</p>
-<pre><code class="language-gherkin">Feature: 订单折扣
-  As a 电商用户
-  I want 在符合条件的订单上获得折扣
-  So that 我享受优惠
+<div class="highlight"><pre><span></span><code><span class="k">Feature:</span><span class="nf"> 订单折扣</span>
+<span class="nf">  As a 电商用户</span>
+<span class="nf">  I want 在符合条件的订单上获得折扣</span>
+<span class="nf">  So that 我享受优惠</span>
 
-  Scenario: 新用户首次下单享受 10% 折扣
-    Given 我是新注册用户
-    And 我的购物车中有价值 200 元的商品
-    When 我使用折扣码 &quot;NEW_USER10&quot;
-    Then 订单总额应为 180 元
-    And 折扣金额应显示为 20 元
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> 新用户首次下单享受 10% 折扣</span>
+<span class="k">    Given </span><span class="nf">我是新注册用户</span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">我的购物车中有价值 </span><span class="s">200</span><span class="nf"> 元的商品</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">我使用折扣码 &quot;</span><span class="s">NEW_USER10</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">订单总额应为 </span><span class="s">180</span><span class="nf"> 元</span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">折扣金额应显示为 </span><span class="s">20</span><span class="nf"> 元</span>
 
-  Scenario: 折扣码过期
-    Given 折扣码 &quot;SUMMER2024&quot; 已过期
-    When 我尝试使用该折扣码
-    Then 系统提示 &quot;折扣码已失效&quot;
-    And 订单总额不变
-</code></pre>
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> 折扣码过期</span>
+<span class="k">    Given </span><span class="nf">折扣码 &quot;</span><span class="s">SUMMER2024</span><span class="nf">&quot; 已过期</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">我尝试使用该折扣码</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">系统提示 &quot;</span><span class="s">折扣码已失效</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">订单总额不变</span>
+</code></pre></div>
 <h3 id="52-python-behave">5.2 Python Behave 实现</h3>
-<pre><code class="language-python"># features/steps/order_steps.py
-from behave import given, when, then
-from myapp.models import Order, DiscountCode
+<div class="highlight"><pre><span></span><code><span class="c1"># features/steps/order_steps.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">behave</span><span class="w"> </span><span class="kn">import</span> <span class="n">given</span><span class="p">,</span> <span class="n">when</span><span class="p">,</span> <span class="n">then</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">myapp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">DiscountCode</span>
 
-@given(&quot;我是新注册用户&quot;)
-def step_new_user(context):
-    context.user = User(is_new=True)
+<span class="nd">@given</span><span class="p">(</span><span class="s2">&quot;我是新注册用户&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_new_user</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">is_new</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-@given(&quot;我的购物车中有价值 {amount} 元的商品&quot;)
-def step_cart_with_amount(context, amount):
-    context.cart = Cart(user=context.user, total=float(amount))
+<span class="nd">@given</span><span class="p">(</span><span class="s2">&quot;我的购物车中有价值 </span><span class="si">{amount}</span><span class="s2"> 元的商品&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_cart_with_amount</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">cart</span> <span class="o">=</span> <span class="n">Cart</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
 
-@when('我使用折扣码 &quot;{code}&quot;')
-def step_apply_discount(context, code):
-    context.order = Order.from_cart(context.cart)
-    context.result = context.order.apply_discount(code)
+<span class="nd">@when</span><span class="p">(</span><span class="s1">&#39;我使用折扣码 &quot;</span><span class="si">{code}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_apply_discount</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="o">.</span><span class="n">from_cart</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">cart</span><span class="p">)</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">apply_discount</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
 
-@then(&quot;订单总额应为 {expected} 元&quot;)
-def step_check_total(context, expected):
-    assert context.order.total == float(expected), \
-        f&quot;Expected {expected}, got {context.order.total}&quot;
+<span class="nd">@then</span><span class="p">(</span><span class="s2">&quot;订单总额应为 </span><span class="si">{expected}</span><span class="s2"> 元&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_check_total</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">context</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">total</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="n">expected</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">context</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span>
 
-@then('系统提示 &quot;{message}&quot;')
-def step_check_message(context, message):
-    assert context.result.message == message
-</code></pre>
+<span class="nd">@then</span><span class="p">(</span><span class="s1">&#39;系统提示 &quot;</span><span class="si">{message}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">step_check_message</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">context</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">message</span> <span class="o">==</span> <span class="n">message</span>
+</code></pre></div>
 <h3 id="53-bdd-vs-tdd">5.3 BDD vs TDD</h3>
 <table>
 <thead>
@@ -889,18 +3615,18 @@ def step_check_message(context, message):
 <hr />
 <h2 id="linting">六、静态分析 &amp; Linting</h2>
 <h3 id="61-eslint">6.1 ESLint</h3>
-<pre><code class="language-javascript">// eslint.config.js
-export default [
-  {
-    rules: {
-      &quot;no-unused-vars&quot;: &quot;error&quot;,
-      &quot;no-console&quot;: &quot;warn&quot;,
-      &quot;eqeqeq&quot;: [&quot;error&quot;, &quot;always&quot;],
-      &quot;complexity&quot;: [&quot;warn&quot;, { max: 10 }],
-    },
-  },
-];
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// eslint.config.js</span>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">rules</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;no-unused-vars&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;no-console&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;warn&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;eqeqeq&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;always&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="s2">&quot;complexity&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">max</span><span class="o">:</span><span class="w"> </span><span class="mf">10</span><span class="w"> </span><span class="p">}],</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">];</span>
+</code></pre></div>
 <p><strong>推荐插件</strong>：</p>
 <table>
 <thead>
@@ -929,70 +3655,70 @@ export default [
 </tbody>
 </table>
 <p><strong>Pre-commit Hook</strong>：</p>
-<pre><code class="language-bash"># .husky/pre-commit
-npx lint-staged
-</code></pre>
-<pre><code class="language-javascript">// package.json
-{
-  &quot;lint-staged&quot;: {
-    &quot;*.{ts,tsx}&quot;: [&quot;eslint --fix&quot;, &quot;prettier --write&quot;],
-    &quot;*.py&quot;: [&quot;ruff check --fix&quot;, &quot;ruff format&quot;]
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># .husky/pre-commit</span>
+npx<span class="w"> </span>lint-staged
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// package.json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;lint-staged&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;*.{ts,tsx}&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;eslint --fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;prettier --write&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="s2">&quot;*.py&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ruff check --fix&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ruff format&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="62-prettier">6.2 Prettier</h3>
-<pre><code class="language-json">{
-  &quot;semi&quot;: true,
-  &quot;singleQuote&quot;: false,
-  &quot;tabWidth&quot;: 2,
-  &quot;trailingComma&quot;: &quot;all&quot;,
-  &quot;printWidth&quot;: 100
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;semi&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;singleQuote&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tabWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;trailingComma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;printWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><strong>ESLint + Prettier 集成</strong>：用 <code>eslint-config-prettier</code> 关闭 ESLint 中与 Prettier 冲突的规则，用 <code>eslint-plugin-prettier</code> 将 Prettier 作为 ESLint 规则运行。推荐方案——直接用 Prettier 做格式化，ESLint 做代码质量检查，互不重叠。</p>
 <h3 id="63-typescript">6.3 TypeScript 严格模式</h3>
-<pre><code class="language-json">{
-  &quot;compilerOptions&quot;: {
-    &quot;strict&quot;: true,
-    &quot;noUncheckedIndexedAccess&quot;: true,
-    &quot;noImplicitReturns&quot;: true,
-    &quot;exactOptionalPropertyTypes&quot;: true
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;noUncheckedIndexedAccess&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;noImplicitReturns&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;exactOptionalPropertyTypes&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <p><code>strict: true</code> 开启以下子选项：
 - <code>strictNullChecks</code> — null/undefined 类型安全检查
 - <code>noImplicitAny</code> — 禁止隐式 any
 - <code>strictFunctionTypes</code> — 函数类型逆变检查
 - <code>strictBindCallApply</code> — <code>bind/call/apply</code> 类型安全</p>
 <h3 id="64-python">6.4 Python 类型检查</h3>
-<pre><code class="language-bash"># mypy
-mypy myapp/ --strict --ignore-missing-imports
+<div class="highlight"><pre><span></span><code><span class="c1"># mypy</span>
+mypy<span class="w"> </span>myapp/<span class="w"> </span>--strict<span class="w"> </span>--ignore-missing-imports
 
-# pyright (更快)
-pyright myapp/
-</code></pre>
-<pre><code class="language-python"># pyproject.toml
-[tool.mypy]
-strict = true
-disallow_untyped_defs = true
-warn_return_any = true
-warn_unreachable = true
-</code></pre>
+<span class="c1"># pyright (更快)</span>
+pyright<span class="w"> </span>myapp/
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml</span>
+<span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">mypy</span><span class="p">]</span>
+<span class="n">strict</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">disallow_untyped_defs</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">warn_return_any</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">warn_unreachable</span> <span class="o">=</span> <span class="n">true</span>
+</code></pre></div>
 <h3 id="65">6.5 高级静态分析</h3>
 <p><strong>SonarQube</strong>：持续检查代码异味、安全漏洞、重复代码、复杂度。支持多语言，提供 Quality Gate 门禁。</p>
 <p><strong>CodeQL</strong>：GitHub 出品的语义分析引擎，能发现复杂的安全漏洞（如跨站脚本、SQL 注入、不安全的反序列化）。集成在 GitHub Actions 中自动运行。</p>
-<pre><code class="language-yaml"># .github/workflows/codeql.yml
-name: &quot;CodeQL&quot;
-on: [push, pull_request]
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
-      - uses: github/codeql-action/analyze@v3
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/codeql.yml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CodeQL&quot;</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">analyze</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github/codeql-action/init@v3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github/codeql-action/analyze@v3</span>
+</code></pre></div>
 <hr />
 <h2 id="_6">七、代码审查</h2>
 <h3 id="71">7.1 审查清单</h3>
@@ -1138,48 +3864,48 @@ jobs:
 </tbody>
 </table>
 <h3 id="82">8.2 重构技术</h3>
-<pre><code class="language-python"># 示例：提取方法（Extract Method）
-# 重构前
-def process_order(order):
-    total = sum(item.price for item in order.items)
-    discount = 0
-    if order.user.is_vip:
-        discount = total * 0.2
-    elif total &gt; 500:
-        discount = total * 0.1
-    final = total - discount
-    # 邮件通知
-    subject = &quot;订单确认&quot;
-    body = f&quot;您的订单总计 ¥{final}，已优惠 ¥{discount}&quot;
-    send_email(order.user.email, subject, body)
-    return final
+<div class="highlight"><pre><span></span><code><span class="c1"># 示例：提取方法（Extract Method）</span>
+<span class="c1"># 重构前</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+    <span class="n">discount</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">order</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_vip</span><span class="p">:</span>
+        <span class="n">discount</span> <span class="o">=</span> <span class="n">total</span> <span class="o">*</span> <span class="mf">0.2</span>
+    <span class="k">elif</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="n">discount</span> <span class="o">=</span> <span class="n">total</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">discount</span>
+    <span class="c1"># 邮件通知</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;订单确认&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;您的订单总计 ¥</span><span class="si">{</span><span class="n">final</span><span class="si">}</span><span class="s2">，已优惠 ¥</span><span class="si">{</span><span class="n">discount</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">send_email</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">final</span>
 
-# 重构后
-def process_order(order):
-    final = calculate_final_total(order)
-    send_order_confirmation(order.user, final, order.total - final)
-    return final
+<span class="c1"># 重构后</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_order</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">calculate_final_total</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+    <span class="n">send_order_confirmation</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">final</span><span class="p">,</span> <span class="n">order</span><span class="o">.</span><span class="n">total</span> <span class="o">-</span> <span class="n">final</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">final</span>
 
-def calculate_final_total(order):
-    total = sum(item.price for item in order.items)
-    discount = calculate_discount(order.user, total)
-    return total - discount
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_final_total</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">order</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+    <span class="n">discount</span> <span class="o">=</span> <span class="n">calculate_discount</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span> <span class="o">-</span> <span class="n">discount</span>
 
-def calculate_discount(user, total):
-    if user.is_vip:
-        return total * 0.2
-    if total &gt; 500:
-        return total * 0.1
-    return 0
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_discount</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_vip</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">total</span> <span class="o">*</span> <span class="mf">0.2</span>
+    <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">total</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="k">return</span> <span class="mi">0</span>
 
-def send_order_confirmation(user, final_total, discount):
-    subject = &quot;订单确认&quot;
-    body = f&quot;您的订单总计 ¥{final_total}，已优惠 ¥{discount}&quot;
-    send_email(user.email, subject, body)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">send_order_confirmation</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">final_total</span><span class="p">,</span> <span class="n">discount</span><span class="p">):</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="s2">&quot;订单确认&quot;</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;您的订单总计 ¥</span><span class="si">{</span><span class="n">final_total</span><span class="si">}</span><span class="s2">，已优惠 ¥</span><span class="si">{</span><span class="n">discount</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">send_email</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="83">8.3 安全重构的前提</h3>
 <p><strong>没有测试覆盖，重构是重写</strong>。安全重构的三角约束：</p>
-<pre><code>         ┌──────────┐
+<div class="highlight"><pre><span></span><code>         ┌──────────┐
          │  测试覆盖 │
          │ (安全网)  │
          └──────────┘
@@ -1190,71 +3916,71 @@ def send_order_confirmation(user, final_total, discount):
 │ 小步骤 │  │ 频繁  │  │ 保持  │
 │ 逐步修改 │  │ 运行测试 │  │ 功能不变 │
 └───────┘  └───────┘  └───────┘
-</code></pre>
+</code></pre></div>
 <h3 id="84">8.4 遗留代码策略</h3>
 <p><strong>表征测试（Characterization Tests）</strong>：在重构前，先运行代码并捕获实际输出作为测试基线。这些测试验证"当前行为"，而非"期望行为"。</p>
 <p><strong>萌芽方法（Sprout Method）</strong>：在遗留类中新增一个 <code>public</code> 方法，将新逻辑独立实现，不修改原有代码。</p>
-<pre><code class="language-python">class LegacyPaymentProcessor:
-    def process(self, payment):
-        # ... 500 行遗留代码，不敢动 ...
-        result = self._old_processing(payment)
-        # 新增：在尾部插入新逻辑，不影响旧逻辑
-        self._audit_log(payment, result)
-        return result
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LegacyPaymentProcessor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment</span><span class="p">):</span>
+        <span class="c1"># ... 500 行遗留代码，不敢动 ...</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_processing</span><span class="p">(</span><span class="n">payment</span><span class="p">)</span>
+        <span class="c1"># 新增：在尾部插入新逻辑，不影响旧逻辑</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_audit_log</span><span class="p">(</span><span class="n">payment</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
 
-    def _audit_log(self, payment, result):
-        &quot;&quot;&quot;新加的审计日志，不修改旧方法内部&quot;&quot;&quot;
-        log_entry = AuditEntry(payment_id=payment.id, result=result)
-        db.session.add(log_entry)
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_audit_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;新加的审计日志，不修改旧方法内部&quot;&quot;&quot;</span>
+        <span class="n">log_entry</span> <span class="o">=</span> <span class="n">AuditEntry</span><span class="p">(</span><span class="n">payment_id</span><span class="o">=</span><span class="n">payment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">log_entry</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>Seam（接缝）</strong>：代码中允许替换行为的位置（如参数、虚函数、依赖注入点）。找到这些位置，测试就能安全地插入。</p>
 <hr />
 <h2 id="_8">九、性能测试</h2>
 <h3 id="91">9.1 负载测试</h3>
 <p><strong>Locust</strong>（Python，最推荐）：</p>
-<pre><code class="language-python"># locustfile.py
-from locust import HttpUser, task, between
+<div class="highlight"><pre><span></span><code><span class="c1"># locustfile.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">locust</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpUser</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">between</span>
 
-class WebsiteUser(HttpUser):
-    wait_time = between(1, 5)  # 模拟用户思考时间
+<span class="k">class</span><span class="w"> </span><span class="nc">WebsiteUser</span><span class="p">(</span><span class="n">HttpUser</span><span class="p">):</span>
+    <span class="n">wait_time</span> <span class="o">=</span> <span class="n">between</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1"># 模拟用户思考时间</span>
 
-    @task(3)  # 权重 3
-    def view_products(self):
-        self.client.get(&quot;/api/products&quot;)
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># 权重 3</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">view_products</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/products&quot;</span><span class="p">)</span>
 
-    @task(1)  # 权重 1
-    def create_order(self):
-        self.client.post(&quot;/api/orders&quot;, json={
-            &quot;items&quot;: [{&quot;sku&quot;: &quot;A001&quot;, &quot;qty&quot;: 1}],
-        })
-</code></pre>
-<pre><code class="language-bash">locust -f locustfile.py --headless -u 100 -r 10 --run-time 5m
-# --headless: 无 UI
-# -u 100: 100 个并发用户
-# -r 10: 每秒启动 10 个用户
-# --run-time 5m: 运行 5 分钟
-</code></pre>
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 权重 1</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/orders&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;sku&quot;</span><span class="p">:</span> <span class="s2">&quot;A001&quot;</span><span class="p">,</span> <span class="s2">&quot;qty&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span>
+        <span class="p">})</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>locust<span class="w"> </span>-f<span class="w"> </span>locustfile.py<span class="w"> </span>--headless<span class="w"> </span>-u<span class="w"> </span><span class="m">100</span><span class="w"> </span>-r<span class="w"> </span><span class="m">10</span><span class="w"> </span>--run-time<span class="w"> </span>5m
+<span class="c1"># --headless: 无 UI</span>
+<span class="c1"># -u 100: 100 个并发用户</span>
+<span class="c1"># -r 10: 每秒启动 10 个用户</span>
+<span class="c1"># --run-time 5m: 运行 5 分钟</span>
+</code></pre></div>
 <p><strong>k6</strong>（Go 编写，JavaScript 脚本）：</p>
-<pre><code class="language-javascript">import http from &quot;k6/http&quot;;
-import { check, sleep } from &quot;k6&quot;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;k6/http&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">check</span><span class="p">,</span><span class="w"> </span><span class="nx">sleep</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;k6&quot;</span><span class="p">;</span>
 
-export const options = {
-  stages: [
-    { duration: &quot;2m&quot;, target: 50 },   // 爬升到 50 用户
-    { duration: &quot;5m&quot;, target: 50 },   // 保持
-    { duration: &quot;2m&quot;, target: 0 },    // 下降
-  ],
-  thresholds: {
-    http_req_duration: [&quot;p(95)&lt;500&quot;],  // 95% 请求 &lt; 500ms
-  },
-};
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">stages</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2m&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w">   </span><span class="c1">// 爬升到 50 用户</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;5m&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">50</span><span class="w"> </span><span class="p">},</span><span class="w">   </span><span class="c1">// 保持</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2m&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="p">},</span><span class="w">    </span><span class="c1">// 下降</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">thresholds</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">http_req_duration</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;p(95)&lt;500&quot;</span><span class="p">],</span><span class="w">  </span><span class="c1">// 95% 请求 &lt; 500ms</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">};</span>
 
-export default function () {
-  const res = http.get(&quot;https://api.example.com/health&quot;);
-  check(res, { &quot;status is 200&quot;: (r) =&gt; r.status === 200 });
-  sleep(1);
-}
-</code></pre>
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;https://api.example.com/health&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">check</span><span class="p">(</span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;status is 200&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">r</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="p">});</span>
+<span class="w">  </span><span class="nx">sleep</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="92-vs-vs">9.2 压力测试 vs 尖峰测试 vs 浸泡测试</h3>
 <table>
 <thead>
@@ -1294,9 +4020,9 @@ export default function () {
 </table>
 <h3 id="93">9.3 性能剖析</h3>
 <p><strong>Python（cProfile）</strong>：</p>
-<pre><code class="language-bash">python -m cProfile -o profile.prof myapp.py
-snakeviz profile.prof  # 可视化火焰图
-</code></pre>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>cProfile<span class="w"> </span>-o<span class="w"> </span>profile.prof<span class="w"> </span>myapp.py
+snakeviz<span class="w"> </span>profile.prof<span class="w">  </span><span class="c1"># 可视化火焰图</span>
+</code></pre></div>
 <p><strong>前端（Chrome DevTools）</strong>：</p>
 <ul>
 <li><strong>Performance 面板</strong>：录制交互，分析 FPS、CPU、内存</li>
@@ -1383,26 +4109,26 @@ snakeviz profile.prof  # 可视化火焰图
 <p><strong>关键洞察</strong>：<strong>部署频率和前置时间与变更失败率并不呈反比</strong>——精英团队既能更频繁地部署，出现故障也更少。这说明自动化质量门禁和持续改进是有效的。</p>
 <h3 id="102">10.2 代码质量指标</h3>
 <p><strong>圈复杂度（Cyclomatic Complexity）</strong>：</p>
-<pre><code>M = E - N + 2P
-</code></pre>
+<div class="highlight"><pre><span></span><code>M = E - N + 2P
+</code></pre></div>
 <ul>
 <li><code>E</code>：图中边的数量</li>
 <li><code>N</code>：节点数量</li>
 <li><code>P</code>：连接组件的数量（通常为 1）</li>
 </ul>
-<pre><code class="language-python">def handle_request(status_code, user_role, is_authenticated):
-    # M = 1 （线性，无分支）
-    if is_authenticated:                    # +1
-        if user_role == &quot;admin&quot;:            # +1
-            return &quot;full_access&quot;
-        elif user_role == &quot;editor&quot;:         # +1
-            if status_code == 200:          # +1
-                return &quot;editor_access&quot;
-            return &quot;read_only&quot;
-        return &quot;limited_access&quot;
-    return &quot;redirect_login&quot;
-# 圈复杂度 = 1 + 4 (if/elif) = 5
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">(</span><span class="n">status_code</span><span class="p">,</span> <span class="n">user_role</span><span class="p">,</span> <span class="n">is_authenticated</span><span class="p">):</span>
+    <span class="c1"># M = 1 （线性，无分支）</span>
+    <span class="k">if</span> <span class="n">is_authenticated</span><span class="p">:</span>                    <span class="c1"># +1</span>
+        <span class="k">if</span> <span class="n">user_role</span> <span class="o">==</span> <span class="s2">&quot;admin&quot;</span><span class="p">:</span>            <span class="c1"># +1</span>
+            <span class="k">return</span> <span class="s2">&quot;full_access&quot;</span>
+        <span class="k">elif</span> <span class="n">user_role</span> <span class="o">==</span> <span class="s2">&quot;editor&quot;</span><span class="p">:</span>         <span class="c1"># +1</span>
+            <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>          <span class="c1"># +1</span>
+                <span class="k">return</span> <span class="s2">&quot;editor_access&quot;</span>
+            <span class="k">return</span> <span class="s2">&quot;read_only&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;limited_access&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;redirect_login&quot;</span>
+<span class="c1"># 圈复杂度 = 1 + 4 (if/elif) = 5</span>
+</code></pre></div>
 <p><strong>阈值</strong>：</p>
 <table>
 <thead>
@@ -1437,14 +4163,14 @@ snakeviz profile.prof  # 可视化火焰图
 </table>
 <p><strong>认知复杂度</strong>：比圈复杂度更能反映人类理解代码的难度。它不计算 <code>if</code> 嵌套的指数级路径，而是计算<strong>嵌套深度</strong>导致的认知负担。</p>
 <p><strong>内聚与耦合</strong>：</p>
-<pre><code>高内聚 + 低耦合 = 可维护代码
+<div class="highlight"><pre><span></span><code>高内聚 + 低耦合 = 可维护代码
 高内聚 + 高耦合 = 模块强关联但内部一致
 低内聚 + 低耦合 = 杂物箱，什么都有一点
 低内聚 + 高耦合 = 最差的境地，谁也改不动
-</code></pre>
+</code></pre></div>
 <h3 id="103">10.3 技术债务管理</h3>
 <p><strong>技术债务象限</strong>（Martin Fowler）：</p>
-<pre><code>                  谨慎的
+<div class="highlight"><pre><span></span><code>                  谨慎的
         ┌────────────────────────┐
         │  故意 / 已知    │  无意 / 已知    │
         │  （策略性负债） │  （需要偿还）    │
@@ -1457,7 +4183,7 @@ snakeviz profile.prof  # 可视化火焰图
         │  以为没事      │  检查的模块      │
         └────────────────────────┘
                   鲁莽的
-</code></pre>
+</code></pre></div>
 <p><strong>管理策略</strong>：</p>
 <ol>
 <li><strong>量化</strong>：用 SonarQube 追踪 Tech Debt Ratio（技术债务比率 = 修复成本 / 重写成本）</li>
@@ -1467,54 +4193,54 @@ snakeviz profile.prof  # 可视化火焰图
 </ol>
 <hr />
 <h2 id="_10">综合测试策略模板</h2>
-<pre><code class="language-yaml"># testing-strategy.yaml
-project: CodeNebula
-version: 1.0
+<div class="highlight"><pre><span></span><code><span class="c1"># testing-strategy.yaml</span>
+<span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CodeNebula</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 
-layers:
-  unit:
-    tools: [pytest, Jest]
-    coverage:
-      line: &quot;&gt;= 85%&quot;
-      branch: &quot;&gt;= 75%&quot;
-    target: &quot;src/**/*.py, src/**/*.ts&quot;
+<span class="nt">layers</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">unit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pytest</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Jest</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">coverage</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">line</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&gt;=</span><span class="nv"> </span><span class="s">85%&quot;</span>
+<span class="w">      </span><span class="nt">branch</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&gt;=</span><span class="nv"> </span><span class="s">75%&quot;</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;src/**/*.py,</span><span class="nv"> </span><span class="s">src/**/*.ts&quot;</span>
 
-  integration:
-    tools: [pytest + SQLite, supertest, Testcontainers]
-    coverage: &quot;关键 API &gt;= 90%&quot;
-    target: &quot;api/, services/, repositories/&quot;
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pytest + SQLite</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">supertest</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Testcontainers</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">coverage</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;关键</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">90%&quot;</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;api/,</span><span class="nv"> </span><span class="s">services/,</span><span class="nv"> </span><span class="s">repositories/&quot;</span>
 
-  e2e:
-    tools: [Playwright]
-    target: &quot;关键用户路径（登录、支付、注册）&quot;
-    retries: 2
-    max_tests: 20
+<span class="w">  </span><span class="nt">e2e</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Playwright</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;关键用户路径（登录、支付、注册）&quot;</span>
+<span class="w">    </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">max_tests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
 
-  static_analysis:
-    tools: [ESLint, mypy, SonarQube]
-    rules: &quot;errors 必须通过，warnings 48 小时内处理&quot;
-    pre_commit: true
+<span class="w">  </span><span class="nt">static_analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ESLint</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mypy</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">SonarQube</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;errors</span><span class="nv"> </span><span class="s">必须通过，warnings</span><span class="nv"> </span><span class="s">48</span><span class="nv"> </span><span class="s">小时内处理&quot;</span>
+<span class="w">    </span><span class="nt">pre_commit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-  performance:
-    tools: [Locust, Lighthouse]
-    frequency: &quot;每次发布前 + 每周回归&quot;
-    thresholds:
-      p95_response_time: 500ms
-      lcp: 2.5s
-      cls: 0.1
+<span class="w">  </span><span class="nt">performance</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tools</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Locust</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Lighthouse</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">frequency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;每次发布前</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">每周回归&quot;</span>
+<span class="w">    </span><span class="nt">thresholds</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">p95_response_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500ms</span>
+<span class="w">      </span><span class="nt">lcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.5s</span>
+<span class="w">      </span><span class="nt">cls</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
 
-review:
-  max_lines_per_pr: 400
-  response_time: &quot;&lt; 2 hours&quot;
-  checklist: &quot;使用 PR 模板自动生成&quot;
+<span class="nt">review</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_lines_per_pr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+<span class="w">  </span><span class="nt">response_time</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">hours&quot;</span>
+<span class="w">  </span><span class="nt">checklist</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;使用</span><span class="nv"> </span><span class="s">PR</span><span class="nv"> </span><span class="s">模板自动生成&quot;</span>
 
-metrics:
-  dora:
-    deployment_frequency: &quot;每周 ≥ 1&quot;
-    lead_time: &quot;&lt; 1 day&quot;
-    change_failure_rate: &quot;&lt; 10%&quot;
-    mtbf: &quot;持续追踪&quot;
-</code></pre>
+<span class="nt">metrics</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dora</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">deployment_frequency</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;每周</span><span class="nv"> </span><span class="s">≥</span><span class="nv"> </span><span class="s">1&quot;</span>
+<span class="w">    </span><span class="nt">lead_time</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">day&quot;</span>
+<span class="w">    </span><span class="nt">change_failure_rate</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;</span><span class="nv"> </span><span class="s">10%&quot;</span>
+<span class="w">    </span><span class="nt">mtbf</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;持续追踪&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="_11">扩展阅读</h2>
 <ul>
@@ -1524,82 +4250,71 @@ metrics:
 <li>《Accelerate》— Nicole Forsgren 等（DORA 指标原著）</li>
 <li>Google Testing Blog — testing.googleblog.com</li>
 <li>Playwright 官方文档 — playwright.dev/docs</li>
-</ul></div>
-            </div>
-        </div>
+</ul>
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script src="../../js/bootstrap.bundle.min.js"></script>
-        <script>
-            var base_url = "../..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../../js/base.js"></script>
-        <script src="../../search/main.js"></script>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-            <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-    </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
 </div>
-
-    </body>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>

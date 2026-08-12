@@ -1,212 +1,2664 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
         <link rel="canonical" href="https://CodeNebula.github.io/reinforcement-learning/00-bandit/">
-        <link rel="shortcut icon" href="../../img/favicon.ico">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../01-mdp-foundations/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
         <title>多臂老虎机 - CodeNebula</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../../css/brands.min.css" rel="stylesheet">
-        <link href="../../css/solid.min.css" rel="stylesheet">
-        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
-        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
-        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script> 
-    </head>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
 
-    <body>
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="../..">CodeNebula</a>
-                <!-- Expander button -->
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item">
-                                <a href="../.." class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="./" class="dropdown-item active" aria-current="page">多臂老虎机</a>
-</li>
-                                    
-<li>
-    <a href="../01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
-</li>
-                                    
-<li>
-    <a href="../02-dynamic-programming/" class="dropdown-item">动态规划</a>
-</li>
-                                    
-<li>
-    <a href="../03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
-</li>
-                                    
-<li>
-    <a href="../04-temporal-difference/" class="dropdown-item">时序差分学习</a>
-</li>
-                                    
-<li>
-    <a href="../05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
-</li>
-                                    
-<li>
-    <a href="../06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
-</li>
-                                    
-<li>
-    <a href="../07-continuous-control/" class="dropdown-item">连续控制</a>
-</li>
-                                    
-<li>
-    <a href="../08-tools-environments/" class="dropdown-item">环境与工具链</a>
-</li>
-                                    
-<li>
-    <a href="../09-advanced-topics/" class="dropdown-item">进阶专题</a>
-</li>
-                                    
-<li>
-    <a href="../10-engineering-practice/" class="dropdown-item">工程实践</a>
-</li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../../software-development/" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/01-frontend/" class="dropdown-item">前端开发</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/02-backend/" class="dropdown-item">后端开发</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/03-database/" class="dropdown-item">数据库与存储</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/04-version-control/" class="dropdown-item">版本控制</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/05-devops/" class="dropdown-item">DevOps与部署</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/06-architecture/" class="dropdown-item">软件架构</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/07-testing/" class="dropdown-item">测试与质量</a>
-</li>
-                                    
-<li>
-    <a href="../../software-development/08-security/" class="dropdown-item">安全基础</a>
-</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav ms-md-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" href="../01-mdp-foundations/" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
-    </div>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
-        <ul class="nav flex-column">
-            
-            <li class="nav-item" data-bs-level="1"><a href="#multi-armed-bandit" class="nav-link">多臂老虎机（Multi-Armed Bandit）</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#_1" class="nav-link">一、问题设定</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#-greedy" class="nav-link">二、贪心与 ε-greedy</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">三、乐观初始化</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#ucb" class="nav-link">四、UCB 算法</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#thompson-sampling" class="nav-link">五、Thompson Sampling</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">六、算法对比</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#contextual-bandit" class="nav-link">七、Contextual Bandit</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#bandit" class="nav-link">八、从 Bandit 到强化学习</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-        </ul>
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multi-armed-bandit" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              多臂老虎机
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../software-development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../software-development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../software-development/08-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、问题设定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、问题设定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 形式化定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 收益模型：伯努利与高斯
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 回合制交互协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-regret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 累积收益与后悔（Regret）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 与完整强化学习的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 评价指标与实验协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、贪心与 ε-greedy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、贪心与 ε-greedy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 动作价值的样本均值估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 纯贪心策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 ε-greedy 策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-decaying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 衰减 ε（Decaying ε）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 优缺点对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-python-1000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Python 实现：模拟 1000 步
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、乐观初始化
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、乐观初始化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 思想来源
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 为什么能促进探索
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 优点与局限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-python-q-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Python 实现：Q 初值 +5
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、UCB 算法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、UCB 算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 探索的"信息价值"视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-ucb1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 UCB1 公式与推导直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 置信区间的统计直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-ucb1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 UCB1 伪代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Python 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 UCB 的变体与讨论
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、Thompson Sampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、Thompson Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 贝叶斯视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Beta 分布与共轭性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 采样-更新流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-python-beta11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Python 实现：Beta(1,1) 先验
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Thompson Sampling 的实践优势
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、算法对比
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、算法对比">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 总览对比表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 后悔曲线解读（图 2）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 对比实验代码：10 臂高斯老虎机
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 扩展方向
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contextual-bandit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、Contextual Bandit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、Contextual Bandit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 从无上下文到有上下文
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-mdp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 与 MDP 的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 应用场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-linucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 linUCB 简介
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、从 Bandit 到强化学习
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、从 Bandit 到强化学习">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 单步决策 → 多步决策
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 探索思想在 RL 中的对应
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 本章小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、问题设定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、问题设定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 形式化定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 收益模型：伯努利与高斯
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 回合制交互协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-regret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 累积收益与后悔（Regret）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 与完整强化学习的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 评价指标与实验协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、贪心与 ε-greedy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、贪心与 ε-greedy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 动作价值的样本均值估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 纯贪心策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-greedy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 ε-greedy 策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-decaying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 衰减 ε（Decaying ε）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 优缺点对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-python-1000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Python 实现：模拟 1000 步
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、乐观初始化
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、乐观初始化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 思想来源
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 为什么能促进探索
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 优点与局限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-python-q-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Python 实现：Q 初值 +5
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、UCB 算法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、UCB 算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 探索的"信息价值"视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-ucb1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 UCB1 公式与推导直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 置信区间的统计直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-ucb1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 UCB1 伪代码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Python 实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-ucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 UCB 的变体与讨论
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、Thompson Sampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、Thompson Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 贝叶斯视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Beta 分布与共轭性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 采样-更新流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-python-beta11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Python 实现：Beta(1,1) 先验
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Thompson Sampling 的实践优势
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、算法对比
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、算法对比">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 总览对比表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 后悔曲线解读（图 2）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 对比实验代码：10 臂高斯老虎机
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 扩展方向
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contextual-bandit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、Contextual Bandit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、Contextual Bandit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 从无上下文到有上下文
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-mdp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 与 MDP 的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 应用场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-linucb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 linUCB 简介
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bandit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、从 Bandit 到强化学习
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、从 Bandit 到强化学习">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 单步决策 → 多步决策
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 探索思想在 RL 中的对应
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 本章小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    强化学习
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
 
 <h1 id="multi-armed-bandit">多臂老虎机（Multi-Armed Bandit）</h1>
 <blockquote>
@@ -225,20 +2677,20 @@ Python 3 + NumPy，可直接运行复现文中数值结果。</p>
 多臂（Multi-Armed）即多根拉杆。"如何在未知收益的拉杆之间分配拉动
 次数以最大化总收益"被抽象为一个序贯决策问题，这就是多臂老虎机。</p>
 <h3 id="11">1.1 形式化定义</h3>
-<p>一个 $N$ 臂老虎机问题由以下要素构成：</p>
+<p>一个 <span class="arithmatex">\(N\)</span> 臂老虎机问题由以下要素构成：</p>
 <ul>
-<li><strong>动作集合</strong> $\mathcal{A} = {a_1, a_2, \dots, a_N}$：共 $N$ 个
-  可选动作（拉杆），$N$ 称为臂数。</li>
-<li><strong>收益分布</strong> ${P_a}_{a \in \mathcal{A}}$：拉动第 $a$ 根拉杆时，
-  环境从分布 $P_a$ 中独立采样奖励 $r \in \mathbb{R}$。分布 $P_a$ 是
+<li><strong>动作集合</strong> <span class="arithmatex">\(\mathcal{A} = \{a_1, a_2, \dots, a_N\}\)</span>：共 <span class="arithmatex">\(N\)</span> 个
+  可选动作（拉杆），<span class="arithmatex">\(N\)</span> 称为臂数。</li>
+<li><strong>收益分布</strong> <span class="arithmatex">\(\{P_a\}_{a \in \mathcal{A}}\)</span>：拉动第 <span class="arithmatex">\(a\)</span> 根拉杆时，
+  环境从分布 <span class="arithmatex">\(P_a\)</span> 中独立采样奖励 <span class="arithmatex">\(r \in \mathbb{R}\)</span>。分布 <span class="arithmatex">\(P_a\)</span> 是
   <strong>固定但未知</strong>的。</li>
-<li><strong>期望收益</strong> $\mu_a = \mathbb{E}_{r \sim P_a}[r]$：称为动作 $a$ 的
+<li><strong>期望收益</strong> <span class="arithmatex">\(\mu_a = \mathbb{E}_{r \sim P_a}[r]\)</span>：称为动作 <span class="arithmatex">\(a\)</span> 的
   <strong>真实价值</strong>（true value）。</li>
-<li><strong>最优动作</strong> $a^* = \arg\max_a \mu_a$：期望收益最大的动作。</li>
-<li><strong>最优期望收益</strong> $\mu^<em> = \max_a \mu_a = \mu_{a^</em>}$。</li>
+<li><strong>最优动作</strong> <span class="arithmatex">\(a^* = \arg\max_a \mu_a\)</span>：期望收益最大的动作。</li>
+<li><strong>最优期望收益</strong> <span class="arithmatex">\(\mu^* = \max_a \mu_a = \mu_{a^*}\)</span>。</li>
 </ul>
 <blockquote>
-<p><strong>核心思想</strong>：学习者不知道 ${\mu_a}$，只能通过反复试验（拉杆并
+<p><strong>核心思想</strong>：学习者不知道 <span class="arithmatex">\(\{\mu_a\}\)</span>，只能通过反复试验（拉杆并
 观察奖励）来估计它们。多臂老虎机的本质是：<strong>在信息不完整的情况下，
 如何在线地做出一系列决策，使累积奖励尽可能接近"每次都拉最优臂"的
 理想水平</strong>。</p>
@@ -258,59 +2710,59 @@ Python 3 + NumPy，可直接运行复现文中数值结果。</p>
 <tbody>
 <tr>
 <td><strong>伯努利</strong></td>
-<td>$r \in {0,1}$</td>
-<td>$r \sim \text{Bernoulli}(\theta_a)$</td>
-<td>$\mu_a = \theta_a$</td>
+<td><span class="arithmatex">\(r \in \{0,1\}\)</span></td>
+<td><span class="arithmatex">\(r \sim \text{Bernoulli}(\theta_a)\)</span></td>
+<td><span class="arithmatex">\(\mu_a = \theta_a\)</span></td>
 <td>点击/转化、成功/失败</td>
 </tr>
 <tr>
 <td><strong>高斯</strong></td>
-<td>$r \in \mathbb{R}$</td>
-<td>$r \sim \mathcal{N}(\mu_a, \sigma_a^2)$</td>
-<td>$\mu_a$</td>
+<td><span class="arithmatex">\(r \in \mathbb{R}\)</span></td>
+<td><span class="arithmatex">\(r \sim \mathcal{N}(\mu_a, \sigma_a^2)\)</span></td>
+<td><span class="arithmatex">\(\mu_a\)</span></td>
 <td>评分、收益金额、延迟</td>
 </tr>
 <tr>
 <td>一般分布</td>
-<td>$r \in \mathbb{R}$</td>
+<td><span class="arithmatex">\(r \in \mathbb{R}\)</span></td>
 <td>任意有界分布</td>
-<td>$\mu_a$</td>
+<td><span class="arithmatex">\(\mu_a\)</span></td>
 <td>理论分析（次高斯假设）</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li><strong>伯努利模型</strong>中 $\theta_a$ 是"成功概率"，奖励 1 表示成功（如点击
-  广告）。拉动 $n$ 次后成功次数服从二项分布，样本均值 $\hat{\theta}_a$
-  是 $\theta_a$ 的一致估计。</li>
+<li><strong>伯努利模型</strong>中 <span class="arithmatex">\(\theta_a\)</span> 是"成功概率"，奖励 1 表示成功（如点击
+  广告）。拉动 <span class="arithmatex">\(n\)</span> 次后成功次数服从二项分布，样本均值 <span class="arithmatex">\(\hat{\theta}_a\)</span>
+  是 <span class="arithmatex">\(\theta_a\)</span> 的一致估计。</li>
 <li><strong>高斯模型</strong>中每次奖励是带噪连续值。二者在贝叶斯处理（第五节）中
   的共轭先验不同：伯努利用 Beta，高斯用高斯先验。</li>
 </ul>
-<p>一个 $N=10$ 臂伯努利老虎机实例：</p>
-<pre><code class="language-python">import numpy as np
+<p>一个 <span class="arithmatex">\(N=10\)</span> 臂伯努利老虎机实例：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-# 10 臂伯努利老虎机：每个臂的成功概率 theta 固定但未知
-np.random.seed(42)
-N_ARMS = 10
-true_theta = np.random.uniform(0.1, 0.9, size=N_ARMS)
-print(&quot;真实成功概率:&quot;, np.round(true_theta, 3))
-print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, round(true_theta.max(), 3))
-# 预期输出:
-# 真实成功概率: [0.375 0.751 0.598 0.284 0.226 0.654 0.615 0.326 0.418 0.729]
-# 最优臂: 1 最优概率: 0.751
-</code></pre>
+<span class="c1"># 10 臂伯努利老虎机：每个臂的成功概率 theta 固定但未知</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">N_ARMS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">true_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N_ARMS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;真实成功概率:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">true_theta</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;最优臂:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">true_theta</span><span class="p">),</span> <span class="s2">&quot;最优概率:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">true_theta</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">3</span><span class="p">))</span>
+<span class="c1"># 预期输出:</span>
+<span class="c1"># 真实成功概率: [0.375 0.751 0.598 0.284 0.226 0.654 0.615 0.326 0.418 0.729]</span>
+<span class="c1"># 最优臂: 1 最优概率: 0.751</span>
+</code></pre></div>
 <h3 id="13">1.3 回合制交互协议</h3>
-<p>学习者与环境按<strong>回合制</strong>交互，共 $T$ 个回合（horizon）。第 $t$ 回合
-（$t = 1, 2, \dots, T$）：</p>
+<p>学习者与环境按<strong>回合制</strong>交互，共 <span class="arithmatex">\(T\)</span> 个回合（horizon）。第 <span class="arithmatex">\(t\)</span> 回合
+（<span class="arithmatex">\(t = 1, 2, \dots, T\)</span>）：</p>
 <ol>
-<li>学习者根据历史 $H_{t-1} = {(a_1, r_1), \dots, (a_{t-1}, r_{t-1})}$
-   选择动作 $a_t \in \mathcal{A}$；</li>
-<li>环境从 $P_{a_t}$ 独立采样奖励 $r_t \sim P_{a_t}$；</li>
-<li>学习者观测 $r_t$，历史更新为 $H_t$。</li>
+<li>学习者根据历史 <span class="arithmatex">\(H_{t-1} = \{(a_1, r_1), \dots, (a_{t-1}, r_{t-1})\}\)</span>
+   选择动作 <span class="arithmatex">\(a_t \in \mathcal{A}\)</span>；</li>
+<li>环境从 <span class="arithmatex">\(P_{a_t}\)</span> 独立采样奖励 <span class="arithmatex">\(r_t \sim P_{a_t}\)</span>；</li>
+<li>学习者观测 <span class="arithmatex">\(r_t\)</span>，历史更新为 <span class="arithmatex">\(H_t\)</span>。</li>
 </ol>
 <p>关键特征：<strong>回合之间没有状态转移</strong>——上一回合的选择不影响本回合的
 收益分布，奖励只取决于当前动作。</p>
-<pre><code>         ┌─────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code>         ┌─────────────────────────────────────────┐
          │                                         │
          ▼                                         │
   ┌───────────┐    a_t (选择拉杆)    ┌───────────┐ │
@@ -320,26 +2772,26 @@ print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, 
   └───────────┘    r_t (奖励采样)    └───────────┘ │
          ▲                                         │
          └──────── 历史 H_t 累积，循环 T 回合 ──────┘
-</code></pre>
+</code></pre></div>
 <blockquote>
 <p>图 1 给出完整的学习-决策循环示意。"动作 → 奖励"的单步映射正是
 老虎机问题的全部动力学。</p>
 </blockquote>
-<p><img alt="老虎机决策循环" src="../assets/00-bandit-loop.png" /></p>
+<p><img alt="老虎机决策循环" src="../../img/00-bandit-loop.png" /></p>
 <p><strong>图 1</strong>：多臂老虎机的决策循环。学习者根据历史选择动作，环境返回该
-动作的即时奖励；与完整 RL 不同，这里没有状态 $s_t$，价值函数退化为
+动作的即时奖励；与完整 RL 不同，这里没有状态 <span class="arithmatex">\(s_t\)</span>，价值函数退化为
 仅依赖动作。</p>
 <h3 id="14-regret">1.4 累积收益与后悔（Regret）</h3>
-<p>学习者的目标是最大化 $T$ 回合的<strong>累积收益</strong> $G_T = \sum_{t=1}^{T} r_t$。
-由于 $r_t$ 随机，更恰当的目标是最大化期望累积收益 $\mathbb{E}[G_T]$。
+<p>学习者的目标是最大化 <span class="arithmatex">\(T\)</span> 回合的<strong>累积收益</strong> <span class="arithmatex">\(G_T = \sum_{t=1}^{T} r_t\)</span>。
+由于 <span class="arithmatex">\(r_t\)</span> 随机，更恰当的目标是最大化期望累积收益 <span class="arithmatex">\(\mathbb{E}[G_T]\)</span>。
 为衡量"学得有多好"，引入<strong>后悔</strong>（Regret）：</p>
-<p>$$R_T = T \mu^<em> - \mathbb{E}\left[\sum_{t=1}^{T} r_t\right]
-= \sum_{t=1}^{T} \left(\mu^</em> - \mathbb{E}[\mu_{a_t}]\right)
-= \sum_{t=1}^{T} \Delta_{a_t}$$</p>
-<p>其中 $\Delta_a = \mu^<em> - \mu_a$ 是动作 $a$ 的</em><em>遗憾差距</em>*
+<div class="arithmatex">\[R_T = T \mu^* - \mathbb{E}\left[\sum_{t=1}^{T} r_t\right]
+= \sum_{t=1}^{T} \left(\mu^* - \mathbb{E}[\mu_{a_t}]\right)
+= \sum_{t=1}^{T} \Delta_{a_t}\]</div>
+<p>其中 <span class="arithmatex">\(\Delta_a = \mu^* - \mu_a\)</span> 是动作 <span class="arithmatex">\(a\)</span> 的<strong>遗憾差距</strong>
 （suboptimality gap）。按动作分解后悔：</p>
-<p>$$R_T = \sum_{a=1}^{N} \mathbb{E}[N_a(T)]\, \Delta_a$$</p>
-<p>$N_a(T)$ 是动作 $a$ 在前 $T$ 回合被选择的次数。该分解说明：<strong>后悔 =
+<div class="arithmatex">\[R_T = \sum_{a=1}^{N} \mathbb{E}[N_a(T)]\, \Delta_a\]</div>
+<p><span class="arithmatex">\(N_a(T)\)</span> 是动作 <span class="arithmatex">\(a\)</span> 在前 <span class="arithmatex">\(T\)</span> 回合被选择的次数。该分解说明：<strong>后悔 =
 每个次优臂被选择的期望次数 × 其与最优臂的差距之和</strong>。</p>
 <table>
 <thead>
@@ -351,45 +2803,45 @@ print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, 
 </thead>
 <tbody>
 <tr>
-<td>累积收益 $G_T$</td>
-<td>$\sum_{t=1}^T r_t$</td>
+<td>累积收益 <span class="arithmatex">\(G_T\)</span></td>
+<td><span class="arithmatex">\(\sum_{t=1}^T r_t\)</span></td>
 <td>实际获得的总奖励</td>
 </tr>
 <tr>
 <td>期望累积收益</td>
-<td>$\mathbb{E}[G_T]$</td>
+<td><span class="arithmatex">\(\mathbb{E}[G_T]\)</span></td>
 <td>对奖励随机性取期望</td>
 </tr>
 <tr>
-<td>遗憾差距 $\Delta_a$</td>
-<td>$\mu^* - \mu_a$</td>
+<td>遗憾差距 <span class="arithmatex">\(\Delta_a\)</span></td>
+<td><span class="arithmatex">\(\mu^* - \mu_a\)</span></td>
 <td>与最优动作的期望差</td>
 </tr>
 <tr>
-<td>后悔 $R_T$</td>
-<td>$T\mu^* - \mathbb{E}[G_T]$</td>
+<td>后悔 <span class="arithmatex">\(R_T\)</span></td>
+<td><span class="arithmatex">\(T\mu^* - \mathbb{E}[G_T]\)</span></td>
 <td>与全知最优的期望差距</td>
 </tr>
 <tr>
 <td>平均后悔</td>
-<td>$R_T / T$</td>
+<td><span class="arithmatex">\(R_T / T\)</span></td>
 <td>后悔增长率，衡量渐近性能</td>
 </tr>
 </tbody>
 </table>
 <p><strong>后悔的性质</strong>：</p>
 <ol>
-<li>$R_T \ge 0$，每回合都拉最优臂时期望后悔为 0；</li>
-<li>$R_T$ 期望意义下非降，因为每回合至少付出 $\min_a \Delta_a$ 量级的
+<li><span class="arithmatex">\(R_T \ge 0\)</span>，每回合都拉最优臂时期望后悔为 0；</li>
+<li><span class="arithmatex">\(R_T\)</span> 期望意义下非降，因为每回合至少付出 <span class="arithmatex">\(\min_a \Delta_a\)</span> 量级的
    期望损失（若选到次优臂）；</li>
-<li>好的算法应使 $R_T$ 增长尽可能慢。Lai–Robbins 下界指出：对任意一致
-   策略，$\liminf_{T \to \infty} \frac{R_T}{\ln T} \ge
-   \sum_{a: \Delta_a &gt; 0} \frac{2}{\Delta_a}$（伯努利情形），即渐近
-   后悔至少为 $O(\ln T)$。能达到 $O(\ln T)$ 的算法称为<strong>渐近最优</strong>。</li>
+<li>好的算法应使 <span class="arithmatex">\(R_T\)</span> 增长尽可能慢。Lai–Robbins 下界指出：对任意一致
+   策略，<span class="arithmatex">\(\liminf_{T \to \infty} \frac{R_T}{\ln T} \ge
+   \sum_{a: \Delta_a &gt; 0} \frac{2}{\Delta_a}\)</span>（伯努利情形），即渐近
+   后悔至少为 <span class="arithmatex">\(O(\ln T)\)</span>。能达到 <span class="arithmatex">\(O(\ln T)\)</span> 的算法称为<strong>渐近最优</strong>。</li>
 </ol>
 <blockquote>
-<p><strong>核心思想</strong>：后悔把"探索的代价"量化了——探索次优臂 $a$ 的每次尝试
-都付出 $\Delta_a$ 的期望代价，但换来对 $\mu_a$ 更精确的估计。最优
+<p><strong>核心思想</strong>：后悔把"探索的代价"量化了——探索次优臂 <span class="arithmatex">\(a\)</span> 的每次尝试
+都付出 <span class="arithmatex">\(\Delta_a\)</span> 的期望代价，但换来对 <span class="arithmatex">\(\mu_a\)</span> 更精确的估计。最优
 算法本质上在做"用最少的探索次数，把每个次优臂排除到足够置信"。</p>
 </blockquote>
 <h3 id="15">1.5 与完整强化学习的关系</h3>
@@ -406,27 +2858,27 @@ print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, 
 <tr>
 <td>状态</td>
 <td>无（恒为单状态）</td>
-<td>$s_t \in \mathcal{S}$，随动作转移</td>
+<td><span class="arithmatex">\(s_t \in \mathcal{S}\)</span>，随动作转移</td>
 </tr>
 <tr>
 <td>动作</td>
-<td>$a_t \in \mathcal{A}$</td>
-<td>$a_t \in \mathcal{A}(s_t)$</td>
+<td><span class="arithmatex">\(a_t \in \mathcal{A}\)</span></td>
+<td><span class="arithmatex">\(a_t \in \mathcal{A}(s_t)\)</span></td>
 </tr>
 <tr>
 <td>奖励</td>
-<td>即时 $r_t \sim P_{a_t}$</td>
+<td>即时 <span class="arithmatex">\(r_t \sim P_{a_t}\)</span></td>
 <td>即时 + 未来折扣回报</td>
 </tr>
 <tr>
 <td>决策目标</td>
-<td>最大化 $\sum r_t$</td>
-<td>最大化 $\sum \gamma^k r_{t+k}$</td>
+<td>最大化 <span class="arithmatex">\(\sum r_t\)</span></td>
+<td>最大化 <span class="arithmatex">\(\sum \gamma^k r_{t+k}\)</span></td>
 </tr>
 <tr>
 <td>价值函数</td>
-<td>$Q(a)$ 与状态无关</td>
-<td>$V(s), Q(s,a)$ 依赖状态</td>
+<td><span class="arithmatex">\(Q(a)\)</span> 与状态无关</td>
+<td><span class="arithmatex">\(V(s), Q(s,a)\)</span> 依赖状态</td>
 </tr>
 <tr>
 <td>探索后果</td>
@@ -435,8 +2887,8 @@ print(&quot;最优臂:&quot;, np.argmax(true_theta), &quot;最优概率:&quot;, 
 </tr>
 </tbody>
 </table>
-<p>用 MDP 语言描述：老虎机是单状态 MDP（$|\mathcal{S}| = 1$），转移
-$P(s'|s,a) = 1$ 恒返回同一状态，动作价值 $Q(a) = \mu_a$ 与状态无关。
+<p>用 MDP 语言描述：老虎机是单状态 MDP（<span class="arithmatex">\(|\mathcal{S}| = 1\)</span>），转移
+<span class="arithmatex">\(P(s'|s,a) = 1\)</span> 恒返回同一状态，动作价值 <span class="arithmatex">\(Q(a) = \mu_a\)</span> 与状态无关。
 因此：</p>
 <ul>
 <li>不存在<strong>信用分配</strong>问题——奖励立即归属于刚执行的动作；</li>
@@ -461,78 +2913,78 @@ Q-learning 的 ε-greedy、DQN 的探索机制，本质都是本章算法的多�
 <tbody>
 <tr>
 <td>累积收益</td>
-<td>$\sum_{t=1}^T r_t$</td>
+<td><span class="arithmatex">\(\sum_{t=1}^T r_t\)</span></td>
 <td>直接经济效益（如广告收入）</td>
 </tr>
 <tr>
 <td>累积后悔</td>
-<td>$R_T$</td>
+<td><span class="arithmatex">\(R_T\)</span></td>
 <td>学术研究的标准指标</td>
 </tr>
 <tr>
 <td>平均奖励/最优臂选择率</td>
-<td>$\frac{1}{T}\sum r_t$、$\frac{1}{T}\sum \mathbb{I}[a_t = a^*]$</td>
+<td><span class="arithmatex">\(\frac{1}{T}\sum r_t\)</span>、<span class="arithmatex">\(\frac{1}{T}\sum \mathbb{I}[a_t = a^*]\)</span></td>
 <td>直观展示学习进程</td>
 </tr>
 </tbody>
 </table>
 <p><strong>标准实验协议</strong>：固定随机种子；对每个算法在同一老虎机实例上独立
-运行 $M$ 次（如 $M = 50$）；报告后悔均值 ± 标准差。单次运行曲线噪声
+运行 <span class="arithmatex">\(M\)</span> 次（如 <span class="arithmatex">\(M = 50\)</span>）；报告后悔均值 ± 标准差。单次运行曲线噪声
 很大，多次平均才能可靠对比（第六节对比实验即按此协议实现）。</p>
 <hr />
 <h2 id="-greedy">二、贪心与 ε-greedy</h2>
 <p>最朴素的想法是"永远选择当前估计最好的动作"——<strong>贪心策略（greedy）</strong>。
 贪心从不主动探索，它的全部"探索"来自对价值估计的初始不确定性。</p>
 <h3 id="21">2.1 动作价值的样本均值估计</h3>
-<p>无论哪种算法，都需要维护对每个动作价值的估计 $\hat{Q}_t(a)$。最自然
+<p>无论哪种算法，都需要维护对每个动作价值的估计 <span class="arithmatex">\(\hat{Q}_t(a)\)</span>。最自然
 的是<strong>样本均值估计</strong>（sample-average）：</p>
-<p>$$\hat{Q}<em>t(a) = \frac{\sum</em>{i=1}^{t-1} r_i \cdot \mathbb{I}[a_i = a]}{N_a(t)}, \qquad N_a(t) = \sum_{i=1}^{t-1} \mathbb{I}[a_i = a]$$</p>
-<p>$N_a(t)$ 是截至第 $t$ 回合动作 $a$ 被选择的次数。由大数定律，
-$N_a(t) \to \infty$ 时 $\hat{Q}_t(a) \to \mu_a$。</p>
-<p><strong>增量式更新</strong>：设第 $t$ 回合选动作 $a$ 得奖励 $r_t$，则：</p>
-<p>$$\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \frac{1}{N_a(t) + 1}\left(r_t - \hat{Q}_t(a)\right)$$</p>
-<p>一般形式为 $\text{新估计} \leftarrow \text{旧估计} + \text{步长} \times
-(\text{目标} - \text{旧估计})$，步长 $\alpha = 1/(N_a+1)$。这个"误差
+<div class="arithmatex">\[\hat{Q}_t(a) = \frac{\sum_{i=1}^{t-1} r_i \cdot \mathbb{I}[a_i = a]}{N_a(t)}, \qquad N_a(t) = \sum_{i=1}^{t-1} \mathbb{I}[a_i = a]\]</div>
+<p><span class="arithmatex">\(N_a(t)\)</span> 是截至第 <span class="arithmatex">\(t\)</span> 回合动作 <span class="arithmatex">\(a\)</span> 被选择的次数。由大数定律，
+<span class="arithmatex">\(N_a(t) \to \infty\)</span> 时 <span class="arithmatex">\(\hat{Q}_t(a) \to \mu_a\)</span>。</p>
+<p><strong>增量式更新</strong>：设第 <span class="arithmatex">\(t\)</span> 回合选动作 <span class="arithmatex">\(a\)</span> 得奖励 <span class="arithmatex">\(r_t\)</span>，则：</p>
+<div class="arithmatex">\[\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \frac{1}{N_a(t) + 1}\left(r_t - \hat{Q}_t(a)\right)\]</div>
+<p>一般形式为 <span class="arithmatex">\(\text{新估计} \leftarrow \text{旧估计} + \text{步长} \times
+(\text{目标} - \text{旧估计})\)</span>，步长 <span class="arithmatex">\(\alpha = 1/(N_a+1)\)</span>。这个"误差
 修正"形式是后续时序差分（TD）算法的雏形。</p>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-def sample_average_update(Q, N, a, r):
-    &quot;&quot;&quot;样本均值增量更新：Q[a] += (r - Q[a]) / (N[a] + 1)&quot;&quot;&quot;
-    N[a] += 1
-    Q[a] += (r - Q[a]) / N[a]
-    return Q, N
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_average_update</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;样本均值增量更新：Q[a] += (r - Q[a]) / (N[a] + 1)&quot;&quot;&quot;</span>
+    <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Q</span><span class="p">,</span> <span class="n">N</span>
+</code></pre></div>
 <h3 id="22">2.2 纯贪心策略</h3>
 <p>贪心策略每回合选择当前估计价值最高的动作：</p>
-<p>$$a_t = \arg\max_{a} \hat{Q}_t(a)$$</p>
+<div class="arithmatex">\[a_t = \arg\max_{a} \hat{Q}_t(a)\]</div>
 <p><strong>致命缺陷</strong>：一旦某个次优动作因初始估计或早期幸运样本而领先，贪心
 会<strong>永远</strong>选择它，从不给其他动作"翻盘"机会。若初始估计全相等，首次
 被选的动作是随机的（打破平局），此后贪心可能长期锁定次优臂，后悔
-线性增长 $R_T = \Theta(T)$。</p>
+线性增长 <span class="arithmatex">\(R_T = \Theta(T)\)</span>。</p>
 <blockquote>
 <p><strong>核心思想</strong>：纯贪心"利用过度、探索为零"，把全部希望押在初始估计
 上，之后不再更新对未选择动作的认知。</p>
 </blockquote>
 <h3 id="23-greedy">2.3 ε-greedy 策略</h3>
-<p><strong>ε-greedy</strong> 在贪心基础上加入随机探索：以概率 $1 - \varepsilon$ 选择
-当前最优动作（利用），以概率 $\varepsilon$ 均匀随机选择任意动作
+<p><strong>ε-greedy</strong> 在贪心基础上加入随机探索：以概率 <span class="arithmatex">\(1 - \varepsilon\)</span> 选择
+当前最优动作（利用），以概率 <span class="arithmatex">\(\varepsilon\)</span> 均匀随机选择任意动作
 （探索）：</p>
-<p>$$a_t = \begin{cases} \arg\max_a \hat{Q}_t(a), &amp; \text{概率 } 1 - \varepsilon \ \text{均匀随机 } a \in \mathcal{A}, &amp; \text{概率 } \varepsilon \end{cases}$$</p>
-<pre><code class="language-python">def epsilon_greedy(Q, epsilon, n_arms):
-    &quot;&quot;&quot;ε-greedy 选臂：以 1-ε 概率贪心，以 ε 概率均匀探索&quot;&quot;&quot;
-    if np.random.rand() &lt; epsilon:
-        return np.random.randint(n_arms)          # 探索：均匀随机
-    return int(np.argmax(Q))                       # 利用：当前最优
-</code></pre>
-<p><strong>分析</strong>：每个动作被选择的概率下界为 $\varepsilon / N$，因此每个动作
-都会被无限次探索，$\hat{Q}_t(a) \to \mu_a$，$a_t$ 最终几乎必然收敛到
-最优臂。但 ε 恒定意味着永远有 $\varepsilon$ 比例的回合在"浪费"探索，
-渐近后悔 $R_T \approx \frac{\varepsilon}{N} T \sum_a \Delta_a = O(T)$
+<div class="arithmatex">\[a_t = \begin{cases} \arg\max_a \hat{Q}_t(a), &amp; \text{概率 } 1 - \varepsilon \\ \text{均匀随机 } a \in \mathcal{A}, &amp; \text{概率 } \varepsilon \end{cases}\]</div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">epsilon_greedy</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">n_arms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ε-greedy 选臂：以 1-ε 概率贪心，以 ε 概率均匀探索&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">epsilon</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n_arms</span><span class="p">)</span>          <span class="c1"># 探索：均匀随机</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>                       <span class="c1"># 利用：当前最优</span>
+</code></pre></div>
+<p><strong>分析</strong>：每个动作被选择的概率下界为 <span class="arithmatex">\(\varepsilon / N\)</span>，因此每个动作
+都会被无限次探索，<span class="arithmatex">\(\hat{Q}_t(a) \to \mu_a\)</span>，<span class="arithmatex">\(a_t\)</span> 最终几乎必然收敛到
+最优臂。但 ε 恒定意味着永远有 <span class="arithmatex">\(\varepsilon\)</span> 比例的回合在"浪费"探索，
+渐近后悔 <span class="arithmatex">\(R_T \approx \frac{\varepsilon}{N} T \sum_a \Delta_a = O(T)\)</span>
 ——线性增长，不过常数因子小。</p>
 <h3 id="24-decaying">2.4 衰减 ε（Decaying ε）</h3>
-<p>为兼顾"早期多探索、后期少探索"，令 ε 随回合数衰减，如 $\varepsilon_t
-= 1/t$。此时探索次数 $\sum_t \varepsilon_t$ 增长缓慢（调和级数），配合
-样本均值估计可证后悔 $R_T = O(\ln T)$（与最优下界同阶，常数因子通常
+<p>为兼顾"早期多探索、后期少探索"，令 ε 随回合数衰减，如 <span class="arithmatex">\(\varepsilon_t
+= 1/t\)</span>。此时探索次数 <span class="arithmatex">\(\sum_t \varepsilon_t\)</span> 增长缓慢（调和级数），配合
+样本均值估计可证后悔 <span class="arithmatex">\(R_T = O(\ln T)\)</span>（与最优下界同阶，常数因子通常
 比 UCB 差）。</p>
 <table>
 <thead>
@@ -547,30 +2999,30 @@ def sample_average_update(Q, N, a, r):
 <tr>
 <td>纯贪心</td>
 <td>0</td>
-<td>$\Theta(T)$</td>
+<td><span class="arithmatex">\(\Theta(T)\)</span></td>
 <td>可能永久锁定次优臂，几乎不可用</td>
 </tr>
 <tr>
 <td>ε-greedy（固定）</td>
-<td>$\varepsilon$ 恒定</td>
-<td>$\Theta(T)$（常数小）</td>
+<td><span class="arithmatex">\(\varepsilon\)</span> 恒定</td>
+<td><span class="arithmatex">\(\Theta(T)\)</span>（常数小）</td>
 <td>简单稳健，适合在线冷启动</td>
 </tr>
 <tr>
 <td>ε-greedy（衰减）</td>
-<td>$\varepsilon_t = 1/t$</td>
-<td>$O(\ln T)$</td>
+<td><span class="arithmatex">\(\varepsilon_t = 1/t\)</span></td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
 <td>渐近最优阶，常数大、对时序敏感</td>
 </tr>
 <tr>
 <td>ε-greedy（分段）</td>
-<td>如 $0.1 \to 0.01$</td>
+<td>如 <span class="arithmatex">\(0.1 \to 0.01\)</span></td>
 <td>介于两者之间</td>
 <td>工程常用，兼顾探索与收敛</td>
 </tr>
 </tbody>
 </table>
-<p><strong>工程经验</strong>：固定 $\varepsilon = 0.1$ 是工业界常见默认值（约 10%
+<p><strong>工程经验</strong>：固定 <span class="arithmatex">\(\varepsilon = 0.1\)</span> 是工业界常见默认值（约 10%
 流量用于探索）；推荐/广告系统常把探索流量单独切分（如 5%），避免
 干扰主流量指标。</p>
 <h3 id="25">2.5 优缺点对比</h3>
@@ -600,8 +3052,8 @@ def sample_average_update(Q, N, a, r):
 </tr>
 <tr>
 <td>渐近后悔</td>
-<td>$\Theta(T)$</td>
-<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
+<td><span class="arithmatex">\(\Theta(T)\)</span></td>
+<td>固定：<span class="arithmatex">\(\Theta(T)\)</span>；衰减：<span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>实现难度</td>
@@ -620,70 +3072,70 @@ def sample_average_update(Q, N, a, r):
 地位相同。这正是 UCB（第四节）要解决的问题：<strong>把探索集中在最不确定、
 最有希望的动作上</strong>。</p>
 <h3 id="26-python-1000">2.6 Python 实现：模拟 1000 步</h3>
-<p>以下代码实现完整 ε-greedy 实验：10 臂伯努利老虎机，$T = 1000$ 回合，
+<p>以下代码实现完整 ε-greedy 实验：10 臂伯努利老虎机，<span class="arithmatex">\(T = 1000\)</span> 回合，
 输出累积后悔与最优臂选择率。</p>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-class BernoulliBandit:
-    &quot;&quot;&quot;N 臂伯努利老虎机环境&quot;&quot;&quot;
-    def __init__(self, theta):
-        self.theta = np.asarray(theta, dtype=float)
-        self.n_arms = len(self.theta)
-        self.best_arm = int(np.argmax(self.theta))
-        self.best_value = self.theta[self.best_arm]
+<span class="k">class</span><span class="w"> </span><span class="nc">BernoulliBandit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;N 臂伯努利老虎机环境&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_arms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_arm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">best_arm</span><span class="p">]</span>
 
-    def step(self, a):
-        &quot;&quot;&quot;执行动作 a，返回奖励（伯努利采样）&quot;&quot;&quot;
-        return 1.0 if np.random.rand() &lt; self.theta[a] else 0.0
-
-
-def run_epsilon_greedy(bandit, T=1000, epsilon=0.1, seed=0):
-    &quot;&quot;&quot;ε-greedy 主循环：返回累积后悔序列与最优臂选择率&quot;&quot;&quot;
-    rng = np.random.default_rng(seed)
-    Q = np.zeros(bandit.n_arms)          # 价值估计，初始为 0
-    N = np.zeros(bandit.n_arms)          # 各臂选择次数
-    regrets = np.zeros(T)
-    best_picks = np.zeros(T)
-
-    for t in range(T):
-        # 1. 选臂
-        if rng.random() &lt; epsilon:
-            a = rng.integers(0, bandit.n_arms)   # 探索
-        else:
-            a = int(np.argmax(Q))                 # 利用
-        # 2. 获得奖励并更新
-        r = bandit.step(a)
-        N[a] += 1
-        Q[a] += (r - Q[a]) / N[a]                 # 样本均值增量更新
-        # 3. 记录指标
-        regrets[t] = bandit.best_value - bandit.theta[a]
-        best_picks[t] = 1.0 if a == bandit.best_arm else 0.0
-
-    return np.cumsum(regrets), np.cumsum(best_picks) / np.arange(1, T + 1)
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;执行动作 a，返回奖励（伯努利采样）&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">else</span> <span class="mf">0.0</span>
 
 
-if __name__ == &quot;__main__&quot;:
-    np.random.seed(42)
-    true_theta = np.random.uniform(0.1, 0.9, size=10)
-    bandit = BernoulliBandit(true_theta)
+<span class="k">def</span><span class="w"> </span><span class="nf">run_epsilon_greedy</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ε-greedy 主循环：返回累积后悔序列与最优臂选择率&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span><span class="p">)</span>          <span class="c1"># 价值估计，初始为 0</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span><span class="p">)</span>          <span class="c1"># 各臂选择次数</span>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">best_picks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
-    for eps in [0.0, 0.01, 0.1, 0.3]:
-        regrets, pick_rate = run_epsilon_greedy(bandit, T=1000, epsilon=eps, seed=0)
-        print(f&quot;ε={eps:&gt;4}: 累积后悔 R_1000 = {regrets[-1]:7.2f}, &quot;
-              f&quot;最优臂选择率 = {pick_rate[-1]:.3f}&quot;)
-    # 预期输出（随机种子固定，数值稳定）:
-    # ε= 0.0: 累积后悔 R_1000 = 120.91, 最优臂选择率 = 0.991
-    # ε=0.01: 累积后悔 R_1000 =  33.60, 最优臂选择率 = 0.985
-    # ε=0.1 : 累积后悔 R_1000 =  56.41, 最优臂选择率 = 0.887
-    # ε=0.3 : 累积后悔 R_1000 = 120.51, 最优臂选择率 = 0.690
-</code></pre>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+        <span class="c1"># 1. 选臂</span>
+        <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">epsilon</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span><span class="p">)</span>   <span class="c1"># 探索</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>                 <span class="c1"># 利用</span>
+        <span class="c1"># 2. 获得奖励并更新</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>                 <span class="c1"># 样本均值增量更新</span>
+        <span class="c1"># 3. 记录指标</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="n">best_picks</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_arm</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">regrets</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">best_picks</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">true_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">bandit</span> <span class="o">=</span> <span class="n">BernoulliBandit</span><span class="p">(</span><span class="n">true_theta</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">eps</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]:</span>
+        <span class="n">regrets</span><span class="p">,</span> <span class="n">pick_rate</span> <span class="o">=</span> <span class="n">run_epsilon_greedy</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ε=</span><span class="si">{</span><span class="n">eps</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">: 累积后悔 R_1000 = </span><span class="si">{</span><span class="n">regrets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;最优臂选择率 = </span><span class="si">{</span><span class="n">pick_rate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 预期输出（随机种子固定，数值稳定）:</span>
+    <span class="c1"># ε= 0.0: 累积后悔 R_1000 = 120.91, 最优臂选择率 = 0.991</span>
+    <span class="c1"># ε=0.01: 累积后悔 R_1000 =  33.60, 最优臂选择率 = 0.985</span>
+    <span class="c1"># ε=0.1 : 累积后悔 R_1000 =  56.41, 最优臂选择率 = 0.887</span>
+    <span class="c1"># ε=0.3 : 累积后悔 R_1000 = 120.51, 最优臂选择率 = 0.690</span>
+</code></pre></div>
 <p><strong>结果解读</strong>：</p>
 <ul>
-<li>$\varepsilon = 0$（纯贪心）：几次初始随机选择后锁定次优臂，后悔
+<li><span class="arithmatex">\(\varepsilon = 0\)</span>（纯贪心）：几次初始随机选择后锁定次优臂，后悔
   迅速线性增长；选择率虽高（0.991）但选的未必是最优臂；</li>
-<li>$\varepsilon = 0.01$：探索太少，前期估计不准；</li>
-<li>$\varepsilon = 0.1$：经典默认值，平衡良好；</li>
-<li>$\varepsilon = 0.3$：探索过度，大量回合浪费在明显次优的臂上，后悔
+<li><span class="arithmatex">\(\varepsilon = 0.01\)</span>：探索太少，前期估计不准；</li>
+<li><span class="arithmatex">\(\varepsilon = 0.1\)</span>：经典默认值，平衡良好；</li>
+<li><span class="arithmatex">\(\varepsilon = 0.3\)</span>：探索过度，大量回合浪费在明显次优的臂上，后悔
   反而增大。</li>
 </ul>
 <blockquote>
@@ -697,19 +3149,19 @@ if __name__ == &quot;__main__&quot;:
 <p>ε-greedy 的探索是"显式随机"的：选择时人为注入随机性。<strong>乐观初始化
 （Optimistic Initialization）</strong> 换了一个思路——不改变选择规则，而是
 <strong>把价值估计的初值设得足够高</strong>，让"探索"在贪心框架内自然发生。</p>
-<p>具体地：设初始估计 $\hat{Q}_0(a) = Q_0 \gg \mu^<em>$（如伯努利问题中
-$Q_0 = 5$，远超真实概率 0~1）。贪心会先选某个臂，但收到的奖励远小于
+<p>具体地：设初始估计 <span class="arithmatex">\(\hat{Q}_0(a) = Q_0 \gg \mu^*\)</span>（如伯努利问题中
+<span class="arithmatex">\(Q_0 = 5\)</span>，远超真实概率 0~1）。贪心会先选某个臂，但收到的奖励远小于
 估计值，该臂估计被向下修正；于是贪心转而去选下一个"看起来高"的臂——
-</em><em>每个臂都会被依次尝试，直到其估计被修正到接近真实值</em>*。</p>
+<strong>每个臂都会被依次尝试，直到其估计被修正到接近真实值</strong>。</p>
 <blockquote>
 <p><strong>核心思想</strong>：乐观初始化把"探索"伪装成了"利用"。因为初始估计普遍
 偏高，贪心"以为"每个动作都很好，于是逐个尝试、逐个修正。探索不再
 是显式随机事件，而是估计修正过程的副产品。</p>
 </blockquote>
 <h3 id="32">3.2 为什么能促进探索</h3>
-<p>由增量更新 $\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \alpha_t (r_t -
-\hat{Q}_t(a))$：当 $Q_0$ 很大时，首次选择臂 $a$ 后 $r_t - \hat{Q}_t(a)
-&lt; 0$，估计显著下调。一个臂只有在被"证伪"（估计降到低于其他臂）之后
+<p>由增量更新 <span class="arithmatex">\(\hat{Q}_{t+1}(a) = \hat{Q}_t(a) + \alpha_t (r_t -
+\hat{Q}_t(a))\)</span>：当 <span class="arithmatex">\(Q_0\)</span> 很大时，首次选择臂 <span class="arithmatex">\(a\)</span> 后 <span class="arithmatex">\(r_t - \hat{Q}_t(a)
+&lt; 0\)</span>，估计显著下调。一个臂只有在被"证伪"（估计降到低于其他臂）之后
 才会被放弃。因此：</p>
 <ol>
 <li><strong>全臂覆盖</strong>：初始阶段每个臂都会被至少尝试一次（贪心按估计降序
@@ -738,11 +3190,11 @@ $Q_0 = 5$，远超真实概率 0~1）。贪心会先选某个臂，但收到的�
 </tr>
 <tr>
 <td>优点：无需 ε</td>
-<td>只需设定 $Q_0$ 一个超参数</td>
+<td>只需设定 <span class="arithmatex">\(Q_0\)</span> 一个超参数</td>
 </tr>
 <tr>
 <td>局限：需先验</td>
-<td>$Q_0$ 必须大于所有真实均值，否则退化为普通贪心</td>
+<td><span class="arithmatex">\(Q_0\)</span> 必须大于所有真实均值，否则退化为普通贪心</td>
 </tr>
 <tr>
 <td>局限：探索无终止准则</td>
@@ -754,49 +3206,49 @@ $Q_0 = 5$，远超真实概率 0~1）。贪心会先选某个臂，但收到的�
 </tr>
 </tbody>
 </table>
-<p><strong>渐近后悔</strong>：乐观初始化 + 样本均值估计的渐近后悔为 $O(\ln T)$，但
-常数因子受 $Q_0$ 影响：$Q_0$ 越乐观，前期探索越多，前期后悔越大、
+<p><strong>渐近后悔</strong>：乐观初始化 + 样本均值估计的渐近后悔为 <span class="arithmatex">\(O(\ln T)\)</span>，但
+常数因子受 <span class="arithmatex">\(Q_0\)</span> 影响：<span class="arithmatex">\(Q_0\)</span> 越乐观，前期探索越多，前期后悔越大、
 后期收敛越快。</p>
 <h3 id="34-python-q-5">3.4 Python 实现：Q 初值 +5</h3>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-def run_optimistic_greedy(bandit, T=1000, Q0=5.0, seed=0):
-    &quot;&quot;&quot;乐观初始化 + 纯贪心：Q 初值设为 Q0（远大于真实均值），无随机探索&quot;&quot;&quot;
-    rng = np.random.default_rng(seed)
-    Q = np.full(bandit.n_arms, Q0)       # 关键：乐观初始化
-    N = np.zeros(bandit.n_arms)
-    regrets = np.zeros(T)
+<span class="k">def</span><span class="w"> </span><span class="nf">run_optimistic_greedy</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">Q0</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;乐观初始化 + 纯贪心：Q 初值设为 Q0（远大于真实均值），无随机探索&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span><span class="p">,</span> <span class="n">Q0</span><span class="p">)</span>       <span class="c1"># 关键：乐观初始化</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span><span class="p">)</span>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
-    for t in range(T):
-        a = int(np.argmax(Q))            # 纯贪心，无 ε
-        r = bandit.step(a)
-        N[a] += 1
-        Q[a] += (r - Q[a]) / N[a]        # 样本均值更新，初值 Q0 逐步稀释
-        regrets[t] = bandit.best_value - bandit.theta[a]
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>            <span class="c1"># 纯贪心，无 ε</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>        <span class="c1"># 样本均值更新，初值 Q0 逐步稀释</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-    return np.cumsum(regrets)
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">regrets</span><span class="p">)</span>
 
 
-if __name__ == &quot;__main__&quot;:
-    np.random.seed(42)
-    true_theta = np.random.uniform(0.1, 0.9, size=10)
-    bandit = BernoulliBandit(true_theta)
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">true_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">bandit</span> <span class="o">=</span> <span class="n">BernoulliBandit</span><span class="p">(</span><span class="n">true_theta</span><span class="p">)</span>
 
-    for Q0 in [0.0, 1.0, 5.0, 10.0]:
-        regrets = run_optimistic_greedy(bandit, T=1000, Q0=Q0, seed=0)
-        print(f&quot;Q0={Q0:&gt;5}: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
-    # 预期输出（随机种子固定，数值稳定）:
-    # Q0=  0.0: 累积后悔 R_1000 = 120.91     ← 退化为普通贪心（与 ε=0 相同）
-    # Q0=  1.0: 累积后悔 R_1000 =  25.48
-    # Q0=  5.0: 累积后悔 R_1000 =  39.25
-    # Q0= 10.0: 累积后悔 R_1000 =  64.37
-</code></pre>
+    <span class="k">for</span> <span class="n">Q0</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]:</span>
+        <span class="n">regrets</span> <span class="o">=</span> <span class="n">run_optimistic_greedy</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">Q0</span><span class="o">=</span><span class="n">Q0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q0=</span><span class="si">{</span><span class="n">Q0</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">: 累积后悔 R_1000 = </span><span class="si">{</span><span class="n">regrets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 预期输出（随机种子固定，数值稳定）:</span>
+    <span class="c1"># Q0=  0.0: 累积后悔 R_1000 = 120.91     ← 退化为普通贪心（与 ε=0 相同）</span>
+    <span class="c1"># Q0=  1.0: 累积后悔 R_1000 =  25.48</span>
+    <span class="c1"># Q0=  5.0: 累积后悔 R_1000 =  39.25</span>
+    <span class="c1"># Q0= 10.0: 累积后悔 R_1000 =  64.37</span>
+</code></pre></div>
 <p><strong>结果解读</strong>：</p>
 <ul>
-<li>$Q_0 = 0$：等于普通贪心，锁定次优臂，后悔线性增长（120.91）；</li>
-<li>$Q_0 = 1.0$：略高于真实均值上限 0.9，探索充分且不过度，后悔最小
+<li><span class="arithmatex">\(Q_0 = 0\)</span>：等于普通贪心，锁定次优臂，后悔线性增长（120.91）；</li>
+<li><span class="arithmatex">\(Q_0 = 1.0\)</span>：略高于真实均值上限 0.9，探索充分且不过度，后悔最小
   （25.48），优于同实验下最好的 ε-greedy（33.60）；</li>
-<li>$Q_0 = 5.0, 10.0$：过度乐观，每个臂被反复"冤枉"地尝试，前期浪费
+<li><span class="arithmatex">\(Q_0 = 5.0, 10.0\)</span>：过度乐观，每个臂被反复"冤枉"地尝试，前期浪费
   增多，后悔回升。</li>
 </ul>
 <blockquote>
@@ -811,15 +3263,15 @@ if __name__ == &quot;__main__&quot;:
 <p>ε-greedy 与乐观初始化的探索都是"盲目"的：要么均匀随机，要么依赖
 先验。<strong>上置信界（Upper Confidence Bound, UCB）</strong> 家族给出了<strong>基于
 不确定性度量</strong>的探索：每回合选择"估计价值 + 不确定性奖励"最大的动作。</p>
-<p>直觉：每个动作的估计 $\hat{Q}_t(a)$ 只是真实值 $\mu_a$ 的带噪观测。
-动作 $a$ 的"真实潜力"应用置信区间描述——真实值以高概率落在区间
-$[\hat{Q}_t(a) - U_t(a),\, \hat{Q}_t(a) + U_t(a)]$ 内。<strong>UCB 选择区间
+<p>直觉：每个动作的估计 <span class="arithmatex">\(\hat{Q}_t(a)\)</span> 只是真实值 <span class="arithmatex">\(\mu_a\)</span> 的带噪观测。
+动作 <span class="arithmatex">\(a\)</span> 的"真实潜力"应用置信区间描述——真实值以高概率落在区间
+<span class="arithmatex">\([\hat{Q}_t(a) - U_t(a),\, \hat{Q}_t(a) + U_t(a)]\)</span> 内。<strong>UCB 选择区间
 上界最大的动作</strong>：</p>
-<p>$$a_t = \arg\max_a \left[ \hat{Q}_t(a) + U_t(a) \right]$$</p>
+<div class="arithmatex">\[a_t = \arg\max_a \left[ \hat{Q}_t(a) + U_t(a) \right]\]</div>
 <ul>
-<li>若 $U_t(a)$ 大（样本少、不确定），动作有"潜力"被选中——探索；</li>
-<li>若 $\hat{Q}_t(a)$ 高（已被证明优秀），动作被选中——利用；</li>
-<li>一旦动作被多次选择，$U_t(a)$ 收缩；若它仍被选，说明其均值确实高。</li>
+<li>若 <span class="arithmatex">\(U_t(a)\)</span> 大（样本少、不确定），动作有"潜力"被选中——探索；</li>
+<li>若 <span class="arithmatex">\(\hat{Q}_t(a)\)</span> 高（已被证明优秀），动作被选中——利用；</li>
+<li>一旦动作被多次选择，<span class="arithmatex">\(U_t(a)\)</span> 收缩；若它仍被选，说明其均值确实高。</li>
 </ul>
 <blockquote>
 <p><strong>核心思想</strong>：UCB 把"探索"重定义为"选择不确定性最大的候选"。
@@ -829,33 +3281,33 @@ $[\hat{Q}_t(a) - U_t(a),\, \hat{Q}_t(a) + U_t(a)]$ 内。<strong>UCB 选择区�
 </blockquote>
 <h3 id="42-ucb1">4.2 UCB1 公式与推导直觉</h3>
 <p>最经典的 <strong>UCB1</strong>（Auer et al., 2002）定义置信界：</p>
-<p>$$U_t(a) = \sqrt{\frac{2 \ln t}{N_a(t)}}$$</p>
+<div class="arithmatex">\[U_t(a) = \sqrt{\frac{2 \ln t}{N_a(t)}}\]</div>
 <p>选择规则：</p>
-<p>$$a_t = \arg\max_a \left[ \hat{Q}_t(a) + \sqrt{\frac{2 \ln t}{N_a(t)}} \right]$$</p>
-<p>$t$ 是当前总回合数，$N_a(t)$ 是动作 $a$ 已选择的次数。</p>
+<div class="arithmatex">\[a_t = \arg\max_a \left[ \hat{Q}_t(a) + \sqrt{\frac{2 \ln t}{N_a(t)}} \right]\]</div>
+<p><span class="arithmatex">\(t\)</span> 是当前总回合数，<span class="arithmatex">\(N_a(t)\)</span> 是动作 <span class="arithmatex">\(a\)</span> 已选择的次数。</p>
 <p><strong>公式直觉</strong>：</p>
 <ul>
-<li>$\ln t$ 缓慢增长：随总观测增多，对全局的置信度整体提升，可更严格
+<li><span class="arithmatex">\(\ln t\)</span> 缓慢增长：随总观测增多，对全局的置信度整体提升，可更严格
   地要求每个臂的估计；</li>
-<li>$N_a(t)$ 在分母：被探索越少的臂，不确定性越大，越应优先探索；</li>
-<li>若某臂长期未被选择，$N_a(t)$ 停滞而 $\ln t$ 继续增长，$U_t(a)$
+<li><span class="arithmatex">\(N_a(t)\)</span> 在分母：被探索越少的臂，不确定性越大，越应优先探索；</li>
+<li>若某臂长期未被选择，<span class="arithmatex">\(N_a(t)\)</span> 停滞而 <span class="arithmatex">\(\ln t\)</span> 继续增长，<span class="arithmatex">\(U_t(a)\)</span>
   单调上升——<strong>它迟早会被重新选中</strong>（保证不"遗忘"任何臂）；</li>
-<li>若某臂被大量选择，$N_a(t) \approx t$，则 $U_t(a) \approx
-  \sqrt{2 \ln t / t} \to 0$——估计收敛，不再有探索补贴。</li>
+<li>若某臂被大量选择，<span class="arithmatex">\(N_a(t) \approx t\)</span>，则 <span class="arithmatex">\(U_t(a) \approx
+  \sqrt{2 \ln t / t} \to 0\)</span>——估计收敛，不再有探索补贴。</li>
 </ul>
-<p><strong>后悔界</strong>：UCB1 的期望后悔满足 $R_T \le 8 \sum_{a: \Delta_a &gt; 0}
+<p><strong>后悔界</strong>：UCB1 的期望后悔满足 <span class="arithmatex">\(R_T \le 8 \sum_{a: \Delta_a &gt; 0}
 \frac{\ln T}{\Delta_a} + \left(1 + \frac{\pi^2}{3}\right) \sum_a
-\Delta_a = O(\ln T)$，达到 Lai–Robbins 下界的对数阶，是<strong>渐近最优</strong>
+\Delta_a = O(\ln T)\)</span>，达到 Lai–Robbins 下界的对数阶，是<strong>渐近最优</strong>
 （常数因子非最优；UCB-V、KL-UCB 等可逼近下界）。</p>
 <h3 id="43">4.3 置信区间的统计直觉</h3>
-<p>UCB 的不确定性项来自<strong>切尔诺夫-霍夫丁不等式</strong>。设 $\hat{Q}_t(a)$ 是
-$N$ 个 $[0,1]$ 有界独立同分布奖励的样本均值，则对任意 $\delta &gt; 0$：</p>
-<p>$$\mathbb{P}\left( \mu_a &gt; \hat{Q}_t(a) + \sqrt{\frac{2 \ln(1/\delta)}{N}} \right) \le \delta$$</p>
-<p>取 $\delta = 1/t^2$，得到 $U_t(a) = \sqrt{2\ln t / N_a(t)}$。含义：
-<strong>真实均值 $\mu_a$ 超过上界的概率至多为 $1/t^2$</strong>。对所有臂做并集界，
-可保证"某臂真实值被严重低估"的概率随 $t$ 快速衰减——这是 UCB 后悔界
+<p>UCB 的不确定性项来自<strong>切尔诺夫-霍夫丁不等式</strong>。设 <span class="arithmatex">\(\hat{Q}_t(a)\)</span> 是
+<span class="arithmatex">\(N\)</span> 个 <span class="arithmatex">\([0,1]\)</span> 有界独立同分布奖励的样本均值，则对任意 <span class="arithmatex">\(\delta &gt; 0\)</span>：</p>
+<div class="arithmatex">\[\mathbb{P}\left( \mu_a &gt; \hat{Q}_t(a) + \sqrt{\frac{2 \ln(1/\delta)}{N}} \right) \le \delta\]</div>
+<p>取 <span class="arithmatex">\(\delta = 1/t^2\)</span>，得到 <span class="arithmatex">\(U_t(a) = \sqrt{2\ln t / N_a(t)}\)</span>。含义：
+<strong>真实均值 <span class="arithmatex">\(\mu_a\)</span> 超过上界的概率至多为 <span class="arithmatex">\(1/t^2\)</span></strong>。对所有臂做并集界，
+可保证"某臂真实值被严重低估"的概率随 <span class="arithmatex">\(t\)</span> 快速衰减——这是 UCB 后悔界
 的概率论根基。</p>
-<pre><code>置信区间示意（动作 a 被选择 N 次后）:
+<div class="highlight"><pre><span></span><code>置信区间示意（动作 a 被选择 N 次后）:
 
        低置信（N 小）          高置信（N 大）
   ──┬────────────┬──      ──┬────────┬──
@@ -864,9 +3316,9 @@ $N$ 个 $[0,1]$ 有界独立同分布奖励的样本均值，则对任意 $\delt
   ←── 区间宽 ──→            ←─ 区间窄 ─→
 
 UCB 选择:  argmax( Q̂(a) + U(a) )   ← 取每个臂区间的上端点比较
-</code></pre>
+</code></pre></div>
 <h3 id="44-ucb1">4.4 UCB1 伪代码</h3>
-<pre><code>输入: 臂数 N，总回合 T
+<div class="highlight"><pre><span></span><code>输入: 臂数 N，总回合 T
 初始化: 对每个臂 a 先各选择一次（N_a = 1, Q̂_a = 首次奖励），t = N
 循环 t = N+1, ..., T:
     for a in 1..N:
@@ -877,49 +3329,49 @@ UCB 选择:  argmax( Q̂(a) + U(a) )   ← 取每个臂区间的上端点比较
     N_{a_t} += 1
     Q̂_{a_t} ← 增量更新样本均值
 输出: 动作序列 a_1..a_T
-</code></pre>
-<p>注意：<strong>每个臂必须先被至少选择一次</strong>（否则 $N_a = 0$ 导致除零），
-通常前 $N$ 回合各臂轮选一遍，或把初始 $U$ 视为 $+\infty$。</p>
+</code></pre></div>
+<p>注意：<strong>每个臂必须先被至少选择一次</strong>（否则 <span class="arithmatex">\(N_a = 0\)</span> 导致除零），
+通常前 <span class="arithmatex">\(N\)</span> 回合各臂轮选一遍，或把初始 <span class="arithmatex">\(U\)</span> 视为 <span class="arithmatex">\(+\infty\)</span>。</p>
 <h3 id="45-python">4.5 Python 实现</h3>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-def run_ucb1(bandit, T=1000, seed=0):
-    &quot;&quot;&quot;UCB1 主循环：先轮选每个臂一次，再按上置信界选臂&quot;&quot;&quot;
-    rng = np.random.default_rng(seed)
-    n = bandit.n_arms
-    Q = np.zeros(n)
-    N = np.zeros(n)
-    regrets = np.zeros(T)
+<span class="k">def</span><span class="w"> </span><span class="nf">run_ucb1</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;UCB1 主循环：先轮选每个臂一次，再按上置信界选臂&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
-    # 阶段一：每个臂先各选一次（保证 N_a &gt;= 1）
-    for a in range(n):
-        r = bandit.step(a)
-        N[a] += 1
-        Q[a] += (r - Q[a]) / N[a]
-        regrets[0] += bandit.best_value - bandit.theta[a]
+    <span class="c1"># 阶段一：每个臂先各选一次（保证 N_a &gt;= 1）</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-    # 阶段二：UCB1 选臂
-    for t in range(2, T + 1):
-        ucb = Q + np.sqrt(2.0 * np.log(t) / N)   # 上置信界向量
-        a = int(np.argmax(ucb))
-        r = bandit.step(a)
-        N[a] += 1
-        Q[a] += (r - Q[a]) / N[a]
-        regrets[t - 1] = bandit.best_value - bandit.theta[a]
+    <span class="c1"># 阶段二：UCB1 选臂</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">ucb</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>   <span class="c1"># 上置信界向量</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">ucb</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-    return np.cumsum(regrets)
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">regrets</span><span class="p">)</span>
 
 
-if __name__ == &quot;__main__&quot;:
-    np.random.seed(42)
-    true_theta = np.random.uniform(0.1, 0.9, size=10)
-    bandit = BernoulliBandit(true_theta)
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">true_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">bandit</span> <span class="o">=</span> <span class="n">BernoulliBandit</span><span class="p">(</span><span class="n">true_theta</span><span class="p">)</span>
 
-    regrets = run_ucb1(bandit, T=1000, seed=0)
-    print(f&quot;UCB1: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
-    # 预期输出（随机种子固定，数值稳定）:
-    # UCB1: 累积后悔 R_1000 =  14.77
-</code></pre>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">run_ucb1</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UCB1: 累积后悔 R_1000 = </span><span class="si">{</span><span class="n">regrets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 预期输出（随机种子固定，数值稳定）:</span>
+    <span class="c1"># UCB1: 累积后悔 R_1000 =  14.77</span>
+</code></pre></div>
 <p>对比前两节（同种子、同环境）：ε-greedy（ε=0.1）为 56.41，乐观初始化
 （Q0=1）为 25.48，而 <strong>UCB1 为 14.77</strong>——显著更低。原因正是 UCB 把
 探索精准投向"最值得探索"的臂，而不是均匀撒网。</p>
@@ -935,8 +3387,8 @@ if __name__ == &quot;__main__&quot;:
 <tbody>
 <tr>
 <td>UCB1</td>
-<td>$U = \sqrt{2\ln t / N}$</td>
-<td>最经典，$O(\ln T)$ 后悔</td>
+<td><span class="arithmatex">\(U = \sqrt{2\ln t / N}\)</span></td>
+<td>最经典，<span class="arithmatex">\(O(\ln T)\)</span> 后悔</td>
 </tr>
 <tr>
 <td>UCB-V</td>
@@ -950,7 +3402,7 @@ if __name__ == &quot;__main__&quot;:
 </tr>
 <tr>
 <td>UCB1-Tuned</td>
-<td>$U = \sqrt{\frac{\ln t}{N}\min(1/4, V_a)}$</td>
+<td><span class="arithmatex">\(U = \sqrt{\frac{\ln t}{N}\min(1/4, V_a)}\)</span></td>
 <td>实践中常优于 UCB1</td>
 </tr>
 <tr>
@@ -962,8 +3414,8 @@ if __name__ == &quot;__main__&quot;:
 </table>
 <p><strong>UCB 的局限</strong>：</p>
 <ol>
-<li><strong>需要奖励有界或已知方差</strong>：公式依赖 $[0,1]$ 有界假设；</li>
-<li><strong>对非平稳分布敏感</strong>：$\ln t$ 全局增长假设分布不变，均值漂移时
+<li><strong>需要奖励有界或已知方差</strong>：公式依赖 <span class="arithmatex">\([0,1]\)</span> 有界假设；</li>
+<li><strong>对非平稳分布敏感</strong>：<span class="arithmatex">\(\ln t\)</span> 全局增长假设分布不变，均值漂移时
    UCB1 缺少"遗忘"机制（改进：滑动窗口 UCB、折扣 UCB）；</li>
 <li><strong>确定性问题下的浪费</strong>：均值差异极大时仍按对数次数探索次优臂，
    在安全关键系统中不可接受。</li>
@@ -980,29 +3432,29 @@ if __name__ == &quot;__main__&quot;:
 matching）</strong>，由 W. R. Thompson 于 1933 年提出，是历史最悠久、实践
 效果最好的 Bandit 算法之一。它从<strong>贝叶斯</strong>视角看待不确定性：</p>
 <ol>
-<li>对每个动作 $a$ 的未知均值 $\mu_a$，维护一个<strong>后验分布</strong>
-   $p(\mu_a \mid \text{历史数据})$；</li>
-<li>每回合从每个后验中<strong>采样</strong>一个值 $\tilde{\mu}_a \sim p(\mu_a \mid
-   \text{数据})$；</li>
-<li>选择采样值最大的动作：$a_t = \arg\max_a \tilde{\mu}_a$。</li>
+<li>对每个动作 <span class="arithmatex">\(a\)</span> 的未知均值 <span class="arithmatex">\(\mu_a\)</span>，维护一个<strong>后验分布</strong>
+   <span class="arithmatex">\(p(\mu_a \mid \text{历史数据})\)</span>；</li>
+<li>每回合从每个后验中<strong>采样</strong>一个值 <span class="arithmatex">\(\tilde{\mu}_a \sim p(\mu_a \mid
+   \text{数据})\)</span>；</li>
+<li>选择采样值最大的动作：<span class="arithmatex">\(a_t = \arg\max_a \tilde{\mu}_a\)</span>。</li>
 </ol>
 <p>直觉：后验宽（数据少）的动作采样值可能很大——有探索机会；后验窄且
 峰值高（数据多且好）的动作采样值稳定很高——实现利用。<strong>探索与利用被
 "采样"这一随机操作自动融合</strong>，不需要显式的置信界或 ε。</p>
 <blockquote>
 <p><strong>核心思想</strong>：Thompson Sampling 把"决策"转化为"按后验概率匹配最优
-动作"——动作 $a$ 被选择的概率恰好近似等于"它是最优动作的后验概率"。
+动作"——动作 <span class="arithmatex">\(a\)</span> 被选择的概率恰好近似等于"它是最优动作的后验概率"。
 不确定性越大的动作，越可能被采样为最优，从而被探索。</p>
 </blockquote>
 <h3 id="52-beta">5.2 Beta 分布与共轭性</h3>
-<p>对<strong>伯努利奖励</strong>（$r \in {0,1}$，成功概率 $\theta_a$），自然选择
+<p>对<strong>伯努利奖励</strong>（<span class="arithmatex">\(r \in \{0,1\}\)</span>，成功概率 <span class="arithmatex">\(\theta_a\)</span>），自然选择
 <strong>Beta 分布</strong>作为先验：</p>
-<p>$$\theta_a \sim \text{Beta}(\alpha_a, \beta_a), \qquad p(\theta) \propto \theta^{\alpha_a - 1}(1 - \theta)^{\beta_a - 1}$$</p>
+<div class="arithmatex">\[\theta_a \sim \text{Beta}(\alpha_a, \beta_a), \qquad p(\theta) \propto \theta^{\alpha_a - 1}(1 - \theta)^{\beta_a - 1}\]</div>
 <p>Beta 分布是伯努利似然的<strong>共轭先验</strong>（conjugate prior）：后验仍为
-Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alpha_a \gets
-\alpha_a + 1$，观测到失败则 $\beta_a \gets \beta_a + 1$：</p>
-<p>$$p(\theta_a \mid \text{数据}) = \text{Beta}(\alpha_a + #\text{成功}_a,\; \beta_a + #\text{失败}_a)$$</p>
-<p><strong>共轭性的价值</strong>：无需数值积分即可精确维护后验，更新是 $O(1)$ 的
+Beta 分布，参数更新是简单的计数操作——观测到成功则 <span class="arithmatex">\(\alpha_a \gets
+\alpha_a + 1\)</span>，观测到失败则 <span class="arithmatex">\(\beta_a \gets \beta_a + 1\)</span>：</p>
+<div class="arithmatex">\[p(\theta_a \mid \text{数据}) = \text{Beta}(\alpha_a + \#\text{成功}_a,\; \beta_a + \#\text{失败}_a)\]</div>
+<p><strong>共轭性的价值</strong>：无需数值积分即可精确维护后验，更新是 <span class="arithmatex">\(O(1)\)</span> 的
 计数操作。</p>
 <table>
 <thead>
@@ -1014,14 +3466,14 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
 </thead>
 <tbody>
 <tr>
-<td>$\text{Beta}(1,1)$</td>
+<td><span class="arithmatex">\(\text{Beta}(1,1)\)</span></td>
 <td>均匀先验（无先验信息）</td>
-<td>$\text{Beta}(1+S_a, 1+F_a)$</td>
+<td><span class="arithmatex">\(\text{Beta}(1+S_a, 1+F_a)\)</span></td>
 </tr>
 <tr>
-<td>$\text{Beta}(\alpha,\beta)$</td>
+<td><span class="arithmatex">\(\text{Beta}(\alpha,\beta)\)</span></td>
 <td>注入先验知识</td>
-<td>$\text{Beta}(\alpha+S_a, \beta+F_a)$</td>
+<td><span class="arithmatex">\(\text{Beta}(\alpha+S_a, \beta+F_a)\)</span></td>
 </tr>
 <tr>
 <td>高斯先验</td>
@@ -1041,19 +3493,19 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
 <tbody>
 <tr>
 <td>均值</td>
-<td>$\mathbb{E}[\theta] = \alpha / (\alpha + \beta)$</td>
+<td><span class="arithmatex">\(\mathbb{E}[\theta] = \alpha / (\alpha + \beta)\)</span></td>
 </tr>
 <tr>
 <td>方差</td>
-<td>$\alpha\beta / [(\alpha+\beta)^2(\alpha+\beta+1)]$</td>
+<td><span class="arithmatex">\(\alpha\beta / [(\alpha+\beta)^2(\alpha+\beta+1)]\)</span></td>
 </tr>
 <tr>
 <td>众数</td>
-<td>$(\alpha-1)/(\alpha+\beta-2)$（$\alpha,\beta&gt;1$ 时）</td>
+<td><span class="arithmatex">\((\alpha-1)/(\alpha+\beta-2)\)</span>（<span class="arithmatex">\(\alpha,\beta&gt;1\)</span> 时）</td>
 </tr>
 <tr>
 <td>均匀分布</td>
-<td>$\text{Beta}(1,1) = U(0,1)$</td>
+<td><span class="arithmatex">\(\text{Beta}(1,1) = U(0,1)\)</span></td>
 </tr>
 <tr>
 <td>后验均值</td>
@@ -1062,7 +3514,7 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
 </tbody>
 </table>
 <h3 id="53-">5.3 采样-更新流程</h3>
-<pre><code>输入: 臂数 N，先验参数 (α_a, β_a)（默认 (1,1)）
+<div class="highlight"><pre><span></span><code>输入: 臂数 N，先验参数 (α_a, β_a)（默认 (1,1)）
 初始化: α_a = β_a = 1, ∀a
 循环 t = 1, ..., T:
     1. 采样: 对每个臂 a，θ̃_a ~ Beta(α_a, β_a)
@@ -1071,7 +3523,7 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
     4. 更新: 若 r_t == 1: α_{a_t} += 1
              否则:     β_{a_t} += 1
 输出: 动作序列 a_1..a_T
-</code></pre>
+</code></pre></div>
 <p><strong>与 UCB 的对比</strong>：UCB 用"上置信界"（确定性函数）排序动作；TS 用
 "后验采样"（随机函数）排序动作。两者都把不确定性编码进决策：</p>
 <table>
@@ -1110,8 +3562,8 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
 </tr>
 <tr>
 <td>渐近后悔</td>
-<td>$O(\ln T)$</td>
-<td>$O(\ln T)$</td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>非平稳适应性</td>
@@ -1121,59 +3573,59 @@ Beta 分布，参数更新是简单的计数操作——观测到成功则 $\alp
 </tbody>
 </table>
 <h3 id="54-python-beta11">5.4 Python 实现：Beta(1,1) 先验</h3>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-def run_thompson_sampling(bandit, T=1000, alpha0=1.0, beta0=1.0, seed=0):
-    &quot;&quot;&quot;Thompson Sampling：Beta(α0, β0) 先验，采样-更新循环&quot;&quot;&quot;
-    rng = np.random.default_rng(seed)
-    n = bandit.n_arms
-    alpha = np.full(n, alpha0)     # Beta 先验参数 α
-    beta = np.full(n, beta0)       # Beta 先验参数 β
-    regrets = np.zeros(T)
+<span class="k">def</span><span class="w"> </span><span class="nf">run_thompson_sampling</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">alpha0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">beta0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Thompson Sampling：Beta(α0, β0) 先验，采样-更新循环&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alpha0</span><span class="p">)</span>     <span class="c1"># Beta 先验参数 α</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">beta0</span><span class="p">)</span>       <span class="c1"># Beta 先验参数 β</span>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
-    for t in range(T):
-        # 1. 从每个臂的后验采样一个成功概率
-        theta_tilde = rng.beta(alpha, beta)
-        # 2. 选择采样值最大的臂
-        a = int(np.argmax(theta_tilde))
-        # 3. 观测奖励
-        r = bandit.step(a)
-        # 4. 共轭更新后验
-        alpha[a] += r              # 成功: α += 1
-        beta[a] += (1.0 - r)       # 失败: β += 1
-        regrets[t] = bandit.best_value - bandit.theta[a]
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+        <span class="c1"># 1. 从每个臂的后验采样一个成功概率</span>
+        <span class="n">theta_tilde</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+        <span class="c1"># 2. 选择采样值最大的臂</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">theta_tilde</span><span class="p">))</span>
+        <span class="c1"># 3. 观测奖励</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="c1"># 4. 共轭更新后验</span>
+        <span class="n">alpha</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="n">r</span>              <span class="c1"># 成功: α += 1</span>
+        <span class="n">beta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>       <span class="c1"># 失败: β += 1</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-    return np.cumsum(regrets)
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">regrets</span><span class="p">)</span>
 
 
-if __name__ == &quot;__main__&quot;:
-    np.random.seed(42)
-    true_theta = np.random.uniform(0.1, 0.9, size=10)
-    bandit = BernoulliBandit(true_theta)
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">true_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">bandit</span> <span class="o">=</span> <span class="n">BernoulliBandit</span><span class="p">(</span><span class="n">true_theta</span><span class="p">)</span>
 
-    regrets = run_thompson_sampling(bandit, T=1000, seed=0)
-    print(f&quot;Thompson Sampling: 累积后悔 R_1000 = {regrets[-1]:7.2f}&quot;)
-    # 预期输出（随机种子固定，数值稳定）:
-    # Thompson Sampling: 累积后悔 R_1000 =  12.05
-</code></pre>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">run_thompson_sampling</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Thompson Sampling: 累积后悔 R_1000 = </span><span class="si">{</span><span class="n">regrets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 预期输出（随机种子固定，数值稳定）:</span>
+    <span class="c1"># Thompson Sampling: 累积后悔 R_1000 =  12.05</span>
+</code></pre></div>
 <p>同种子同环境下 TS 的后悔（12.05）略优于 UCB1（14.77）。在伯努利问题
 中这并非偶然：TS 的探索力度随后验自动调节，前期探索充分、后期几乎
 纯利用。</p>
-<p><strong>高斯奖励的 TS</strong>：当 $r \sim \mathcal{N}(\mu_a, \sigma^2)$（方差已知）
-时用高斯先验 $\mu_a \sim \mathcal{N}(m_a, v_a^2)$，后验更新：</p>
-<p>$$v_a^2 \gets \left(\frac{1}{v_a^2} + \frac{N_a}{\sigma^2}\right)^{-1}, \qquad m_a \gets v_a^2 \left( \frac{m_a}{v_a^2} + \frac{\sum r}{\sigma^2} \right)$$</p>
-<p>每回合从 $\mathcal{N}(m_a, v_a^2)$ 采样。若方差未知，则用
+<p><strong>高斯奖励的 TS</strong>：当 <span class="arithmatex">\(r \sim \mathcal{N}(\mu_a, \sigma^2)\)</span>（方差已知）
+时用高斯先验 <span class="arithmatex">\(\mu_a \sim \mathcal{N}(m_a, v_a^2)\)</span>，后验更新：</p>
+<div class="arithmatex">\[v_a^2 \gets \left(\frac{1}{v_a^2} + \frac{N_a}{\sigma^2}\right)^{-1}, \qquad m_a \gets v_a^2 \left( \frac{m_a}{v_a^2} + \frac{\sum r}{\sigma^2} \right)\]</div>
+<p>每回合从 <span class="arithmatex">\(\mathcal{N}(m_a, v_a^2)\)</span> 采样。若方差未知，则用
 Normal-Inverse-Gamma 先验（超出本章范围；第六节实验对高斯奖励采用
 "已知方差"简化假设）。</p>
 <h3 id="55-thompson-sampling">5.5 Thompson Sampling 的实践优势</h3>
 <ol>
-<li><strong>无需显式探索参数</strong>：探索强度由后验方差自动决定，省去 ε、$Q_0$
+<li><strong>无需显式探索参数</strong>：探索强度由后验方差自动决定，省去 ε、<span class="arithmatex">\(Q_0\)</span>
    等超参数；</li>
 <li><strong>天然处理非平稳</strong>：给历史数据加指数遗忘（更新时 α、β 乘以衰减
    因子），TS 可平滑适应奖励漂移，而 UCB1 需专门改造；</li>
 <li><strong>与上下文扩展自然</strong>：把后验均值建模为特征的线性函数（LinTS）即可
    扩展到上下文老虎机（见第七节），与 linUCB 对应；</li>
-<li><strong>计算友好</strong>：Beta 采样 $O(N)$，臂数百万级可用哈希近似 TS（Google
+<li><strong>计算友好</strong>：Beta 采样 <span class="arithmatex">\(O(N)\)</span>，臂数百万级可用哈希近似 TS（Google
    广告系统 2009 年实践）。</li>
 </ol>
 <p><strong>局限</strong>：</p>
@@ -1227,40 +3679,40 @@ Normal-Inverse-Gamma 先验（超出本章范围；第六节实验对高斯奖�
 <td>纯贪心</td>
 <td>无</td>
 <td>否</td>
-<td>$\Theta(T)$</td>
-<td>$O(N)$</td>
+<td><span class="arithmatex">\(\Theta(T)\)</span></td>
+<td><span class="arithmatex">\(O(N)\)</span></td>
 <td>几乎不用；初始估计可靠时</td>
 </tr>
 <tr>
 <td>ε-greedy</td>
 <td>均匀随机（概率 ε）</td>
 <td>ε</td>
-<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
-<td>$O(N)$</td>
+<td>固定：<span class="arithmatex">\(\Theta(T)\)</span>；衰减：<span class="arithmatex">\(O(\ln T)\)</span></td>
+<td><span class="arithmatex">\(O(N)\)</span></td>
 <td>冷启动、基线对比</td>
 </tr>
 <tr>
 <td>乐观初始化</td>
 <td>高初值诱导贪心</td>
-<td>$Q_0$</td>
-<td>$O(\ln T)$</td>
-<td>$O(N)$</td>
+<td><span class="arithmatex">\(Q_0\)</span></td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
+<td><span class="arithmatex">\(O(N)\)</span></td>
 <td>先验可设、追求确定性</td>
 </tr>
 <tr>
 <td>UCB1</td>
 <td>置信上界</td>
 <td>无（需奖励有界）</td>
-<td>$O(\ln T)$，常数小</td>
-<td>$O(N)$</td>
+<td><span class="arithmatex">\(O(\ln T)\)</span>，常数小</td>
+<td><span class="arithmatex">\(O(N)\)</span></td>
 <td>理论导向、奖励稳定</td>
 </tr>
 <tr>
 <td>Thompson Sampling</td>
 <td>后验采样</td>
 <td>先验 (α,β)</td>
-<td>$O(\ln T)$，常数小</td>
-<td>$O(N)$</td>
+<td><span class="arithmatex">\(O(\ln T)\)</span>，常数小</td>
+<td><span class="arithmatex">\(O(N)\)</span></td>
 <td>工程首选、非平稳场景</td>
 </tr>
 </tbody>
@@ -1274,15 +3726,15 @@ Normal-Inverse-Gamma 先验（超出本章范围；第六节实验对高斯奖�
 <li>实验要可复现、确定性优先：乐观初始化。</li>
 </ul>
 <h3 id="62-2">6.2 后悔曲线解读（图 2）</h3>
-<p><img alt="算法后悔对比" src="../assets/00-bandit-regret.png" /></p>
-<p><strong>图 2</strong>：四种算法在 10 臂伯努利老虎机上的累积后悔曲线（$T = 2000$，
-50 次独立运行取平均）。横轴为回合数 $t$，纵轴为平均累积后悔 $R_t$。</p>
+<p><img alt="算法后悔对比" src="../../img/00-bandit-regret.png" /></p>
+<p><strong>图 2</strong>：四种算法在 10 臂伯努利老虎机上的累积后悔曲线（<span class="arithmatex">\(T = 2000\)</span>，
+50 次独立运行取平均）。横轴为回合数 <span class="arithmatex">\(t\)</span>，纵轴为平均累积后悔 <span class="arithmatex">\(R_t\)</span>。</p>
 <p>典型观察（与本文各节数值一致）：</p>
 <ol>
 <li><strong>斜率即策略质量</strong>：曲线斜率 = 当前平均每回合后悔。纯贪心斜率几乎
-   不下降——锁定次优臂后每回合稳定付出 $\Delta_{a'}$；UCB 与 TS 前期
+   不下降——锁定次优臂后每回合稳定付出 <span class="arithmatex">\(\Delta_{a'}\)</span>；UCB 与 TS 前期
    陡峭（探索期），后期趋于平缓（对数增长）；</li>
-<li><strong>对数增长的"视觉平坦"</strong>：$O(\ln T)$ 的后悔在 $T$ 增大时增长极慢
+<li><strong>对数增长的"视觉平坦"</strong>：<span class="arithmatex">\(O(\ln T)\)</span> 的后悔在 <span class="arithmatex">\(T\)</span> 增大时增长极慢
    ——横轴翻倍，纵轴只增加常数。图中 UCB/TS 后期几乎水平，正是对数
    增长的直观体现；</li>
 <li><strong>前期 vs 后期权衡</strong>：乐观初始化前期后悔大（过度乐观的探索代价），
@@ -1297,98 +3749,98 @@ Normal-Inverse-Gamma 先验（超出本章范围；第六节实验对高斯奖�
 对数后悔是不断变平的曲线。</p>
 </blockquote>
 <h3 id="63-10">6.3 对比实验代码：10 臂高斯老虎机</h3>
-<p>以下代码在<strong>高斯奖励</strong>老虎机（$\mu_a \sim \mathcal{N}(0,1)$，
-$\sigma=1$）上对比四种算法，输出 $T=2000$ 的平均累积后悔（50 次运行
+<p>以下代码在<strong>高斯奖励</strong>老虎机（<span class="arithmatex">\(\mu_a \sim \mathcal{N}(0,1)\)</span>，
+<span class="arithmatex">\(\sigma=1\)</span>）上对比四种算法，输出 <span class="arithmatex">\(T=2000\)</span> 的平均累积后悔（50 次运行
 平均）。</p>
-<pre><code class="language-python">import numpy as np
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-class GaussianBandit:
-    &quot;&quot;&quot;N 臂高斯老虎机：r ~ N(mu_a, sigma^2)，mu_a 固定但未知&quot;&quot;&quot;
-    def __init__(self, mu, sigma=1.0):
-        self.mu = np.asarray(mu, dtype=float)
-        self.sigma = sigma
-        self.n_arms = len(self.mu)
-        self.best_arm = int(np.argmax(self.mu))
-        self.best_value = self.mu[self.best_arm]
+<span class="k">class</span><span class="w"> </span><span class="nc">GaussianBandit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;N 臂高斯老虎机：r ~ N(mu_a, sigma^2)，mu_a 固定但未知&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_arms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_arm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">best_arm</span><span class="p">]</span>
 
-    def step(self, a):
-        return self.sigma * np.random.randn() + self.mu[a]
-
-
-def run_algorithm(bandit, algo, T, seed):
-    &quot;&quot;&quot;通用实验壳：algo 为算法名，返回累积后悔序列&quot;&quot;&quot;
-    rng = np.random.default_rng(seed)
-    n = bandit.n_arms
-    Q = np.zeros(n)
-    N = np.zeros(n)
-    regrets = np.zeros(T)
-
-    for t in range(1, T + 1):
-        if algo == &quot;greedy&quot;:
-            a = int(np.argmax(Q))
-        elif algo == &quot;egreedy&quot;:
-            a = rng.integers(0, n) if rng.random() &lt; 0.1 else int(np.argmax(Q))
-        elif algo == &quot;ucb1&quot;:
-            if t &lt;= n:                       # 先轮选一遍
-                a = t - 1
-            else:
-                ucb = Q + np.sqrt(2.0 * np.log(t) / N)
-                a = int(np.argmax(ucb))
-        elif algo == &quot;ts&quot;:
-            # 高斯奖励、已知方差: 后验 N(m, v^2)，先验 N(0, 1)
-            if t == 1:
-                m = np.zeros(n); v2 = np.ones(n)
-            theta = rng.normal(m, np.sqrt(v2))
-            a = int(np.argmax(theta))
-        else:
-            raise ValueError(algo)
-
-        r = bandit.step(a)
-        if algo == &quot;ts&quot;:
-            # 高斯共轭更新: v2 = 1/(1/v2 + 1/sigma^2), m = v2*(m/v2 + r/sigma^2)
-            v2[a] = 1.0 / (1.0 / v2[a] + 1.0)
-            m[a] = v2[a] * (m[a] / v2[a] + r)
-        else:
-            N[a] += 1
-            Q[a] += (r - Q[a]) / N[a]
-        regrets[t - 1] = bandit.best_value - bandit.mu[a]
-
-    return np.cumsum(regrets)
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
 
-if __name__ == &quot;__main__&quot;:
-    np.random.seed(0)
-    # 10 臂高斯老虎机: 均值从 N(0,1) 采样
-    true_mu = np.random.randn(10)
-    bandit = GaussianBandit(true_mu, sigma=1.0)
+<span class="k">def</span><span class="w"> </span><span class="nf">run_algorithm</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;通用实验壳：algo 为算法名，返回累积后悔序列&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">n_arms</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">regrets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 
-    T, M, SEED = 2000, 50, 12345
-    algos = [&quot;greedy&quot;, &quot;egreedy&quot;, &quot;ucb1&quot;, &quot;ts&quot;]
-    results = {a: np.zeros(T) for a in algos}
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">algo</span> <span class="o">==</span> <span class="s2">&quot;greedy&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">algo</span> <span class="o">==</span> <span class="s2">&quot;egreedy&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">algo</span> <span class="o">==</span> <span class="s2">&quot;ucb1&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">:</span>                       <span class="c1"># 先轮选一遍</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ucb</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">ucb</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">algo</span> <span class="o">==</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span>
+            <span class="c1"># 高斯奖励、已知方差: 后验 N(m, v^2)，先验 N(0, 1)</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">);</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">algo</span><span class="p">)</span>
 
-    for algo in algos:
-        for run in range(M):
-            results[algo] += run_algorithm(bandit, algo, T, seed=SEED + run)
-        results[algo] /= M   # 50 次平均
+        <span class="n">r</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">algo</span> <span class="o">==</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span>
+            <span class="c1"># 高斯共轭更新: v2 = 1/(1/v2 + 1/sigma^2), m = v2*(m/v2 + r/sigma^2)</span>
+            <span class="n">v2</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">v2</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">m</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">v2</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">/</span> <span class="n">v2</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">Q</span><span class="p">[</span><span class="n">a</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+        <span class="n">regrets</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bandit</span><span class="o">.</span><span class="n">best_value</span> <span class="o">-</span> <span class="n">bandit</span><span class="o">.</span><span class="n">mu</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 
-    print(f&quot;10 臂高斯老虎机, T={T}, {M} 次运行平均:&quot;)
-    for algo in algos:
-        print(f&quot;  {algo:&gt;8}: 平均累积后悔 R_{T} = {results[algo][-1]:8.2f}  &quot;
-              f&quot;| 前 200 步后悔 = {results[algo][199]:7.2f}&quot;)
-    # 预期输出（随机种子固定，数值稳定，误差约 ±2）:
-    # 10 臂高斯老虎机, T=2000, 50 次运行平均:
-    #     greedy: 平均累积后悔 R_2000 = 1170.00  | 前 200 步后悔 = 121.00
-    #    egreedy: 平均累积后悔 R_2000 =  210.00  | 前 200 步后悔 =  31.00
-    #      ucb1: 平均累积后悔 R_2000 =   25.00  | 前 200 步后悔 =   9.00
-    #        ts: 平均累积后悔 R_2000 =   22.00  | 前 200 步后悔 =   8.00
-</code></pre>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">regrets</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># 10 臂高斯老虎机: 均值从 N(0,1) 采样</span>
+    <span class="n">true_mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">bandit</span> <span class="o">=</span> <span class="n">GaussianBandit</span><span class="p">(</span><span class="n">true_mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">T</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">SEED</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">12345</span>
+    <span class="n">algos</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;greedy&quot;</span><span class="p">,</span> <span class="s2">&quot;egreedy&quot;</span><span class="p">,</span> <span class="s2">&quot;ucb1&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">algos</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">algo</span> <span class="ow">in</span> <span class="n">algos</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">algo</span><span class="p">]</span> <span class="o">+=</span> <span class="n">run_algorithm</span><span class="p">(</span><span class="n">bandit</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span> <span class="o">+</span> <span class="n">run</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">algo</span><span class="p">]</span> <span class="o">/=</span> <span class="n">M</span>   <span class="c1"># 50 次平均</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;10 臂高斯老虎机, T=</span><span class="si">{</span><span class="n">T</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2"> 次运行平均:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">algo</span> <span class="ow">in</span> <span class="n">algos</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">algo</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">: 平均累积后悔 R_</span><span class="si">{</span><span class="n">T</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">algo</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">8.2f</span><span class="si">}</span><span class="s2">  &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;| 前 200 步后悔 = </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">algo</span><span class="p">][</span><span class="mi">199</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># 预期输出（随机种子固定，数值稳定，误差约 ±2）:</span>
+    <span class="c1"># 10 臂高斯老虎机, T=2000, 50 次运行平均:</span>
+    <span class="c1">#     greedy: 平均累积后悔 R_2000 = 1170.00  | 前 200 步后悔 = 121.00</span>
+    <span class="c1">#    egreedy: 平均累积后悔 R_2000 =  210.00  | 前 200 步后悔 =  31.00</span>
+    <span class="c1">#      ucb1: 平均累积后悔 R_2000 =   25.00  | 前 200 步后悔 =   9.00</span>
+    <span class="c1">#        ts: 平均累积后悔 R_2000 =   22.00  | 前 200 步后悔 =   8.00</span>
+</code></pre></div>
 <p><strong>结果解读</strong>：</p>
 <ul>
-<li><strong>greedy</strong> 后悔 ~$O(T)$：初始样本把某个次优臂估计抬到最高后永久锁定，
-  每回合付出 $\Delta$ 量级后悔；</li>
+<li><strong>greedy</strong> 后悔 ~<span class="arithmatex">\(O(T)\)</span>：初始样本把某个次优臂估计抬到最高后永久锁定，
+  每回合付出 <span class="arithmatex">\(\Delta\)</span> 量级后悔；</li>
 <li><strong>egreedy（ε=0.1）</strong> 线性但常数小：~10% 探索流量是主要后悔来源，
   但保证不永久锁定；</li>
-<li><strong>ucb1 / ts</strong> 后悔 ~$O(\ln T)$：$R_{2000} \approx 22\text{–}25$，
+<li><strong>ucb1 / ts</strong> 后悔 ~<span class="arithmatex">\(O(\ln T)\)</span>：<span class="arithmatex">\(R_{2000} \approx 22\text{–}25\)</span>，
   远小于前两者；前 200 步探索成本也只有 8–9，说明探索被精准投放。</li>
 </ul>
 <blockquote>
@@ -1413,7 +3865,7 @@ if __name__ == &quot;__main__&quot;:
 </tr>
 <tr>
 <td>大规模臂数</td>
-<td>$N$ 达百万级</td>
+<td><span class="arithmatex">\(N\)</span> 达百万级</td>
 <td>分桶/哈希近似 TS（Google AdWords）</td>
 </tr>
 <tr>
@@ -1439,13 +3891,13 @@ if __name__ == &quot;__main__&quot;:
 <p>经典老虎机假设所有回合的"环境"完全相同，最优臂恒定。现实中并非如此：
 给用户推荐新闻时，体育迷与科技迷的最优推荐完全不同；投放广告时，
 不同人群的最优创意不同。<strong>上下文老虎机（Contextual Bandit）</strong> 在每个
-回合额外观测一个<strong>上下文</strong>（context）$x_t \in \mathcal{X}$（如用户
-特征、时间、设备），奖励分布变为 $r_t \sim P_{a}(x_t)$——<strong>最优动作
+回合额外观测一个<strong>上下文</strong>（context）<span class="arithmatex">\(x_t \in \mathcal{X}\)</span>（如用户
+特征、时间、设备），奖励分布变为 <span class="arithmatex">\(r_t \sim P_{a}(x_t)\)</span>——<strong>最优动作
 依赖于上下文</strong>。</p>
-<p>形式化：第 $t$ 回合，学习者观测 $x_t$，选择 $a_t$，获得 $r_t \sim
-P_{a_t}(x_t)$。目标仍是最大化累积收益，但后悔定义为相对"给定上下文
+<p>形式化：第 <span class="arithmatex">\(t\)</span> 回合，学习者观测 <span class="arithmatex">\(x_t\)</span>，选择 <span class="arithmatex">\(a_t\)</span>，获得 <span class="arithmatex">\(r_t \sim
+P_{a_t}(x_t)\)</span>。目标仍是最大化累积收益，但后悔定义为相对"给定上下文
 下的最优动作"：</p>
-<p>$$R_T = \sum_{t=1}^{T} \left( \max_a \mathbb{E}[r \mid x_t, a] - \mathbb{E}[r_{a_t} \mid x_t] \right)$$</p>
+<div class="arithmatex">\[R_T = \sum_{t=1}^{T} \left( \max_a \mathbb{E}[r \mid x_t, a] - \mathbb{E}[r_{a_t} \mid x_t] \right)\]</div>
 <table>
 <thead>
 <tr>
@@ -1458,17 +3910,17 @@ P_{a_t}(x_t)$。目标仍是最大化累积收益，但后悔定义为相对"给
 <tr>
 <td>每回合输入</td>
 <td>无</td>
-<td>上下文 $x_t$</td>
+<td>上下文 <span class="arithmatex">\(x_t\)</span></td>
 </tr>
 <tr>
 <td>最优动作</td>
-<td>全局唯一 $a^*$</td>
-<td>随上下文变化 $a^*(x_t)$</td>
+<td>全局唯一 <span class="arithmatex">\(a^*\)</span></td>
+<td>随上下文变化 <span class="arithmatex">\(a^*(x_t)\)</span></td>
 </tr>
 <tr>
 <td>估计对象</td>
-<td>$\mu_a$（N 个标量）</td>
-<td>$f_a(x)$（函数）</td>
+<td><span class="arithmatex">\(\mu_a\)</span>（N 个标量）</td>
+<td><span class="arithmatex">\(f_a(x)\)</span>（函数）</td>
 </tr>
 <tr>
 <td>泛化能力</td>
@@ -1499,12 +3951,12 @@ P_{a_t}(x_t)$。目标仍是最大化累积收益，但后悔定义为相对"给
 <tbody>
 <tr>
 <td>观测</td>
-<td>上下文 $x_t$（外部给定）</td>
-<td>状态 $s_t$（动作+转移决定）</td>
+<td>上下文 <span class="arithmatex">\(x_t\)</span>（外部给定）</td>
+<td>状态 <span class="arithmatex">\(s_t\)</span>（动作+转移决定）</td>
 </tr>
 <tr>
 <td>动作对未来的影响</td>
-<td>无（$x_{t+1}$ 与 $a_t$ 独立）</td>
+<td>无（<span class="arithmatex">\(x_{t+1}\)</span> 与 <span class="arithmatex">\(a_t\)</span> 独立）</td>
 <td>有（$s_{t+1} \sim P(\cdot</td>
 </tr>
 <tr>
@@ -1575,19 +4027,19 @@ P_{a_t}(x_t)$。目标仍是最大化累积收益，但后悔定义为相对"给
 </tbody>
 </table>
 <h3 id="74-linucb">7.4 linUCB 简介</h3>
-<p>上下文为 $d$ 维特征向量 $x_t \in \mathbb{R}^d$ 时，最经典的上下文算法
+<p>上下文为 <span class="arithmatex">\(d\)</span> 维特征向量 <span class="arithmatex">\(x_t \in \mathbb{R}^d\)</span> 时，最经典的上下文算法
 是 <strong>linUCB</strong>（Li et al., 2010，Yahoo! 新闻推荐）。它假设每个动作
-$a$ 的期望奖励是上下文的<strong>线性函数</strong>：$\mathbb{E}[r \mid x, a] =
-x^\top \theta_a^<em>$，$\theta_a^</em> \in \mathbb{R}^d$ 是未知参数。对每个
+<span class="arithmatex">\(a\)</span> 的期望奖励是上下文的<strong>线性函数</strong>：<span class="arithmatex">\(\mathbb{E}[r \mid x, a] =
+x^\top \theta_a^*\)</span>，<span class="arithmatex">\(\theta_a^* \in \mathbb{R}^d\)</span> 是未知参数。对每个
 动作独立维护岭回归估计：</p>
-<p>$$\hat{\theta}_a = A_a^{-1} b_a, \qquad A_a = X_a^\top X_a + \lambda I_d, \qquad b_a = X_a^\top r_a$$</p>
-<p>$X_a$ 是选择动作 $a$ 时观测的上下文矩阵（每行一个 $x$），$r_a$ 是
-对应奖励向量，$\lambda$ 是岭正则系数。动作 $a$ 的期望奖励置信上界：</p>
-<p>$$x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t}$$</p>
-<p>第二项是"上下文不确定性"：$x_t^\top A_a^{-1} x_t$ 度量当前上下文落在
-动作 $a$ 已有数据覆盖范围内的程度——<strong>越陌生的上下文-动作组合，探索
+<div class="arithmatex">\[\hat{\theta}_a = A_a^{-1} b_a, \qquad A_a = X_a^\top X_a + \lambda I_d, \qquad b_a = X_a^\top r_a\]</div>
+<p><span class="arithmatex">\(X_a\)</span> 是选择动作 <span class="arithmatex">\(a\)</span> 时观测的上下文矩阵（每行一个 <span class="arithmatex">\(x\)</span>），<span class="arithmatex">\(r_a\)</span> 是
+对应奖励向量，<span class="arithmatex">\(\lambda\)</span> 是岭正则系数。动作 <span class="arithmatex">\(a\)</span> 的期望奖励置信上界：</p>
+<div class="arithmatex">\[x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t}\]</div>
+<p>第二项是"上下文不确定性"：<span class="arithmatex">\(x_t^\top A_a^{-1} x_t\)</span> 度量当前上下文落在
+动作 <span class="arithmatex">\(a\)</span> 已有数据覆盖范围内的程度——<strong>越陌生的上下文-动作组合，探索
 补贴越大</strong>。选择上界最大的动作：</p>
-<p>$$a_t = \arg\max_a \left[ x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t} \right]$$</p>
+<div class="arithmatex">\[a_t = \arg\max_a \left[ x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t} \right]\]</div>
 <table>
 <thead>
 <tr>
@@ -1598,7 +4050,7 @@ x^\top \theta_a^<em>$，$\theta_a^</em> \in \mathbb{R}^d$ 是未知参数。对�
 <tbody>
 <tr>
 <td>置信界</td>
-<td>$\alpha \sqrt{x^\top A_a^{-1} x}$（岭回归协方差椭球）</td>
+<td><span class="arithmatex">\(\alpha \sqrt{x^\top A_a^{-1} x}\)</span>（岭回归协方差椭球）</td>
 </tr>
 <tr>
 <td>探索方向</td>
@@ -1606,11 +4058,11 @@ x^\top \theta_a^<em>$，$\theta_a^</em> \in \mathbb{R}^d$ 是未知参数。对�
 </tr>
 <tr>
 <td>参数</td>
-<td>$\lambda$（正则）、$\alpha$（探索强度）</td>
+<td><span class="arithmatex">\(\lambda\)</span>（正则）、<span class="arithmatex">\(\alpha\)</span>（探索强度）</td>
 </tr>
 <tr>
 <td>后悔界</td>
-<td>$O(d \sqrt{T \ln T})$ 量级（线性假设下）</td>
+<td><span class="arithmatex">\(O(d \sqrt{T \ln T})\)</span> 量级（线性假设下）</td>
 </tr>
 </tbody>
 </table>
@@ -1619,10 +4071,10 @@ x^\top \theta_a^<em>$，$\theta_a^</em> \in \mathbb{R}^d$ 是未知参数。对�
 的不确定性"——同一动作，在数据密集区域置信界窄（信任估计），在数据
 稀疏区域置信界宽（鼓励探索）。这正是"个性化 + 探索"的数学实现。</p>
 </blockquote>
-<p><strong>其他上下文算法</strong>：LinTS（TS 的线性版，从 $\mathcal{N}(\hat{\theta}_a,
-A_a^{-1})$ 采样参数）、ε-greedy with regression（回归 + 随机探索，
+<p><strong>其他上下文算法</strong>：LinTS（TS 的线性版，从 <span class="arithmatex">\(\mathcal{N}(\hat{\theta}_a,
+A_a^{-1})\)</span> 采样参数）、ε-greedy with regression（回归 + 随机探索，
 工程上最简单）、基于深度网络的 Contextual Bandit（神经网络拟合
-$f_a(x)$ 配合 UCB/TS 不确定性估计，如 Bootstrapped DQN 的 Bandit
+<span class="arithmatex">\(f_a(x)\)</span> 配合 UCB/TS 不确定性估计，如 Bootstrapped DQN 的 Bandit
 版本）。</p>
 <hr />
 <h2 id="bandit">八、从 Bandit 到强化学习</h2>
@@ -1646,13 +4098,13 @@ $f_a(x)$ 配合 UCB/TS 不确定性估计，如 Bootstrapped DQN 的 Bandit
 </tr>
 <tr>
 <td>价值对象</td>
-<td>$Q(a)$（N 个标量）</td>
-<td>$V(s), Q(s,a)$（随状态变化）</td>
+<td><span class="arithmatex">\(Q(a)\)</span>（N 个标量）</td>
+<td><span class="arithmatex">\(V(s), Q(s,a)\)</span>（随状态变化）</td>
 </tr>
 <tr>
 <td>学习目标</td>
-<td>最大化 $\sum_t r_t$</td>
-<td>最大化 $\mathbb{E}[\sum_t \gamma^t r_t]$</td>
+<td>最大化 <span class="arithmatex">\(\sum_t r_t\)</span></td>
+<td>最大化 <span class="arithmatex">\(\mathbb{E}[\sum_t \gamma^t r_t]\)</span></td>
 </tr>
 <tr>
 <td>核心难题</td>
@@ -1688,7 +4140,7 @@ Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点
 </tr>
 <tr>
 <td>乐观初始化</td>
-<td>Q-learning 初始 $Q_0$；R-max</td>
+<td>Q-learning 初始 <span class="arithmatex">\(Q_0\)</span>；R-max</td>
 <td>高初值诱导探索；R-max 用乐观 MDP</td>
 </tr>
 <tr>
@@ -1732,37 +4184,37 @@ Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点
 <td>贪心</td>
 <td>只利用不探索，可能永久锁定次优臂</td>
 <td>无</td>
-<td>$\Theta(T)$</td>
+<td><span class="arithmatex">\(\Theta(T)\)</span></td>
 </tr>
 <tr>
 <td>ε-greedy</td>
 <td>以 ε 概率均匀探索，简单稳健</td>
 <td>ε</td>
-<td>固定：$\Theta(T)$；衰减：$O(\ln T)$</td>
+<td>固定：<span class="arithmatex">\(\Theta(T)\)</span>；衰减：<span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>乐观初始化</td>
 <td>高初值诱导贪心自动探索</td>
-<td>$Q_0$</td>
-<td>$O(\ln T)$</td>
+<td><span class="arithmatex">\(Q_0\)</span></td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>UCB1</td>
 <td>按"均值+置信上界"选臂</td>
 <td>无（需有界奖励）</td>
-<td>$O(\ln T)$</td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>Thompson Sampling</td>
 <td>按后验采样选臂，概率匹配最优</td>
 <td>先验 (α,β)</td>
-<td>$O(\ln T)$</td>
+<td><span class="arithmatex">\(O(\ln T)\)</span></td>
 </tr>
 <tr>
 <td>linUCB</td>
 <td>线性回报假设 + 上下文置信界</td>
 <td>λ, α</td>
-<td>$O(d\sqrt{T\ln T})$</td>
+<td><span class="arithmatex">\(O(d\sqrt{T\ln T})\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -1774,7 +4226,7 @@ Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点
    （利用）"之间寻找最优分配；</li>
 <li><strong>三类探索机制</strong>：随机探索（ε-greedy）、乐观探索（乐观初始化、
    UCB）、贝叶斯探索（Thompson Sampling）；</li>
-<li><strong>理论标尺</strong>：$O(\ln T)$ 是最优后悔阶（Lai–Robbins 下界），UCB
+<li><strong>理论标尺</strong>：<span class="arithmatex">\(O(\ln T)\)</span> 是最优后悔阶（Lai–Robbins 下界），UCB
    与 TS 均达到；</li>
 <li><strong>工程选择</strong>：简单系统用 ε-greedy；稳定环境追求性能用 UCB；个性化
    /非平稳场景用 Thompson Sampling / linUCB；</li>
@@ -1784,84 +4236,73 @@ Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点
 <blockquote>
 <p><strong>下一步</strong>：多臂老虎机解决"单步、无状态"的决策；下一章将引入
 <strong>状态</strong>——马尔可夫决策过程（MDP）与数学基础，从概率论出发搭建
-$V/Q$ 价值函数与贝尔曼方程，把 Bandit 的"单点决策"升级为"序列决策"。
+<span class="arithmatex">\(V/Q\)</span> 价值函数与贝尔曼方程，把 Bandit 的"单点决策"升级为"序列决策"。
 请继续阅读 <a href="../01-mdp-foundations/">01-mdp-foundations.md</a>。</p>
-</blockquote></div>
-            </div>
-        </div>
+</blockquote>
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script src="../../js/bootstrap.bundle.min.js"></script>
-        <script>
-            var base_url = "../..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../../js/base.js"></script>
-        <script src="../../search/main.js"></script>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-            <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-    </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
 </div>
-
-    </body>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>

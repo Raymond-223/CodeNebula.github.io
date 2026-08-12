@@ -1,212 +1,2598 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
         <link rel="canonical" href="https://CodeNebula.github.io/software-development/08-security/">
-        <link rel="shortcut icon" href="../../img/favicon.ico">
+      
+      
+        <link rel="prev" href="../07-testing/">
+      
+      
+        <link rel="next" href="../../reinforcement-learning/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
         <title>安全基础 - CodeNebula</title>
-        <link href="../../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../../css/brands.min.css" rel="stylesheet">
-        <link href="../../css/solid.min.css" rel="stylesheet">
-        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
-        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
-        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script> 
-    </head>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
 
-    <body>
-        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
-            <div class="container">
-                <a class="navbar-brand" href="../..">CodeNebula</a>
-                <!-- Expander button -->
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Expanded navigation -->
-                <div id="navbar-collapse" class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item">
-                                <a href="../.." class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">强化学习</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../../reinforcement-learning/" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/00-bandit/" class="dropdown-item">多臂老虎机</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/01-mdp-foundations/" class="dropdown-item">MDP与数学基础</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/02-dynamic-programming/" class="dropdown-item">动态规划</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="dropdown-item">蒙特卡洛方法</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/04-temporal-difference/" class="dropdown-item">时序差分学习</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/05-value-approximation/" class="dropdown-item">值函数逼近与DQN</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/06-policy-gradient/" class="dropdown-item">策略梯度与Actor-Critic</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/07-continuous-control/" class="dropdown-item">连续控制</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/08-tools-environments/" class="dropdown-item">环境与工具链</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/09-advanced-topics/" class="dropdown-item">进阶专题</a>
-</li>
-                                    
-<li>
-    <a href="../../reinforcement-learning/10-engineering-practice/" class="dropdown-item">工程实践</a>
-</li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">软件开发</a>
-                                <ul class="dropdown-menu">
-                                    
-<li>
-    <a href="../" class="dropdown-item">概览</a>
-</li>
-                                    
-<li>
-    <a href="../01-frontend/" class="dropdown-item">前端开发</a>
-</li>
-                                    
-<li>
-    <a href="../02-backend/" class="dropdown-item">后端开发</a>
-</li>
-                                    
-<li>
-    <a href="../03-database/" class="dropdown-item">数据库与存储</a>
-</li>
-                                    
-<li>
-    <a href="../04-version-control/" class="dropdown-item">版本控制</a>
-</li>
-                                    
-<li>
-    <a href="../05-devops/" class="dropdown-item">DevOps与部署</a>
-</li>
-                                    
-<li>
-    <a href="../06-architecture/" class="dropdown-item">软件架构</a>
-</li>
-                                    
-<li>
-    <a href="../07-testing/" class="dropdown-item">测试与质量</a>
-</li>
-                                    
-<li>
-    <a href="./" class="dropdown-item active" aria-current="page">安全基础</a>
-</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav ms-md-auto">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li class="nav-item">
-                                <a rel="prev" href="../07-testing/" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a rel="next" class="nav-link disabled">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
-            <span class="fa fa-angle-down"></span>
-        </button>
-    </div>
 
     
-    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
-        <ul class="nav flex-column">
-            
-            <li class="nav-item" data-bs-level="1"><a href="#_1" class="nav-link">安全基础</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#_2" class="nav-link">一、密码学基础</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_3" class="nav-link">二、认证与授权</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#web-owasp-top-10" class="nav-link">三、Web 安全（OWASP Top 10）</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#api" class="nav-link">四、API 安全</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_4" class="nav-link">五、基础设施安全</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#ssdlc" class="nav-link">六、安全开发生命周期（SSDLC）</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_5" class="nav-link">七、合规与隐私</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#_6" class="nav-link">安全核对清单</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-        </ul>
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
-</div></div>
-                    <div class="col-md-9" role="main">
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CodeNebula" class="md-header__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CodeNebula
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              安全基础
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to the dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to the dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  软件开发
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reinforcement-learning/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  强化学习
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../inex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Algorithm
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../idex.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paper Interpretion
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Mathematics/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Mathematics
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CodeNebula" class="md-nav__button md-logo" aria-label="CodeNebula" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CodeNebula
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件开发
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    软件开发
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    前端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端开发
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据库与存储
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-version-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    版本控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps与部署
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    软件架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    测试与质量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    安全基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、密码学基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、密码学基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 对称加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 非对称加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 哈希函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 密钥交换与 TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、认证与授权
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、认证与授权">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 密码存储
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 多因素认证（MFA）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 会话管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 JWT 深入剖析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-oauth-20-openid-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 OAuth 2.0 与 OpenID Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-rbac-vs-abac-vs-rebac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 RBAC vs ABAC vs ReBAC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-owasp-top-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、Web 安全（OWASP Top 10）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、Web 安全（OWASP Top 10）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 SQL 注入
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 XSS（跨站脚本攻击）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-csrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 CSRF（跨站请求伪造）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-ssrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 SSRF（服务端请求伪造）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-owasp-top-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 其他 OWASP Top 10 关键项
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、API 安全
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、API 安全">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 速率限制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 输入验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 CORS 最小权限配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-grpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 gRPC 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 GraphQL 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、基础设施安全
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、基础设施安全">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 网络安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 容器安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Kubernetes 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 密钥管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssdlc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、安全开发生命周期（SSDLC）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、安全开发生命周期（SSDLC）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 威胁建模（STRIDE）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 安全工具链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 安全门禁策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 事件响应计划
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、合规与隐私
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、合规与隐私">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-gdpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 GDPR 要点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 数据分类
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 匿名化 vs 假名化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 审计日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安全核对清单
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="安全核对清单">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        开发阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD 阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运维阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reinforcement-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    强化学习
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    强化学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/00-bandit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    多臂老虎机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/01-mdp-foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MDP与数学基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/02-dynamic-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    动态规划
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/03-monte-carlo-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    蒙特卡洛方法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/04-temporal-difference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    时序差分学习
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/05-value-approximation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    值函数逼近与DQN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/06-policy-gradient/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    策略梯度与Actor-Critic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/07-continuous-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    连续控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/08-tools-environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/09-advanced-topics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进阶专题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reinforcement-learning/10-engineering-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工程实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../idex.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paper Interpretion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mathematics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mathematics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Game Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Four First Lessons.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Four First Lessons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Mathematics/Game Theory/Iterative Deletion.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Iterative Deletion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、密码学基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、密码学基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 对称加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 非对称加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 哈希函数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 密钥交换与 TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、认证与授权
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、认证与授权">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 密码存储
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 多因素认证（MFA）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 会话管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 JWT 深入剖析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-oauth-20-openid-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 OAuth 2.0 与 OpenID Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-rbac-vs-abac-vs-rebac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 RBAC vs ABAC vs ReBAC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-owasp-top-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、Web 安全（OWASP Top 10）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、Web 安全（OWASP Top 10）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 SQL 注入
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 XSS（跨站脚本攻击）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-csrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 CSRF（跨站请求伪造）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-ssrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 SSRF（服务端请求伪造）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-owasp-top-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 其他 OWASP Top 10 关键项
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、API 安全
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、API 安全">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 速率限制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 输入验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 CORS 最小权限配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-grpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 gRPC 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 GraphQL 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、基础设施安全
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="五、基础设施安全">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 网络安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 容器安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Kubernetes 安全
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 密钥管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssdlc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、安全开发生命周期（SSDLC）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、安全开发生命周期（SSDLC）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 威胁建模（STRIDE）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 安全工具链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 安全门禁策略
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 事件响应计划
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、合规与隐私
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、合规与隐私">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-gdpr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 GDPR 要点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 数据分类
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-vs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 匿名化 vs 假名化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 审计日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安全核对清单
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="安全核对清单">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        开发阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD 阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运维阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    软件开发
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
 
 <h1 id="_1">安全基础</h1>
 <blockquote>
@@ -216,17 +2602,17 @@
 <h2 id="_2">一、密码学基础</h2>
 <h3 id="11">1.1 对称加密</h3>
 <p>对称加密使用<strong>同一个密钥</strong>进行加密和解密。最广泛使用的标准是 <strong>AES（Advanced Encryption Standard）</strong>，支持 128、192 和 256 位密钥。</p>
-<pre><code class="language-python">from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-import os
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.ciphers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">padding</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-def aes_encrypt(plaintext: bytes, key: bytes) -&gt; tuple[bytes, bytes, bytes]:
-    iv = os.urandom(16)  # 初始化向量（IV），必须随机
-    cipher = Cipher(algorithms.AES(key), modes.GCM(iv))
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-    return ciphertext, iv, encryptor.tag  # GCM 模式自带认证标签
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">aes_encrypt</span><span class="p">(</span><span class="n">plaintext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>  <span class="c1"># 初始化向量（IV），必须随机</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">modes</span><span class="o">.</span><span class="n">GCM</span><span class="p">(</span><span class="n">iv</span><span class="p">))</span>
+    <span class="n">encryptor</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encryptor</span><span class="p">()</span>
+    <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plaintext</span><span class="p">)</span> <span class="o">+</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ciphertext</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">tag</span>  <span class="c1"># GCM 模式自带认证标签</span>
+</code></pre></div>
 <p><strong>AES 工作模式对比：</strong></p>
 <table>
 <thead>
@@ -275,20 +2661,20 @@ def aes_encrypt(plaintext: bytes, key: bytes) -&gt; tuple[bytes, bytes, bytes]:
 <p><strong>密钥长度建议：</strong> AES-128 安全强度足够（128 位密钥对抗暴力破解已远超可行范围），但行业标准已向 AES-256 迁移以应对未来量子计算威胁和合规要求。</p>
 <h3 id="12">1.2 非对称加密</h3>
 <p>非对称加密使用 <strong>密钥对（Key Pair）</strong>：公钥加密、私钥解密。</p>
-<pre><code class="language-python">from cryptography.hazmat.primitives.asymmetric import rsa, padding as asym_padding
-from cryptography.hazmat.primitives import hashes
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">rsa</span><span class="p">,</span> <span class="n">padding</span> <span class="k">as</span> <span class="n">asym_padding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span>
 
-# 生成 RSA 密钥对
-private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-public_key = private_key.public_key()
+<span class="c1"># 生成 RSA 密钥对</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">public_exponent</span><span class="o">=</span><span class="mi">65537</span><span class="p">,</span> <span class="n">key_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span>
+<span class="n">public_key</span> <span class="o">=</span> <span class="n">private_key</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span>
 
-# 使用公钥加密对称密钥（混合加密常见模式）
-ciphertext = public_key.encrypt(
-    session_key,
-    asym_padding.OAEP(mgf=asym_padding.MGF1(algorithm=hashes.SHA256()),
-                      algorithm=hashes.SHA256(), label=None)
-)
-</code></pre>
+<span class="c1"># 使用公钥加密对称密钥（混合加密常见模式）</span>
+<span class="n">ciphertext</span> <span class="o">=</span> <span class="n">public_key</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+    <span class="n">session_key</span><span class="p">,</span>
+    <span class="n">asym_padding</span><span class="o">.</span><span class="n">OAEP</span><span class="p">(</span><span class="n">mgf</span><span class="o">=</span><span class="n">asym_padding</span><span class="o">.</span><span class="n">MGF1</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">()),</span>
+                      <span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>非对称算法对比：</strong></p>
 <table>
 <thead>
@@ -325,25 +2711,25 @@ ciphertext = public_key.encrypt(
 </tbody>
 </table>
 <p><strong>数字签名流程：</strong></p>
-<pre><code class="language-go">// Go — Ed25519 签名与验证
-import &quot;crypto/ed25519&quot;
+<div class="highlight"><pre><span></span><code><span class="c1">// Go — Ed25519 签名与验证</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;crypto/ed25519&quot;</span>
 
-func signMessage(privateKey ed25519.PrivateKey, msg []byte) []byte {
-    return ed25519.Sign(privateKey, msg)  // 返回 64 字节签名
-}
+<span class="kd">func</span><span class="w"> </span><span class="nx">signMessage</span><span class="p">(</span><span class="nx">privateKey</span><span class="w"> </span><span class="nx">ed25519</span><span class="p">.</span><span class="nx">PrivateKey</span><span class="p">,</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ed25519</span><span class="p">.</span><span class="nx">Sign</span><span class="p">(</span><span class="nx">privateKey</span><span class="p">,</span><span class="w"> </span><span class="nx">msg</span><span class="p">)</span><span class="w">  </span><span class="c1">// 返回 64 字节签名</span>
+<span class="p">}</span>
 
-func verifySignature(publicKey ed25519.PublicKey, msg, sig []byte) bool {
-    return ed25519.Verify(publicKey, msg, sig)
-}
-</code></pre>
+<span class="kd">func</span><span class="w"> </span><span class="nx">verifySignature</span><span class="p">(</span><span class="nx">publicKey</span><span class="w"> </span><span class="nx">ed25519</span><span class="p">.</span><span class="nx">PublicKey</span><span class="p">,</span><span class="w"> </span><span class="nx">msg</span><span class="p">,</span><span class="w"> </span><span class="nx">sig</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ed25519</span><span class="p">.</span><span class="nx">Verify</span><span class="p">(</span><span class="nx">publicKey</span><span class="p">,</span><span class="w"> </span><span class="nx">msg</span><span class="p">,</span><span class="w"> </span><span class="nx">sig</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="13">1.3 哈希函数</h3>
 <p>哈希函数将任意长度输入映射为固定长度的"指纹"。<strong>好的哈希函数必须满足</strong>：抗原像性（单向）、抗第二原像性（给定输入难找相同哈希的另一输入）、抗碰撞性（难找任意两个相同哈希的输入）。</p>
-<pre><code class="language-python">import hashlib
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 
-# SHA-256 基础用法
-digest = hashlib.sha256(b&quot;hello&quot;).hexdigest()
-# 输出: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
-</code></pre>
+<span class="c1"># SHA-256 基础用法</span>
+<span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<span class="c1"># 输出: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824</span>
+</code></pre></div>
 <p><strong>常见哈希算法安全状态：</strong></p>
 <table>
 <thead>
@@ -393,7 +2779,7 @@ digest = hashlib.sha256(b&quot;hello&quot;).hexdigest()
 <p><strong>彩虹表与盐值：</strong> 攻击者可以预先计算海量常见密码的哈希值（彩虹表），快速逆向查找。加盐（Salting）使每个用户即使相同密码也产生不同哈希。</p>
 <h3 id="14-tls">1.4 密钥交换与 TLS</h3>
 <p><strong>Diffie-Hellman 密钥交换</strong> 允许双方在不安全的信道上协商共享密钥。<strong>ECDH（椭圆曲线 Diffie-Hellman）</strong> 是其椭圆曲线版本，更高效。</p>
-<pre><code class="language-mermaid">sequenceDiagram
+<div class="highlight"><pre><span></span><code>sequenceDiagram
     participant Client
     participant Server
     Client-&gt;&gt;Server: ClientHello (TLS 版本、密码套件、随机数)
@@ -405,33 +2791,33 @@ digest = hashlib.sha256(b&quot;hello&quot;).hexdigest()
     Client-&gt;&gt;Server: ChangeCipherSpec + Finished (加密)
     Server-&gt;&gt;Client: ChangeCipherSpec + Finished (加密)
     Note over Client,Server: 🔒 HTTPS 安全连接建立
-</code></pre>
+</code></pre></div>
 <p><strong>TLS 1.3 相比 1.2 的关键改进：</strong>
 - 握手从 2-RTT 降至 <strong>1-RTT</strong>（复用连接 0-RTT）
 - 移除了不安全的密码套件（RC4、CBC 模式、RSA 密钥交换）
 - 强制使用 <strong>前向保密（Perfect Forward Secrecy）</strong> — 即使私钥泄露，过去的会话也无法被解密</p>
-<p><strong>证书链验证路径：</strong></p>
-<pre><code>根 CA（自签名，预置于操作系统/浏览器）
+<p><strong>证书链验证路径：</strong>
+<div class="highlight"><pre><span></span><code>根 CA（自签名，预置于操作系统/浏览器）
   └── 中间 CA（由根 CA 签名）
        └── 服务器证书（由中间 CA 签名）
             └── subjectAltName = *.example.com
-</code></pre>
+</code></pre></div></p>
 <hr />
 <h2 id="_3">二、认证与授权</h2>
 <h3 id="21">2.1 密码存储</h3>
 <p><strong>绝对禁止：</strong> 明文存储、MD5/SHA-1/SHA-256 直接哈希、Base64 编码、自加密。</p>
 <p><strong>正确做法：</strong> 使用专为密码设计的慢速哈希函数。</p>
-<pre><code class="language-python">import bcrypt
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">bcrypt</span>
 
-# 注册：生成哈希
-password = b&quot;SecureP@ss123!&quot;
-salt = bcrypt.gensalt(rounds=12)   # rounds=12 ≈ 250ms
-hashed = bcrypt.hashpw(password, salt)
+<span class="c1"># 注册：生成哈希</span>
+<span class="n">password</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;SecureP@ss123!&quot;</span>
+<span class="n">salt</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">gensalt</span><span class="p">(</span><span class="n">rounds</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>   <span class="c1"># rounds=12 ≈ 250ms</span>
+<span class="n">hashed</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">hashpw</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">salt</span><span class="p">)</span>
 
-# 登录：验证
-if bcrypt.checkpw(input_password, stored_hash):
-    print(&quot;认证通过&quot;)
-</code></pre>
+<span class="c1"># 登录：验证</span>
+<span class="k">if</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">checkpw</span><span class="p">(</span><span class="n">input_password</span><span class="p">,</span> <span class="n">stored_hash</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;认证通过&quot;</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>密码哈希算法对比：</strong></p>
 <table>
 <thead>
@@ -474,18 +2860,18 @@ if bcrypt.checkpw(input_password, stored_hash):
 </tr>
 </tbody>
 </table>
-<pre><code class="language-python">from argon2 import PasswordHasher, Type
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">argon2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasswordHasher</span><span class="p">,</span> <span class="n">Type</span>
 
-ph = PasswordHasher(
-    time_cost=3,          # 迭代次数
-    memory_cost=65536,    # 64MB 内存消耗
-    parallelism=4,        # 并行线程
-    hash_len=32,          # 输出哈希长度
-    type=Type.ID          # argon2id — 同时抗侧信道和 GPU 攻击
-)
-hash_str = ph.hash(&quot;my_password&quot;)
-ph.verify(hash_str, &quot;my_password&quot;)  # 自动解析参数并验证
-</code></pre>
+<span class="n">ph</span> <span class="o">=</span> <span class="n">PasswordHasher</span><span class="p">(</span>
+    <span class="n">time_cost</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>          <span class="c1"># 迭代次数</span>
+    <span class="n">memory_cost</span><span class="o">=</span><span class="mi">65536</span><span class="p">,</span>    <span class="c1"># 64MB 内存消耗</span>
+    <span class="n">parallelism</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>        <span class="c1"># 并行线程</span>
+    <span class="n">hash_len</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>          <span class="c1"># 输出哈希长度</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">Type</span><span class="o">.</span><span class="n">ID</span>          <span class="c1"># argon2id — 同时抗侧信道和 GPU 攻击</span>
+<span class="p">)</span>
+<span class="n">hash_str</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="s2">&quot;my_password&quot;</span><span class="p">)</span>
+<span class="n">ph</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">hash_str</span><span class="p">,</span> <span class="s2">&quot;my_password&quot;</span><span class="p">)</span>  <span class="c1"># 自动解析参数并验证</span>
+</code></pre></div>
 <p><strong>Pepper（密钥胡椒）：</strong> 在哈希前追加一个应用级秘密（存储在 HSM 或外部密钥服务中），即使数据库泄露，攻击者也无法离线破解。</p>
 <p><strong>密码策略（NIST SP 800-63B 最新指南）：</strong>
 - 最小长度 <strong>8 字符</strong>（推荐 12+）
@@ -522,30 +2908,30 @@ ph.verify(hash_str, &quot;my_password&quot;)  # 自动解析参数并验证
 </tbody>
 </table>
 <p><strong>TOTP（基于时间的一次性密码）实现原理：</strong></p>
-<pre><code class="language-python">import hmac, struct, time, base64
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span><span class="o">,</span><span class="w"> </span><span class="nn">struct</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">base64</span>
 
-def generate_totp(secret: str, interval: int = 30) -&gt; str:
-    key = base64.b32decode(secret.upper())
-    counter = struct.pack(&quot;&gt;Q&quot;, int(time.time() // interval))
-    h = hmac.new(key, counter, &quot;sha1&quot;).digest()
-    offset = h[-1] &amp; 0x0F
-    code = struct.unpack(&quot;&gt;I&quot;, h[offset:offset+4])[0] &amp; 0x7FFFFFFF
-    return f&quot;{code % 1000000:06d}&quot;
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_totp</span><span class="p">(</span><span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b32decode</span><span class="p">(</span><span class="n">secret</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;Q&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">//</span> <span class="n">interval</span><span class="p">))</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">counter</span><span class="p">,</span> <span class="s2">&quot;sha1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0x0F</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span><span class="o">+</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0x7FFFFFFF</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">code</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">1000000</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
 <blockquote>
 <p><strong>推荐排序：</strong> WebAuthn/FIDO2 硬件密钥 &gt; TOTP 应用 &gt; SMS（SMS 易受 SIM Swap 攻击，尽可能避免）。</p>
 </blockquote>
 <h3 id="23">2.3 会话管理</h3>
-<pre><code class="language-python"># 安全的会话配置示例（Python Flask）
-app.config.update(
-    SECRET_KEY=os.environ[&quot;FLASK_SECRET&quot;],  # 从环境变量读取，绝不硬编码
-    SESSION_COOKIE_HTTPONLY=True,           # 禁止 JavaScript 访问
-    SESSION_COOKIE_SECURE=True,             # 仅 HTTPS
-    SESSION_COOKIE_SAMESITE='Lax',          # 防 CSRF
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=1),
-    SESSION_REFRESH_EACH_REQUEST=True       # 滑动过期
-)
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># 安全的会话配置示例（Python Flask）</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="n">SECRET_KEY</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;FLASK_SECRET&quot;</span><span class="p">],</span>  <span class="c1"># 从环境变量读取，绝不硬编码</span>
+    <span class="n">SESSION_COOKIE_HTTPONLY</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># 禁止 JavaScript 访问</span>
+    <span class="n">SESSION_COOKIE_SECURE</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>             <span class="c1"># 仅 HTTPS</span>
+    <span class="n">SESSION_COOKIE_SAMESITE</span><span class="o">=</span><span class="s1">&#39;Lax&#39;</span><span class="p">,</span>          <span class="c1"># 防 CSRF</span>
+    <span class="n">PERMANENT_SESSION_LIFETIME</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">SESSION_REFRESH_EACH_REQUEST</span><span class="o">=</span><span class="kc">True</span>       <span class="c1"># 滑动过期</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>会话安全黄金法则：</strong>
 1. <strong>会话 ID 不可预测</strong> — 使用 <code>os.urandom(32)</code> 或系统 CSPRNG 生成，长度 ≥ 128 位
 2. <strong>登录后旋转会话 ID</strong> — 防止会话固定攻击（Session Fixation）
@@ -554,26 +2940,26 @@ app.config.update(
 5. <strong>Cookie 属性</strong> — 始终设置 <code>HttpOnly</code>、<code>Secure</code>、<code>SameSite</code></p>
 <h3 id="24-jwt">2.4 JWT 深入剖析</h3>
 <p>JWT（JSON Web Token）由三部分组成：<code>header.payload.signature</code>。</p>
-<pre><code>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.
+<div class="highlight"><pre><span></span><code>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.
 eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.
 SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-</code></pre>
-<p><strong>关键字段：</strong></p>
-<pre><code class="language-json">{
-  &quot;alg&quot;: &quot;RS256&quot;,
-  &quot;typ&quot;: &quot;JWT&quot;,
-  &quot;kid&quot;: &quot;key-id-1&quot;
-}
-.
-{
-  &quot;sub&quot;: &quot;user_12345&quot;,
-  &quot;iat&quot;: 1700000000,
-  &quot;exp&quot;: 1700003600,
-  &quot;iss&quot;: &quot;https://auth.example.com&quot;,
-  &quot;aud&quot;: &quot;api.example.com&quot;,
-  &quot;jti&quot;: &quot;unique-token-id&quot;
-}
-</code></pre>
+</code></pre></div>
+<p><strong>关键字段：</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;alg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RS256&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;typ&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JWT&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;key-id-1&quot;</span>
+<span class="p">}</span>
+<span class="err">.</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user_12345&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1700000000</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1700003600</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://auth.example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;aud&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;api.example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;jti&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;unique-token-id&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
 <p><strong>RS256 vs HS256：</strong></p>
 <table>
 <thead>
@@ -621,7 +3007,7 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 4. <strong>无绑定到会话</strong> — JWT 无退出机制（除非使用黑名单或短有效期）</p>
 <h3 id="25-oauth-20-openid-connect">2.5 OAuth 2.0 与 OpenID Connect</h3>
 <p><strong>授权码流程（Authorization Code + PKCE）——当前推荐方案：</strong></p>
-<pre><code>┌─────────┐          ┌───────────┐          ┌──────────┐
+<div class="highlight"><pre><span></span><code>┌─────────┐          ┌───────────┐          ┌──────────┐
 │  前端    │          │  后端服务  │          │ 授权服务器│
 │ (SPA)   │          │  (API)    │          │ (Auth0)  │
 └────┬────┘          └─────┬─────┘          └─────┬────┘
@@ -642,7 +3028,7 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
      │                     │&lt;─────────────────────│
      │                     │  7. 返回资源          │
      │&lt;────────────────────│                      │
-</code></pre>
+</code></pre></div>
 <p><strong>为什么需要 PKCE：</strong> 传统授权码流程依赖客户端密钥（client_secret），但 SPA/移动端无法安全存储密钥。PKCE 使用动态生成的 <code>code_verifier</code> 和 <code>code_challenge</code>，即使是公开客户端也能安全使用。</p>
 <p><strong>OAuth 2.0 与 OpenID Connect 的关系：</strong>
 - <strong>OAuth 2.0</strong>：授权框架，关注"能不能访问资源"
@@ -683,14 +3069,14 @@ SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 </tr>
 </tbody>
 </table>
-<pre><code class="language-python"># ABAC 策略示例（使用 Casbin/OPA 风格）
-policy = &quot;&quot;&quot;
-允许操作当且仅当：
-  user.department == resource.owner_department AND
-  user.clearance_level &gt;= resource.required_clearance AND
-  time.now() BETWEEN resource.access_window.start AND resource.access_window.end
-&quot;&quot;&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># ABAC 策略示例（使用 Casbin/OPA 风格）</span>
+<span class="n">policy</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">允许操作当且仅当：</span>
+<span class="s2">  user.department == resource.owner_department AND</span>
+<span class="s2">  user.clearance_level &gt;= resource.required_clearance AND</span>
+<span class="s2">  time.now() BETWEEN resource.access_window.start AND resource.access_window.end</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="web-owasp-top-10">三、Web 安全（OWASP Top 10）</h2>
 <h3 id="31-sql">3.1 SQL 注入</h3>
@@ -699,17 +3085,17 @@ policy = &quot;&quot;&quot;
 - <strong>Blind（盲注）</strong> — 通过 <code>true/false</code> 响应推断数据
 - <strong>Out-of-Band（带外）</strong> — 通过 DNS/HTTP 请求外传数据</p>
 <p><strong>预防措施：</strong></p>
-<pre><code class="language-python"># ❌ 错误：字符串拼接
-query = f&quot;SELECT * FROM users WHERE username = '{username}' AND password = '{password}'&quot;
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ 错误：字符串拼接</span>
+<span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM users WHERE username = &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; AND password = &#39;</span><span class="si">{</span><span class="n">password</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
 
-# ✅ 正确：参数化查询
-import sqlite3
-cursor.execute(&quot;SELECT * FROM users WHERE username = ? AND password = ?&quot;,
-               (username, password))
+<span class="c1"># ✅ 正确：参数化查询</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users WHERE username = ? AND password = ?&quot;</span><span class="p">,</span>
+               <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">))</span>
 
-# ORM 方式（SQLAlchemy）
-users = session.query(User).filter(User.username == username, User.password == password).all()
-</code></pre>
+<span class="c1"># ORM 方式（SQLAlchemy）</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">username</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">password</span> <span class="o">==</span> <span class="n">password</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></pre></div>
 <p><strong>防御层次（纵深防御）：</strong>
 1. <strong>第一道防线：参数化查询 / ORM</strong> — 杜绝拼接
 2. <strong>第二道防线：输入验证</strong> — 白名单允许的字符
@@ -747,97 +3133,97 @@ users = session.query(User).filter(User.username == username, User.password == p
 </tbody>
 </table>
 <p><strong>预防策略：</strong></p>
-<pre><code class="language-html">&lt;!-- CSP（Content Security Policy）HTTP 响应头 --&gt;
-Content-Security-Policy: default-src 'self'; 
-                       script-src 'self' https://cdn.example.com;
-                       style-src 'self' 'unsafe-inline';
-                       img-src 'self' data:;
-                       object-src 'none';
-                       base-uri 'none';
+<div class="highlight"><pre><span></span><code><span class="cm">&lt;!-- CSP（Content Security Policy）HTTP 响应头 --&gt;</span>
+Content-Security-Policy: default-src &#39;self&#39;; 
+                       script-src &#39;self&#39; https://cdn.example.com;
+                       style-src &#39;self&#39; &#39;unsafe-inline&#39;;
+                       img-src &#39;self&#39; data:;
+                       object-src &#39;none&#39;;
+                       base-uri &#39;none&#39;;
 
-&lt;!-- 输出编码 — 根据上下文使用不同编码策略 --&gt;
-&lt;div&gt;${escapeHtml(userInput)}&lt;/div&gt;         &lt;!-- HTML 实体编码 --&gt;
-&lt;a href=&quot;${escapeUrl(userInput)}&quot;&gt;...&lt;/a&gt;   &lt;!-- URL 编码 --&gt;
-&lt;script&gt;var x = ${escapeJs(userInput)}&lt;/script&gt; &lt;!-- JavaScript 编码 --&gt;
-</code></pre>
+<span class="cm">&lt;!-- 输出编码 — 根据上下文使用不同编码策略 --&gt;</span>
+<span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>${escapeHtml(userInput)}<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>         <span class="cm">&lt;!-- HTML 实体编码 --&gt;</span>
+<span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;${escapeUrl(userInput)}&quot;</span><span class="p">&gt;</span>...<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>   <span class="cm">&lt;!-- URL 编码 --&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="kd">var</span><span class="w"> </span><span class="nx">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$</span><span class="p">{</span><span class="nx">escapeJs</span><span class="p">(</span><span class="nx">userInput</span><span class="p">)}&lt;/</span><span class="nt">script</span><span class="p">&gt;</span> <span class="cm">&lt;!-- JavaScript 编码 --&gt;</span>
+</code></pre></div>
 <blockquote>
 <p><strong>不要依赖 <code>X-XSS-Protection</code></strong> — 该标头已被浏览器废弃（Chrome 和 Edge 已移除），CSP 是正确方案。</p>
 </blockquote>
 <h3 id="33-csrf">3.3 CSRF（跨站请求伪造）</h3>
 <p><strong>工作原理：</strong> 用户登录 A 站后，在未登出的情况下访问恶意 B 站，B 站构造请求冒用 A 站的用户身份。</p>
 <p><strong>三重防御机制：</strong></p>
-<pre><code class="language-python"># 1. CSRF Token（服务端验证）
-from flask_wtf.csrf import CSRFProtect
-csrf = CSRFProtect(app)  # 为每个表单生成 Token，在服务器验证
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. CSRF Token（服务端验证）</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_wtf.csrf</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSRFProtect</span>
+<span class="n">csrf</span> <span class="o">=</span> <span class="n">CSRFProtect</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>  <span class="c1"># 为每个表单生成 Token，在服务器验证</span>
 
-# 2. SameSite Cookie（浏览器原生防御）
-Set-Cookie: session=abc123; SameSite=Strict; HttpOnly; Secure
-# Strict — 完全禁止跨站请求携带 Cookie
-# Lax — 允许顶级导航（GET 请求）— 推荐默认值
-# None — 允许所有跨站请求（需同时设置 Secure）
+<span class="c1"># 2. SameSite Cookie（浏览器原生防御）</span>
+<span class="n">Set</span><span class="o">-</span><span class="n">Cookie</span><span class="p">:</span> <span class="n">session</span><span class="o">=</span><span class="n">abc123</span><span class="p">;</span> <span class="n">SameSite</span><span class="o">=</span><span class="n">Strict</span><span class="p">;</span> <span class="n">HttpOnly</span><span class="p">;</span> <span class="n">Secure</span>
+<span class="c1"># Strict — 完全禁止跨站请求携带 Cookie</span>
+<span class="c1"># Lax — 允许顶级导航（GET 请求）— 推荐默认值</span>
+<span class="c1"># None — 允许所有跨站请求（需同时设置 Secure）</span>
 
-# 3. Double Submit Cookie — 将 Token 同时放在 Cookie 和请求头中，
-# 服务器验证两者是否一致（适用于无状态架构）
-</code></pre>
+<span class="c1"># 3. Double Submit Cookie — 将 Token 同时放在 Cookie 和请求头中，</span>
+<span class="c1"># 服务器验证两者是否一致（适用于无状态架构）</span>
+</code></pre></div>
 <h3 id="34-ssrf">3.4 SSRF（服务端请求伪造）</h3>
 <p>攻击者控制服务端发起请求，访问内部网络资源。</p>
 <p><strong>预防措施：</strong></p>
-<pre><code class="language-python">import ipaddress
-from urllib.parse import urlparse
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">ipaddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
 
-def validate_url(url: str) -&gt; bool:
-    parsed = urlparse(url)
-    try:
-        # 1. 解析 IP，禁止内网地址
-        ip = ipaddress.ip_address(socket.gethostbyname(parsed.hostname))
-        if ip.is_private or ip.is_loopback or ip.is_link_local:
-            return False
-        # 2. 白名单协议
-        if parsed.scheme not in (&quot;https&quot;,):
-            return False
-        # 3. DNS rebinding 防护：解析后再次验证
-        return True
-    except Exception:
-        return False
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># 1. 解析 IP，禁止内网地址</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">hostname</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">ip</span><span class="o">.</span><span class="n">is_private</span> <span class="ow">or</span> <span class="n">ip</span><span class="o">.</span><span class="n">is_loopback</span> <span class="ow">or</span> <span class="n">ip</span><span class="o">.</span><span class="n">is_link_local</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># 2. 白名单协议</span>
+        <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;https&quot;</span><span class="p">,):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># 3. DNS rebinding 防护：解析后再次验证</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div>
 <h3 id="35-owasp-top-10">3.5 其他 OWASP Top 10 关键项</h3>
 <p><strong>Insecure Deserialization（不安全的反序列化）：</strong></p>
-<pre><code class="language-python"># ❌ 危险：pickle 反序列化可执行任意代码
-data = base64.b64decode(request.cookies.get(&quot;session&quot;))
-obj = pickle.loads(data)  # 攻击者可构造恶意 payload
+<div class="highlight"><pre><span></span><code><span class="c1"># ❌ 危险：pickle 反序列化可执行任意代码</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session&quot;</span><span class="p">))</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># 攻击者可构造恶意 payload</span>
 
-# ✅ 安全：使用 JSON/YAML 等结构化格式（或验证签名后反序列化）
-obj = json.loads(request.cookies.get(&quot;session&quot;))
-</code></pre>
+<span class="c1"># ✅ 安全：使用 JSON/YAML 等结构化格式（或验证签名后反序列化）</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session&quot;</span><span class="p">))</span>
+</code></pre></div>
 <p><strong>组件漏洞治理：</strong> 维护 SBOM（Software Bill of Materials）、配置 Dependabot/Renovate 自动更新、CI/CD 中集成 Trivy/Snyk 扫描。</p>
 <hr />
 <h2 id="api">四、API 安全</h2>
 <h3 id="41">4.1 速率限制</h3>
-<pre><code class="language-python"># Token Bucket 算法实现
-import time
-from collections import defaultdict
+<div class="highlight"><pre><span></span><code><span class="c1"># Token Bucket 算法实现</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
-class TokenBucket:
-    def __init__(self, rate: float, capacity: int):
-        self.rate = rate          # 令牌填充速率（/秒）
-        self.capacity = capacity  # 桶容量（最大突发）
-        self.tokens = defaultdict(lambda: capacity)
-        self.last_refill = defaultdict(time.time)
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenBucket</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span>          <span class="c1"># 令牌填充速率（/秒）</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="n">capacity</span>  <span class="c1"># 桶容量（最大突发）</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">capacity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_refill</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
 
-    def allow(self, key: str) -&gt; bool:
-        now = time.time()
-        elapsed = now - self.last_refill[key]
-        self.tokens[key] = min(self.capacity,
-                               self.tokens[key] + elapsed * self.rate)
-        self.last_refill[key] = now
-        if self.tokens[key] &gt;= 1:
-            self.tokens[key] -= 1
-            return True
-        return False
+    <span class="k">def</span><span class="w"> </span><span class="nf">allow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_refill</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="n">elapsed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_refill</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
-# 使用 Redis 的滑动窗口（生产环境推荐）
-# 返回 `X-RateLimit-Remaining` / `Retry-After` 头
-</code></pre>
+<span class="c1"># 使用 Redis 的滑动窗口（生产环境推荐）</span>
+<span class="c1"># 返回 `X-RateLimit-Remaining` / `Retry-After` 头</span>
+</code></pre></div>
 <p><strong>限制策略对比：</strong></p>
 <table>
 <thead>
@@ -870,66 +3256,66 @@ class TokenBucket:
 </tbody>
 </table>
 <h3 id="42">4.2 输入验证</h3>
-<pre><code class="language-python">from pydantic import BaseModel, Field, EmailStr, validator
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">validator</span>
 
-class CreateUserRequest(BaseModel):
-    username: str = Field(..., min_length=3, max_length=32, pattern=r&quot;^[a-zA-Z0-9_]+$&quot;)
-    email: EmailStr
-    age: int = Field(..., ge=0, le=150)
+<span class="k">class</span><span class="w"> </span><span class="nc">CreateUserRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9_]+$&quot;</span><span class="p">)</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">EmailStr</span>
+    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
 
-    @validator(&quot;username&quot;)
-    def no_reserved_names(cls, v):
-        if v.lower() in (&quot;admin&quot;, &quot;root&quot;, &quot;system&quot;):
-            raise ValueError(&quot;reserved username&quot;)
-        return v
-</code></pre>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_reserved_names</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;reserved username&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
 <p><strong>白名单 vs 黑名单：</strong> 始终优先使用白名单（allowlist）——定义什么是允许的，拒绝所有其他输入。黑名单（denylist）容易被绕过（如 SQL 注入过滤 <code>'</code> 但忽略 <code>\</code>）。</p>
 <h3 id="43-cors">4.3 CORS 最小权限配置</h3>
-<pre><code class="language-nginx"># Nginx 配置：仅允许特定来源
-add_header Access-Control-Allow-Origin &quot;https://app.example.com&quot; always;
-add_header Access-Control-Allow-Methods &quot;GET, POST&quot; always;
-add_header Access-Control-Allow-Credentials &quot;true&quot; always;
-add_header Access-Control-Max-Age 86400 always;
-# 绝不能设置为 Access-Control-Allow-Origin: *
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># Nginx 配置：仅允许特定来源</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Access-Control-Allow-Origin</span><span class="w"> </span><span class="s">&quot;https://app.example.com&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Access-Control-Allow-Methods</span><span class="w"> </span><span class="s">&quot;GET,</span><span class="w"> </span><span class="s">POST&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Access-Control-Allow-Credentials</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="k">add_header</span><span class="w"> </span><span class="s">Access-Control-Max-Age</span><span class="w"> </span><span class="mi">86400</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<span class="c1"># 绝不能设置为 Access-Control-Allow-Origin: *</span>
+</code></pre></div>
 <h3 id="44-grpc">4.4 gRPC 安全</h3>
-<pre><code class="language-go">// gRPC 服务端 TLS + 认证拦截器
-func main() {
-    creds, _ := credentials.NewServerTLSFromFile(&quot;server.crt&quot;, &quot;server.key&quot;)
-    interceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-        token, err := ExtractBearerToken(ctx)
-        if err != nil || !validateToken(token) {
-            return nil, status.Errorf(codes.Unauthenticated, &quot;invalid token&quot;)
-        }
-        return handler(ctx, req)
-    }
-    srv := grpc.NewServer(
-        grpc.Creds(creds),
-        grpc.UnaryInterceptor(interceptor),
-    )
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1">// gRPC 服务端 TLS + 认证拦截器</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">creds</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">credentials</span><span class="p">.</span><span class="nx">NewServerTLSFromFile</span><span class="p">(</span><span class="s">&quot;server.crt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;server.key&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">interceptor</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">info</span><span class="w"> </span><span class="o">*</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">UnaryServerInfo</span><span class="p">,</span><span class="w"> </span><span class="nx">handler</span><span class="w"> </span><span class="nx">grpc</span><span class="p">.</span><span class="nx">UnaryHandler</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">ExtractBearerToken</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">!</span><span class="nx">validateToken</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="nx">codes</span><span class="p">.</span><span class="nx">Unauthenticated</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;invalid token&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">handler</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">srv</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">grpc</span><span class="p">.</span><span class="nx">NewServer</span><span class="p">(</span>
+<span class="w">        </span><span class="nx">grpc</span><span class="p">.</span><span class="nx">Creds</span><span class="p">(</span><span class="nx">creds</span><span class="p">),</span>
+<span class="w">        </span><span class="nx">grpc</span><span class="p">.</span><span class="nx">UnaryInterceptor</span><span class="p">(</span><span class="nx">interceptor</span><span class="p">),</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="45-graphql">4.5 GraphQL 安全</h3>
-<pre><code class="language-graphql"># 查询深度限制（防止嵌套过深导致性能问题）
-# depth: 3
-query {
-  user(id: &quot;1&quot;) {       # depth 1
-    posts {              # depth 2
-      comments {         # depth 3 （达到限制）
-        author {         # ❌ 被拒绝
-          name
-        }
-      }
-    }
-  }
-}
-</code></pre>
-<pre><code class="language-python"># 费用分析 — 为每个字段分配复杂度
-type Query {
-  users: [User!]!        @cost(complexity: 10)
-  searchUsers(q: String!): [User!]! @cost(complexity: 50, multipliers: [&quot;q&quot;])
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c"># 查询深度限制（防止嵌套过深导致性能问题）</span>
+<span class="c"># depth: 3</span>
+<span class="k">query</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">user</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="c"># depth 1</span>
+<span class="w">    </span><span class="n">posts</span><span class="w"> </span><span class="p">{</span><span class="w">              </span><span class="c"># depth 2</span>
+<span class="w">      </span><span class="n">comments</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="c"># depth 3 （达到限制）</span>
+<span class="w">        </span><span class="n">author</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="c"># ❌ 被拒绝</span>
+<span class="w">          </span><span class="n">name</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 费用分析 — 为每个字段分配复杂度</span>
+<span class="nb">type</span> <span class="n">Query</span> <span class="p">{</span>
+  <span class="n">users</span><span class="p">:</span> <span class="p">[</span><span class="n">User</span><span class="err">!</span><span class="p">]</span><span class="err">!</span>        <span class="nd">@cost</span><span class="p">(</span><span class="n">complexity</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="n">searchUsers</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="n">String</span><span class="err">!</span><span class="p">):</span> <span class="p">[</span><span class="n">User</span><span class="err">!</span><span class="p">]</span><span class="err">!</span> <span class="nd">@cost</span><span class="p">(</span><span class="n">complexity</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="n">multipliers</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div>
 <hr />
 <h2 id="_4">五、基础设施安全</h2>
 <h3 id="51">5.1 网络安全</h3>
@@ -964,84 +3350,84 @@ type Query {
 </tr>
 </tbody>
 </table>
-<p><strong>AWS 安全组示例（最小权限）：</strong></p>
-<pre><code>入站规则：
+<p><strong>AWS 安全组示例（最小权限）：</strong>
+<div class="highlight"><pre><span></span><code>入站规则：
   HTTP    0.0.0.0/0       tcp:80        # ALB
   HTTPS   0.0.0.0/0       tcp:443       # ALB
   MySQL   sg-app-tier     tcp:3306      # 仅应用层可访问
 
 出站规则：
   全部     0.0.0.0/0       ALL           # 出站按需限制
-</code></pre>
+</code></pre></div></p>
 <h3 id="52">5.2 容器安全</h3>
-<pre><code class="language-dockerfile"># 最小基础镜像 — 使用 distroless 替代完整操作系统
-FROM gcr.io/distroless/base-debian12:latest
+<div class="highlight"><pre><span></span><code><span class="c"># 最小基础镜像 — 使用 distroless 替代完整操作系统</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">gcr.io/distroless/base-debian12:latest</span>
 
-# 以非 root 用户运行
-USER 65532:65532
+<span class="c"># 以非 root 用户运行</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">65532:65532</span>
 
-# 只读根文件系统
-# docker run --read-only --tmpfs /tmp ...
-</code></pre>
-<pre><code class="language-yaml"># Kubernetes Pod 安全上下文
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secure-pod
-spec:
-  securityContext:
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-  containers:
-  - name: app
-    image: myapp:1.0
-    securityContext:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: [&quot;ALL&quot;]
-      readOnlyRootFilesystem: true
-</code></pre>
+<span class="c"># 只读根文件系统</span>
+<span class="c"># docker run --read-only --tmpfs /tmp ...</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Kubernetes Pod 安全上下文</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secure-pod</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">seccompProfile</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:1.0</span>
+<span class="w">    </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">drop</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ALL&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">readOnlyRootFilesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
 <h3 id="53-kubernetes">5.3 Kubernetes 安全</h3>
-<p><strong>RBAC 最小权限：</strong></p>
-<pre><code class="language-yaml">apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: default
-  name: pod-reader
-rules:
-- apiGroups: [&quot;&quot;]
-  resources: [&quot;pods&quot;, &quot;pods/log&quot;]
-  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
----
-# 绝不在集群级别绑定——使用 RoleBinding 限制到 namespace
-</code></pre>
-<p><strong>NetworkPolicy — 默认拒绝入站：</strong></p>
-<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: default-deny-ingress
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-</code></pre>
+<p><strong>RBAC 最小权限：</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rbac.authorization.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Role</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pod-reader</span>
+<span class="nt">rules</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pods&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pods/log&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;get&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;list&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;watch&quot;</span><span class="p p-Indicator">]</span>
+<span class="nn">---</span>
+<span class="c1"># 绝不在集群级别绑定——使用 RoleBinding 限制到 namespace</span>
+</code></pre></div></p>
+<p><strong>NetworkPolicy — 默认拒绝入站：</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default-deny-ingress</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">podSelector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="nt">policyTypes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingress</span>
+</code></pre></div></p>
 <p><strong>Secrets 加密：</strong> 默认情况下 Kubernetes Secrets 仅 Base64 编码存储在 etcd 中。务必开启 etcd 加密或使用外部密钥管理：</p>
-<pre><code class="language-yaml"># EncryptionConfiguration
-apiVersion: apiserver.config.k8s.io/v1
-kind: EncryptionConfiguration
-resources:
-- resources: [&quot;secrets&quot;]
-  providers:
-  - kms:
-      name: myKMSProvider
-      endpoint: unix:///var/run/kms-provider.sock
-  - aesgcm:
-      keys:
-      - name: key1
-        secret: c2VjcmV0IGlzIHNlY3VyZQ==
-  - identity: {}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># EncryptionConfiguration</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apiserver.config.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EncryptionConfiguration</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resources</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;secrets&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">providers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kms</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myKMSProvider</span>
+<span class="w">      </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unix:///var/run/kms-provider.sock</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">aesgcm</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">keys</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key1</span>
+<span class="w">        </span><span class="nt">secret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c2VjcmV0IGlzIHNlY3VyZQ==</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">identity</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</code></pre></div>
 <h3 id="54">5.4 密钥管理</h3>
 <table>
 <thead>
@@ -1079,12 +3465,12 @@ resources:
 </tr>
 </tbody>
 </table>
-<pre><code class="language-hcl"># Vault 动态密钥示例（每次请求获取临时数据库凭据）
-path &quot;database/creds/my-role&quot; {
-  capabilities = [&quot;read&quot;]
-}
-# 返回：租期 1 小时的临时用户名/密码
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># Vault 动态密钥示例（每次请求获取临时数据库凭据）</span>
+<span class="err">path</span><span class="w"> </span><span class="s2">&quot;database/creds/my-role&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="c1"># 返回：租期 1 小时的临时用户名/密码</span>
+</code></pre></div>
 <hr />
 <h2 id="ssdlc">六、安全开发生命周期（SSDLC）</h2>
 <h3 id="61-stride">6.1 威胁建模（STRIDE）</h3>
@@ -1186,35 +3572,35 @@ path &quot;database/creds/my-role&quot; {
 </tr>
 </tbody>
 </table>
-<pre><code class="language-yaml"># GitHub Actions — 安全扫描流水线
-name: Security Scan
-on: [push, pull_request]
-jobs:
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: SAST (Semgrep)
-        uses: semgrep/semgrep-action@v1
-        with:
-          config: p/owasp-top-ten
-      - name: Dependency Scan
-        uses: snyk/actions/python@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Docker Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: myapp:${{ github.sha }}
-          exit-code: 1              # 发现漏洞则构建失败
-          severity: HIGH,CRITICAL   # 仅阻止高危漏洞
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="c1"># GitHub Actions — 安全扫描流水线</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Security Scan</span>
+<span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">security</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SAST (Semgrep)</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semgrep/semgrep-action@v1</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">p/owasp-top-ten</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dependency Scan</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snyk/actions/python@master</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">SNYK_TOKEN</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.SNYK_TOKEN }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Docker Scan</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aquasecurity/trivy-action@master</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">image-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myapp:${{ github.sha }}</span>
+<span class="w">          </span><span class="nt">exit-code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">              </span><span class="c1"># 发现漏洞则构建失败</span>
+<span class="w">          </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HIGH,CRITICAL</span><span class="w">   </span><span class="c1"># 仅阻止高危漏洞</span>
+</code></pre></div>
 <h3 id="63">6.3 安全门禁策略</h3>
-<pre><code>代码提交 → SAST 扫描 → 依赖扫描 → 构建 → 容器扫描 → 集成测试(DAST) → 部署
+<div class="highlight"><pre><span></span><code>代码提交 → SAST 扫描 → 依赖扫描 → 构建 → 容器扫描 → 集成测试(DAST) → 部署
   │           │          │          │        │           │
   ▼           ▼          ▼          ▼        ▼           ▼
 失败阻塞    &gt;1高危阻塞   &gt;1高危阻塞  失败阻塞  &gt;1严重阻塞   &gt;1高危阻塞
-</code></pre>
+</code></pre></div>
 <blockquote>
 <p><strong>策略原则：</strong> 在 CI/CD 中设置清晰的阈值。例如：任何 CRITICAL 漏洞阻止合并，HIGH 漏洞 7 天内须修复，MEDIUM 漏洞在发布前修复。允许例外需安全团队审批。</p>
 </blockquote>
@@ -1271,28 +3657,28 @@ jobs:
 </tbody>
 </table>
 <h3 id="72">7.2 数据分类</h3>
-<pre><code class="language-yaml"># 数据分类标签示例
-data_classification:
-  public:
-    description: 公开信息，无需保护
-    examples: [&quot;产品名称&quot;, &quot;公开文档&quot;]
-    controls: [&quot;基本安全&quot;]
+<div class="highlight"><pre><span></span><code><span class="c1"># 数据分类标签示例</span>
+<span class="nt">data_classification</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">public</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">公开信息，无需保护</span>
+<span class="w">    </span><span class="nt">examples</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;产品名称&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;公开文档&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">controls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;基本安全&quot;</span><span class="p p-Indicator">]</span>
 
-  internal:
-    description: 内部信息，泄露有轻微影响
-    examples: [&quot;内部 Wiki&quot;, &quot;组织架构&quot;]
-    controls: [&quot;访问控制&quot;, &quot;培训&quot;]
+<span class="w">  </span><span class="nt">internal</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">内部信息，泄露有轻微影响</span>
+<span class="w">    </span><span class="nt">examples</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;内部</span><span class="nv"> </span><span class="s">Wiki&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;组织架构&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">controls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;访问控制&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;培训&quot;</span><span class="p p-Indicator">]</span>
 
-  confidential:
-    description: 敏感信息，泄露有重大影响
-    examples: [&quot;客户数据&quot;, &quot;财务报告&quot;]
-    controls: [&quot;加密存储&quot;, &quot;传输加密&quot;, &quot;审计日志&quot;]
+<span class="w">  </span><span class="nt">confidential</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">敏感信息，泄露有重大影响</span>
+<span class="w">    </span><span class="nt">examples</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;客户数据&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;财务报告&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">controls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;加密存储&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;传输加密&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;审计日志&quot;</span><span class="p p-Indicator">]</span>
 
-  restricted:
-    description: 最高敏感度，泄露有极端影响
-    examples: [&quot;密码&quot;, &quot;PII&quot;, &quot;支付卡信息&quot;]
-    controls: [&quot;加密+HSM&quot;, &quot;最小权限+审批&quot;, &quot;实时监控&quot;]
-</code></pre>
+<span class="w">  </span><span class="nt">restricted</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">最高敏感度，泄露有极端影响</span>
+<span class="w">    </span><span class="nt">examples</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;密码&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;PII&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;支付卡信息&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">controls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;加密+HSM&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;最小权限+审批&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;实时监控&quot;</span><span class="p p-Indicator">]</span>
+</code></pre></div>
 <h3 id="73-vs">7.3 匿名化 vs 假名化</h3>
 <table>
 <thead>
@@ -1329,24 +3715,24 @@ data_classification:
 <p><strong>工程建议：</strong> 生产环境存储的数据应始终假名化处理——用不可逆哈希替代用户 ID 用于分析，保留单独的安全映射表用于必要时的身份恢复。日志中永远不要记录原始 PII。</p>
 </blockquote>
 <h3 id="74">7.4 审计日志</h3>
-<pre><code class="language-python"># 结构化的审计日志（不可否认性）
-import structlog
-import json
+<div class="highlight"><pre><span></span><code><span class="c1"># 结构化的审计日志（不可否认性）</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">structlog</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-audit_logger = structlog.get_logger(&quot;audit&quot;)
+<span class="n">audit_logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;audit&quot;</span><span class="p">)</span>
 
-def log_audit_event(user_id: str, action: str, resource: str, result: str):
-    audit_logger.info(&quot;audit_event&quot;,
-        event_id=os.urandom(8).hex(),      # 唯一事件 ID
-        timestamp=datetime.utcnow().isoformat(),
-        user_id=user_id,
-        action=action,                      # user.delete, role.assign, config.change
-        resource=resource,
-        result=result,                      # success / denied / failure
-        source_ip=request.remote_addr,
-        user_agent=request.user_agent.string,
-    )
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_audit_event</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">audit_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;audit_event&quot;</span><span class="p">,</span>
+        <span class="n">event_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>      <span class="c1"># 唯一事件 ID</span>
+        <span class="n">timestamp</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>                      <span class="c1"># user.delete, role.assign, config.change</span>
+        <span class="n">resource</span><span class="o">=</span><span class="n">resource</span><span class="p">,</span>
+        <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>                      <span class="c1"># success / denied / failure</span>
+        <span class="n">source_ip</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">remote_addr</span><span class="p">,</span>
+        <span class="n">user_agent</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user_agent</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
 <p><strong>审计日志最佳实践：</strong>
 - <strong>不可篡改</strong> — 写入专门的日志服务（如 AWS CloudTrail），使用 append-only 存储
 - <strong>时间同步</strong> — 所有节点使用 NTP，时间戳精确到毫秒
@@ -1387,82 +3773,71 @@ def log_audit_event(user_id: str, action: str, resource: str, result: str):
 - NIST CSF — 网络安全框架
 - GDPR 全文 — https://gdpr.eu/
 - Mozilla Observatory — TLS/Web 安全评分</p>
-</blockquote></div>
-            </div>
-        </div>
+</blockquote>
 
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script src="../../js/bootstrap.bundle.min.js"></script>
-        <script>
-            var base_url = "../..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../../js/base.js"></script>
-        <script src="../../search/main.js"></script>
 
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-            <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
-                <form>
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
-    </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
 </div>
-
-    </body>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tabs", "navigation.tabs.sticky", "navigation.expand", "navigation.path", "navigation.indexes", "toc.follow", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
 </html>

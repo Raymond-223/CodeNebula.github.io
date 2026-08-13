@@ -1,0 +1,206 @@
+/* ======================================================
+   0. 全局渐变变量
+   ====================================================== */
+
+:root {
+  --nebula-gradient: linear-gradient(
+    120deg,
+    #8b5cf6,
+    #6366f1,
+    #06b6d4,
+    #ec4899
+  );
+
+  --nebula-gradient-soft: linear-gradient(
+    120deg,
+    rgba(139, 92, 246, 0.9),
+    rgba(6, 182, 212, 0.9),
+    rgba(236, 72, 153, 0.9)
+  );
+}
+
+/* 深色模式更亮 */
+[data-md-color-scheme="slate"] {
+  --nebula-gradient: linear-gradient(
+    120deg,
+    #a78bfa,
+    #60a5fa,
+    #22d3ee,
+    #f472b6
+  );
+}
+
+/* ======================================================
+   1. Header 顶栏（Logo + 搜索）
+   ====================================================== */
+
+.md-header {
+  background: var(--nebula-gradient);
+  background-size: 300% 300%;
+  animation: nebula-flow 10s ease infinite;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+.md-header::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #4cc9f0,
+    #f72585,
+    transparent
+  );
+}
+
+/* Logo 渐变文字 */
+.md-header__title,
+.md-header__topic {
+  background: linear-gradient(90deg, #fff, #c7d2fe, #67e8f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
+/* ======================================================
+   2. 上方导航栏 Tabs（你图里的那一排）
+   ====================================================== */
+
+.md-tabs {
+  background: var(--nebula-gradient);
+  background-size: 300% 300%;
+  animation: nebula-flow 12s ease infinite;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.md-tabs__link {
+  color: rgba(255, 255, 255, 0.85);
+  transition: all 0.3s ease;
+}
+
+/* Hover 发光 */
+.md-tabs__link:hover {
+  color: #ffffff;
+  text-shadow:
+    0 0 8px rgba(139, 92, 246, 0.9),
+    0 0 16px rgba(6, 182, 212, 0.6);
+}
+
+/* 当前激活 tab */
+.md-tabs__link--active {
+  color: #ffffff;
+  position: relative;
+}
+
+.md-tabs__link--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  background: var(--nebula-gradient-soft);
+  border-radius: 2px;
+}
+
+/* ======================================================
+   3. 标题：H1–H4 动态渐变文字
+   ====================================================== */
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  background: var(--nebula-gradient);
+  background-size: 300% 300%;
+  animation: nebula-flow 8s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+/* H2 下划线 */
+.md-typeset h2::after {
+  content: "";
+  display: block;
+  margin-top: 0.3em;
+  width: 80px;
+  height: 3px;
+  background: var(--nebula-gradient);
+  background-size: 300% 300%;
+  animation: nebula-flow 6s ease infinite;
+  border-radius: 3px;
+}
+
+/* ======================================================
+   4. 代码块：动态渐变边框
+   ====================================================== */
+
+.md-typeset pre {
+  position: relative;
+  border-radius: 16px;
+  background: var(--md-code-bg-color);
+  padding: 1.2em;
+  overflow: hidden;
+}
+
+.md-typeset pre::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: var(--nebula-gradient);
+  background-size: 400% 400%;
+  animation: nebula-flow 8s ease infinite;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+/* 行内代码 */
+.md-typeset code {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.18),
+    rgba(6, 182, 212, 0.18)
+  );
+  border-radius: 6px;
+  padding: 0.2em 0.4em;
+}
+
+/* ======================================================
+   5. 引用块 & Admonition
+   ====================================================== */
+
+.md-typeset blockquote,
+.md-typeset .admonition,
+.md-typeset details {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.6);
+  overflow: hidden;
+}
+
+.md-typeset blockquote::before,
+.md-typeset .admonition::before,
+.md-typeset details::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: var(--nebula-gradient);
+  background-size: 300% 300%;
+  animation: nebula-flow 10s ease infinite;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+/* ======================================================
+   6. 动画定义
+   ====================================================== */
+
+@keyframes nebula-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

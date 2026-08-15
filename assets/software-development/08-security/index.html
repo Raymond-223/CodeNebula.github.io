@@ -1263,6 +1263,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、底层原理：密码学与 TLS 内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、底层原理：密码学与 TLS 内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-aes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 对称加密内核：AES 轮函数与分组模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-rsa-ecc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 非对称加密的数学基础：RSA 与 ECC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-sha-256" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 哈希函数原理：SHA-256 与不可逆性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 数字签名：私钥加密摘要、公钥验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-tls-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 TLS 1.3 握手全流程与前向保密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-https-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 HTTPS 证书链：CA 信任模型与吊销
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2529,6 +2612,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、底层原理：密码学与 TLS 内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、底层原理：密码学与 TLS 内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-aes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 对称加密内核：AES 轮函数与分组模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-rsa-ecc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 非对称加密的数学基础：RSA 与 ECC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-sha-256" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 哈希函数原理：SHA-256 与不可逆性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 数字签名：私钥加密摘要、公钥验证
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-tls-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 TLS 1.3 握手全流程与前向保密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-https-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 HTTPS 证书链：CA 信任模型与吊销
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3774,6 +3940,302 @@ Content-Security-Policy: default-src &#39;self&#39;;
 - GDPR 全文 — https://gdpr.eu/
 - Mozilla Observatory — TLS/Web 安全评分</p>
 </blockquote>
+<h2 id="tls">九、底层原理：密码学与 TLS 内核</h2>
+<blockquote>
+<p>前面章节介绍了密码学工具"怎么用"，本节深入"为什么这样设计"：AES 轮函数如何实现混淆与扩散，RSA 与 ECC 各自建立在哪个数学难题之上，SHA-256 为何不可逆，TLS 1.3 握手如何协商出会话密钥，以及 HTTPS 证书链如何建立信任。理解内核，才能写出经得起推敲的安全代码。</p>
+</blockquote>
+<h3 id="91-aes">9.1 对称加密内核：AES 轮函数与分组模式</h3>
+<p>AES-128 将 16 字节明文块排列成 4×4 状态矩阵，迭代 10 轮（AES-192 为 12 轮，AES-256 为 14 轮）。除最后一轮外，每轮执行四个步骤：</p>
+<div class="highlight"><pre><span></span><code>明文块(16B) ──► 轮密钥加(AddRoundKey) ── 与轮密钥异或
+                     │
+                     ▼
+                 字节替换(SubBytes) ── S 盒非线性代换 ──► 混淆(confusion)
+                     │
+                     ▼
+                 行移位(ShiftRows) ── 行循环移位，使列间数据交叉
+                     │
+                     ▼
+                 列混淆(MixColumns) ── GF(2^8) 矩阵乘法 ──► 扩散(diffusion)
+                     │
+                     ▼
+                 轮密钥加(AddRoundKey) ── 进入下一轮
+（最后一轮省略列混淆；轮密钥由密钥扩展算法从主密钥派生）
+</code></pre></div>
+<ul>
+<li><strong>混淆</strong>：明文与密钥关系复杂化，单个明文字节变化后，密文每个字节约以 1/2 概率翻转；</li>
+<li><strong>扩散</strong>：单个明文字节的影响铺满整个状态矩阵，破坏统计结构，抵抗差分与线性分析。</li>
+</ul>
+<p><strong>分组模式对比：</strong></p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>是否需 IV/nonce</th>
+<th>并行解密</th>
+<th>认证</th>
+<th>典型问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ECB</td>
+<td>否</td>
+<td>是</td>
+<td>否</td>
+<td>相同明文块产出相同密文块，泄漏模式信息，<strong>禁用</strong></td>
+</tr>
+<tr>
+<td>CBC</td>
+<td>是（IV）</td>
+<td>否</td>
+<td>否</td>
+<td>需配合 HMAC；IV 必须随机且不可预测</td>
+</tr>
+<tr>
+<td>CTR</td>
+<td>是（nonce）</td>
+<td>是</td>
+<td>否</td>
+<td>流式加密，需额外认证</td>
+</tr>
+<tr>
+<td>GCM</td>
+<td>是（96-bit nonce）</td>
+<td>是</td>
+<td>是（AEAD）</td>
+<td>nonce 重用即灾难，可恢复认证密钥 H</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么 CBC 需要 IV：</strong> CBC 的迭代式是 <code>C_i = E_K(P_i ⊕ C_{i-1})</code>（<code>C_0 = IV</code>）。若同一密钥下两条消息使用相同 IV，则首个分组 <code>P_1 ⊕ IV</code> 相同、<code>C_1</code> 相同，攻击者可据此探测明文关系。IV 使相同明文在不同会话中产生不同密文——它不必保密，但必须随机且每次唯一。</p>
+<p><strong>为什么 GCM 同时提供认证：</strong> GCM 在 CTR 模式下加密的同时，用 GHASH 在 GF(2¹²⁸) 上对密文与附加数据（AAD）做多项式累加，生成 128 位认证标签。GHASH 的密钥 <code>H = E_K(0¹²⁸)</code> 与加密密钥同源，篡改任何一位密文都会导致标签校验失败。机密性（CTR 加密）、完整性（GHASH 标签）由同一密钥与计数器体系完成，即 AEAD——消灭了"先加密后认证"组合中的误用空间。</p>
+<blockquote>
+<p><strong>核心思想：</strong> 分组模式解决"如何用块密码加密任意长度数据"，AEAD 把机密性、完整性、nonce 唯一性合并为单一原语。ECB 泄漏模式、CBC 无认证且 IV 易误用，GCM 是当前唯一推荐选择。</p>
+</blockquote>
+<p><strong>小结：</strong> AES 以"混淆+扩散"轮函数抵抗统计分析；CBC 依赖随机 IV 且无认证，GCM 以 GHASH 一步获得认证加密，成为现代 TLS 的默认选择。</p>
+<h3 id="92-rsa-ecc">9.2 非对称加密的数学基础：RSA 与 ECC</h3>
+<p><strong>RSA 的数论基础：</strong> 取大素数 p、q，令 <code>n = p·q</code>，<code>φ(n) = (p−1)(q−1)</code>。选公钥指数 e（常用 65537）满足 <code>gcd(e, φ(n)) = 1</code>，计算私钥 <code>d ≡ e⁻¹ (mod φ(n))</code>。由<strong>欧拉定理</strong> <code>a^φ(n) ≡ 1 (mod n)</code>：</p>
+<div class="highlight"><pre><span></span><code>加密:  c = m^e  mod n
+解密:  m = c^d  mod n = m^(e·d) mod n = m^(k·φ(n)+1) mod n ≡ m  (mod n)
+</code></pre></div>
+<p>安全性依赖<strong>大整数分解难题</strong>：已知 n 反求 p、q 目前只有亚指数复杂度的算法（一般数域筛 GNFS）。一旦分解成功，即可由 e 求出 d，私钥沦陷。</p>
+<p><strong>ECC 的椭圆曲线离散对数难题：</strong> 选取有限域上的椭圆曲线 E 与基点 G（阶为 n），私钥为随机整数 d，公钥 <code>Q = d·G</code>（标量乘法）。已知 Q 与 G 反求 d 是<strong>椭圆曲线离散对数问题（ECDLP）</strong>，目前仅有指数级算法（Pollard rho），故 256 位曲线即可提供 128 位安全强度。</p>
+<p><strong>RSA 与 ECC 对比：</strong></p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>RSA</th>
+<th>ECC（P-256）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数学难题</td>
+<td>大整数分解（GNFS 亚指数）</td>
+<td>椭圆曲线离散对数（指数级）</td>
+</tr>
+<tr>
+<td>128 位安全所需密钥</td>
+<td>3072 bit</td>
+<td>256 bit</td>
+</tr>
+<tr>
+<td>密钥生成</td>
+<td>慢（大素数搜索 + 素性检验）</td>
+<td>快</td>
+</tr>
+<tr>
+<td>加解密/签名性能</td>
+<td>慢</td>
+<td>快 5–10 倍</td>
+</tr>
+<tr>
+<td>签名长度</td>
+<td>与密钥同长（约 384 B）</td>
+<td>64 B</td>
+</tr>
+<tr>
+<td>量子威胁</td>
+<td>Shor 算法可破解</td>
+<td>Shor 算法同样可破解</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想：</strong> 非对称安全的本质是"正反向计算不对称"——正向（加密、验签）容易，反向（解密、伪造）依赖公认困难问题。ECC 因 ECDLP 缺乏亚指数算法，用更短密钥达到同等强度。</p>
+</blockquote>
+<p><strong>小结：</strong> RSA 基于分解难题、ECC 基于 ECDLP；同强度下 ECC 密钥更短、性能更优，但二者均受 Shor 算法威胁，需关注后量子算法（Kyber、Dilithium）迁移。</p>
+<h3 id="93-sha-256">9.3 哈希函数原理：SHA-256 与不可逆性</h3>
+<p><strong>Merkle–Damgård 结构：</strong> SHA-256 将消息填充至 512 位的整数倍（末尾附加 64 位长度字段），再按分组逐块压缩：</p>
+<div class="highlight"><pre><span></span><code>消息 M ─► 填充(补位 + 64bit 长度) ─► M1 ─► M2 ─► … ─► Mk
+                                         │      │          │
+                                         ▼      ▼          ▼
+IV(8×32bit 常量) ─► 压缩函数f ─► 中间态 ─► 压缩函数f ─► … ─► 256bit 摘要
+                     (64 轮：模 2^32 加法、循环移位、非线性函数)
+</code></pre></div>
+<p>压缩函数 f 接收 512+256 位、输出 256 位，是<strong>单向压缩</strong>：信息被丢弃，反向求解等价于解 2²⁵⁶ 个方程。</p>
+<p><strong>雪崩效应演示</strong>（改动 1 个比特，摘要约半数比特翻转）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="n">msg</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;GET /api/user?id=1001 HTTP/1.1&quot;</span>
+<span class="n">flipped</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="n">msg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">^</span> <span class="mb">0b00000001</span><span class="p">])</span> <span class="o">+</span> <span class="n">msg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># 翻转首字节最低位</span>
+
+<span class="n">da</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">(),</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">flipped</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">x</span> <span class="o">^</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="n">db</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;原始:   &quot;</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;翻转1位:&quot;</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">flipped</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;比特翻转率: </span><span class="si">{</span><span class="n">diff</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">da</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>预期输出：
+原始:    722c4b7d74a8ea3fb7cc1a560fab19ca150ad50b21c640f4b53b6f51e769b0c6
+翻转1位: ebc68ba6f3c7930f866afabcf6a226f67a69fffa3b5aa35950b1041bbe59cd7d
+比特翻转率: 53.12%   （理论期望 50%，256 位中约 128 位翻转）
+</code></pre></div>
+<p><strong>为什么不可逆：</strong> 单向压缩 + 长度压缩（512+256 → 256）构成多对一映射，反函数不存在；可行攻击只有抗原像性穷举（2²⁵⁶）与生日碰撞（2¹²⁸），均远超现实算力。</p>
+<p><strong>彩虹表与加盐：</strong> 攻击者预计算"常见密码 → 哈希"的链式表（彩虹表），查表即可逆向弱密码。加盐（每用户随机盐与密码拼接后哈希）使每个用户的哈希空间独立，预计算表整体失效；密码场景还需慢哈希（bcrypt/argon2id）抬高单次猜测成本。</p>
+<blockquote>
+<p><strong>核心思想：</strong> 哈希安全来自"单向压缩 + 雪崩扩散"组合：压缩保证不可逆，雪崩保证输入的任何细微差异在输出中无规律放大，无法通过局部修改构造碰撞。</p>
+</blockquote>
+<p><strong>小结：</strong> Merkle–Damgård 迭代把任意长度输入折叠为定长摘要；不可逆源于信息压缩，防碰撞源于雪崩效应；彩虹表可被加盐彻底瓦解。</p>
+<h3 id="94">9.4 数字签名：私钥加密摘要、公钥验证</h3>
+<p>签名是"只有私钥持有者能产生、任何人都能验证"的完整性凭证：对消息的哈希摘要做私钥运算生成签名，验签用公钥运算并比对：</p>
+<div class="highlight"><pre><span></span><code>┌───────── 签名方（持有私钥 d）──────────┐      ┌───────── 验证方（持有公钥 Q）──────────┐
+│ 消息 M ─► SHA-256 ─► 摘要 h           │      │ 消息 M ─► SHA-256 ─► 摘要 h&#39;          │
+│ 摘要 h ─► 私钥运算 sign(h) ─► 签名 s  │ ────► │ 签名 s ─► 公钥运算 verify(s) ─► h&#39;&#39;   │
+│                                       │ 传输  │ 比对 h&#39; == h&#39;&#39; ? 相等则签名有效       │
+└───────────────────────────────────────┘      └───────────────────────────────────────┘
+</code></pre></div>
+<p><strong>为什么先哈希再签名（Sign-then-Hash）：</strong>
+- <strong>性能</strong>：非对称运算开销与输入长度相关，对定长摘要（32 B）运算远快于对整条消息；
+- <strong>长度</strong>：签名长度与消息长度无关，固定为密钥长度量级；
+- <strong>安全</strong>：哈希破坏消息的代数结构，防止 RSA 乘法同态等性质被利用构造伪造签名。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">rsa</span><span class="p">,</span> <span class="n">padding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">rsa</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">public_exponent</span><span class="o">=</span><span class="mi">65537</span><span class="p">,</span> <span class="n">key_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sign</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="p">(</span><span class="n">mgf</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">MGF1</span><span class="p">(</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">()),</span>
+                                     <span class="n">salt_length</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="o">.</span><span class="n">MAX_LENGTH</span><span class="p">),</span>
+                    <span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">key</span><span class="o">.</span><span class="n">public_key</span><span class="p">()</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="p">(</span><span class="n">mgf</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">MGF1</span><span class="p">(</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">()),</span>
+                        <span class="n">salt_length</span><span class="o">=</span><span class="n">padding</span><span class="o">.</span><span class="n">PSS</span><span class="o">.</span><span class="n">MAX_LENGTH</span><span class="p">),</span>
+            <span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="n">sig</span> <span class="o">=</span> <span class="n">sign</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;release-v1.2.3&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">verify</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;release-v1.2.3&quot;</span><span class="p">,</span> <span class="n">sig</span><span class="p">))</span>        <span class="c1"># True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">verify</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;release-v1.2.3-tampered&quot;</span><span class="p">,</span> <span class="n">sig</span><span class="p">))</span>  <span class="c1"># False（摘要不匹配）</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想：</strong> 签名不是"加密消息"，而是"用私钥对摘要做单向变换"；验证方用公钥还原摘要并与本地哈希比对。哈希层将任意长度消息折叠为定长摘要并抹去代数结构，是签名方案安全性的基石。</p>
+</blockquote>
+<p><strong>小结：</strong> 签名 = 私钥运算（产生）+ 公钥运算（校验）；先哈希同时解决性能、长度与结构安全三个问题，任何字节篡改都会导致摘要不匹配而验签失败。</p>
+<h3 id="95-tls-13">9.5 TLS 1.3 握手全流程与前向保密</h3>
+<p>TLS 1.3 握手仅需 1-RTT，且默认全部使用临时密钥（ephemeral）实现前向保密：</p>
+<div class="highlight"><pre><span></span><code>Client                                            Server
+  │ 1. ClientHello                                  │
+  │    key_share: 客户端 ECDHE 临时公钥               │
+  │    supported_versions: [1.3]                    │
+  ├────────────────────────────────────────────────►│
+  │                                                 │ 2. ServerHello
+  │                                                 │    key_share: 服务器 ECDHE 临时公钥
+  │                                                 │ 3. 证书 + 证书链（含签名）
+  │ 4. 校验证书链（CA 信任）                         │
+  │    计算共享秘密：ECDHE(双方临时私钥)              │
+  │    派生主密钥与流量密钥                           │
+  │ 5. Finished（应用数据加密自此开始）               │
+  │◄────────────────────────────────────────────────┤
+  │ 6. Finished + 应用数据                          │
+  ├────────────────────────────────────────────────►│
+  │ 7. 应用数据（AES-256-GCM，双向）                 │
+  │◄════════════════════════════════════════════════►│
+</code></pre></div>
+<p><strong>密钥派生链：</strong> ECDHE 共享秘密 → HKDF-Extract → 主密钥 → HKDF-Expand → 会话密钥（客户端/服务器各一套读写密钥：AES-256-GCM + 派生 IV）。</p>
+<p><strong>前向保密原理：</strong> 每次握手生成全新的 ECDHE 临时密钥对，会话密钥由临时私钥参与派生，握手结束后临时私钥立即销毁。即使长期密钥（证书私钥，仅用于签名认证）日后泄露，攻击者也拿不到已销毁的临时私钥，无法回溯解密历史流量。TLS ≤1.2 的 RSA 密钥交换用证书私钥直接加密预主密钥，不具备此性质，故在 TLS 1.3 中被彻底移除。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ECDHE 密钥协商演示</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">ec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.hkdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">HKDF</span>
+
+<span class="n">alice</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">SECP256R1</span><span class="p">())</span>
+<span class="n">bob</span>   <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">SECP256R1</span><span class="p">())</span>
+
+<span class="c1"># 交换公钥后各自计算共享秘密（两端得到相同字节）</span>
+<span class="n">shared_a</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">ECDH</span><span class="p">(),</span> <span class="n">bob</span><span class="o">.</span><span class="n">public_key</span><span class="p">())</span>
+<span class="n">shared_b</span> <span class="o">=</span> <span class="n">bob</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">ECDH</span><span class="p">(),</span> <span class="n">alice</span><span class="o">.</span><span class="n">public_key</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">shared_a</span> <span class="o">==</span> <span class="n">shared_b</span>  <span class="c1"># 共享秘密一致</span>
+
+<span class="c1"># HKDF 派生会话密钥</span>
+<span class="n">session_key</span> <span class="o">=</span> <span class="n">HKDF</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                   <span class="n">salt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;tls13 traffic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="n">shared_a</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;共享秘密: </span><span class="si">{</span><span class="n">shared_a</span><span class="o">.</span><span class="n">hex</span><span class="p">()[:</span><span class="mi">32</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;会话密钥: </span><span class="si">{</span><span class="n">session_key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># 预期输出: 两条 32 字节十六进制串；两端共享秘密完全一致</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想：</strong> 认证（证书签名，长期密钥）与机密性（ECDHE，临时密钥）解耦——长期密钥只证明身份，临时密钥只加密数据。这是 TLS 1.3 前向保密的本质，也是"用后即焚"在密钥管理中的体现。</p>
+</blockquote>
+<p><strong>小结：</strong> TLS 1.3 以 ECDHE 临时密钥协商共享秘密、HKDF 派生会话密钥，1-RTT 完成握手；临时私钥即时销毁，保证长期密钥泄露后历史流量依然安全。</p>
+<h3 id="96-https-ca">9.6 HTTPS 证书链：CA 信任模型与吊销</h3>
+<p><strong>信任链结构：</strong> 浏览器内置根 CA 证书（信任锚），服务器证书由中间 CA 签发，中间 CA 由根 CA 签发：</p>
+<div class="highlight"><pre><span></span><code>┌──────────────┐ 签发  ┌──────────────┐ 签发  ┌──────────────┐
+│  根 CA(自签)  │ ────► │  中间 CA      │ ────► │  服务器证书   │
+│  内置信任锚    │       │  (Sub CA)     │       │  www.example │
+└──────────────┘       └──────────────┘       └──────────────┘
+   验证路径：叶子 ← 中间 ← 根（逐级用上级公钥验证下级签名，直至信任锚）
+</code></pre></div>
+<p><strong>X.509 v3 证书结构：</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version / serialNumber</td>
+<td>版本（v3）与唯一序列号</td>
+</tr>
+<tr>
+<td>issuer / subject</td>
+<td>签发者与持有者 DN</td>
+</tr>
+<tr>
+<td>validity</td>
+<td>有效期（notBefore / notAfter）</td>
+</tr>
+<tr>
+<td>subjectPublicKeyInfo</td>
+<td>持有者公钥与算法标识</td>
+</tr>
+<tr>
+<td>extensions</td>
+<td>SAN（域名）、Key Usage、EKU、CRL/OCSP 地址</td>
+</tr>
+<tr>
+<td>signatureAlgorithm + signature</td>
+<td>签发者对上列字段的签名</td>
+</tr>
+</tbody>
+</table>
+<p>验证流程：① 用上级证书公钥验证本证书签名；② 检查有效期；③ 检查域名与 SAN 匹配；④ 检查 Key Usage/EKU；⑤ 查询吊销状态。</p>
+<p><strong>吊销机制：</strong>
+- <strong>CRL（证书吊销列表）</strong>：CA 定期发布被吊销序列号列表，客户端下载比对。缺点：列表体积大、更新滞后，吊销到生效存在窗口期；
+- <strong>OCSP（在线证书状态协议）</strong>：客户端实时查询单证书状态（good/revoked/unknown）。缺点：额外网络请求，且 CA 可获知用户访问的站点（隐私泄露）；<strong>OCSP Stapling</strong> 由服务器在握手中附带经签名的响应，消除该问题。</p>
+<blockquote>
+<p><strong>核心思想：</strong> HTTPS 信任不是"验证证书本身"，而是"验证签名链追溯到信任锚"。根 CA 私钥是全系统信任的单点——一旦泄露（如 DigiNotar 事件）必须立即吊销其签发的所有证书，故根 CA 私钥通常离线存储。</p>
+</blockquote>
+<p><strong>小结：</strong> 证书链把分散的站点信任收敛到少数根 CA；X.509 承载公钥与元数据并由上级签名防篡改；CRL 批量滞后、OCSP 实时但有隐私成本，OCSP Stapling 是折中方案。</p>
 
 
 

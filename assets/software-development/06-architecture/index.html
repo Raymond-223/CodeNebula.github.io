@@ -1401,6 +1401,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：分布式系统理论内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：分布式系统理论内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 CAP 定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 BASE 理论与最终一致性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-consistent-hashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 一致性哈希（Consistent Hashing）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-raft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Raft 共识算法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-2pc-3pc-saga-tcc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 分布式事务：2PC / 3PC / Saga / TCC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-kafka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 消息队列底层模型（以 Kafka 为例）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2906,6 +2989,89 @@
     <span class="md-ellipsis">
       
         7.3 网关级限流
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：分布式系统理论内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：分布式系统理论内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 CAP 定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 BASE 理论与最终一致性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-consistent-hashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 一致性哈希（Consistent Hashing）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-raft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Raft 共识算法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-2pc-3pc-saga-tcc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 分布式事务：2PC / 3PC / Saga / TCC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-kafka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 消息队列底层模型（以 Kafka 为例）
       
     </span>
   </a>
@@ -4949,6 +5115,320 @@ Client ──→ Web BFF  ───→ 用户服务
 <li><strong>简单优于灵活</strong>——"你不会需要它"（YAGNI）在架构层面同样成立</li>
 </ol>
 </blockquote>
+<!-- 增补小节：追加到 06-architecture.md 第七节之后，不修改原文件。 -->
+
+<h2 id="_7">八、底层原理：分布式系统理论内核</h2>
+<blockquote>
+<p>前七节描述架构的"形状"，本节深入其"物理内核"：CAP/BASE 划定取舍边界，一致性哈希与 Raft 解决数据放置与共识，分布式事务与消息队列提供跨节点的一致性与异步协作原语——理解了这些，才能解释"架构为什么必须这样设计"。</p>
+</blockquote>
+<h3 id="81-cap">8.1 CAP 定理</h3>
+<p><strong>形式化定义</strong>：</p>
+<ul>
+<li><strong>一致性（Consistency）</strong>：任何读操作都能读到最近一次写的结果。形式化为线性一致性：存在全局操作顺序，每个操作原子生效且与实时序相容。</li>
+<li><strong>可用性（Availability）</strong>：每个到达非故障节点的请求最终都会收到非错误响应——"总能响应，但不保证最新"。</li>
+<li><strong>分区容错（Partition Tolerance）</strong>：网络分区（消息丢失或延迟超阈值）发生时系统仍能对外服务。</li>
+</ul>
+<p><strong>为什么三者不可兼得（证明思路）</strong>：</p>
+<div class="highlight"><pre><span></span><code>反证：假设存在同时满足 C、A、P 的系统。网络分区把节点分为 G1、G2：
+  1. 客户端向 G1 写 v1 —— P 允许 G1 在分区内正常服务
+  2. 客户端向 G2 读 —— A 要求 G2 必须响应
+  3. G2 未收到 v1（分区隔离），只能返回旧值 v0
+  4. v0 ≠ v1，违反 C —— 矛盾
+⇒ P 不可放弃（分区必然存在），只能在 C 与 A 之间二选一。
+</code></pre></div>
+<p><strong>CP vs AP 实例对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>CP（分区时牺牲可用性）</th>
+<th>AP（分区时牺牲一致性）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分区时行为</td>
+<td>拒绝读写，等待愈合</td>
+<td>继续服务，容忍旧数据</td>
+</tr>
+<tr>
+<td>典型实例</td>
+<td>ZooKeeper、etcd、HBase</td>
+<td>Cassandra、DynamoDB、Eureka、Redis 异步复制</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>元数据、配置、选主、账务</td>
+<td>商品浏览、feed、会话缓存</td>
+</tr>
+<tr>
+<td>恢复策略</td>
+<td>愈合后同步日志</td>
+<td>后台补偿 + 版本向量解决冲突</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：CAP 不是"三选二"的菜单，而是"P 必选、C/A 二选一"。真正的设计问题是：<strong>分区发生时，优先保数据正确，还是优先保请求成功？</strong></p>
+</blockquote>
+<p><strong>小结</strong>：CAP 以反证法证明分区客观存在时一致性与可用性不可兼得，架构师必须按业务语义明确 CP/AP 定位。</p>
+<h3 id="82-base">8.2 BASE 理论与最终一致性</h3>
+<p>BASE（Basically Available, Soft state, Eventual consistency）是 AP 路线的工程化落地：</p>
+<ul>
+<li><strong>基本可用</strong>：分区或过载时允许功能降级（限流、返回缓存），而非整体不可用。</li>
+<li><strong>软状态</strong>：允许节点存在中间态，不要求任何时刻全局一致。</li>
+<li><strong>最终一致</strong>：无新写入的静默期后，所有副本经异步收敛达成一致。收敛强度分级：因果一致性 &gt; 读己之写 &gt; 单调读 &gt; 弱一致。</li>
+</ul>
+<p><strong>事件溯源（Event Sourcing）</strong>：不保存"当前状态"，只追加存储<strong>事实（事件）</strong>，状态由事件流重放：</p>
+<div class="highlight"><pre><span></span><code>写路径: Command ──▶ 校验执行 ──▶ 追加事件（append-only EventStore）
+读路径: 状态 = fold(事件流, 初始值)；快照用于截断重放
+</code></pre></div>
+<p>优势：完整审计轨迹、可回溯任意历史状态、事件是唯一事实源；代价：事件流无限增长需快照压缩，读模型需另行投影。</p>
+<p><strong>CQRS（命令查询职责分离）</strong>：写模型（Command）与读模型（Query）分离为独立存储；与事件溯源组合时读模型由事件异步投影生成，读写最终一致：</p>
+<div class="highlight"><pre><span></span><code> Command 端                           Query 端
+┌──────────────────┐  投影(异步)  ┌──────────────────┐
+│ 写模型(事件存储)   │ ──────────▶ │ 读模型(缓存/ES)   │
+└──────────────────┘  事件流重放  └──────────────────┘
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：BASE 用"最终一致"换"持续可用"；事件溯源 + CQRS 把"状态"降级为"事件的投影"，允许读写异步收敛——这是高并发系统的标准底层一致性模型。</p>
+</blockquote>
+<p><strong>小结</strong>：BASE 把一致性从强约束降为可收敛的弱约束；事件溯源提供事实源，CQRS 隔离读写模型，二者组合是最终一致性架构的标准实现路径。</p>
+<h3 id="83-consistent-hashing">8.3 一致性哈希（Consistent Hashing）</h3>
+<p><strong>为什么需要</strong>：普通取模 <code>node = hash(key) % N</code> 在节点数 N 变化时约 N/(N+1) 的 key 迁移，缓存场景等同集体失效（雪崩）。</p>
+<p><strong>哈希环</strong>：key 与节点都哈希到 [0, 2³²) 的环上，key 顺时针遇到的第一个节点即归属：</p>
+<div class="highlight"><pre><span></span><code>               0 / 2³²
+            ┌────────────┐
+     node B │            │ node A
+            │     ● k1   │
+       ● k2 │            │
+            └────────────┘
+             node C
+
+环上按 hash 顺时针排列（A &lt; B &lt; C）：
+  k1 在 A 与 B 之间  ⇒ 顺时针首个节点 = node B
+  k2 在 C 与 A 之间(回绕) ⇒ 归属 node A
+</code></pre></div>
+<p><strong>虚拟节点</strong>：每个物理节点在环上放置 K 个虚拟节点（<code>nodeA#0..#K-1</code>），解决节点少时分布不均、增减时负载转移不均两个问题。K 越大越均匀但路由表越大（工程上 K 取 100~200）。</p>
+<p><strong>与普通哈希对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>取模哈希</th>
+<th>一致性哈希</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>增减节点迁移量</td>
+<td>约 N/(N+1) 的 key</td>
+<td>仅约 1/N 的 key</td>
+</tr>
+<tr>
+<td>数据倾斜</td>
+<td>天然均匀</td>
+<td>需虚拟节点矫正</td>
+</tr>
+<tr>
+<td>路由复杂度</td>
+<td>O(1)</td>
+<td>O(log N)（环上二分）</td>
+</tr>
+<tr>
+<td>典型应用</td>
+<td>单机分库分表</td>
+<td>Memcached、Cassandra、Kafka 分区分配</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Python 实现与预期输出</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConsistentHash</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">vnodes</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ring</span> <span class="o">=</span> <span class="p">{}</span>                      <span class="c1"># hash -&gt; 物理节点</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vnodes</span><span class="p">):</span>         <span class="c1"># 每物理节点 vnodes 个虚拟节点</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">#</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sorted_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kh</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sorted_keys</span><span class="p">:</span>         <span class="c1"># 量大时改用 bisect</span>
+            <span class="k">if</span> <span class="n">kh</span> <span class="o">&gt;=</span> <span class="n">h</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="n">kh</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ring</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sorted_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>   <span class="c1"># 回绕环起点</span>
+
+<span class="n">ch</span> <span class="o">=</span> <span class="n">ConsistentHash</span><span class="p">([</span><span class="s2">&quot;nodeA&quot;</span><span class="p">,</span> <span class="s2">&quot;nodeB&quot;</span><span class="p">,</span> <span class="s2">&quot;nodeC&quot;</span><span class="p">])</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;user_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<span class="c1"># 预期输出（虚拟节点下近似均匀，1000 个 key 时偏差 &lt; 5%，key 越多越收敛）:</span>
+<span class="c1"># {&#39;nodeA&#39;: 343, &#39;nodeB&#39;: 345, &#39;nodeC&#39;: 312}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：一致性哈希把"节点数参与哈希运算"改为"节点在环上占位"，使映射局部化——增删节点只影响环上相邻区间，迁移量从 O(N) 降为 O(1/N)。</p>
+</blockquote>
+<p><strong>小结</strong>：一致性哈希以环状寻址 + 虚拟节点，在 O(log N) 路由代价下把节点变更迁移量降至最低，是缓存与存储集群弹性伸缩的基石。</p>
+<h3 id="84-raft">8.4 Raft 共识算法</h3>
+<p>Raft 将共识分解为三个子问题：领导者选举、日志复制、安全性。节点三态：</p>
+<div class="highlight"><pre><span></span><code>Follower ──选举超时──▶ Candidate ──多数票──▶ Leader
+    ▲                                        │
+    └──────── 收到更高 term 心跳/请求 ◀───────┘
+</code></pre></div>
+<p><strong>领导者选举（term 与心跳）</strong>：时间划分为递增的任期 term；Follower 在选举超时内未收到 Leader 心跳，即自增 term 转为 Candidate 发起投票，获得多数（N/2+1）票者当选。term 用于隔离过期 Leader 的写入。</p>
+<p><strong>选举时序图</strong>：</p>
+<div class="highlight"><pre><span></span><code>Node1(Follower)  Node2(Follower)  Node3(Follower)
+      │                │                │
+      │  term=1 选举超时                   │
+      │──RequestVote──▶│                 │
+      │──RequestVote───────────────────▶│
+      │◀──Vote(term=1)──│                 │
+      │◀──Vote(term=1)───────────────────│
+      │  2 票(含自己) &gt; 半数 → 当选 Leader
+      │──AppendEntries(心跳, term=1)──▶│
+      │──AppendEntries(心跳, term=1)──────▶│
+</code></pre></div>
+<p><strong>日志复制与提交规则</strong>：</p>
+<div class="highlight"><pre><span></span><code>Client ──▶ Leader: 追加条目 index=1
+Leader ──▶ 多数 Follower: AppendEntries(log=1)
+多数确认后: Leader 更新 commitIndex=1 → 应用状态机 → 回复 Client
+</code></pre></div>
+<ul>
+<li><strong>提交规则</strong>：条目被复制到<strong>大多数节点</strong>即视为已提交；已提交条目绝不允许被覆盖。</li>
+<li><strong>安全性保证</strong>：① 选举限制——Candidate 日志必须"不旧于"多数节点（比较最后条目的 term 与 index）才能当选；② 日志匹配——AppendEntries 携带 prevLogIndex/prevLogTerm，不一致则拒绝并回退，保证日志前缀一致；③ 只有 Leader 能提交，保证已提交条目的顺序与幂等性。</li>
+</ul>
+<p><strong>选举伪代码与预期输出</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_election</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">peers</span><span class="p">,</span> <span class="n">current_term</span><span class="p">):</span>
+    <span class="n">current_term</span> <span class="o">+=</span> <span class="mi">1</span>                  <span class="c1"># 任期自增，隔离旧 Leader</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;candidate&quot;</span>
+    <span class="n">votes</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>                  <span class="c1"># 先投自己</span>
+    <span class="k">for</span> <span class="n">peer</span> <span class="ow">in</span> <span class="n">peers</span><span class="p">:</span>                 <span class="c1"># 并发请求投票（携带 term 与最后日志）</span>
+        <span class="k">if</span> <span class="n">request_vote</span><span class="p">(</span><span class="n">peer</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="n">current_term</span><span class="p">,</span> <span class="n">last_log</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">last_log</span><span class="p">):</span>
+            <span class="n">votes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">peer</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">votes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">peers</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span>   <span class="c1"># 严格多数（N=3 需 2 票）</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;leader&quot;</span>
+        <span class="n">broadcast_heartbeat</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="n">current_term</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;LEADER&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;FOLLOWER&quot;</span>                  <span class="c1"># 收到更高 term 或超时未过半则退回</span>
+
+<span class="c1"># 预期输出（3 节点、无丢包、日志同样新）:</span>
+<span class="c1"># term=1 选举超时 → 收到 2 票(含自己) → 2 &gt; 3//2=1 → 返回 LEADER</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：Raft 用"多数派"化解不确定性——任意两个多数集合必相交，Leader 一旦被多数节点确认，其日志条目不可能被后续任期覆盖，共识由此可证明地收敛。</p>
+</blockquote>
+<p><strong>小结</strong>：Raft 通过任期号 + 多数派投票 + 日志匹配约束，把共识收敛为确定性可证明安全的算法，是 etcd、Consul、TiKV 的共识底座。</p>
+<h3 id="85-2pc-3pc-saga-tcc">8.5 分布式事务：2PC / 3PC / Saga / TCC</h3>
+<p><strong>2PC（两阶段提交）</strong>：协调者先向所有参与者发 prepare，全部 yes 后广播 commit，否则 abort。
+<strong>3PC</strong>：在 2PC 前增加 canCommit，并把提交拆为 preCommit + doCommit，缩小协调者故障时的阻塞窗口。
+<strong>Saga</strong>：长事务拆为本地事务序列 T₁..Tₙ，每个 Ti 配补偿事务 Ci，任一步失败则逆序补偿。
+<strong>TCC</strong>：业务方实现 Try（预留资源）/ Confirm（确认）/ Cancel（释放），由框架编排。</p>
+<p><strong>四者对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>2PC</th>
+<th>3PC</th>
+<th>Saga</th>
+<th>TCC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一致性</td>
+<td>强一致</td>
+<td>强一致</td>
+<td>最终一致</td>
+<td>最终一致</td>
+</tr>
+<tr>
+<td>隔离性</td>
+<td>有（全局锁）</td>
+<td>有</td>
+<td>无（业务自理）</td>
+<td>预留资源近似</td>
+</tr>
+<tr>
+<td>协调者故障</td>
+<td>参与者阻塞</td>
+<td>超时可自决</td>
+<td>无单点</td>
+<td>依赖框架恢复</td>
+</tr>
+<tr>
+<td>业务侵入</td>
+<td>低</td>
+<td>低</td>
+<td>中（补偿逻辑）</td>
+<td>高（三方法改造）</td>
+</tr>
+<tr>
+<td>吞吐</td>
+<td>低（两轮 RTT+锁）</td>
+<td>低</td>
+<td>高</td>
+<td>中</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>短事务、同构存储</td>
+<td>理论优、落地少</td>
+<td>跨服务长流程</td>
+<td>资金类强校验</td>
+</tr>
+</tbody>
+</table>
+<p><strong>各自优缺点</strong>：</p>
+<ul>
+<li><strong>2PC</strong>：强一致、实现简单；但协调者单点、参与者同步阻塞、宕机后悬挂事务无法自动处理。</li>
+<li><strong>3PC</strong>：阻塞窗口小；但分区下参与者超时提交而协调者已 abort 仍可能不一致，实际部署极少。</li>
+<li><strong>Saga</strong>：高吞吐、无全局锁；但缺隔离性，需语义锁/幂等，正向与补偿必须可重入。</li>
+<li><strong>TCC</strong>：业务级资源预留、可控性强；但开发量大，空回滚与悬挂需幂等表 + 事务控制表处理。</li>
+</ul>
+<p><strong>Seata AT 模式原理</strong>：AT（Auto Transaction）沿 2PC 思想演进，对业务无侵入：</p>
+<div class="highlight"><pre><span></span><code>① 业务 SQL 前：AT 代理生成 before image
+② 执行业务 SQL：生成 after image，与 before 一并写入 undo_log（同库同事务）
+③ 全局提交：异步删除 undo_log
+④ 全局回滚：按 undo_log 逆序补偿还原为 before image；
+   冲突检测：当前数据与 after image 不一致则人工/重试介入
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：强一致事务的代价是阻塞与低吞吐；Saga/TCC 用"补偿"与"预留"换取最终一致与高并发。选型本质是回答：<strong>这笔业务能接受多长时间的账不平？</strong></p>
+</blockquote>
+<p><strong>小结</strong>：2PC/3PC 保强一致但阻塞低吞吐；Saga 与 TCC 以补偿和预留换取最终一致；Seata AT 用镜像日志自动化补偿，是 2PC 思想的无侵入工程化实现。</p>
+<h3 id="86-kafka">8.6 消息队列底层模型（以 Kafka 为例）</h3>
+<p><strong>partition / offset / consumer group</strong>：Topic 划分为多个 partition（并行度与有序性边界），消息在 partition 内拥有单调递增的 offset；同一 group 内的消费者共同消费一个 topic，每个 partition 同一时刻只归组内一个消费者（组内有序）；不同 group 独立推进 offset（广播语义）：</p>
+<div class="highlight"><pre><span></span><code>Topic &quot;orders&quot;（3 个 partition，append-only 日志）
+┌───────────┐ ┌───────────┐ ┌───────────┐
+│  P0       │ │  P1       │ │  P2       │
+│  offset 0 │ │  offset 0 │ │  offset 0 │
+│  offset 1 │ │  offset 1 │ │  offset 1 │
+└───────────┘ └───────────┘ └───────────┘
+     │              │            │
+     ▼              ▼            ▼
+Group-A:  C1 ── C2      C3        ← 组内分担，partition 只归一个消费者
+Group-B:  C4 ── C5 ── C6          ← 组间 offset 独立（订阅/广播）
+</code></pre></div>
+<p><strong>日志追加写与顺序读</strong>：存储本质是 partition 上的 append-only 日志（segment 段文件 + 稀疏索引）。生产者只追加（顺序写，命中页缓存、批量发送），消费者按 offset 顺序读，配合零拷贝（sendfile）实现高吞吐：</p>
+<div class="highlight"><pre><span></span><code>Producer ──追加──▶ Partition 日志（顺序写） ──顺序读──▶ Consumer
+                    segment: .log + .index（稀疏索引）
+</code></pre></div>
+<p><strong>投递语义</strong>：</p>
+<ul>
+<li><strong>at-least-once</strong>：先处理再提交 offset；崩溃后重复消费，要求消费者幂等。</li>
+<li><strong>at-most-once</strong>：先提交 offset 再处理；可能丢消息。</li>
+<li><strong>exactly-once</strong>：幂等生产者（PID+序号去重）+ 跨 partition 事务原子提交 + 消费者事务性读取；代价是吞吐下降，通常在账务场景启用。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：消息队列的高吞吐来自"把随机读写变为顺序读写、把一致性责任下放给消费者"。partition 是并行与有序的折中单元，offset 是进度指针，语义选择本质是吞吐与重复/丢失风险的权衡。</p>
+</blockquote>
+<p><strong>小结</strong>：Kafka 以 partition 承载并行度、offset 记录进度、group 隔离消费视图，用追加写与顺序读逼近磁盘极限吞吐；at-least-once 是默认选择，exactly-once 需幂等与事务机制叠加。</p>
 
 
 

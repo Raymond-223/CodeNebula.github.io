@@ -1151,6 +1151,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：容器与编排内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：容器与编排内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-namespace-cgroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 容器隔离原理：namespace 与 cgroup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-unionfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 镜像分层原理：UnionFS 与写时复制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Docker 构建原理：上下文、缓存与多阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Kubernetes 调度原理：控制面、调度器与控制器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-cnipod-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 容器网络：CNI、Pod 模型与 Service 寻址
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-cicd-dag-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 CI/CD 原理：DAG、制品与 GitOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2470,6 +2553,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：容器与编排内核
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：容器与编排内核">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-namespace-cgroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 容器隔离原理：namespace 与 cgroup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-unionfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 镜像分层原理：UnionFS 与写时复制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Docker 构建原理：上下文、缓存与多阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Kubernetes 调度原理：控制面、调度器与控制器
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85-cnipod-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 容器网络：CNI、Pod 模型与 Service 寻址
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86-cicd-dag-gitops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 CI/CD 原理：DAG、制品与 GitOps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4629,6 +4795,122 @@ aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span
 </table>
 <blockquote>
 <p>DevOps 的最终目标是让开发者能专注于<strong>交付业务价值</strong>，而不是被部署流程和运维杂事拖慢。工具和流程只是手段，文化和持续改进才是核心。</p>
+</blockquote>
+<h2 id="_5">八、底层原理：容器与编排内核</h2>
+<blockquote>
+<p>本节深入内核：容器如何隔离、镜像如何分层、Docker 如何构建、K8s 如何调度与组网、流水线如何执行。理解原理，排障与架构设计才能直达本质。</p>
+</blockquote>
+<h3 id="81-namespace-cgroup">8.1 容器隔离原理：namespace 与 cgroup</h3>
+<p>容器不是轻量级虚拟机，而是一组受限的普通进程，隔离由内核两套机制提供：</p>
+<ul>
+<li><strong>namespace</strong>：视图隔离——让进程"看不见"宿主机其他资源。常用 7 种：PID（进程号，容器内 PID 1 是主进程）、NET（网卡/路由）、MNT（挂载点）、UTS（主机名）、IPC（消息队列）、USER（用户 ID 映射）、CGROUP（cgroup 视图）。</li>
+<li><strong>cgroup</strong>：资源限制——约束进程"能用多少"CPU/内存/IO。运行时（runc）以 <code>clone()</code> 传入 namespace 标志创建进程，再把 PID 写入 cgroup 子系统。</li>
+</ul>
+<div class="highlight"><pre><span></span><code>宿主机: PID 1 systemd | PID 200 容器进程 | 网络栈 eth0
+容器内: PID 1 主进程 | PID 2 子进程 | 看不到宿主机进程 (PID 重新编号)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>容器</th>
+<th>虚拟机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>隔离级别</td>
+<td>进程级（共享内核）</td>
+<td>硬件级（独立内核）</td>
+</tr>
+<tr>
+<td>启动速度</td>
+<td>毫秒级</td>
+<td>秒到分钟级</td>
+</tr>
+<tr>
+<td>资源开销</td>
+<td>极小</td>
+<td>大（完整 OS）</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>弱（共享内核）</td>
+<td>强（内核隔离）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>可运行示例</strong>——cgroup v2 限制 CPU 为 0.5 核：</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>/sys/fs/cgroup/cpu.demo
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;50000&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/sys/fs/cgroup/cpu.demo/cpu.max<span class="w">   </span><span class="c1"># 50ms/100ms 周期</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$$</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/sys/fs/cgroup/cpu.demo/cgroup.procs<span class="w">   </span><span class="c1"># 本 shell 入组</span>
+<span class="c1"># 预期输出: 子进程合计最多占 50% CPU (stress-ng --cpu 4 验证)</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：容器 = 普通进程 + namespace（隔离视图）+ cgroup（资源限制）。</p>
+</blockquote>
+<p><strong>小结</strong>：namespace 决定"看得见什么"，cgroup 决定"能用多少"。</p>
+<h3 id="82-unionfs">8.2 镜像分层原理：UnionFS 与写时复制</h3>
+<p>镜像由只读层（layer）堆叠，运行时叠加可写层，底层是联合文件系统（UnionFS），Docker 默认用 <strong>OverlayFS</strong> 合并多层视图：</p>
+<div class="highlight"><pre><span></span><code>容器可写层(读写发生于此) -&gt; 层4: CMD -&gt; 层3: COPY -&gt; 层2: RUN build -&gt; 层1: FROM
+                            ↑ 镜像只读层 (Dockerfile 指令逐层生成)
+</code></pre></div>
+<p><strong>写时复制（CoW）</strong>：读文件按"上层优先"逐层查找；写文件先把下层文件复制到可写层再修改，只读层永不变。故多容器共享全部只读层，仅各自维护薄薄的可写层，磁盘占用极低。</p>
+<p><strong>Dockerfile 每行指令如何产生层</strong>：<code>FROM</code>/<code>RUN</code>/<code>COPY</code>/<code>ADD</code> 各创建一层（<code>ENV</code>/<code>CMD</code> 只写元数据）。<strong>层越多镜像越大</strong>：① 被删文件仍留在下层——apt 缓存即使 <code>rm</code> 掉也占空间；② 每层有元数据开销且无法跨层压缩。实践：合并 RUN、多阶段构建、<code>&amp;&amp; rm -rf /var/lib/apt/lists/*</code>。</p>
+<blockquote>
+<p><strong>核心思想</strong>：分层 + CoW 使"共享"成为可能——镜像只存一份，分发与启动因此变快。</p>
+</blockquote>
+<p><strong>小结</strong>：层是存储单元，CoW 是共享与提速机制，控制层数即控制镜像体积。</p>
+<h3 id="83-docker">8.3 Docker 构建原理：上下文、缓存与多阶段</h3>
+<p><strong>Build 上下文</strong>：<code>docker build .</code> 的 <code>.</code> 指构建上下文——客户端将其打包发给守护进程，<code>COPY</code>/<code>ADD</code> 只能引用上下文内文件，故用 <code>.dockerignore</code> 排除 node_modules、.git 等。</p>
+<p><strong>层缓存机制</strong>：指令执行前先查缓存，命中"父层相同且指令相同"的层则跳过；<strong>缓存失效（cache invalidation）</strong>——任一前置层变化，其后所有层缓存失效，故"变动少的放前面"（先 <code>COPY go.mod go.sum</code> 再 <code>RUN go mod download</code>，最后 <code>COPY . .</code> 与 <code>RUN go build</code>，源码变更只重建后两层）。</p>
+<p><strong>多阶段构建</strong>：单文件多个 <code>FROM</code>，前一阶段产物经 <code>COPY --from</code> 拷入后一阶段；构建阶段保留工具链，运行阶段只含产物，最终镜像只含最后阶段的层：</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">golang:1.22</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span><span class="w">        </span>#<span class="w"> </span>阶段1:<span class="w"> </span>完整工具链
+<span class="k">RUN</span><span class="w"> </span>go<span class="w"> </span>build<span class="w"> </span>-o<span class="w"> </span>/server<span class="w"> </span>.
+<span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.19</span><span class="w">                   </span><span class="c"># 阶段2: 精简运行时</span>
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>builder<span class="w"> </span>/server<span class="w"> </span>/server
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/server&quot;</span><span class="p">]</span>
+<span class="c"># 预期输出: 最终镜像约 10MB (对比单阶段约 300MB)</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：构建的本质是"可复现的层序列"；缓存让重复构建变快，多阶段让产物变小。</p>
+</blockquote>
+<p><strong>小结</strong>：上下文界定输入范围，缓存决定构建速度，多阶段决定产物体积。</p>
+<h3 id="84-kubernetes">8.4 Kubernetes 调度原理：控制面、调度器与控制器</h3>
+<p><strong>架构</strong>：控制面——<strong>kube-apiserver</strong>（唯一入口，统一读写状态）、<strong>etcd</strong>（键值存储，状态唯一事实源）、<strong>kube-scheduler</strong>（选节点）、<strong>kube-controller-manager</strong>（运行控制器）；数据面——<strong>kubelet</strong>（节点 agent，创建/销毁容器并上报）、<strong>kube-proxy</strong>（维护转发规则）、<strong>containerd</strong>（运行容器）。kubelet 经 apiserver 的 watch 机制获知任务。</p>
+<p><strong>Pod 调度流程（过滤-打分）</strong>：① <strong>过滤</strong>：剔除资源不足、端口冲突、亲和性不匹配、未容忍 taint 的节点；② <strong>打分</strong>：按资源余量、亲和性、拓扑分布评分取最高；③ 绑定结果写入 API Server，kubelet 监听到后创建 Pod。</p>
+<p><strong>Controller 的声明式循环（Reconcile Loop）</strong>：提交期望状态（如 <code>replicas: 3</code>），控制器持续"观察当前 → 对比期望 → 施加变更"直至一致：</p>
+<div class="highlight"><pre><span></span><code>期望(3) -&gt; 观察(当前1) -&gt; 差异=2 -&gt; 创建2个Pod -&gt; 再观察… (一致后空转)
+</code></pre></div>
+<p><strong>kube-proxy 与 Service</strong>：Service 是虚拟 IP（ClusterIP），无实体；kube-proxy 监听 Service/Endpoints 变化，写入 iptables/IPVS 规则把 ClusterIP 流量负载均衡到后端 Pod。Pod 重建 IP 变化而 Service 不变，实现解耦。</p>
+<blockquote>
+<p><strong>核心思想</strong>：K8s 的一切都是"期望状态 + 控制器循环"，自愈的本质是控制器把现实拉回期望。</p>
+</blockquote>
+<p><strong>小结</strong>：apiserver+etcd 是大脑，调度器负责"放哪"，controller 负责"维持"，kube-proxy 负责"转发"。</p>
+<h3 id="85-cnipod-service">8.5 容器网络：CNI、Pod 模型与 Service 寻址</h3>
+<p><strong>CNI（Container Network Interface）</strong>：容器运行时与网络插件的标准接口；kubelet 创建 Pod 时调用 CNI 插件（calico/flannel/cilium）分配 IP、创建虚拟网卡并接入网络。</p>
+<p><strong>bridge 与 overlay</strong>：bridge 在宿主机建网桥（cni0），veth 接入，同机互通（Docker 默认）；overlay 用 VXLAN 隧道封装，跨宿主机组成虚拟二层网络（K8s 集群跨节点）。</p>
+<p><strong>Pod 网络模型</strong>：每个 Pod 拥有独立 IP，<strong>Pod 间无需 NAT 直接互通</strong>（扁平网络）；Pod 内多容器共享同一网络命名空间（共享 IP 与 localhost），经 localhost 互访。</p>
+<p><strong>Service ClusterIP 与 DNS</strong>：ClusterIP 是集群内虚拟 IP，由 kube-proxy 转译为 Pod IP；CoreDNS 提供域名 <code>&lt;svc&gt;.&lt;ns&gt;.svc.cluster.local</code>，Pod 内按服务名访问即可（<code>nslookup my-service.default.svc.cluster.local</code> 预期解析出 ClusterIP，DNS 服务器 10.96.0.10）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：K8s 网络把"IP 会变"的 Pod 封装为"名字稳定"的 Service，DNS + kube-proxy 是这层抽象的实现。</p>
+</blockquote>
+<p><strong>小结</strong>：CNI 解决"怎么连通"，Pod 模型解决"以什么为单位连通"，Service+DNS 解决"连到哪个稳定入口"。</p>
+<h3 id="86-cicd-dag-gitops">8.6 CI/CD 原理：DAG、制品与 GitOps</h3>
+<p><strong>Pipeline 的 DAG 执行模型</strong>：任务间依赖构成有向无环图——无环保证不死锁，有向保证顺序；无依赖任务并行，有依赖者等前置完成：</p>
+<div class="highlight"><pre><span></span><code>        +--&gt; test(unit) ---+
+build --+                  +--&gt; deploy(staging) --&gt; deploy(prod)
+        +--&gt; test(e2e)  ---+   (并行测试全通过才继续)
+</code></pre></div>
+<p><strong>制品（Artifact）流转</strong>：构建产物作为<strong>不可变制品</strong>带唯一标识（如镜像 digest）在阶段间传递：<code>提交 -&gt; 构建出 myapp@sha256:abc123 -&gt; 测试该 digest -&gt; 部署该 digest -&gt; 回滚到上一 digest</code>，保证"测试过的就是部署的"。</p>
+<p><strong>GitOps 核心思想：声明式 + 控制器</strong>——把 K8s 的 controller 模式推广到交付链：① <strong>声明式</strong>：Git 仓库是期望状态的唯一事实源（infra-as-code），变更走 PR；② <strong>控制器</strong>：Argo CD/Flux 持续比对"Git 中的期望"与"集群实际"，有偏差即自动收敛（或告警等确认）；③ 部署 = 合并 PR，回滚 = revert commit，审计 = git log。命令示例：<code>argocd app diff my-app</code>（预期输出 <code>Sync Status: Synced / OutOfSync</code>）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：GitOps = 用 Git 当控制面，用控制器当执行者。"无人值守部署"的本质是控制器循环在自动工作。</p>
+</blockquote>
+<p><strong>小结</strong>：DAG 定义执行顺序，制品保证交付一致性，GitOps 把"部署"简化为"改代码"。</p>
+<hr />
+<blockquote>
+<p><strong>本节总结</strong>：namespace+cgroup 与 UnionFS+CoW 是 Docker 的地基；过滤-打分调度、控制器循环、CNI 与 Service 抽象是 K8s 的骨架；DAG 与制品流转是 CI/CD 的引擎，GitOps 把声明式思想延伸至整个交付生命周期。</p>
 </blockquote>
 
 

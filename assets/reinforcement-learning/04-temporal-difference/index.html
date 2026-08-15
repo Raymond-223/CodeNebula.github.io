@@ -1565,6 +1565,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#td_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：TD 误差与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：TD 误差与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 TD 误差的条件期望与消去律
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-td0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 随机逼近与表格型 TD(0) 收敛
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 偏差-方差权衡的量化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 TD(λ) 的理论：资格迹与等价性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-q-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Q-Learning 的收敛条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-td-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结：TD 与 MC 收敛对比总表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2658,6 +2741,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#td_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：TD 误差与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：TD 误差与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 TD 误差的条件期望与消去律
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-td0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 随机逼近与表格型 TD(0) 收敛
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 偏差-方差权衡的量化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 TD(λ) 的理论：资格迹与等价性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-q-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Q-Learning 的收敛条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-td-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结：TD 与 MC 收敛对比总表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4769,6 +4935,197 @@ Q-Learning ███       █████████████████�
 将进入深度强化学习：用神经网络逼近 <span class="arithmatex">\(Q\)</span> 函数，并解决自举 + 函数逼近
 带来的不稳定问题（经验回放、目标网络），其中 Double DQN 正是本章
 最大化偏差思想的直接继承。</p>
+</blockquote>
+<h2 id="td_2">十、理论进阶：TD 误差与收敛性</h2>
+<blockquote>
+<p>本节回答"算法为什么成立"：TD 误差的消去律与不动点、随机逼近下的收敛
+定理、偏差-方差权衡的量化。记号沿用前文：<span class="arithmatex">\(T_\pi\)</span> 为 Bellman 期望算子，
+<span class="arithmatex">\(\lVert\cdot\rVert_\infty\)</span> 为最大范数。</p>
+</blockquote>
+<h3 id="101-td">10.1 TD 误差的条件期望与消去律</h3>
+<div class="arithmatex">\[\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\]</div>
+<p><strong>定理（消去律）</strong>：<span class="arithmatex">\(V = v_\pi\)</span> 时 <span class="arithmatex">\(\mathbb{E}[\delta_t \mid S_t = s] = 0\)</span>。
+证明只用 Bellman 期望方程：</p>
+<div class="arithmatex">\[\mathbb{E}[\delta_t \mid S_t=s] = r_\pi(s) + \gamma\sum_{s'}P(s' \mid s,\pi(s))\,v_\pi(s') - v_\pi(s) = v_\pi(s) - v_\pi(s) = 0\]</div>
+<p><strong>推广</strong>：对任意 <span class="arithmatex">\(V\)</span>，定义 <span class="arithmatex">\((T_\pi V)(s) = \mathbb{E}[R_{t+1} + \gamma V(S_{t+1}) \mid S_t=s]\)</span>，则</p>
+<div class="arithmatex">\[\mathbb{E}[\delta_t \mid S_t=s] = (T_\pi V)(s) - V(s) \qquad \text{（Bellman 残差）}\]</div>
+<p><strong>不动点</strong>：<span class="arithmatex">\(T_\pi\)</span> 是最大范数下的 <span class="arithmatex">\(\gamma\)</span>-收缩算子（<span class="arithmatex">\(\lVert T_\pi V - T_\pi U\rVert_\infty \le \gamma\lVert V-U\rVert_\infty\)</span>），由 Banach 不动点定理有唯一不动点 <span class="arithmatex">\(v_\pi\)</span>；期望更新 <span class="arithmatex">\(V \leftarrow V + \alpha(T_\pi V - V)\)</span> 每步把 <span class="arithmatex">\(\lVert V-v_\pi\rVert_\infty\)</span> 缩小约 <span class="arithmatex">\(1-\alpha(1-\gamma)\)</span> 倍——残差即学习方向，残差为零处更新停止。</p>
+<p>数值验证（3 状态随机 MDP，均匀转移、奖励 <span class="arithmatex">\([0,1,-1]\)</span>、<span class="arithmatex">\(\gamma=0.9\)</span>；解出 <span class="arithmatex">\(v_\pi\)</span> 后采样 20 万条一步转移估计条件期望）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">v_pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">P</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>   <span class="c1"># Bellman 方程</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">);</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200000</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>                        <span class="c1"># 一步转移</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">v_pi</span><span class="p">[</span><span class="n">s2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v_pi</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+    <span class="n">acc</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="n">delta</span><span class="p">;</span> <span class="n">cnt</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;E[delta|s] 估计:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">acc</span> <span class="o">/</span> <span class="n">cnt</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bellman 残差   :&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">P</span> <span class="o">@</span> <span class="n">v_pi</span> <span class="o">-</span> <span class="n">v_pi</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># 预期输出（噪声 ~1e-3）:</span>
+<span class="c1"># E[delta|s] 估计: [-0.001   0.0041  0.0012]</span>
+<span class="c1"># Bellman 残差   : [0. 0. 0.]</span>
+</code></pre></div>
+<p><strong>小结</strong>：<span class="arithmatex">\(\mathbb{E}[\delta_t \mid S_t=s] = (T_\pi V)(s) - V(s)\)</span> 同时给出消去律（真值处误差期望为 0）、学习方向（残差）与唯一不动点 <span class="arithmatex">\(v_\pi\)</span>。</p>
+<h3 id="102-td0">10.2 随机逼近与表格型 TD(0) 收敛</h3>
+<p><strong>Robbins-Monro 框架</strong>：迭代 <span class="arithmatex">\(x_{k+1} = x_k + \alpha_k(f(x_k) + \xi_k)\)</span>，<span class="arithmatex">\(f\)</span> 收缩且有唯一根 <span class="arithmatex">\(x^*\)</span>，<span class="arithmatex">\(\xi_k\)</span> 零均值噪声。若步长满足</p>
+<div class="arithmatex">\[\sum_k \alpha_k = \infty, \qquad \sum_k \alpha_k^2 &lt; \infty\]</div>
+<p>则 <span class="arithmatex">\(x_k \to x^*\)</span> 以概率 1：前者保证能"走到"根，后者保证噪声被平均掉（典型 <span class="arithmatex">\(\alpha_k = 1/k\)</span>）。</p>
+<p><strong>TD(0) 是随机逼近特例</strong>：代入 10.1 结论，</p>
+<div class="arithmatex">\[V(s) \leftarrow V(s) + \alpha_t\big[\underbrace{(T_\pi V)(s) - V(s)}_{f} + \underbrace{\delta_t - \mathbb{E}[\delta_t \mid S_t=s]}_{\text{零均值 }\xi}\big]\]</div>
+<p><strong>收敛定理（证明思路）</strong>：(1) <strong>收缩</strong>——<span class="arithmatex">\(T_\pi\)</span> 是 <span class="arithmatex">\(\gamma\)</span>-收缩，唯一不动点 <span class="arithmatex">\(v_\pi\)</span>；(2) <strong>期望更新</strong>——<span class="arithmatex">\(V \leftarrow V + \alpha(T_\pi V - V)\)</span> 使 <span class="arithmatex">\(\lVert V-v_\pi\rVert_\infty\)</span> 单调收缩；(3) <strong>噪声消去</strong>——RM 条件下噪声累积是零均值有限方差鞅，以概率 1 趋于 0（鞅收敛）。三步合起来：<strong>满足 RM 步长条件的表格型 TD(0) 以概率 1 收敛到 <span class="arithmatex">\(v_\pi\)</span></strong>。关键前提是噪声零均值（消去律）——目标含系统性偏差时收敛目标即偏离 <span class="arithmatex">\(v_\pi\)</span>。</p>
+<p><strong>与 MC 对比</strong>：MC 更新同样在 RM 框架内：<span class="arithmatex">\(G_t\)</span> 是 <span class="arithmatex">\(v_\pi(S_t)\)</span> 的无偏观测，本质是分状态样本均值，同条件下也以概率 1 收敛。差别只在观测——MC 方差随回合长度增长，TD 方差小但有偏，取舍即下节权衡。</p>
+<p><strong>小结</strong>：TD 与 MC 收敛都归约到 Robbins-Monro 定理，区别只在"观测是什么"；RM 条件 <span class="arithmatex">\(\sum\alpha=\infty,\ \sum\alpha^2&lt;\infty\)</span> 是共同步长合同。</p>
+<h3 id="103-">10.3 偏差-方差权衡的量化</h3>
+<p>恒等式 <span class="arithmatex">\(\mathbb{E}[(X-c)^2] = \operatorname{Var}(X) + (\mathbb{E}[X]-c)^2\)</span>。取 <span class="arithmatex">\(X=G_t^{(n)}\)</span>、<span class="arithmatex">\(c=v_\pi(S_t)\)</span>：
+- <strong>偏差项来自自举</strong>：<span class="arithmatex">\(G_t^{(n)}\)</span> 末尾 <span class="arithmatex">\(\gamma^n V(S_{t+n})\)</span> 是估计值，<span class="arithmatex">\(n\to\infty\)</span> 时偏差 <span class="arithmatex">\(\to 0\)</span>；
+- <strong>方差项来自采样</strong>：<span class="arithmatex">\(n\)</span> 步随机量累加，<span class="arithmatex">\(n\to\infty\)</span> 时趋于整轨迹回报方差（伯努利情形极限 <span class="arithmatex">\(v_\pi(s)(1-v_\pi(s))\)</span>）。</p>
+<p>故 <span class="arithmatex">\(n=1\)</span> 纯 TD（偏差最大、方差最小）、<span class="arithmatex">\(n=\infty\)</span> 纯 MC（零偏差、方差最大），中间存在最优 <span class="arithmatex">\(n^*\)</span>。λ-return 同理（<span class="arithmatex">\(G_t^\lambda\)</span> 是 n-step return 的凸组合）：</p>
+<div class="arithmatex">\[\mathbb{E}[(G_t^\lambda - v_\pi)^2] = \operatorname{Var}(G_t^\lambda) + (\mathbb{E}[G_t^\lambda] - v_\pi)^2\]</div>
+<p>偏差项随 <span class="arithmatex">\(\lambda\)</span> 增大而减小，方差项随 <span class="arithmatex">\(\lambda\)</span> 增大而增大。</p>
+<div class="highlight"><pre><span></span><code>误差²
+  │              ╱╲        ← MSE = 偏差² + 方差（先降后升）
+  │             ╱  ╲
+  │            ╱    ╲____ 方差（随 n 增大，趋于 MC 极限）
+  │  ╱‾‾‾‾‾‾‾
+  │ ╱          ← 偏差²（随 n 增大而减小）
+  │╱
+  └──────────────────────────────► n
+   n=1(纯TD)    n*    n=∞(纯MC)
+</code></pre></div>
+<p>数值演示（随机游走：状态 0..5、0/5 吸收、到 5 得 <span class="arithmatex">\(+1\)</span>、<span class="arithmatex">\(\gamma=1\)</span>、<span class="arithmatex">\(v(s)=s/5\)</span>；把 <span class="arithmatex">\(V(3)\)</span> 调偏为 1.5（真值 0.6）作偏差源，从状态 2 出发采样 2 万轨迹）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">v_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">/</span> <span class="mf">5.0</span>
+<span class="n">V_hat</span> <span class="o">=</span> <span class="n">v_true</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span> <span class="n">V_hat</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>          <span class="c1"># 偏差源：状态 3 高估</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">trajs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20000</span><span class="p">):</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">traj</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">traj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">trajs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n    偏差^2     方差      MSE&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">]:</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">traj</span> <span class="ow">in</span> <span class="n">trajs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">traj</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>                      <span class="c1"># 已终止：真实终止奖励</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">traj</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>                                  <span class="c1"># 未终止：自举截断</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">gamma</span><span class="o">**</span><span class="n">n</span> <span class="o">*</span> <span class="n">V_hat</span><span class="p">[</span><span class="n">traj</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">bias2</span> <span class="o">=</span> <span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">v_true</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">bias2</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">var</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">bias2</span><span class="o">+</span><span class="n">var</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 预期输出:</span>
+<span class="c1"># n= 1  0.20092   0.42250   0.62342</span>
+<span class="c1"># n= 3  0.11405   0.43599   0.55005</span>
+<span class="c1"># n= 5  0.05254   0.40060   0.45314</span>
+<span class="c1"># n= 7  0.02119   0.35455   0.37574</span>
+<span class="c1"># n=10  0.00001   0.20986   0.20987</span>
+<span class="c1"># n=30  0.00000   0.23966   0.23966</span>
+</code></pre></div>
+<p>（<span class="arithmatex">\(n\)</span> 偶数时未吸收轨迹到不了状态 3（奇偶性），故 <span class="arithmatex">\(n=10\)</span> 偏差恰为 0；方差趋于 MC 极限 0.24。本例 <span class="arithmatex">\(n^*\approx10\)</span>：MSE 在纯 TD 的 0.62（偏差主导）与纯 MC 的 0.24（方差主导）之间取最小。）</p>
+<p><strong>小结</strong>：MSE = 偏差² + 方差；<span class="arithmatex">\(n\)</span>（或 <span class="arithmatex">\(\lambda\)</span>）从 1 到 <span class="arithmatex">\(\infty\)</span> 单调地把偏差换成方差，最优在交点附近。</p>
+<h3 id="104-td">10.4 TD(λ) 的理论：资格迹与等价性</h3>
+<p><strong>泛化递推</strong>：<span class="arithmatex">\(z_t = \gamma\lambda\, z_{t-1} + \nabla V(S_t)\)</span>；表格型下 <span class="arithmatex">\(\nabla V(S_t)\)</span> 的分量即 <span class="arithmatex">\(\mathbf{1}\{S_t=s\}\)</span>，回到 7.3 节累积迹；梯度形式为函数逼近 TD(λ) 预留接口。</p>
+<div class="highlight"><pre><span></span><code>资格迹传播（访问序列 S_0→S_1→S_2→S_3，γλ=0.5）：
+时刻        S_0     S_1     S_2     S_3
+t=0        z=1      0       0       0
+t=1        0.5     z=1      0       0
+t=2        0.25    0.5     z=1      0
+t=3        0.125   0.25    0.5     z=1
+                                   │
+   t=3 的 δ_3 按迹回放：S_3 得 1 份，S_0 只得 0.125 份
+</code></pre></div>
+<p><strong>核心恒等式</strong>（TD(λ) 理论的心脏）：</p>
+<div class="arithmatex">\[\boxed{\; G_t^\lambda - V(S_t) = \sum_{k=t}^{\infty}(\gamma\lambda)^{k-t}\,\delta_k \;}\]</div>
+<p>证明思路（telescoping）：展开每个 <span class="arithmatex">\(\delta_k\)</span>，所有 <span class="arithmatex">\(V\)</span> 项两两相消，剩余按"回报出现位置"重新分组即得 λ-return 定义。恒等式解释三件事：(1) λ-return 是未来 TD 误差的几何加权和——TD 误差是原语；(2) 资格迹必须按 <span class="arithmatex">\(\gamma\lambda\)</span> 衰减，后向更新 <span class="arithmatex">\(\sum_t\delta_t z_t\)</span> 才等于前向 <span class="arithmatex">\(\sum_t(G_t^\lambda - V(S_t))\)</span>；(3) <strong>前向-后向等价</strong>：<span class="arithmatex">\(\sum_t\delta_t z_t\)</span> 交换求和次序后，状态 <span class="arithmatex">\(S_k\)</span> 收到的总系数恰为 <span class="arithmatex">\(\sum_{t\ge k}(\gamma\lambda)^{t-k}\delta_t = G_k^\lambda - V(S_k)\)</span>，与离线 λ-return 更新逐状态相等。</p>
+<p><strong>小结</strong>：递推 <span class="arithmatex">\(z_t = \gamma\lambda z_{t-1} + \nabla V(S_t)\)</span> 与恒等式 <span class="arithmatex">\(G_t^\lambda - V(S_t) = \sum_{k\ge t}(\gamma\lambda)^{k-t}\delta_k\)</span> 构成 TD(λ) 全部理论：前者是在线实现，后者是与 λ-return 的等价性，共享衰减因子 <span class="arithmatex">\(\gamma\lambda\)</span>。</p>
+<h3 id="105-q-learning">10.5 Q-Learning 的收敛条件</h3>
+<p>随机逼近形式：</p>
+<div class="arithmatex">\[Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha_t\big[R_{t+1} + \gamma\max_{a'}Q(S_{t+1},a') - Q(S_t,A_t)\big]\]</div>
+<p>Bellman 最优算子 <span class="arithmatex">\((HQ)(s,a) = \mathbb{E}[R_{t+1} + \gamma\max_{a'}Q(S_{t+1},a') \mid S_t=s, A_t=a]\)</span> 同样是 <span class="arithmatex">\(\gamma\)</span>-收缩，唯一不动点 <span class="arithmatex">\(Q^*\)</span>。</p>
+<p><strong>收敛定理（Watkins &amp; Dayan 1992，表格型）</strong>：若 (1) 步长满足 RM 条件（对每个 (s,a) 分别累计）；(2) 行为策略保证所有 (s,a) 被无限频繁访问（GLIE：如 <span class="arithmatex">\(\varepsilon\)</span>-greedy 且 <span class="arithmatex">\(\varepsilon_t\to0\)</span>、<span class="arithmatex">\(\sum_t\varepsilon_t=\infty\)</span>），则 <span class="arithmatex">\(Q_t \to Q^*\)</span> 以概率 1。</p>
+<p><strong>为何 off-policy 也能收敛</strong>：更新目标中的 <span class="arithmatex">\(\max\)</span> 与行为策略无关——它问"哪个动作最好"，不问"行为策略走哪个"。行为策略只决定哪些 (s,a) 被采样（访问频率），不决定更新指向哪个不动点；GLIE 保证各分量无限频繁更新后收敛到同一 <span class="arithmatex">\(Q^*\)</span>。对照 SARSA：目标 <span class="arithmatex">\(R+\gamma Q(S',A')\)</span> 中 <span class="arithmatex">\(A'\sim\pi\)</span>，期望方向是 <span class="arithmatex">\(T_\pi Q - Q\)</span>，收敛到 <span class="arithmatex">\(Q^\pi\)</span>——策略一换必须重学；Q-Learning 的 max 目标绕开行为策略，代价是最大化偏差（第五节 Double Q-Learning 的动机）。</p>
+<p><strong>小结</strong>：Q-Learning 收敛 = <span class="arithmatex">\(H\)</span> 的 <span class="arithmatex">\(\gamma\)</span>-收缩 + 消去律（残差 <span class="arithmatex">\(HQ-Q\)</span> 的无偏采样）+ GLIE；max 算子把更新方向与行为策略解耦，故 off-policy 亦收敛。</p>
+<h3 id="106-td-mc">10.6 理论小结：TD 与 MC 收敛对比总表</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>蒙特卡洛 MC</th>
+<th>表格型 TD(0)</th>
+<th>n-step / TD(λ)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>随机观测</td>
+<td><span class="arithmatex">\(G_t\)</span>（整条轨迹）</td>
+<td><span class="arithmatex">\(R_{t+1}+\gamma V(S_{t+1})\)</span>（一步）</td>
+<td><span class="arithmatex">\(G_t^{(n)}\)</span> / <span class="arithmatex">\(G_t^\lambda\)</span></td>
+</tr>
+<tr>
+<td>观测期望</td>
+<td><span class="arithmatex">\(v_\pi(S_t)\)</span>（无偏）</td>
+<td><span class="arithmatex">\((T_\pi V)(S_t)\)</span>（有偏，含自举）</td>
+<td>介于两者之间</td>
+</tr>
+<tr>
+<td>噪声方差</td>
+<td>大，随回合长度增长</td>
+<td>小（单步随机量）</td>
+<td>随 <span class="arithmatex">\(n\)</span> / <span class="arithmatex">\(\lambda\)</span> 递增</td>
+</tr>
+<tr>
+<td>偏差</td>
+<td>0</td>
+<td>非零（<span class="arithmatex">\(V\ne v_\pi\)</span> 时）</td>
+<td>随 <span class="arithmatex">\(n\)</span> / <span class="arithmatex">\(\lambda\)</span> 递减</td>
+</tr>
+<tr>
+<td>收敛机制</td>
+<td>样本均值（RM）</td>
+<td>收缩算子 <span class="arithmatex">\(T_\pi\)</span> + RM</td>
+<td>同 TD(0)，偏差-方差可调</td>
+</tr>
+<tr>
+<td>步长条件</td>
+<td><span class="arithmatex">\(\sum\alpha=\infty,\ \sum\alpha^2&lt;\infty\)</span></td>
+<td>同左</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>收敛目标</td>
+<td><span class="arithmatex">\(v_\pi\)</span> / <span class="arithmatex">\(Q^\pi\)</span>（SARSA）</td>
+<td><span class="arithmatex">\(v_\pi\)</span> / <span class="arithmatex">\(Q^*\)</span>（Q-Learning）</td>
+<td>同左</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：全部收敛性由三条性质拼成——<strong>收缩</strong>（<span class="arithmatex">\(T_\pi\)</span> / <span class="arithmatex">\(H\)</span> 是
+<span class="arithmatex">\(\gamma\)</span>-收缩，唯一不动点即真值）、<strong>消去律</strong>（TD 误差条件期望等于
+Bellman 残差，真值处为 0）、<strong>噪声消去</strong>（RM 步长把零均值噪声平均掉）。
+<span class="arithmatex">\(n\)</span> 与 <span class="arithmatex">\(\lambda\)</span> 只调节偏差-方差配比；Q-Learning 用 max 算子把不动点
+固定为 <span class="arithmatex">\(Q^*\)</span>。上述结论仅限<strong>表格型</strong>——引入函数逼近后"收缩 + 零均值
+噪声"论证失效（自举、函数逼近与 off-policy 构成不稳定三要素 deadly
+triad），下一章的经验回放与目标网络正是为此设计。</p>
 </blockquote>
 
 

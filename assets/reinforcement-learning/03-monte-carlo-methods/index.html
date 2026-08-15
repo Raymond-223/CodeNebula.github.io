@@ -1542,6 +1542,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：无偏性与方差
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：无偏性与方差">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 首次访问 MC 的无偏性证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 每次访问 MC 的偏差分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 方差分析：MC 为何高方差
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 重要性采样理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 增量式平均与常数步长
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 理论小结：MC 的三重身份
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2668,6 +2751,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：无偏性与方差
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：无偏性与方差">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 首次访问 MC 的无偏性证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 每次访问 MC 的偏差分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 方差分析：MC 为何高方差
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 重要性采样理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 增量式平均与常数步长
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-mc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 理论小结：MC 的三重身份
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4803,6 +4969,309 @@ a_t = \arg\max_a \left[ Q(s, a) + c \cdot P(s, a) \cdot \frac{\sqrt{N(s)}}{1 + N
 以及为什么 TD 最终成为 DQN 等一切现代深度 RL 算法的内核。→
 <a href="../04-temporal-difference/">第 4 章：时序差分方法</a></p>
 </blockquote>
+<h2 id="_2">九、理论进阶：无偏性与方差</h2>
+<blockquote>
+<p>本节回到统计基础，回答三个"为什么"：为何首次访问 MC 无偏、每次访问
+MC 有偏？为何 MC 方差大、TD 方差小？为何重要性采样能把 <code>b</code> 的期望
+改写成 <code>π</code> 的期望？记号沿用前文：<code>G_t</code> 回报、<code>v_π(s)</code> 状态价值、<code>γ</code>
+折扣因子、<code>N(s)</code> 更新次数。</p>
+</blockquote>
+<h3 id="91-mc">9.1 首次访问 MC 的无偏性证明</h3>
+<p><strong>设定</strong>：用 <code>π</code> 独立采样 <code>N</code> 个回合，记第 <code>i</code> 个回合中 <code>s</code> 首次出现
+时刻的回报为 <code>G_t^(i)</code>，估计量 <code>V_N(s) = (1/N)ΣG_t^(i)</code>。分两步证明：</p>
+<p><em>第一步，回报的条件期望就是价值函数</em>（2.1 节定义本身）：</p>
+<div class="highlight"><pre><span></span><code>v_π(s) = E_π[ G_t | S_t = s ]   ⇒   E[ G_t^(i) ] = v_π(s)
+</code></pre></div>
+<p><em>第二步，期望的线性性把样本平均与真值连起来</em>：</p>
+<div class="highlight"><pre><span></span><code>E[ V_N(s) ] = (1/N) Σ_i E[ G_t^(i) ]   (线性性, 不需独立性)
+            = (1/N) · N · v_π(s)       (第一步)
+            = v_π(s)                   ∎ 无偏
+</code></pre></div>
+<p><code>G_t^(i)</code> i.i.d. 且期望有限，大数定律给出一致性 <code>V_N(s) → v_π(s)</code>：</p>
+<div class="highlight"><pre><span></span><code>  回合1: s ─A_t→ S_{t+1} ─A_{t+1}→ … ─→ 终止   G_t^(1) = R_{t+1}+γR_{t+2}+…
+  回合2: s ─A&#39;_t→ … ─→ 终止                    G_t^(2)   (与 G_t^(1) i.i.d.)
+  …
+  V_N(s) = (G_t^(1)+…+G_t^(N)) / N  ──(N→∞)──► v_π(s)   大数定律
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：首次访问 MC 的无偏性只依赖 <code>v_π(s)</code> 的定义与期望的线性
+性，全程未用环境模型 <code>P</code>；每回合至多一个样本 ⇒ i.i.d. ⇒ 大数定律生效。</p>
+</blockquote>
+<p><strong>本节小结</strong>：首次访问 MC 无偏（期望线性性）+ 一致（大数定律），证明免模型。</p>
+<h3 id="92-mc">9.2 每次访问 MC 的偏差分析</h3>
+<p>设回合中 <code>s</code> 在 <code>t_1 &lt; t_2 &lt; … &lt; t_m</code> 被访问，每次访问 MC 把 <code>m</code> 个回报
+全部计入平均。偏差来自两处：</p>
+<p><em>相关性</em>：<code>G_{t_1}</code> 与 <code>G_{t_2}</code> 共享从 <code>t_2</code> 起的未来：</p>
+<div class="highlight"><pre><span></span><code>G_{t_1} = R_{t_1+1} + … + γ^{t_2-t_1-1}R_{t_2} + γ^{t_2-t_1}·G_{t_2}
+</code></pre></div>
+<p>同回合样本相关，不再 i.i.d.，样本平均失去大数定律的标准形式。</p>
+<p><em>选择性条件</em>：<code>E[ G_{t_2} | 回合历史 ]</code> 一般 ≠ <code>v_π(s)</code>——"回访到 <code>s</code>"
+本身携带信息（如随机游走折返），改变了回报的条件分布。此即有偏的根源。</p>
+<p><strong>偏差大小</strong>：随回合内平均访问次数增大而增大（相关样本占比升高），随
+<code>N → ∞</code> 趋于 0（仍一致）；量级通常小于 MC 自身方差，有限样本下几乎
+不可见。</p>
+<p><strong>为何实践常用每次访问</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>理由</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据效率</td>
+<td>一回合 <code>m</code> 个样本，等效样本量更大、方差更低</td>
+</tr>
+<tr>
+<td>实现简单</td>
+<td>反向遍历时见一次更新一次，无需记录首次</td>
+</tr>
+<tr>
+<td>函数逼近友好</td>
+<td>特征近似下无"首次"概念，每次访问是自然选择</td>
+</tr>
+<tr>
+<td>偏差可忽略</td>
+<td>随回合数消失，量级小于方差</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：每次访问用"一点偏差"换"几倍样本"。首次访问是理论标尺，
+每次访问是工程默认——两者渐近收敛到同一个 <code>v_π(s)</code>。</p>
+</blockquote>
+<p><strong>本节小结</strong>：每次访问有偏（相关 + 选择偏差）但一致；因数据效率与函数
+逼近便利而更常用。</p>
+<h3 id="93-mc">9.3 方差分析：MC 为何高方差</h3>
+<p>回报是整条轨迹的累积，方差随之累积：</p>
+<div class="highlight"><pre><span></span><code>Var(G_t) = Σ_k γ^{2k} Var(R_{t+k+1}) + 2Σ_{k&lt;l} γ^{k+l} Cov(R_{t+k+1}, R_{t+l+1})
+</code></pre></div>
+<p><code>γ=1</code>、奖励同分布时 <code>Var(G_t) ≈ H·Var(R)</code> 随轨迹长度 <code>H</code> 线性增长；而
+估计量方差只按样本量衰减 <code>Var(V_N) = Var(G)/N</code>。长轨迹 × 大奖励波动
+需要海量回合才能压住噪声——这就是 MC 的高方差。TD(0) 的目标
+<code>R + γV(S')</code> 只有一步随机性，方差小得多，但 <code>V(S')</code> 是估计值，用估计
+更新估计引入偏差（自举）：</p>
+<div class="highlight"><pre><span></span><code>       方差
+         ▲
+         │   ● MC: 偏差=0, 方差随轨迹长度累积
+         │  ╱
+         │ ╱  ← n-step TD / λ-return 沿此插值
+         │╱
+         │ ● TD(0): 自举一步, 低方差但有偏差
+         │
+         └──────────────────────────────► 偏差
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MC</th>
+<th>TD(0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新目标</td>
+<td>整条回报 <code>G_t</code></td>
+<td>单步目标 <code>R_{t+1} + γV(S_{t+1})</code></td>
+</tr>
+<tr>
+<td>偏差</td>
+<td>无（首次访问）</td>
+<td>有（自举，依赖 <code>V</code> 质量）</td>
+</tr>
+<tr>
+<td>方差</td>
+<td>随 <code>H</code> 累积，按 <code>1/N</code> 衰减</td>
+<td>小，但相邻更新相关</td>
+</tr>
+<tr>
+<td>更新时机</td>
+<td>回合结束</td>
+<td>每步</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：MC 把全部不确定性扛在单个样本 <code>G_t</code> 上，TD 分摊到每步。
+高方差是 MC 为"无偏 + 免模型"支付的保费。</p>
+</blockquote>
+<p><strong>本节小结</strong>：<code>Var(G_t)</code> 随轨迹长度累积（<code>γ</code> 折扣可缓解），估计量方差
+按 <code>1/N</code> 衰减；"MC 无偏高方差 vs TD 有偏低方差"是 RL 最基本的取舍轴。</p>
+<h3 id="94">9.4 重要性采样理论</h3>
+<p><strong>权重定义</strong>：同一条轨迹 <code>τ</code> 在 <code>π</code> 与 <code>b</code> 下的出现概率之比（转移概率
+<code>P</code> 相同，在比值中约掉）：</p>
+<div class="highlight"><pre><span></span><code>ρ_{t:T-1} = P_π(τ|s)/P_b(τ|s) = Π_{k=t}^{T-1} π(A_k|S_k) / b(A_k|S_k)
+</code></pre></div>
+<p><strong>期望改写推导</strong>：把"对 <code>b</code> 的期望"按轨迹展开，代入 <code>ρ</code>，约分后恰好
+变成"对 <code>π</code> 的期望"：</p>
+<div class="highlight"><pre><span></span><code>E_b[ ρ·G_t | S_t=s ] = Σ_τ P_b(τ|s)·ρ(τ)·G(τ)        (期望=概率加权和)
+                     = Σ_τ P_b(τ|s)·[P_π(τ|s)/P_b(τ|s)]·G(τ)  (代入ρ)
+                     = Σ_τ P_π(τ|s)·G(τ)              (约分: P_b 消去)
+                     = E_π[ G_t | S_t=s ] = v_π(s)     ∎
+</code></pre></div>
+<p>关键一步是约分：<strong>环境模型 <code>P</code> 在分子分母中同时出现、被消掉</strong>——off-
+policy MC 无需知道模型即可完成期望的"换测度"。</p>
+<p><strong>WIS 为何有偏但方差更小</strong>：</p>
+<div class="highlight"><pre><span></span><code>OIS:  V(s) = (1/N) Σ ρ_i G_i     E[V] = v_π(s)   无偏
+WIS:  V(s) = Σ ρ_i G_i / Σ ρ_i   E[V] ≠ v_π(s)   有偏(一致)
+</code></pre></div>
+<p>WIS 是比值估计量（期望不穿过比值），故有偏；但 <code>w_i = ρ_i/Σρ_i ≥ 0</code>、
+<code>Σw_i = 1</code>，<code>V(s)</code> 是样本回报的凸组合，被限制在 <code>[min G_i, max G_i]</code>
+内——单个巨大 <code>ρ</code> 无法把估计值带飞。OIS 方差正比于 <code>Var(ρG)</code>，而 <code>ρ</code>
+是长乘积，长轨迹下可爆炸（见下例）。</p>
+<p><strong>数值验证</strong>（<code>random.seed(42)</code> 下输出可复现）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">H</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">GAMMA</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span>   <span class="c1"># 回合长 / 每批回合数 / 批数 / 折扣</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pi</span><span class="p">():</span>  <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.8</span> <span class="k">else</span> <span class="mi">1</span>   <span class="c1"># 目标策略</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">b</span><span class="p">():</span>   <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>               <span class="c1"># 行为策略(均匀)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">batch</span><span class="p">():</span>
+    <span class="n">Gs</span><span class="p">,</span> <span class="n">rhos</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">acts</span><span class="p">,</span> <span class="n">G</span> <span class="o">=</span> <span class="p">[],</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>                            <span class="c1"># 按 b 采样一条轨迹</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">b</span><span class="p">();</span> <span class="n">acts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">G</span> <span class="o">+=</span> <span class="n">GAMMA</span> <span class="o">**</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># 动作0奖励1</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">:</span>                                <span class="c1"># rho = Π π(a|s)/b(a|s)</span>
+            <span class="n">rho</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">0.8</span> <span class="o">/</span> <span class="mf">0.5</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mf">0.2</span> <span class="o">/</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">Gs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">G</span><span class="p">);</span> <span class="n">rhos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span>
+    <span class="n">ois</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">g</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rhos</span><span class="p">,</span> <span class="n">Gs</span><span class="p">))</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">wis</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">g</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rhos</span><span class="p">,</span> <span class="n">Gs</span><span class="p">))</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rhos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ois</span><span class="p">,</span> <span class="n">wis</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">Gs</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>   <span class="c1"># 第三个: 普通平均(估 v_b)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">stat</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="n">batch</span><span class="p">()[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)]</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">M</span>
+    <span class="n">sd</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">M</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sd</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;理论值: v_b(s) = </span><span class="si">{</span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">,  v_pi(s) = </span><span class="si">{</span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.8</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;MC 普通平均(估 v_b)&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s2">&quot;普通IS 估计(估 v_pi)&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                  <span class="p">(</span><span class="s2">&quot;加权IS 估计(估 v_pi)&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]:</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">stat</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;18</span><span class="si">}</span><span class="s2">: 均值 </span><span class="si">{</span><span class="n">mu</span><span class="si">:</span><span class="s2">7.3f</span><span class="si">}</span><span class="s2">, 标准差 </span><span class="si">{</span><span class="n">sd</span><span class="si">:</span><span class="s2">7.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>预期输出（<code>seed=42</code> 实测）：</p>
+<div class="highlight"><pre><span></span><code>理论值: v_b(s) = 10.0,  v_pi(s) = 16.0
+MC 普通平均(估 v_b)  : 均值  10.003, 标准差   0.027     ← 无偏(均值≈10)
+普通IS 估计(估 v_pi) : 均值  15.813, 标准差   5.374     ← 无偏但方差大
+加权IS 估计(估 v_pi) : 均值  15.840, 标准差   0.618     ← 有偏但方差小
+</code></pre></div>
+<p>普通 IS 把期望校正到 <code>v_π ≈ 16</code>（无偏）但标准差达 <code>5.374</code>；加权 IS 校正
+效果相同、标准差仅 <code>0.618</code>——方差缩小近一个数量级。</p>
+<blockquote>
+<p><strong>核心思想</strong>：IS 的本质是"换测度"——乘上轨迹概率比 <code>ρ</code> 把 <code>b</code> 分布下
+的期望改写成 <code>π</code> 分布下的期望，环境模型在比值中约掉；WIS 用凸组合的
+有界性换方差，是 off-policy 实践的标准选择。</p>
+</blockquote>
+<p><strong>本节小结</strong>：<code>E_b[ρG] = v_π(s)</code> 由"期望展开 + 代入 ρ + 约分"三步得到；
+OIS 无偏但方差随 <code>ρ</code> 爆炸，WIS 有偏（一致）但方差小，实际首选 WIS。</p>
+<h3 id="95">9.5 增量式平均与常数步长</h3>
+<p><strong>增量式平均</strong>：<code>α_n = 1/n</code> 时与样本平均完全等价：</p>
+<div class="highlight"><pre><span></span><code>V_{n+1}(s) = V_n(s) + α_n·(G_n − V_n(s))
+</code></pre></div>
+<p><strong>Robbins-Monro 收敛条件</strong>（随机逼近理论）：</p>
+<div class="highlight"><pre><span></span><code>Σ_{n=1}^∞ α_n = ∞     且     Σ_{n=1}^∞ α_n² &lt; ∞
+</code></pre></div>
+<p>第一条保证"走遍"所有样本、不被初始值困住；第二条保证噪声累积有限；二者
+合起来给出 <code>V_n → v_π(s)</code>（以概率 1）。典型例子 <code>α_n = 1/n</code>。</p>
+<p><strong>常数步长 <code>α</code></strong>：不满足第二条（<code>Σα² = ∞</code>），故<strong>不收敛到点</strong>，而收敛
+到真值附近的有界邻域；但具有<strong>遗忘性质</strong>。展开递推：</p>
+<div class="highlight"><pre><span></span><code>V_n = (1-α)^n·V_0 + α·Σ_{k=0}^{n-1} (1-α)^{n-1-k}·G_k
+
+老样本                                  新样本
+(1-α)^n·V_0 … (1-α)^2·G_{n-2} (1-α)·G_{n-1} G_n
+└────────── 权重按 (1-α) 指数衰减, 有效记忆 ≈ 1/α 步 ──────────┘
+</code></pre></div>
+<p>故常数 <code>α</code> 能跟踪非平稳目标（策略改进、分布漂移时旧样本自动"过期"），
+代价是稳态方差不为零：<code>稳态方差 ≈ α·Var(G)/(2−α)</code>（α 较小时）。这是
+"收敛速度 × 稳态精度 × 跟踪能力"的折中。</p>
+<blockquote>
+<p><strong>核心思想</strong>：<code>α_n = 1/n</code> 是无偏平均的在线形态（收敛但不遗忘）；常数
+<code>α</code> 放弃精确收敛、换取遗忘与跟踪。MC 控制中策略不断改进，常数 <code>α</code>
+通常比 <code>1/n</code> 更实用。</p>
+</blockquote>
+<p><strong>本节小结</strong>：Robbins-Monro 条件（<code>Σα=∞, Σα²&lt;∞</code>）是收敛充分条件；常数
+<code>α</code> 以"有界邻域 + 指数遗忘"为代价换取对非平稳目标的跟踪能力。</p>
+<h3 id="96-mc">9.6 理论小结：MC 的三重身份</h3>
+<table>
+<thead>
+<tr>
+<th>身份</th>
+<th>内容</th>
+<th>后果与对策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>无偏</strong></td>
+<td><code>E[V_N(s)] = v_π(s)</code>（首次访问）</td>
+<td>适合做策略评估基准；经 IS 校正后 off-policy 仍无偏（OIS）</td>
+</tr>
+<tr>
+<td><strong>高方差</strong></td>
+<td><code>Var(G_t)</code> 随轨迹长度累积</td>
+<td>长轨迹用折扣/截断；样本量按 <code>1/N</code> 换精度；WIS 压方差</td>
+</tr>
+<tr>
+<td><strong>每回合更新</strong></td>
+<td>必须等回合结束、无自举</td>
+<td>只适用回合制任务；持续性任务交给 TD</td>
+</tr>
+</tbody>
+</table>
+<p><strong>适用场景速查</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>是否适合 MC</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回合制、回合较短</td>
+<td>适合</td>
+<td>方差可控，且拿到无偏估计</td>
+</tr>
+<tr>
+<td>需要精确的策略评估基准</td>
+<td>适合</td>
+<td>无偏性是 TD 类方法不具备的</td>
+</tr>
+<tr>
+<td>行为策略 ≠ 目标策略</td>
+<td>适合（off-policy + WIS）</td>
+<td>需满足覆盖条件 <code>π(a|s) &gt; 0 ⇒ b(a|s) &gt; 0</code></td>
+</tr>
+<tr>
+<td>回合很长、奖励稀疏</td>
+<td>谨慎</td>
+<td>方差随长度累积，需折扣或 n-step 截断</td>
+</tr>
+<tr>
+<td>持续性任务（无终止）</td>
+<td>不适合</td>
+<td>等不到完整回报 <code>G_t</code>，应改用 TD</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：MC 的三重身份互为因果——正因为无偏，才敢在回合结束前
+不碰任何估计值（无自举）；正因为无自举，随机性全部压在整条轨迹上
+（高方差）；正因为要完整轨迹，才被限定在回合制任务中。第 4 章的 TD
+打破的正是这个循环：用自举换低方差，用单步换实时性，代价是牺牲无偏。</p>
+</blockquote>
+<p><strong>本节小结</strong>：无偏 / 高方差 / 每回合更新是 MC 统计性质的完整闭环；理解
+这个闭环，就理解了为什么第 4 章的 TD 要以"牺牲无偏"为代价登场。</p>
 
 
 

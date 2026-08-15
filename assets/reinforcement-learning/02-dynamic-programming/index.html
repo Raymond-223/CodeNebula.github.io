@@ -1553,6 +1553,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：策略迭代与价值迭代的收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：策略迭代与价值迭代的收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-policy-improvement-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 策略改进定理（Policy Improvement Theorem）的证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 策略迭代（PI）的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-vi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 价值迭代（VI）的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 泛化：GPI 为什么"不完美也能收敛"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 收敛速度对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结与证明中的常见误区
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2746,6 +2829,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：策略迭代与价值迭代的收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：策略迭代与价值迭代的收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-policy-improvement-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 策略改进定理（Policy Improvement Theorem）的证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 策略迭代（PI）的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-vi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 价值迭代（VI）的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-gpi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 泛化：GPI 为什么"不完美也能收敛"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 收敛速度对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结与证明中的常见误区
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4834,6 +5000,160 @@ k=3：价值 -3 的区域 = 三步能到终止的状态（状态 3、6、9、12�
 看到，MC 方法如何用"采样"替代 DP 中的"期望"，以及它付出的代价（方差）
 与获得的自由（无需模型）。</p>
 </blockquote>
+<!-- 理论增补：插入原文件「## 附：本章速查表」之后。记号沿用本章。 -->
+
+<h2 id="_3">十、理论进阶：策略迭代与价值迭代的收敛性</h2>
+<p>前八节给出算法与实验，本节补上理论骨架：为什么"评估—改进"循环必然收敛、收敛多快、误差如何控制。记号沿用本章：<span class="arithmatex">\(\gamma\in[0,1)\)</span> 为折扣因子（<span class="arithmatex">\(\gamma=1\)</span> 情形见 10.3），<span class="arithmatex">\(\mathcal{T}_\pi\)</span>、<span class="arithmatex">\(\mathcal{T}^*\)</span> 为贝尔曼期望算子与最优算子。</p>
+<h3 id="101-policy-improvement-theorem">10.1 策略改进定理（Policy Improvement Theorem）的证明</h3>
+<p><strong>定理</strong>：设 <span class="arithmatex">\(\pi\)</span>、<span class="arithmatex">\(\pi'\)</span> 为确定性策略。若对<strong>所有</strong> <span class="arithmatex">\(s\)</span> 有 <span class="arithmatex">\(q_\pi\big(s,\pi'(s)\big) \ge v_\pi(s)\)</span>，则对所有 <span class="arithmatex">\(s\)</span> 有 <span class="arithmatex">\(v_{\pi'}(s) \ge v_\pi(s)\)</span>；若某状态严格大于，则同一状态处 <span class="arithmatex">\(v_{\pi'} &gt; v_\pi\)</span>。</p>
+<p><strong>证明</strong>：对任意 <span class="arithmatex">\(s\)</span>，把 <span class="arithmatex">\(v_{\pi'}\)</span> 按贝尔曼期望方程展开，每展开一层就用假设替换"下一步价值"，逐项比较：</p>
+<div class="highlight"><pre><span></span><code>  v_π(s) ≤ E_{π&#39;}[ r_1 + γ v_π(S_1) | s ]                     ①
+         ≤ E_{π&#39;}[ r_1 + γ r_2 + γ² v_π(S_2) | s ]            ② ①在 S_1 处展开
+         ≤ E_{π&#39;}[ r_1 + γ r_2 + γ² r_3 + γ³ v_π(S_3) | s ]   ③ ②在 S_2 处展开
+         ……
+         ≤ E_{π&#39;}[ Σ_{t=1..n} γ^{t-1} r_t + γ^n v_π(S_n) | s ]
+
+令 n → ∞：γ&lt;1 时 γ^n v_π(S_n) → 0（v_π 有界）；γ=1 的吸收任务中
+v_π(S_n) → 0（几乎必然到达吸收态）。右侧收敛到 E_{π&#39;}[Σ_{t≥1} γ^{t-1} r_t] = v_π&#39;(s)，
+故 v_π&#39;(s) ≥ v_π(s) 对所有 s 成立；若①严格，用 v_π&#39; ≥ v_π 代回①得
+v_π&#39;(s) ≥ q_π(s, π&#39;(s)) &gt; v_π(s)。□
+</code></pre></div>
+<p><strong>贪心改进自动满足假设</strong>：当 <span class="arithmatex">\(\pi' = \mathrm{greedy}(v_\pi)\)</span> 时 <span class="arithmatex">\(q_\pi\big(s,\pi'(s)\big) = \max_a q_\pi(s,a) \ge q_\pi\big(s,\pi(s)\big) = v_\pi(s)\)</span>。故只要做贪心改进，前提自动成立、改进永不倒退；<span class="arithmatex">\(\pi' \ne \pi\)</span> 时还有状态严格变好——3.2 节结论的严格化。</p>
+<blockquote>
+<p><strong>核心思想</strong>：策略改进定理是策略迭代的"引擎"：贪心改进永不倒退，且"改进不动 ⇔ 已最优"。证明套路是"展开—替换—取极限"：每展开一层贝尔曼期望方程，就消费一次假设。</p>
+</blockquote>
+<p><strong>小结</strong>：定理把"逐状态动作价值比较"升级为"全局价值比较"；对贪心改进前提自动满足，故 PI 每轮都不退化。</p>
+<h3 id="102-pi">10.2 策略迭代（PI）的收敛性</h3>
+<p><strong>单调性</strong>：设 <span class="arithmatex">\(\pi_0 \to \pi_1 \to \cdots\)</span> 为 PI 的策略序列，<span class="arithmatex">\(v_k = v_{\pi_k}\)</span>。由 10.1，<span class="arithmatex">\(v_{k+1} \ge v_k\)</span>（分量wise）——价值序列单调非降。</p>
+<p><strong>有限终止</strong>：有限 MDP 中确定性策略总数 <span class="arithmatex">\(\lvert\mathcal{A}\rvert^{\lvert\mathcal{S}\rvert}\)</span> 有限。若 <span class="arithmatex">\(\pi_{k+1} = \pi_k\)</span>，由 3.4 节判据 <span class="arithmatex">\(v_{\pi_k} = v_*\)</span>，停机输出最优；若 <span class="arithmatex">\(\pi_{k+1} \ne \pi_k\)</span>，则至少一个状态严格改进、价值向量严格变大，而同一策略不可能对应两个不同价值，故策略不可能重复。严格单调序列穿过有限集合，<strong>至多 <span class="arithmatex">\(\lvert\mathcal{A}\rvert^{\lvert\mathcal{S}\rvert}\)</span> 轮必然终止</strong>。</p>
+<p><strong>轮数分析</strong>：上界指数级、极松；实践通常 3–10 轮，因每轮是<strong>全局</strong>贪心，一次修正大量状态（GridWorld 4 轮、11 次扫描）。每轮代价 = 评估 <span class="arithmatex">\(O(k\lvert\mathcal{S}\rvert^2\lvert\mathcal{A}\rvert)\)</span>（<span class="arithmatex">\(k\)</span> 次扫描）+ 改进 <span class="arithmatex">\(O(\lvert\mathcal{S}\rvert\lvert\mathcal{A}\rvert)\)</span>。</p>
+<p><strong>数值验证（可运行）</strong>：自包含随机 MDP（<span class="arithmatex">\(\lvert\mathcal{S}\rvert=5,\lvert\mathcal{A}\rvert=2,\gamma=0.9\)</span>），记录每轮 <span class="arithmatex">\(\sum_s v_{\pi_k}(s)\)</span>：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>          <span class="c1"># 固定种子</span>
+<span class="n">nS</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">g</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.9</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">nS</span><span class="p">,</span> <span class="n">nA</span><span class="p">,</span> <span class="n">nS</span><span class="p">));</span> <span class="n">P</span> <span class="o">/=</span> <span class="n">P</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">nS</span><span class="p">,</span> <span class="n">nA</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="n">pol</span><span class="p">):</span>                       <span class="c1"># 迭代评估 → v_π</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nS</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nS</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">pol</span><span class="p">[</span><span class="n">s</span><span class="p">]]</span> <span class="o">+</span> <span class="n">g</span> <span class="o">*</span> <span class="n">P</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">pol</span><span class="p">[</span><span class="n">s</span><span class="p">]]</span> <span class="o">@</span> <span class="n">V</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]));</span> <span class="n">V</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mf">1e-8</span><span class="p">:</span> <span class="k">return</span> <span class="n">V</span>
+
+<span class="n">pol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nS</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>                  <span class="c1"># 初始：全选动作 0</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">pol</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;轮次 </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2">: 策略 = </span><span class="si">{</span><span class="n">pol</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">   Σv = </span><span class="si">{</span><span class="n">V</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;san,n-&gt;sa&#39;</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">))</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">pol</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;策略稳定于第 </span><span class="si">{</span><span class="n">it</span><span class="si">}</span><span class="s2"> 轮 → 最优策略 </span><span class="si">{</span><span class="n">pol</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">，Σv* = </span><span class="si">{</span><span class="n">V</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">+.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="n">pol</span> <span class="o">=</span> <span class="n">new</span>
+
+<span class="c1"># 预期输出（Σv 单调非降，正是定理的数值体现）：</span>
+<span class="c1"># 轮次 0: 策略 = [0, 0, 0, 0, 0]   Σv = -12.8126</span>
+<span class="c1"># 轮次 1: 策略 = [1, 0, 0, 1, 1]   Σv = -9.7419</span>
+<span class="c1"># 轮次 2: 策略 = [1, 0, 0, 0, 1]   Σv = -9.5101</span>
+<span class="c1"># 策略稳定于第 2 轮 → 最优策略 [1, 0, 0, 0, 1]，Σv* = -9.5101</span>
+</code></pre></div>
+<p><strong>小结</strong>：PI 收敛由"单调（改进定理）+ 有限（策略空间有限）"保证；上界指数但实际轮数极少，是典型的"少而重"算法。</p>
+<h3 id="103-vi">10.3 价值迭代（VI）的收敛性</h3>
+<p><strong><span class="arithmatex">\(\mathcal{T}^*\)</span> 是 <span class="arithmatex">\(\gamma\)</span>-收缩</strong>。<span class="arithmatex">\((\mathcal{T}^* v)(s) = \max_a \sum_{s',r} P(s',r \mid s,a)[r + \gamma v(s')]\)</span>。对任意 <span class="arithmatex">\(u,v\)</span>：</p>
+<div class="highlight"><pre><span></span><code>‖T*u − T*v‖_∞ = max_s | max_a f_u(a) − max_a f_v(a) |        （f_x(a) = Σ P[ r + γ x(s&#39;) ]）
+             ≤ max_{s,a} | f_u(a) − f_v(a) |                 （|max f − max g| ≤ max|f − g|）
+             = max_{s,a} | γ Σ_{s&#39;} P(s&#39;|s,a)(u−v)(s&#39;) | ≤ γ‖u − v‖_∞   □
+</code></pre></div>
+<p><strong>收敛性与误差界</strong>：由巴拿赫不动点定理，<span class="arithmatex">\(\mathcal{T}^*\)</span> 在 <span class="arithmatex">\((\mathbb{R}^{\lvert\mathcal{S}\rvert}, \|\cdot\|_\infty)\)</span> 上有唯一不动点 <span class="arithmatex">\(v_*\)</span>；从任意 <span class="arithmatex">\(v_0\)</span> 出发，<span class="arithmatex">\(v_{k+1} = \mathcal{T}^* v_k\)</span> 收敛到 <span class="arithmatex">\(v_*\)</span>，且</p>
+<div class="arithmatex">\[\|v_k - v_*\|_\infty \le \gamma^k \|v_0 - v_*\|_\infty\]</div>
+<p>推导只有一行：<span class="arithmatex">\(\|v_{k+1}-v_*\| = \|\mathcal{T}^* v_k - \mathcal{T}^* v_*\| \le \gamma\|v_k - v_*\|\)</span>，归纳即得。这是<strong>线性（几何）收敛</strong>，比率 <span class="arithmatex">\(\gamma\)</span>；<span class="arithmatex">\(\gamma \to 1\)</span> 时急剧变慢。</p>
+<p><strong>与策略评估的区别</strong>：策略评估用<strong>期望算子</strong> <span class="arithmatex">\(\mathcal{T}_\pi\)</span>（线性，不动点 <span class="arithmatex">\(v_\pi\)</span>），VI 用<strong>最优算子</strong> <span class="arithmatex">\(\mathcal{T}^*\)</span>（取 <span class="arithmatex">\(\max\)</span>，非线性——<span class="arithmatex">\(\max\)</span> 引入的正是"最优"），不动点 <span class="arithmatex">\(v_*\)</span>。前者回答"给定策略值多少"，后者回答"最优值多少"；两者同为 <span class="arithmatex">\(\gamma\)</span>-收缩，证明同构。</p>
+<p><strong>停机准则</strong>（<span class="arithmatex">\(\gamma=1\)</span> 时失效）：以 <span class="arithmatex">\(\|v_{k+1}-v_k\|_\infty &lt; \theta\)</span> 停机，则 <span class="arithmatex">\(\|v_k - v_*\| &lt; \theta/(1-\gamma)\)</span>。故 <span class="arithmatex">\(\gamma\)</span> 越接近 1，同等精度所需 <span class="arithmatex">\(\theta\)</span> 越小；<span class="arithmatex">\(\gamma=1\)</span> 时 <span class="arithmatex">\(\mathcal{T}^*\)</span> 不是收缩映射，<span class="arithmatex">\(\gamma^k\)</span> 界失效，GridWorld 能收敛依赖吸收结构（5.2 节水波扩散），无统一误差界。</p>
+<p><strong>小结</strong>：VI 收敛是纯泛函分析结论——<span class="arithmatex">\(\mathcal{T}^*\)</span> 的 <span class="arithmatex">\(\gamma\)</span>-收缩性 + 巴拿赫定理给出全局收敛与几何误差界；与策略评估共享同一证明骨架，区别只在期望算子换成最优算子。</p>
+<h3 id="104-gpi">10.4 泛化：GPI 为什么"不完美也能收敛"</h3>
+<p>GPI 的评估把 <span class="arithmatex">\(v\)</span> 拉向 <span class="arithmatex">\(v_\pi\)</span>，改进把 <span class="arithmatex">\(\pi\)</span> 拉向 <span class="arithmatex">\(\mathrm{greedy}(v)\)</span>。几何上是两条目标线，迭代在两者间往复逼近交点：</p>
+<div class="highlight"><pre><span></span><code>    π
+    ▲
+    │\                      ╱  改进线：π = greedy(v)
+    │ \    ④──►            ╱
+    │  \   ▲              ╱
+    │   \ ③             ╱
+    │ ②  \ ▼           ╱
+    │ ▲   \           ╱
+    │①    \         ╱
+    │●起点  \       ╱
+    │        ╳ ★ (v_*, π_*) 交点 = 最优
+    └────────────────────────────► v
+    评估线：v = v_π
+    ①③… 评估：竖直移动（固定 π），把 v 拉向 v_π
+    ②④… 改进：水平移动（固定 v），把 π 拉向 greedy(v)
+    折线逐圈逼近 ★；步长不要求为零，也不要求一次到位
+</code></pre></div>
+<p><strong>为什么不要求完全收敛</strong>：收敛的充分条件远比"评估收敛、改进一步到位"宽松——</p>
+<ul>
+<li><strong>价值迭代</strong>即"评估只做一步"的极端 GPI，收敛性由 <span class="arithmatex">\(\mathcal{T}^*\)</span> 收缩性独立保证（10.3）；</li>
+<li><strong>截断策略迭代</strong>（每轮评估只做固定 <span class="arithmatex">\(m\ge1\)</span> 次扫描再贪心）对任意 <span class="arithmatex">\(m\)</span> 收敛：<span class="arithmatex">\(m=1\)</span> 即 VI，<span class="arithmatex">\(m\to\infty\)</span> 即 PI，同一谱系的两端；</li>
+<li>只要每步<strong>方向正确、步长非零、不越过目标</strong>，折线就单调逼近交点。</li>
+</ul>
+<p><strong>互相促进</strong>：改进使评估目标线整体抬高（<span class="arithmatex">\(v_{\pi'} \ge v_\pi\)</span>），评估使贪心基于更准确的价值——一方的输出总在改善另一方的输入，形成正反馈；策略有限、价值有界，杜绝发散。</p>
+<blockquote>
+<p><strong>核心思想</strong>：GPI 的宽容性是"单调逼近 + 有界空间"的必然结果：两个不完备的过程只要方向正确，交替进行就收敛。这也是第 3 章以后一切采样式算法（评估永不收敛）仍能工作的理论底气。</p>
+</blockquote>
+<p><strong>小结</strong>：PI 与 VI 是 GPI 谱系的两个端点；收敛性来源于"方向正确"而非"一步到位"。</p>
+<h3 id="105">10.5 收敛速度对比</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>每轮代价（单次扫描 <span class="arithmatex">\(O(\lvert\mathcal{S}\rvert^2\lvert\mathcal{A}\rvert)\)</span>）</th>
+<th>典型轮数</th>
+<th>收敛保证 / 误差界</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略迭代 PI</td>
+<td>评估 <span class="arithmatex">\(k\)</span> 次扫描 + 改进：<span class="arithmatex">\(O(k\lvert\mathcal{S}\rvert^2\lvert\mathcal{A}\rvert)\)</span></td>
+<td>少（3–10；上界 <span class="arithmatex">\(\lvert\mathcal{A}\rvert^{\lvert\mathcal{S}\rvert}\)</span>）</td>
+<td>精确停机（策略不变即最优）</td>
+<td>状态空间小、需"每轮有完整可用策略"</td>
+</tr>
+<tr>
+<td>价值迭代 VI</td>
+<td>1 次扫描：<span class="arithmatex">\(O(\lvert\mathcal{S}\rvert^2\lvert\mathcal{A}\rvert)\)</span></td>
+<td>多（<span class="arithmatex">\(\approx\)</span> 最长最短路径长度；<span class="arithmatex">\(\gamma&lt;1\)</span> 时随 <span class="arithmatex">\(\gamma\to1\)</span> 急剧增多）</td>
+<td><span class="arithmatex">\(\lVert v_k-v_*\rVert_\infty \le \gamma^k\lVert v_0-v_*\rVert_\infty\)</span></td>
+<td>大规模离散 MDP 默认选择</td>
+</tr>
+<tr>
+<td>截断策略迭代（<span class="arithmatex">\(m\)</span> 次扫描）</td>
+<td><span class="arithmatex">\(O(m\lvert\mathcal{S}\rvert^2\lvert\mathcal{A}\rvert)\)</span></td>
+<td>介于两者之间</td>
+<td>线性收敛（误差界常数小于 VI）</td>
+<td>折中：每轮略贵、轮数明显减少</td>
+</tr>
+</tbody>
+</table>
+<p>要点：<strong>每轮代价</strong> VI 最轻、PI 最重，截断 PI 用 <span class="arithmatex">\(m\)</span> 调节；<strong>轮数</strong> VI 与"信息从终止状态传播的速度"同阶（GridWorld 中 <span class="arithmatex">\(k\)</span> 轮价值恰覆盖 <span class="arithmatex">\(k\)</span> 步内可达区域），PI 轮数几乎与状态数无关（每轮全局修正）；<strong><span class="arithmatex">\(\gamma\)</span></strong> 越接近 1，VI 的 <span class="arithmatex">\(\gamma^k\)</span> 衰减越慢、受影响最直接，PI 有精确停机判据、受影响较小。经验法则：模型已知且状态数上万默认 VI；状态数小或需中间策略用 PI；<span class="arithmatex">\(m\)</span> 取 3–10 的截断 PI 常取得最佳平衡。</p>
+<p><strong>小结</strong>：三者的取舍是"每轮代价 × 轮数"的权衡——VI 每轮便宜但要很多轮，PI 每轮贵但轮数极少，截断 PI 用 <span class="arithmatex">\(m\)</span> 在两端间插值。</p>
+<h3 id="106">10.6 理论小结与证明中的常见误区</h3>
+<p><strong>理论骨架</strong>：策略改进定理（10.1）保证单调，策略空间有限（10.2）保证终止，<span class="arithmatex">\(\mathcal{T}^*\)</span> 收缩（10.3）保证几何收敛，GPI（10.4）证明"方向正确即可"。</p>
+<p><strong>常见误区</strong>：</p>
+<ol>
+<li><strong>把定理的假设当结论</strong>：假设是"逐状态 <span class="arithmatex">\(q_\pi(s,\pi'(s)) \ge v_\pi(s)\)</span>"，结论是"<span class="arithmatex">\(v_{\pi'} \ge v_\pi\)</span>"；反过来不成立，且假设必须对所有 <span class="arithmatex">\(s\)</span> 成立。</li>
+<li><strong>误以为"贪心一次即最优"</strong>：一次改进只保证"不差"（3.5 节例子：改进一次后状态 13 仍错），需多轮迭代。</li>
+<li><strong>误以为 VI 的中间 <span class="arithmatex">\(v_k\)</span> 对应某个策略</strong>：<span class="arithmatex">\(v_k\)</span> 一般不是任何策略的价值函数，只有极限 <span class="arithmatex">\(v_*\)</span> 才是。</li>
+<li><strong>误以为 VI 需要好的初值</strong>：收缩映射从任意 <span class="arithmatex">\(v_0\)</span> 收敛，初值只影响常数与轮数。</li>
+<li><strong>误以为 <span class="arithmatex">\(\gamma=1\)</span> 时误差界照用</strong>：此时 <span class="arithmatex">\(\mathcal{T}^*\)</span> 不是收缩映射，收敛依赖吸收结构，无统一误差界。</li>
+<li><strong>混淆两个算子</strong>：<span class="arithmatex">\(\mathcal{T}_\pi\)</span>（线性，不动点 <span class="arithmatex">\(v_\pi\)</span>）vs <span class="arithmatex">\(\mathcal{T}^*\)</span>（非线性，不动点 <span class="arithmatex">\(v_*\)</span>）；把 <span class="arithmatex">\(\max\)</span> 换成期望即退化为策略评估，反之即升级为 VI。</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：本章全部收敛性结论归结为三句话——<strong>改进定理保证单调，有限空间保证终止，收缩算子保证几何收敛</strong>。理解适用条件，比记住公式更重要。</p>
+</blockquote>
+<p><strong>小结</strong>：理论部分至此闭合——PI 的收敛是组合式的（单调 + 有限），VI 是分析式的（收缩 + 不动点），GPI 把两者统一为同一折线逼近过程；后续章节的采样式算法将沿用"方向正确即收敛"的论证框架。</p>
 
 
 

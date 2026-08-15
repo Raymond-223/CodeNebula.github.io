@@ -1618,6 +1618,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、理论框架总览：三大核心定理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、理论框架总览：三大核心定理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 三大核心定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 三定理如何串起全书
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 理论地图与学习路线
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 理论深度的取舍建议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2225,6 +2286,100 @@
 <blockquote>
 <p><strong>下一步</strong>：从 <a href="00-bandit/">第 0 章：多臂老虎机</a> 开始，用最小的模型理解"探索与利用"这一 RL 第一难题。</p>
 </blockquote>
+<h2 id="_8">七、理论框架总览：三大核心定理</h2>
+<blockquote>
+<p>十二章节的算法各有各的工程细节，但支撑它们收敛与有效的数学骨架只有三条。本节把它们放在一起，作为全书理论地图。</p>
+</blockquote>
+<h3 id="71">7.1 三大核心定理</h3>
+<div class="highlight"><pre><span></span><code>强化学习理论骨架
+├── ① 贝尔曼方程（第 1-2 章）
+│     价值函数的自洽条件 → 迭代求解的依据
+│     关键性质：Bellman 算子是 γ-收缩 → 唯一不动点
+│
+├── ② 策略梯度定理（第 6 章）
+│     策略参数化的优化方向 → 一切 PG 方法的基础
+│     关键性质：∇ 只作用于策略 → model-free 可行
+│
+└── ③ 随机逼近收敛定理（第 3-4 章）
+      增量更新的收敛条件 → TD/MC 收敛的保证
+      关键条件：Σα=∞, Σα²&lt;∞（Robbins-Monro）
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>定理</th>
+<th>回答的问题</th>
+<th>所在章节</th>
+<th>工程影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贝尔曼方程</td>
+<td>价值函数长什么样？</td>
+<td>1, 2</td>
+<td>迭代求解、DP 收敛</td>
+</tr>
+<tr>
+<td>策略梯度定理</td>
+<td>参数往哪更新？</td>
+<td>6</td>
+<td>一切 PG/AC 算法</td>
+</tr>
+<tr>
+<td>随机逼近</td>
+<td>增量更新收敛吗？</td>
+<td>3, 4, 5</td>
+<td>步长设计、稳定训练</td>
+</tr>
+</tbody>
+</table>
+<h3 id="72">7.2 三定理如何串起全书</h3>
+<ul>
+<li><strong>表格时代</strong>（00–04）：贝尔曼方程给出目标，随机逼近保证更新收敛，DP/MC/TD 是三种不同的"用数据逼近贝尔曼方程解"的方式；</li>
+<li><strong>深度时代</strong>（05–07）：策略梯度定理成为主引擎，贝尔曼方程退居辅助（价值作为 baseline/优势估计），随机逼近的收敛条件被 deadly triad 破坏 → 工程技巧补位；</li>
+<li><strong>前沿时代</strong>（08–10）：理论不再保证收敛，改为约束与正则（KL 约束、熵正则、保守估计）——用"可行域"的思想管理不稳定。</li>
+</ul>
+<h3 id="73">7.3 理论地图与学习路线</h3>
+<div class="highlight"><pre><span></span><code>第 1 章 MDP ──→ 贝尔曼方程 ──→ 第 2 章 DP（精确求解）
+                │               │
+                └──→ 近似求解 ──┼──→ 第 3 章 MC（无偏高方差）
+                                ├──→ 第 4 章 TD（有偏低方差）
+                                └──→ 第 5 章 DQN（函数逼近）
+第 6 章 策略梯度定理 ──→ AC/PPO ──→ 第 7 章 连续控制
+第 8-10 章 工具链/进阶/工程（理论约束化：KL、熵、保守估计）
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：全书算法 = 贝尔曼方程（目标）× 策略梯度（方向）× 随机逼近（更新），外加工程约束（信任区域/熵/保守）来驯服不收敛。</p>
+</blockquote>
+<h3 id="74">7.4 理论深度的取舍建议</h3>
+<table>
+<thead>
+<tr>
+<th>读者目标</th>
+<th>必读理论</th>
+<th>可跳过</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工程应用</td>
+<td>贝尔曼方程直觉、PG 定理结论、收敛条件结论</td>
+<td>完整证明推导</td>
+</tr>
+<tr>
+<td>算法研发</td>
+<td>三定理完整证明 + 各章理论进阶节</td>
+<td>工具链细节</td>
+</tr>
+<tr>
+<td>学术研究</td>
+<td>全部 + 原文文献（Sutton &amp; Barto、Lai-Robbins、TRPO 论文）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>小结</strong>：三条定理（贝尔曼、策略梯度、随机逼近）是所有算法的共同祖先。理解它们，后续任何新算法都只是"在哪个环节加了什么约束"。</p>
 
 
 

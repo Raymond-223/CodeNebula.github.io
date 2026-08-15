@@ -1599,6 +1599,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：策略梯度定理的完整证明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：策略梯度定理的完整证明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-log-derivative-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 log-derivative trick：把梯度搬进期望的恒等式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 策略梯度定理的完整证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 为什么期望形式能消掉未知的转移概率
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Baseline 的数学证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-advantage-gae" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Advantage 与 GAE 的理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-trpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 TRPO 的约束优化理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2614,6 +2697,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：策略梯度定理的完整证明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：策略梯度定理的完整证明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-log-derivative-trick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 log-derivative trick：把梯度搬进期望的恒等式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 策略梯度定理的完整证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 为什么期望形式能消掉未知的转移概率
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Baseline 的数学证明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-advantage-gae" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Advantage 与 GAE 的理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-trpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 TRPO 的约束优化理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4247,6 +4413,181 @@ Critic 高估</strong>（最大化偏差的连续版）。下一章 <a href="../
 off-policy 经验回放大幅提升样本效率，用双 Critic 与熵正则对抗高估与
 坍缩，构成现代机器人控制与自动驾驶的主流方案。</p>
 </blockquote>
+<h2 id="_4">十、理论进阶：策略梯度定理的完整证明</h2>
+<blockquote>
+<p>正文第二节给出策略梯度定理的结论。本节补齐完整证明，并回答四个"为什么"：log 为何能把梯度搬进期望、期望形式为何能消掉转移概率、baseline 为何无偏、TRPO 为何需要 KL 约束。</p>
+</blockquote>
+<h3 id="101-log-derivative-trick">10.1 log-derivative trick：把梯度搬进期望的恒等式</h3>
+<p>由链式法则 <code>∇_θ ln π = ∇_θ π / π</code>，两边同乘 <code>π_θ(a|s)</code>：</p>
+<div class="highlight"><pre><span></span><code>∇_θ π_θ(a|s) = π_θ(a|s) · ∇_θ ln π_θ(a|s)          (10.1)
+</code></pre></div>
+<p>实质是<strong>交换求导与求期望的顺序</strong>。设 f(a) 与 θ 无关：</p>
+<div class="highlight"><pre><span></span><code>∇_θ E_{a~π_θ}[f(a)] = ∇_θ Σ_a π_θ(a) f(a)
+  = Σ_a [∇_θ π_θ(a)] f(a)            期望是有限和，求导逐项进行
+  = Σ_a π_θ(a)[∇_θ ln π_θ(a)] f(a)   代入 (10.1)
+  = E_{a~π_θ}[ f(a) ∇_θ ln π_θ(a) ]  (10.2)
+</code></pre></div>
+<p>关键是期望与求导可交换、f 不含 θ：对分布的梯度变成对数概率梯度的期望，可解析、可采样。取 f ≡ 1：</p>
+<div class="highlight"><pre><span></span><code>E_{a~π_θ}[ ∇_θ ln π_θ(a) ] = Σ_a ∇_θ π_θ(a) = ∇_θ 1 = 0        (10.3)
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：(10.2) 把无法采样的 ∇E 换成可采样的 E[∇lnπ·f]；(10.3) 保证对数概率梯度期望为零。二者分别是策略梯度的引擎与消项、无偏性的钥匙。</p>
+</blockquote>
+<p><strong>小结</strong>：log-derivative trick 即 (10.1) 变形与 (10.3) 零期望性质，后续证明反复调用。</p>
+<h3 id="102">10.2 策略梯度定理的完整证明</h3>
+<p><strong>定理</strong>：<code>J(θ) = E_{τ~π_θ}[Σ γ^t r_t]</code>，则</p>
+<div class="highlight"><pre><span></span><code>∇_θ J(θ) = E[ Σ_t γ^t G_t ∇_θ ln π_θ(A_t|S_t) ]                (10.4)
+</code></pre></div>
+<p>其中 <code>G_t = Σ_{l≥0} γ^l r_{t+l}</code> 为折扣回报。</p>
+<p><strong>第一步：目标函数展开。</strong> 轨迹概率（μ、p 均与 θ 无关）：</p>
+<div class="highlight"><pre><span></span><code>P_θ(τ) = μ(S_0) · Π_k π_θ(A_k|S_k) · p(S_{k+1}|S_k, A_k)
+</code></pre></div>
+<p>用期望线性性拆回报、用 score 技巧：</p>
+<div class="highlight"><pre><span></span><code>∇_θ J(θ) = Σ_t γ^t E[ r_t ∇_θ ln P_θ(τ_{≤t}) ]
+         = Σ_t γ^t E[ r_t Σ_{k≤t} ∇_θ ln π_θ(A_k|S_k) ]         (10.5)
+</code></pre></div>
+<p>μ、p 不含 θ，求导后消失——环境模型第一次被消掉。</p>
+<p><strong>第二步：对每个时刻的贡献求梯度并重排求和。</strong> 交换 (10.5) 中对 t、k 的求和：</p>
+<div class="highlight"><pre><span></span><code>∇_θ J(θ) = E[ Σ_k γ^k G_k ∇_θ ln π_θ(A_k|S_k) ]                (10.6)
+</code></pre></div>
+<p><strong>第三步：用 E[∇lnπ] = 0 消去交叉项。</strong> (10.5) 中"未来梯度 × 过去回报"交叉项必须为零。对 k &gt; t，由塔性质与马尔可夫性：</p>
+<div class="highlight"><pre><span></span><code>E[ r_t ∇_θ ln π_θ(A_k|S_k) ]
+  = E[ r_t E[∇_θ ln π_θ(A_k|S_k)|S_k] ]       塔性质
+  = E[ r_t Σ_a π_θ(a|S_k) ∇_θ ln π_θ(a|S_k) ] 条件期望只依赖当前状态
+  = E[ r_t ∇_θ 1 ] = 0                         由 (10.3)
+</code></pre></div>
+<p>交叉项消失，(10.6) 成立，得证。∎</p>
+<blockquote>
+<p><strong>核心思想</strong>：回报期望按时刻展开，每时刻梯度贡献是"前缀轨迹的 score"：θ 无关项被求导杀死，交叉项被 (10.3) 杀死，剩下的 <code>Σ γ^t G_t ∇lnπ</code> 即所求。</p>
+</blockquote>
+<p><strong>小结</strong>：证明 = 展开 (10.5) → 重排 (10.6) → 零期望消项；工具是 score、期望线性性、马尔可夫性。</p>
+<h3 id="103">10.3 为什么期望形式能消掉未知的转移概率</h3>
+<p>(10.4) 中<strong>没有出现 p(s'|s,a) 的任何符号</strong>，原因有二：</p>
+<ol>
+<li>求导层面：<code>∇_θ ln P_θ(τ)</code> 中 p 与 θ 无关，<code>∇_θ ln p = 0</code>；</li>
+<li>估计层面：期望对"环境实际产生的轨迹"求，我们只观测 <code>(S_t, A_t, r_t)</code>，从不计算 <code>P_θ(τ)</code>——转移概率藏在采样测度里隐式加权，在估计量中不露面。</li>
+</ol>
+<p>这是策略梯度<strong>能在 model-free 下工作的根本原因</strong>：估计只需策略梯度与观测到的动作、回报，环境机制完全透明。</p>
+<div class="highlight"><pre><span></span><code>                梯度流（数据流向图）
+
+  θ ──→ π_θ(a|s) ──→ 采样 A_t ~ π_θ(·|S_t) ──→ 环境（黑箱，p 未知）
+                                                      │
+        ĝ = Σ_t γ^t G_t ∇_θ ln π_θ(A_t|S_t)  ←────────┘ 只观测 (S_t, A_t, r_t)
+                  ↑
+        θ ← θ + α·ĝ         全程不触碰 p(s&#39;|s,a)
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：策略梯度"只需要策略的梯度，不需要环境的梯度"，这是它在环境未知、模拟器不可微时仍能工作的根本原因。</p>
+</blockquote>
+<p><strong>小结</strong>：转移概率从求导层（∇ln p = 0）与估计层（测度隐式加权）同时消失，故策略梯度天然 model-free。</p>
+<h3 id="104-baseline">10.4 Baseline 的数学证明</h3>
+<p><strong>无偏性</strong>。对任意只依赖状态的 b(S)：</p>
+<div class="highlight"><pre><span></span><code>E_{a~π_θ(·|s)}[ ∇_θ ln π_θ(a|s) b(s) ]
+  = b(s) Σ_a π_θ(a|s) ∇_θ ln π_θ(a|s)
+  = b(s) ∇_θ Σ_a π_θ(a|s) = b(s) ∇_θ 1 = 0      由 (10.3)
+</code></pre></div>
+<p>对轨迹求期望（塔性质）得该项为零，故用 <code>G_t − b(S_t)</code> 替换 <code>G_t</code> 不改变梯度期望、只改变方差——<strong>任何状态相关基线都无偏</strong>。</p>
+<p><strong>方差最小化与最优基线</strong>。令 <code>d Var[(G_t − b(S_t))∇lnπ]/db = 0</code>：</p>
+<div class="highlight"><pre><span></span><code>b*(s) = E[ G_t ||∇_θ ln π_θ(A_t|S_t)||² | S_t=s ] / E[ ||∇_θ ln π_θ(A_t|S_t)||² | S_t=s ]
+</code></pre></div>
+<p>即以 score 范数平方为权重的价值函数；score 范数近乎恒定时 <code>b*(s) ≈ V^π(s)</code>——这是"价值函数做基线"近乎最优的依据。</p>
+<p>数值验证（softmax 策略，可直接运行）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">softmax</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">z</span><span class="o">.</span><span class="n">max</span><span class="p">());</span> <span class="k">return</span> <span class="n">e</span> <span class="o">/</span> <span class="n">e</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grad_log_pi</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>          <span class="c1"># ∇_θ ln π_θ(a) = 独热向量 − 概率向量</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta</span><span class="p">);</span> <span class="n">g</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">g</span> <span class="o">-</span> <span class="n">p</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">acts</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">200000</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">softmax</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">grad_log_pi</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">acts</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>            <span class="c1"># ≈ [0 0 0 0]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">g</span> <span class="o">*</span> <span class="mf">3.7</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>    <span class="c1"># ≈ [0 0 0 0]</span>
+</code></pre></div>
+<p>预期输出：<code>[-0.0004  0.0005  0.002  -0.0022]</code> 与 <code>[-0.0014  0.002  0.0073 -0.008 ]</code>（≈ 0）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：baseline 之所以"免费"，是因为 (10.3) 保证了 score 与任何状态函数正交；方差分析进一步指出，最优基线正是以 score 范数为权的价值函数。</p>
+</blockquote>
+<p><strong>小结</strong>：baseline 无偏性来自 (10.3) 的逐状态零期望；最优基线是 score 加权的价值函数，<code>V(s)</code> 是其自然近似。</p>
+<h3 id="105-advantage-gae">10.5 Advantage 与 GAE 的理论</h3>
+<p><strong>优势函数</strong>。<code>A^π(s,a) = Q^π(s,a) − V^π(s)</code> 衡量"在 s 采取 a 相对平均水平好多少"。V 只依赖状态，正是 (10.4) 允许减去的 baseline，故 <code>∇J = E[Σ γ^t A^π(S_t,A_t) ∇lnπ(A_t|S_t)]</code>。</p>
+<p><strong>GAE 构造</strong>。定义 TD 残差 <code>δ_t = r_t + γV(S_{t+1}) − V(S_t)</code>，望远镜求和得 <code>A^π(s,a) = Σ_{l≥0} γ^l E[δ_{t+l}|S_t=s,A_t=a]</code>。截断到前 k 项得 k 步优势 <code>Â^(k)_t = Σ_{l=0}^{k-1} γ^l δ_{t+l}</code>：k=1 单步 TD（高偏差低方差），k→∞ 蒙特卡洛（低偏差高方差）。GAE 取 λ 几何加权平均：</p>
+<div class="highlight"><pre><span></span><code>GAE(λ) = Σ_{l≥0} (γλ)^l δ_{t+l} = (1−λ) Σ_{k≥1} λ^(k−1) Â^(k)_t    (10.7)
+</code></pre></div>
+<p><strong>λ 是偏差-方差旋钮</strong>：λ 越小偏差越大、方差越小；λ 越大反之。λ=0 退化为 δ_t，λ=1 退化为 <code>G_t − V(S_t)</code>；有效视野 <code>1/(1−γλ)</code>。</p>
+<p>递推计算（可直接运行）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_gae</span><span class="p">(</span><span class="n">rewards</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;rewards 长 T；values 长 T+1（末位 V(s_T) 自举），递推 (10.7)&quot;&quot;&quot;</span>
+    <span class="n">gae</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rewards</span><span class="p">));</span> <span class="n">adv</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rewards</span><span class="p">))):</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">values</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">adv</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">adv</span>
+        <span class="n">gae</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">adv</span>
+    <span class="k">return</span> <span class="n">gae</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">compute_gae</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span>
+                           <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<p>预期输出：<code>[ 2.9908  1.515   2.868  -0.6   ]</code></p>
+<blockquote>
+<p><strong>核心思想</strong>：GAE 用 λ 在"相信价值函数（低方差、有偏）"与"相信真实回报（无偏、高方差）"间连续插值，无需新样本，只是对同一批 (r, V) 数据做不同权重的后处理。</p>
+</blockquote>
+<p><strong>小结</strong>：A = Q − V 是无偏基线化优势；(10.7) 用几何权重合成 k 步优势估计族，λ 是偏差-方差旋钮。</p>
+<h3 id="106-trpo">10.6 TRPO 的约束优化理论</h3>
+<p><strong>vanilla PG 的信任区域问题</strong>。<code>θ ← θ + η·ĝ</code> 的隐患：ĝ 含噪，η 稍大真实 J 即可能下降；且策略是概率分布，参数小扰动会被指数放大——一步过大导致<strong>策略崩溃</strong>（退化为确定性坏策略，训练不可逆失败）。</p>
+<p><strong>理论支撑</strong>。以旧策略采样的替代目标 <code>L_θ_old(θ) = E[ (π_θ/π_old) A^π_old ]</code> 在 θ_old 处与 J 一阶相等（∇L = ∇J），二阶以上有偏差。Kakade &amp; Langford 给出下界：</p>
+<div class="highlight"><pre><span></span><code>J(θ) ≥ L_θ_old(θ) − C · max_s KL(π_old(·|s) ‖ π_θ(·|s))          (10.8)
+</code></pre></div>
+<p>"最大化替代目标 + 压住 KL"即可保证 J 单调不降（minorize-maximization）。TRPO 写成约束优化：</p>
+<div class="highlight"><pre><span></span><code>max_θ  E[ ρ_t(θ) Â_t ]           ρ_t(θ) = π_θ(A_t|S_t)/π_old(A_t|S_t)
+s.t.   E_s[ KL(π_old(·|s) ‖ π_θ(·|s)) ] ≤ δ                       (10.9)
+</code></pre></div>
+<p>用自然梯度 <code>θ ← θ + α·F⁻¹∇L</code> 求解（F 为 Fisher 矩阵 ≈ KL 局部 Hessian），配共轭梯度与线搜索；F⁻¹ 把梯度"掰弯"到 KL 椭球内最陡方向。</p>
+<div class="highlight"><pre><span></span><code>    信任区域示意图（θ 平面）
+
+              J(θ) 等高线
+        θ_old ──F⁻¹∇L──→ θ*     信任区域：以 θ_old 为中心的 KL 椭球 {KL ≤ δ}
+          │                      （用 KL 度量分布变化，而非欧氏距离）
+          ▼
+        普通梯度 ∇L 一步越界 → 分布剧变 → J 骤降（策略崩溃）
+</code></pre></div>
+<p><strong>PPO：裁剪替代约束</strong>。TRPO 每步解二阶系统代价高；PPO 观察到约束本质是"不允许 ρ_t 偏离 1 太远"，直接在目标上把 ρ 轴"焊死"：</p>
+<div class="highlight"><pre><span></span><code>L^CLIP(θ) = E[ min( ρ_t(θ)Â_t,  clip(ρ_t(θ), 1−ε, 1+ε) Â_t ) ]      (10.10)
+</code></pre></div>
+<p>分段线性性质（Â 的符号决定哪一支起作用）：</p>
+<table>
+<thead>
+<tr>
+<th>情形</th>
+<th>ρ 轴上的形状</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Â_t &gt; 0（好动作）</td>
+<td>ρ: 1→1+ε 线性上升，ρ&gt;1+ε 被压平</td>
+<td>鼓励适度增大 ρ，超过 1+ε 不再奖励</td>
+</tr>
+<tr>
+<td>Â_t &lt; 0（坏动作）</td>
+<td>ρ: 1→1−ε 线性下降，ρ&lt;1−ε 被压平</td>
+<td>惩罚过度提高坏动作概率，同样封顶</td>
+</tr>
+</tbody>
+</table>
+<p>每次更新只有 clip 区间内一段被推着走，等效于每步只迈一小步的软信任区域，无需二阶信息。对比 TRPO：硬约束 + 自然梯度（二阶、开销高、有 (10.8) 保证）vs PPO：软约束 + Adam（一阶、开销低、实践稳定）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：TRPO/PPO 的动机是在同一份旧数据上做多次更新（off-policy 复用），必须限制新旧策略差异：TRPO 用 KL 硬约束 + 自然梯度，PPO 用裁剪把"离 1 太远的 ρ"的梯度清零，殊途同归。</p>
+</blockquote>
+<p><strong>小结</strong>：vanilla PG 大步更新会因分布剧变而崩溃；(10.8) 给出"替代目标 − KL 惩罚"下界，TRPO 据此做 KL 约束优化，PPO 用 (10.10) 的分段线性裁剪廉价近似。</p>
 
 
 

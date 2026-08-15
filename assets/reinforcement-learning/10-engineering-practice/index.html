@@ -1720,6 +1720,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：收敛性的理论判据
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：收敛性的理论判据">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 策略熵：探索程度的定量标尺
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 TD 误差：预测一致性的度量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-kl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 KL 散度：策略更新幅度的监控
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 收敛的理论充分条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 理论判据速查表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2634,6 +2706,78 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：收敛性的理论判据
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：收敛性的理论判据">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 策略熵：探索程度的定量标尺
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 TD 误差：预测一致性的度量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-kl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 KL 散度：策略更新幅度的监控
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 收敛的理论充分条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 理论判据速查表
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5048,6 +5192,122 @@ c) 评估 seed 与训练 seed 相同，"见过"的初始状态被重复评估。
 欢迎来到强化学习的工程世界。</p>
 </blockquote>
 <p>（全书完）</p>
+<h2 id="_9">十、理论进阶：收敛性的理论判据</h2>
+<blockquote>
+<p>前文给出"怎么排查"的工程清单，本节回答"为什么这些指标能指示收敛"：策略熵、TD 误差、KL 散度各自在数学上对应训练过程的什么状态。</p>
+</blockquote>
+<h3 id="101">10.1 策略熵：探索程度的定量标尺</h3>
+<p>策略熵 H(π(·|s)) = −Σ π(a|s) ln π(a|s) 度量策略的随机性：</p>
+<ul>
+<li><strong>熵高</strong>：策略接近均匀分布，仍在广泛探索；</li>
+<li><strong>熵降</strong>：策略逐渐确定性化，开始利用所学；</li>
+<li><strong>熵过低/归零</strong>：策略塌缩到单一动作——若此时性能不佳，说明过早陷入局部最优（熵塌缩，entropy collapse）。</li>
+</ul>
+<div class="highlight"><pre><span></span><code>熵随训练的变化（健康 vs 塌缩）
+
+熵
+ ^
+ |  ██
+ | █  ██        ██      ← 健康：缓慢下降、保持正熵
+ |█    ██      █  ██
+ |       ██   █    ██
+ |         ██ █      ████
+ |           ██
+ |            █        ████  ← 塌缩：骤降到 0
+ +----------------------------------&gt; 训练步数
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：熵是探索-利用平衡的<strong>可观测代理指标</strong>；SAC 显式用熵正则项维持熵下限，PPO 则靠 clip 限制策略突变间接控熵。</p>
+</blockquote>
+<h3 id="102-td">10.2 TD 误差：预测一致性的度量</h3>
+<p>TD 误差 δ_t = r_{t+1} + γV(s_{t+1}) − V(s_t) 度量"相邻两步的价值预测是否自洽"。</p>
+<p>当价值函数收敛到真实 v_π 时，TD 误差的期望趋近于零：</p>
+<div class="highlight"><pre><span></span><code>E[δ_t | S_t = s] = E[R_{t+1} + γv_π(S_{t+1}) | S_t=s] − v_π(s) = 0   （贝尔曼方程）
+</code></pre></div>
+<p>因此<strong>TD 误差的均值→0 是价值收敛的必要信号</strong>；但 TD 误差方差大并不代表发散（可能只是单步奖励噪声大），要结合滑动平均看趋势。</p>
+<table>
+<thead>
+<tr>
+<th>指标表现</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TD 误差均值缓慢趋零</td>
+<td>价值函数在收敛 ✅</td>
+</tr>
+<tr>
+<td>TD 误差持续大且震荡</td>
+<td>奖励尺度大/学习率过高，检查归一化</td>
+</tr>
+<tr>
+<td>TD 误差发散增长</td>
+<td>不稳定（可能是 deadly triad），需降学习率/冻结目标网络</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-kl">10.3 KL 散度：策略更新幅度的监控</h3>
+<p>KL(π_new ‖ π_old) = Σ π_new(a|s) ln(π_new(a|s)/π_old(a|s)) 度量一次更新前后策略的分布距离。</p>
+<ul>
+<li>KL 突增 → 更新步长过大，策略分布剧变，可能破坏已学内容；</li>
+<li>KL 长期接近 0 → 更新过小，训练停滞。</li>
+</ul>
+<p>这正是 <strong>TRPO 用 KL 约束、PPO 用 clip 限制</strong>的原因：监控 KL 相当于直接检查"信任区域"约束是否被违反。</p>
+<blockquote>
+<p><strong>核心思想</strong>：熵看探索、TD 误差看预测、KL 看更新幅度——三者构成训练过程的三维体检表。</p>
+</blockquote>
+<h3 id="104">10.4 收敛的理论充分条件</h3>
+<p>表格型方法（Tabular Q-Learning/TD）有严格收敛保证：</p>
+<div class="highlight"><pre><span></span><code>Robbins-Monro 条件：
+  Σα_t = ∞    （步长之和发散 → 能到达任意远处）
+  Σα_t² &lt; ∞   （步长平方收敛 → 噪声累积有界）
+</code></pre></div>
+<p>满足该条件的衰减步长（如 α_t = 1/t）保证表格 Q 以概率 1 收敛到 Q<em>。</em><em>函数逼近 + 自举 + off-policy 三者齐备时无此保证</em>*（见第 5 章 deadly triad）——工程上的缓解手段（目标网络、回放、clip）本质上都是在"破坏"这些导致发散的组合条件。</p>
+<h3 id="105">10.5 理论判据速查表</h3>
+<table>
+<thead>
+<tr>
+<th>信号</th>
+<th>健康形态</th>
+<th>危险形态</th>
+<th>理论依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>策略熵</td>
+<td>缓慢下降、保持正值</td>
+<td>骤降归零</td>
+<td>探索-利用平衡</td>
+</tr>
+<tr>
+<td>TD 误差</td>
+<td>均值趋零</td>
+<td>持续大/发散</td>
+<td>贝尔曼方程</td>
+</tr>
+<tr>
+<td>KL 散度</td>
+<td>平稳小幅度</td>
+<td>突增</td>
+<td>信任区域</td>
+</tr>
+<tr>
+<td>回报均值</td>
+<td>单调上升后平台</td>
+<td>剧烈震荡/骤降</td>
+<td>随机逼近收敛</td>
+</tr>
+<tr>
+<td>价值规模</td>
+<td>有界</td>
+<td>指数爆炸</td>
+<td>γ 收缩</td>
+</tr>
+</tbody>
+</table>
+<p><strong>小结</strong>：工程排查的每个信号背后都有理论依据——熵对应探索度量、TD 误差对应贝尔曼一致性、KL 对应策略更新幅度。理解了"为什么看这些指标"，调参就从试错变成了有指导的搜索。</p>
 
 
 

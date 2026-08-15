@@ -1635,6 +1635,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：贝尔曼方程与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：贝尔曼方程与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 贝尔曼期望方程的完整推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 贝尔曼最优方程的推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 压缩映射与不动点定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 策略评估迭代的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 折扣因子的作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 三种形式对比与小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2958,6 +3041,89 @@
     <span class="md-ellipsis">
       
         8.6 本章小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：贝尔曼方程与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：贝尔曼方程与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 贝尔曼期望方程的完整推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 贝尔曼最优方程的推导
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 压缩映射与不动点定理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 策略评估迭代的收敛性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 折扣因子的作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 三种形式对比与小结
       
     </span>
   </a>
@@ -5174,6 +5340,256 @@ Q(起点, 上/下/左/右) = [-9.774, -9.7238, -9.774, -9.7238]
 <hr />
 <blockquote>
 <p><strong>下一步</strong>：本章的价值函数都是"给定策略求价值"（策略评估）。第 2 章 <a href="../02-dynamic-programming/">动态规划</a> 将回答"如何找到最优策略"——策略迭代、价值迭代与广义策略迭代（GPI），并在同一个 5×5 GridWorld 上对比随机策略与最优策略的价值差异。</p>
+</blockquote>
+<h2 id="_8">九、理论进阶：贝尔曼方程与收敛性</h2>
+<blockquote>
+<p>前文给出方程的"是什么"，本节回答"为什么"：解为何存在唯一、迭代为何收敛、γ 的角色。核心工具：压缩映射。记号沿用前文：<code>π(a|s)</code> 策略概率，<code>p(s',r|s,a)</code> 转移-奖励联合分布，<code>p(s'|s,a)=Σ_r p(s',r|s,a)</code>。</p>
+</blockquote>
+<h3 id="91">9.1 贝尔曼期望方程的完整推导</h3>
+<p>从 <code>v_π(s)=E_π[G_t|S_t=s]</code> 出发，只用期望线性性、全期望公式、马尔可夫性质三条性质推出方程：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>变换</th>
+<th>依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>①</td>
+<td><code>v_π(s) = E_π[G_t \| S_t = s]</code></td>
+<td>价值定义</td>
+</tr>
+<tr>
+<td>②</td>
+<td><code>= E_π[R_{t+1}+γG_{t+1} \| S_t = s]</code></td>
+<td>回报递推</td>
+</tr>
+<tr>
+<td>③</td>
+<td><code>= E_π[R_{t+1}\|S_t=s] + γE_π[G_{t+1}\|S_t=s]</code></td>
+<td>期望线性性</td>
+</tr>
+<tr>
+<td>④</td>
+<td><code>E[R_{t+1}\|S_t=s] = Σ_a π(a\|s) Σ_{s',r} p(s',r\|s,a)·r</code></td>
+<td>全期望（按动作划分）</td>
+</tr>
+<tr>
+<td>⑤</td>
+<td><code>E[G_{t+1}\|S_t=s] = Σ_{s'} P(S_{t+1}=s'\|S_t=s)·E[G_{t+1}\|S_{t+1}=s',S_t=s]</code></td>
+<td>全期望条件版（按下一状态划分）</td>
+</tr>
+<tr>
+<td>⑥</td>
+<td><code>E[G_{t+1}\|S_{t+1}=s',S_t=s] = E[G_{t+1}\|S_{t+1}=s'] = v_π(s')</code></td>
+<td>马尔可夫性质 + 价值定义</td>
+</tr>
+<tr>
+<td>⑦</td>
+<td><code>P(S_{t+1}=s'\|S_t=s) = Σ_a π(a\|s)·p(s'\|s,a)</code></td>
+<td>全概率（对动作边际化）</td>
+</tr>
+<tr>
+<td>⑧</td>
+<td>合并 ③~⑦</td>
+<td><code>v_π(s) = Σ_a π(a\|s) Σ_{s',r} p(s',r\|s,a)[r+γv_π(s')]</code></td>
+</tr>
+</tbody>
+</table>
+<p>要点：④ 与 ⑤⑦ 同一招用两次（先按动作、再按下一状态划分）；⑥ 是唯一用到马尔可夫性质的一步。</p>
+<blockquote>
+<p><strong>核心思想</strong>：推导链只消耗全期望公式（划分）、期望线性性（拆并）、马尔可夫性质（条件转移）。</p>
+<p><strong>小结</strong>：期望方程是价值定义 + 回报递推 + 三条概率性质的必然推论，每一步都有依据。</p>
+</blockquote>
+<h3 id="92">9.2 贝尔曼最优方程的推导</h3>
+<p>任意随机策略 π 有 <code>v_π(s)=Σ_a π(a|s) q_π(s,a)</code>，而加权平均不超过最大值：</p>
+<div class="highlight"><pre><span></span><code>Σ_a π(a|s)·q_π(s,a) ≤ max_a q_π(s,a) ≤ max_a q*(s,a)
+</code></pre></div>
+<p>等号当且仅当 π 是点质量 <code>δ_{a*}</code>；取 <code>π'(s)=argmax_a q*(s,a)</code> 可达上界，故 <code>v*(s)=max_a q*(s,a)</code> 且<strong>存在确定性最优策略</strong>。对 <code>q*(s,a)</code> 展开一步（同 9.1 ④⑥）：</p>
+<div class="highlight"><pre><span></span><code>q*(s,a) = Σ_{s&#39;,r} p(s&#39;,r|s,a)[ r + γv*(s&#39;) ]
+</code></pre></div>
+<p>合并：<code>v*(s) = max_a Σ_{s',r} p(s',r|s,a)[ r + γv*(s') ]</code>。</p>
+<p><strong>max 为何可穿透动作求和、不能穿透转移期望</strong>：</p>
+<div class="highlight"><pre><span></span><code>max_a Σ_{s&#39;,r} p(s&#39;,r|s,a) f(s&#39;,r)  ≠  Σ_{s&#39;,r} p(s&#39;,r|s,a) max_a f(s&#39;,r)
+</code></pre></div>
+<p>被替换的是"按 π 的加权平均"（最优策略是点质量）；但动作先于环境随机性被选择，max 移进期望内部等于"先看结果再选动作"，会高估价值。正确形式永远是"先 max 后 E"。</p>
+<blockquote>
+<p><strong>核心思想</strong>：期望方程与最优方程的唯一差别，是把"按策略平均动作"换成"取最优动作"；max 的位置由因果顺序决定。</p>
+<p><strong>小结</strong>：最优方程推导 = 期望方程推导 + 不等式（平均 ≤ 最大值）+ 构造（argmax 策略）。</p>
+</blockquote>
+<h3 id="93">9.3 压缩映射与不动点定理</h3>
+<p><strong>贝尔曼期望算子</strong>：<code>(T_π v)(s) = Σ_a π(a|s) Σ_{s',r} p(s',r|s,a)[r+γv(s')]</code>，矩阵形式 <code>T_π v = R_π + γP_π v</code>，<code>v_π</code> 是其不动点。在 ∞-范数 <code>‖v‖∞ = max_s |v(s)|</code> 下：</p>
+<div class="highlight"><pre><span></span><code>‖T_π v − T_π v&#39;‖∞
+  = max_s | γ Σ_a π(a|s) Σ_{s&#39;} p(s&#39;|s,a)[v(s&#39;)−v&#39;(s&#39;)] |   ① 奖励项抵消
+  ≤ γ max_s Σ_a π(a|s) Σ_{s&#39;} p(s&#39;|s,a) |v(s&#39;)−v&#39;(s&#39;)|     ② 三角不等式
+  ≤ γ max_s Σ_a π(a|s) Σ_{s&#39;} p(s&#39;|s,a) ‖v−v&#39;‖∞           ③ 逐项 ≤ 全局最大
+  = γ ‖v − v&#39;‖∞                                            ④ 规范性：行和=1、概率和=1
+</code></pre></div>
+<p>即 <code>‖T_π v − T_π v'‖∞ ≤ γ‖v − v'‖∞</code>：<strong>T_π 是 γ-收缩映射</strong>，反复作用把全体点"吸"向唯一极限：</p>
+<div class="highlight"><pre><span></span><code>   v&#39; ──T_π──► T_πv&#39;            v ──T_π──► T_πv
+    \           /                 ↘        ↙
+     \ 距离≤γd /                    v_π（唯一不动点）
+</code></pre></div>
+<p><strong>Banach 不动点定理</strong>：完备度量空间上的 γ-收缩映射有唯一不动点 <code>x*</code>，且 <code>d(x_k,x*) ≤ γ^k d(x_0,x*)</code>。<code>(R^{|S|},‖·‖∞)</code> 完备，故方程有解（迭代是柯西列）、解唯一（两不动点距离 ≤ γ×自身，必为 0）、该解即 v_π（与闭式解 <code>(I−γP_π)^{-1}R_π</code> 重合）、任意起点收敛。最优算子 <code>T*</code> 同样 γ-收缩，保证第 2 章价值迭代收敛。</p>
+<blockquote>
+<p><strong>核心思想</strong>："解存在、解唯一、迭代可算"被收缩性一条性质同时解决，唯一要求 γ &lt; 1。</p>
+<p><strong>小结</strong>：收缩性只用两条规范性（行和=1、概率和=1）与三角不等式；收缩比恰为 γ。</p>
+</blockquote>
+<h3 id="94">9.4 策略评估迭代的收敛性</h3>
+<div class="highlight"><pre><span></span><code>‖v_{k+1} − v_π‖∞ = ‖T_π v_k − T_π v_π‖∞ ≤ γ‖v_k − v_π‖∞ ≤ ⋯ ≤ γ^{k+1}‖v_0 − v_π‖∞ → 0
+</code></pre></div>
+<p>收敛为<strong>几何速率</strong>（每步误差乘 γ），对数纵轴下曲线为斜率 = ln γ 的直线：</p>
+<div class="highlight"><pre><span></span><code>‖v_k − v*‖∞
+10^0  │●
+      │  ●
+      │    ●
+      │      ●
+10^-1 │        ●
+      │           ●
+      │             ●
+10^-2 │               ●
+      └────────────────────► k
+</code></pre></div>
+<p>精度 ε 所需步数：<code>k ≥ ln(ε/‖v_0−v_π‖∞)/ln γ</code>。<strong>γ → 1 为何变慢</strong>：误差递推 <code>e_{k+1}=γP_π e_k</code> 的谱半径为 <code>γρ(P_π)=γ</code>（随机矩阵谱半径 1），渐近速率恰为 γ；每次迭代只传播一步奖励信息，γ 接近 1 时需约 <code>1/(1−γ)</code> 步才能覆盖有效视界。</p>
+<table>
+<thead>
+<tr>
+<th>γ</th>
+<th>1/(1−γ) 视界</th>
+<th>降 10⁻⁶ 步数</th>
+<th>价值上界（R_max=1）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5</td>
+<td>2</td>
+<td>≈ 20</td>
+<td>2</td>
+</tr>
+<tr>
+<td>0.9</td>
+<td>10</td>
+<td>≈ 132</td>
+<td>10</td>
+</tr>
+<tr>
+<td>0.99</td>
+<td>100</td>
+<td>≈ 1375</td>
+<td>100</td>
+</tr>
+<tr>
+<td>0.999</td>
+<td>1000</td>
+<td>≈ 13809</td>
+<td>1000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>数值验证</strong>（seed 固定可复现）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]])</span>      <span class="c1"># 随机矩阵：每行和为 1</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]);</span> <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">T</span><span class="p">(</span><span class="n">v</span><span class="p">):</span> <span class="k">return</span> <span class="n">R</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">P</span> <span class="o">@</span> <span class="n">v</span>          <span class="c1"># 贝尔曼期望算子</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">ratio_max</span> <span class="o">=</span> <span class="mf">0.0</span>    <span class="c1"># ① 收缩性：像距 ≤ γ·原距</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">v</span><span class="p">,</span> <span class="n">vp</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">T</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="n">T</span><span class="p">(</span><span class="n">vp</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">vp</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1e-15</span><span class="p">)</span>
+    <span class="n">ratio_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio_max</span><span class="p">,</span> <span class="n">ratio</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;最大收缩比 = </span><span class="si">{</span><span class="n">ratio_max</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">  (理论 ≤ γ = </span><span class="si">{</span><span class="n">gamma</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="n">v_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">P</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>  <span class="c1"># ② 迭代收敛，闭式解参照</span>
+<span class="n">v_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="n">err_prev</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">v_k</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="n">v_k</span><span class="p">);</span> <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v_k</span> <span class="o">-</span> <span class="n">v_star</span><span class="p">))</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;，与上一步误差之比 = </span><span class="si">{</span><span class="n">err</span><span class="o">/</span><span class="n">err_prev</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">err_prev</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: 误差 = </span><span class="si">{</span><span class="n">err</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}{</span><span class="n">ratio</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span> <span class="n">err_prev</span> <span class="o">=</span> <span class="n">err</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;v* =&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">v_star</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code># 预期输出:
+最大收缩比 = 0.899987  (理论 ≤ γ = 0.9)
+k=1: 误差 = 5.301370
+k=2: 误差 = 4.671370，与上一步误差之比 = 0.8812
+k=3: 误差 = 4.177270，与上一步误差之比 = 0.8942
+k=4: 误差 = 3.752263，与上一步误差之比 = 0.8983
+k=5: 误差 = 3.375071，与上一步误差之比 = 0.8995
+v* = [6.3014 4.9315]
+</code></pre></div>
+<p>收缩比逐对 ≤ γ；误差比从 0.88 单调趋近 0.9（初期略小是次主导特征值 γ×0.3 的影响）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：收敛性 = 收缩性 + 不动点；γ 是"收敛速度旋钮"，调大 γ 提高远见、按 <code>1/(1−γ)</code> 放慢收敛。</p>
+<p><strong>小结</strong>：策略评估从任意起点收敛到 v_π，误差按 γ^k 几何衰减；步数与 <code>1/(1−γ)</code> 成正比。</p>
+</blockquote>
+<h3 id="95">9.5 折扣因子的作用</h3>
+<p><strong>① 保证回报有界</strong>：<code>|G_t| ≤ Σ_{k=0}^∞ γ^k R_max = R_max/(1−γ) &lt; ∞</code>（几何级数）。γ=1 且不终止时和式发散、价值无定义——这是 γ &lt; 1 最根本的作用。</p>
+<p><strong>② 控制有效视界</strong>：权重 <code>γ^k ≤ ε ⇔ k ≥ ln(1/ε)/ln(1/γ) ≈ (1−γ)^{-1}ln(1/ε)</code>，超过约 <code>1/(1−γ)</code> 步的奖励权重不足 e⁻¹，几乎不影响价值（数量级见 9.4 表）。</p>
+<p><strong>③ 影响价值尺度</strong>：价值 ∈ <code>[−R_max/(1−γ), +R_max/(1−γ)]</code>，γ 越大绝对值越大（8.4 节：V(0) 从 γ=0.9 的 −9.75 膨胀到 γ=0.99 的 −54.82）。不同 γ 下价值不可直接比较。</p>
+<p><strong>④ 终止状态</strong>：终止状态价值约定为 0，两种实现等价——约定 A（显式截断）：<code>G_t = Σ_{k=0}^{T−t−1} γ^k R_{t+k+1}</code> 有限和；约定 B（吸收态）：自转移 + 零奖励 ⇒ <code>v(s)=γv(s) ⇒ v(s)=0</code>。约定 B 把有限和"伪装"成收敛无穷和；γ=1 时只能靠约定 A 且要求几乎必然终止。</p>
+<blockquote>
+<p><strong>核心思想</strong>：γ 同时是回报级数的"收敛半径"、价值尺度的"放大倍数"、迭代速率的"收缩比"。</p>
+<p><strong>小结</strong>：γ &lt; 1 ⇒ 回报有界、价值良定义、迭代收敛；γ → 1 价值膨胀且收敛变慢，工程常取 0.9~0.99。</p>
+</blockquote>
+<h3 id="96">9.6 三种形式对比与小结</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>期望方程（标量）</th>
+<th>最优方程</th>
+<th>期望方程（矩阵）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表达式</td>
+<td><code>v_π(s) = Σ_a π(a\|s) Σ_{s',r} p(s',r\|s,a)[r+γv_π(s')]</code></td>
+<td><code>v*(s) = max_a Σ p(s',r\|s,a)[r+γv*(s')]</code></td>
+<td><code>V = R_π + γP_π V</code></td>
+</tr>
+<tr>
+<td>动作处理</td>
+<td>Σ_a π(a|s) 平均</td>
+<td>max_a 取最大</td>
+<td>并入 R_π、P_π</td>
+</tr>
+<tr>
+<td>形态</td>
+<td>线性方程</td>
+<td>非线性（max）</td>
+<td>线性方程组</td>
+</tr>
+<tr>
+<td>求解</td>
+<td>矩阵求逆 / 迭代</td>
+<td>价值迭代（第 2 章）</td>
+<td><code>(I−γP_π)^{-1}R_π</code></td>
+</tr>
+<tr>
+<td>解</td>
+<td>唯一（= v_π）</td>
+<td>唯一（= v*）</td>
+<td>唯一（= v_π）</td>
+</tr>
+<tr>
+<td>算子</td>
+<td><code>T_π</code>（γ-收缩）</td>
+<td><code>T*</code>（γ-收缩）</td>
+<td>同 T_π</td>
+</tr>
+</tbody>
+</table>
+<p><strong>收官</strong>：三个公式是同一不动点思想的三副面孔，压缩映射定理一次性回答全部理论问题：</p>
+<div class="highlight"><pre><span></span><code>存在性：   T_π 是完备空间上的收缩 ⇒ 不动点存在
+唯一性：   两个不动点距离 = γ×自身 ⇒ 必须为 0
+可计算性： 任意起点迭代误差几何衰减 ⇒ 策略评估必然收敛
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：贝尔曼方程把"无穷步的期望"压缩成"一步的期望 + 自指"，配合压缩映射保证良定义与可行算法；该模式贯穿全部收敛性论证。</p>
+<p><strong>小结</strong>：期望方程（线性、可闭式求解）、最优方程（非线性、只能迭代）、矩阵形式（向量化）视角互补；γ-收缩性是共同源头。</p>
 </blockquote>
 
 

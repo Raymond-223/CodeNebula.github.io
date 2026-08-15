@@ -1413,6 +1413,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、底层原理：测试充分性与覆盖率
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十一、底层原理：测试充分性与覆盖率">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 覆盖率指标的原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-mutation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 变异测试（Mutation Testing）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 测试充分性理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 单元测试框架底层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 代码覆盖率工具原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 测试金字塔的数学直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2885,6 +2968,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、底层原理：测试充分性与覆盖率
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十一、底层原理：测试充分性与覆盖率">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 覆盖率指标的原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-mutation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 变异测试（Mutation Testing）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 测试充分性理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 单元测试框架底层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 代码覆盖率工具原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 测试金字塔的数学直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4251,6 +4417,127 @@ snakeviz<span class="w"> </span>profile.prof<span class="w">  </span><span class
 <li>Google Testing Blog — testing.googleblog.com</li>
 <li>Playwright 官方文档 — playwright.dev/docs</li>
 </ul>
+<h2 id="_12">十一、底层原理：测试充分性与覆盖率</h2>
+<blockquote>
+<p><strong>核心思想</strong>：测试的价值不取决于用例数量，而取决于用例集对缺陷的暴露能力。覆盖率是近似度量，变异测试是精确度量。</p>
+</blockquote>
+<h3 id="111">11.1 覆盖率指标的原理</h3>
+<p>设语句集 S、边集 E，执行过的记为 S'、E'：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数学定义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>行覆盖</td>
+<td>|S'| / |S|</td>
+</tr>
+<tr>
+<td>分支覆盖</td>
+<td>|E'| / |E|（每条边被走过）</td>
+</tr>
+<tr>
+<td>判定覆盖</td>
+<td>每个判定取真/假各一次</td>
+</tr>
+<tr>
+<td>条件覆盖</td>
+<td>每个原子条件取真/假各一次</td>
+</tr>
+<tr>
+<td>路径覆盖</td>
+<td>走过路径 / 全部路径（通常不可穷尽）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>分支覆盖与判定覆盖的区别</strong>：判定覆盖要求判定表达式（如 <code>a &amp;&amp; b</code>）整体取真/假各一次；分支覆盖要求每条边至少走一次。对二元判定二者等价；条件覆盖才要求原子条件独立取真。</p>
+<div class="highlight"><pre><span></span><code><span class="n">hit</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">hit</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>      <span class="c1"># D = c1(x&gt;0) ∧ c2(y&gt;0)</span>
+        <span class="n">hit</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="k">return</span> <span class="s2">&quot;both&quot;</span>
+    <span class="n">hit</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="k">return</span> <span class="s2">&quot;other&quot;</span>
+
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hit</span><span class="p">),</span> <span class="s2">&quot;/ 3&quot;</span><span class="p">)</span>   <span class="c1"># 3/3：行覆盖 100%，条件覆盖 50%</span>
+</code></pre></div>
+<p>行覆盖 100% 只说明每行都跑过，不说明每个分支都被验证。经典反例 <code>if (a &amp;&amp; b)</code>：满足判定覆盖的用例仍漏掉组合缺陷。</p>
+<p><strong>小结</strong>：严格性按 行 &lt; 分支/判定 &lt; 条件 &lt; 路径 递增；行覆盖 100% 只是底线。</p>
+<h3 id="112-mutation-testing">11.2 变异测试（Mutation Testing）</h3>
+<p>变异算子对程序做最小语法扰动：AOR（<code>+</code>→<code>-</code>）、ROR（<code>==</code>→<code>!=</code>）、LCR（<code>&amp;&amp;</code>→<code>||</code>），产生<strong>变异体</strong> M'。</p>
+<p><strong>kill 条件</strong>：T kill M' ⟺ ∃t∈T：t 在 P 上通过、在 M' 上失败。无法被 kill 的称<strong>等价变异体</strong>（行为与 P 相同，须人工剔除）。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>                <span class="c1"># P：n &gt;= 0 判为非负</span>
+    <span class="k">return</span> <span class="s2">&quot;non-negative&quot;</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;negative&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_m</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>              <span class="c1"># ROR 变异体：&gt;= → &gt;</span>
+    <span class="k">return</span> <span class="s2">&quot;non-negative&quot;</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;negative&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">killed</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">mp</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">t</span><span class="p">(</span><span class="n">mp</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">)</span>
+
+<span class="n">tests</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;non-negative&quot;</span><span class="p">,</span>
+         <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;negative&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">classify</span><span class="p">,</span> <span class="n">classify_m</span><span class="p">))</span>  <span class="c1"># False（变异体存活）</span>
+<span class="n">tests</span> <span class="o">+=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;non-negative&quot;</span><span class="p">]</span> <span class="c1"># 边界值 0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">killed</span><span class="p">(</span><span class="n">tests</span><span class="p">,</span> <span class="n">classify</span><span class="p">,</span> <span class="n">classify_m</span><span class="p">))</span>  <span class="c1"># True（被 kill）</span>
+</code></pre></div>
+<p><strong>变异得分</strong>：MS = killed / (total − equivalent)。为何是"黄金标准"：它度量行为被验证而非代码被执行，与真实缺陷检出率相关性远高于行覆盖。代价是每个变异体须重跑整个测试集，工程上以采样加速。</p>
+<p><strong>小结</strong>：变异得分回答了"测试集是否足够好"这一覆盖率无法回答的问题；等价变异体识别是其主要理论缺陷。</p>
+<h3 id="113">11.3 测试充分性理论</h3>
+<p>Goodenough-Gerhart（1975）给出形式判据：
+- <strong>可靠</strong>：满足 C 的任意两个测试集对同一程序结论一致；
+- <strong>有效</strong>：程序含错时，存在满足 C 的测试集能暴露之。</p>
+<p>若判据既可靠又有效，则测试通过 ⟺ 程序正确——不可判定；工程上只能追求近似判据。</p>
+<p><strong>划分测试</strong>：将输入域 D 划分为子域 D₁…Dₖ，每子域至少取一个代表输入，有效性依赖<strong>同质性假设</strong>（子域内行为一致）；边界值分析即其特例。</p>
+<p><strong>随机测试 vs 划分测试</strong>：Duran-Ntafos 分析表明，划分无法精确对齐失效区域时，其检出概率不显著优于同用例数的随机测试；但划分可解释性强，实践中两者结合。</p>
+<p><strong>小结</strong>：充分性判据不可判定；划分的价值在代表性与可解释性，而非检出优势。</p>
+<h3 id="114">11.4 单元测试框架底层</h3>
+<p><strong>测试隔离（fixture）</strong>：每个用例须在确定初始状态下运行，按 setup → test → teardown 执行，pytest 以 fixture 依赖注入与作用域管理资源：</p>
+<div class="highlight"><pre><span></span><code>test 1:  setup(fixture) → 用例 → teardown
+test 2:  setup(fixture) → 用例 → teardown
+</code></pre></div>
+<p>隔离被破坏表现为<strong>顺序依赖</strong>（单跑通过、整套失败），根源是共享可变状态。</p>
+<p><strong>mock 的代理机制</strong>：mock 对象运行时动态生成，拦截属性访问与调用并记录（Python 重写 <code>__getattr__</code>/<code>__call__</code>，Java 用动态代理）。不改被测代码，只在调用边界替换依赖。</p>
+<p><strong>断言失败的报告</strong>：断言本质是抛出 <code>AssertionError</code> 沿栈传播，框架捕获后结合 traceback 输出。pytest 额外做<strong>断言重写</strong>（AST 改写），把 <code>assert a == b</code> 展开为带左右值 diff 的诊断代码。</p>
+<p><strong>小结</strong>：fixture 管状态隔离、mock 管依赖替换、断言重写管诊断信息，共同保证失败即定位。</p>
+<h3 id="115">11.5 代码覆盖率工具原理</h3>
+<p>覆盖率工具通过<strong>插桩</strong>埋入计数器：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>原理</th>
+<th>代表</th>
+<th>运行时开销</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>源码插桩</td>
+<td>改写 AST/源码插入计数语句</td>
+<td>Istanbul、coverage.py</td>
+<td>中</td>
+</tr>
+<tr>
+<td>字节码插桩</td>
+<td>类加载时改写字节码插入探针</td>
+<td>JaCoCo（ASM）</td>
+<td>低（约 5%~20%）</td>
+</tr>
+</tbody>
+</table>
+<p>Python 的 <code>sys.settrace</code> 是轻量变体：按行回调累计，无需改写源码，但开销可达数倍，故 coverage.py 提供 C 加速。生产环境不插桩，覆盖率仅在 CI 构建中收集；插桩改变时序，或掩盖竞态缺陷。</p>
+<p><strong>小结</strong>：插桩是"观测即干扰"的典型：精度与开销需权衡，结果只对插桩构建成立。</p>
+<h3 id="116">11.6 测试金字塔的数学直觉</h3>
+<p>设用例数 nᵢ、执行成本 cᵢ、定位成本 dᵢ，且 c₁&lt;c₂&lt;c₃、d₁&lt;d₂&lt;d₃：</p>
+<div class="highlight"><pre><span></span><code>C_total = Σ nᵢ·cᵢ  +  Σ P(failᵢ)·nᵢ·dᵢ
+          └ 执行成本 ┘   └ 期望失败定位成本 ┘
+</code></pre></div>
+<p>若各层检出缺陷概率相近，用例放底层意味着执行与定位成本同时最小。量化对比：底层 1000 用例 × 10ms = 10s，等量 E2E 为 1000 × 60s = 16.7 小时——差 4 个数量级。金字塔的数学本质是<strong>期望总成本最小化</strong>：粒度越粗，单位用例信息量/成本越低，越应少用。</p>
+<p><strong>小结</strong>：金字塔不是风格偏好，而是执行与定位成本的联合优化；冰激凌甜筒等反模式在期望成本模型下必然劣化。</p>
 
 
 

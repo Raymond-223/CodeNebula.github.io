@@ -1334,6 +1334,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：存储引擎与事务实现
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：存储引擎与事务实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 B+ 树索引原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-innodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 InnoDB 存储引擎
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 事务隔离级别的实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 锁的底层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 分布式数据库基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 缓存与数据库一致性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2951,6 +3034,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、底层原理：存储引擎与事务实现
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、底层原理：存储引擎与事务实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 B+ 树索引原理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-innodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 InnoDB 存储引擎
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 事务隔离级别的实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 锁的底层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#85" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 分布式数据库基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#86" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 缓存与数据库一致性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4398,6 +4564,314 @@ CDN-Cache-Control: no-cache  # CDN 不缓存
 <blockquote>
 <p><strong>本系列下一章</strong>：<a href="../04-version-control/">版本控制 →</a> — Git 深入</p>
 </blockquote>
+<h2 id="_18">八、底层原理：存储引擎与事务实现</h2>
+<blockquote>
+<p>前七节讲"怎么用"，本节讲"为什么"：索引、存储引擎、锁、日志与复制的底层机制，是排查慢查询、设计高并发、评估分布式架构的前提。</p>
+</blockquote>
+<h3 id="81-b">8.1 B+ 树索引原理</h3>
+<p><strong>为什么是 B+ 树</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>结构</th>
+<th>单点查询</th>
+<th>范围查询</th>
+<th>千万级 IO</th>
+<th>核心问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>二叉搜索树</td>
+<td>O(log n)</td>
+<td>O(log n+k)</td>
+<td>约 24 次</td>
+<td>节点只存 1 键，树高、易退化</td>
+</tr>
+<tr>
+<td>哈希表</td>
+<td>O(1)</td>
+<td>不支持</td>
+<td>1 次</td>
+<td>无法范围查询与排序</td>
+</tr>
+<tr>
+<td>B 树</td>
+<td>O(log_m n)</td>
+<td>O(log_m n+k)</td>
+<td>3-4 次</td>
+<td>数据散落各节点，范围查询要中序遍历</td>
+</tr>
+<tr>
+<td><strong>B+ 树</strong></td>
+<td>O(log_m n)</td>
+<td>叶子链表顺序扫描</td>
+<td><strong>2-3 次</strong></td>
+<td>——</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：磁盘 IO 以"页"为单位（一次 16KB），代价远高于内存运算。B+ 树把树高压到 3-4 层，点查仅 2-3 次磁盘 IO；叶子链表让范围查询退化为顺序扫描——哈希与 B 树都给不了这个组合。</p>
+</blockquote>
+<p><strong>页与扇出</strong>：一个节点即一个磁盘页。索引项 ≈ 主键(8B)+指针(6B)=14B，扇出 = 16KB/14B ≈ <strong>1170</strong>；3 层可容纳 ≈ 1170³ ≈ <strong>16 亿条</strong>。根节点常驻 Buffer Pool，点查实际只需 2 次磁盘 IO。</p>
+<div class="highlight"><pre><span></span><code>第 1 层（根，常驻内存）      [ 50 | 120 ]
+                            /    |      \
+第 2 层               [30|40]  [70|90]  [150|180]
+                      /  |  \   /  |  \     |    \
+第 3 层（叶子）    (10,20)(35)(45)(55)(75)(95)(130)(160)
+  叶子节点链表相连，范围查询沿链表顺序扫描
+</code></pre></div>
+<p><strong>聚簇 vs 二级索引</strong>：聚簇索引叶子存整行（表即索引，必须有主键）；二级索引叶子存主键值，查到后需再查聚簇索引取整行 = <strong>回表</strong>（额外 1-2 次 IO）；查询列全在索引内则<strong>覆盖索引</strong>免回表。</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_name</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alice&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 回表</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alice&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 覆盖（id 即主键）</span>
+</code></pre></div>
+<p><strong>B+ 树插入演示</strong>（Python，阶 m=4，节点最多 3 键，插入 1-10）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bisect</span><span class="w"> </span><span class="kn">import</span> <span class="n">bisect_left</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leaf</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leaf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">leaf</span><span class="p">:</span>                                   <span class="c1"># 叶节点：插入后可能分裂</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">bisect_left</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">mid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">Node</span><span class="p">();</span> <span class="n">right</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">mid</span><span class="p">:]</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">[:</span><span class="n">mid</span><span class="p">]</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">next</span><span class="p">,</span> <span class="n">right</span>    <span class="c1"># 维护叶子链表</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">right</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">node</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>         <span class="c1"># 提升键（保留在右叶）</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">bisect_left</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>                 <span class="c1"># 内部节点：下钻子树</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">insert</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">up</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">up</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">);</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">mid</span><span class="p">],</span> <span class="n">Node</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">right</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">right</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">:],</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">[:</span><span class="n">mid</span><span class="p">],</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[:</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">btree_insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">up</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span> <span class="n">root</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">up</span>
+    <span class="n">nr</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="kc">False</span><span class="p">);</span> <span class="n">nr</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">nr</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nr</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="n">root</span> <span class="o">=</span> <span class="n">btree_insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="o">*</span><span class="n">d</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;L&quot;</span> <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">leaf</span> <span class="k">else</span> <span class="s2">&quot;I&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">keys</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">n</span><span class="o">.</span><span class="n">leaf</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">children</span><span class="p">:</span> <span class="n">dump</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">dump</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>预期输出：
+I[7]
+  I[3, 5]
+    L[1, 2]
+    L[3, 4]
+    L[5, 6]
+  I[9]
+    L[7, 8]
+    L[9, 10]
+</code></pre></div>
+<p><strong>小结</strong>：B+ 树以"页内多键、树矮、叶子成链"换最少磁盘 IO；二级索引必引入回表，能覆盖就不回表。</p>
+<h3 id="82-innodb">8.2 InnoDB 存储引擎</h3>
+<p><strong>页结构</strong>（默认 16KB）：</p>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────┐
+│ File Header：页号、上一页/下一页指针、校验和     │
+├──────────────────────────────────────────────┤
+│ Infimum + Supremum（页内最小/最大伪记录）        │
+│ 用户记录区：行按主键有序，单向链表串联            │
+│   隐藏列：rowid、事务ID(DB_TRX_ID)、回滚指针     │
+├──────────────────────────────────────────────┤
+│ Free Space（空闲区）                          │
+├──────────────────────────────────────────────┤
+│ Page Directory（槽指针数组，二分定位）           │
+├──────────────────────────────────────────────┤
+│ File Trailer（8B 校验和，防半页写）              │
+└──────────────────────────────────────────────┘
+</code></pre></div>
+<p>页内查找 = 二分 Page Directory 定位槽 + 槽内链表扫描；相邻页经前后指针构成双向链表，支撑范围预读。</p>
+<p><strong>行格式与 Buffer Pool</strong>：行格式（COMPACT）= 变长长度列表 + NULL 标志 + 记录头 + 隐藏列 + 数据列；Buffer Pool（默认 128MB）是内存页缓存，读写先落内存。改进 <strong>LRU</strong> 分 young（约 63%）与 old（37%）两段，新页先入 old、二次访问才晋升，防止全表扫描挤出热数据。</p>
+<div class="highlight"><pre><span></span><code>读路径：命中→直接返回；未命中→磁盘读页→挂 LRU old 段
+写路径：只改 Buffer Pool 中的页（脏页）→ 后台线程择机刷盘
+</code></pre></div>
+<p><strong>redo log 与 WAL</strong>：</p>
+<blockquote>
+<p><strong>核心思想（WAL）</strong>：先写日志、后写数据。日志是磁盘顺序写、数据是随机写，顺序写快 1-2 个数量级；日志记录了"如何重放"，数据页可延迟落盘。</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>COMMIT 时序：改 Buffer Pool 脏页 → 写 redo log buffer
+           → fsync redo log（组提交）→ 返回成功
+           → 后台刷脏页（刷盘前确保对应 redo 已落盘）
+崩溃恢复：从 checkpoint 起重放 redo log，补回已提交未落盘的数据
+</code></pre></div>
+<p>redo log 是物理日志（"页偏移 X 写为 Y"），保持久性（D）；undo log 是逻辑日志（"回滚到修改前"），保原子性（A）与 MVCC。</p>
+<p><strong>undo log 与 MVCC</strong>：UPDATE 不原地覆盖，先记 undo 再生成新版本行，DB_ROLL_PTR 串成<strong>版本链</strong>，每版本标记创建它的 DB_TRX_ID：</p>
+<div class="highlight"><pre><span></span><code>[trx=1: v1] → [trx=5: v2] → [trx=9: v3（当前）]
+快照读按可见性规则沿链找到&quot;自己可见的版本&quot;
+</code></pre></div>
+<p>MVCC 使"读不加锁、写不阻塞读"成为可能，是 8.3 的基础。</p>
+<p><strong>小结</strong>：InnoDB = 页式存储 + Buffer Pool + WAL。redo 保持久、undo 保回滚与多版本；崩溃恢复的正确性建立在"日志先于数据落盘"之上。</p>
+<h3 id="83">8.3 事务隔离级别的实现</h3>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+<th>实现机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>读未提交</td>
+<td>可能</td>
+<td>可能</td>
+<td>可能</td>
+<td>读不加锁不建快照</td>
+</tr>
+<tr>
+<td>读已提交</td>
+<td>否</td>
+<td>可能</td>
+<td>可能</td>
+<td>MVCC：每语句新快照；写加行锁</td>
+</tr>
+<tr>
+<td>可重复读</td>
+<td>否</td>
+<td>否</td>
+<td>否（间隙锁）</td>
+<td>MVCC：事务级快照；写加行锁+间隙锁</td>
+</tr>
+<tr>
+<td>串行化</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>所有读变当前读（加锁）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>快照读 vs 当前读</strong>：普通 <code>SELECT</code> 走 MVCC 版本链、不加锁；<code>SELECT ... FOR UPDATE / LOCK IN SHARE MODE</code>、<code>UPDATE</code>、<code>DELETE</code> 读最新已提交版本并加锁。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 会话 A：REPEATABLE READ</span>
+<span class="k">BEGIN</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w">    </span><span class="c1">-- ① 100（建立快照）</span>
+<span class="c1">-- 会话 B：UPDATE accounts SET balance=200 WHERE id=1; COMMIT;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w">              </span><span class="c1">-- ② 100：快照读，MVCC 保证</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span><span class="w">   </span><span class="c1">-- ③ 200：当前读，读最新并加锁</span>
+<span class="c1">-- 预期输出：① 100 → ② 100 → ③ 200</span>
+</code></pre></div>
+<p><strong>间隙锁（Gap Lock）</strong>：快照读的幻读已由 MVCC 消除；但当前读（如 <code>WHERE amount&gt;100 FOR UPDATE</code>）会锁住命中记录及记录间<strong>间隙</strong>，阻止其他事务插入新行。间隙锁锁"不存在的区间"，只与插入意向锁冲突。</p>
+<p><strong>小结</strong>：MVCC 解决"读"的一致视图，锁解决"写"的互斥；可重复读 = 事务级快照 + 行锁/间隙锁。级别越高锁范围越大、并发越低。</p>
+<h3 id="84">8.4 锁的底层</h3>
+<div class="highlight"><pre><span></span><code>表锁（LOCK TABLES / DDL 元数据锁）
+  └─ 意向锁（IS/IX：声明&quot;要在表内某行加锁&quot;）
+       └─ 行锁（Record / Gap / Next-Key）
+</code></pre></div>
+<ul>
+<li><strong>意向锁</strong>：判断能否加表锁时无需扫描全部行锁——给行加 S 锁前先加 IS 表锁，他人想加 X 表锁发现 IS/IX 即冲突等待；</li>
+<li><strong>Next-Key Lock</strong> = 记录锁 + 前向间隙锁，是可重复读的默认行锁形态。</li>
+</ul>
+<p><strong>两阶段锁协议（2PL）</strong>：事务内所有加锁先于所有解锁，锁只增不减、提交时统一释放，保证冲突可串行化。</p>
+<p><strong>死锁</strong>：两事务互相持有对方所需锁，InnoDB 用<strong>等待图</strong>检测环，回滚代价较小的事务（<code>innodb_deadlock_detect</code> 默认开启）：</p>
+<div class="highlight"><pre><span></span><code>T1：UPDATE a ...;   -- 持有 a 的行锁，等待 b
+T2：UPDATE b ...;   -- 持有 b 的行锁，等待 a
+  → 等待图成环，InnoDB 回滚 T2，T1 继续
+</code></pre></div>
+<p>规避：多表操作按固定顺序加锁、缩短事务。</p>
+<p><strong>小结</strong>：行锁+意向锁让细粒度并发与表级快速判断兼得；2PL 保证串行化等价；死锁靠等待图检测+回滚牺牲事务，业务侧应统一加锁顺序。</p>
+<h3 id="85">8.5 分布式数据库基础</h3>
+<blockquote>
+<p><strong>CAP 证明思路</strong>：P（分区）是必然事件，问题退化为"分区时选 C 还是 A"。设 G1、G2 初始一致，分区后客户端向 G1 写 x=1 并被接受，再向 G2 读 x：返回旧值则不一致（弃 C），拒绝或等待则不可用（弃 A）——三者不可兼得。BASE 即"放宽 C、保证 A、最终一致"的工程妥协。</p>
+</blockquote>
+<p><strong>一致性哈希</strong>：</p>
+<div class="highlight"><pre><span></span><code>哈希环（0 ~ 2³²-1）
+  0 ───────────────────────────── 2³²-1
+  │      key1 ──► [节点A]         │
+  │  [节点B] ◄── key2             │
+  │           [节点C]             │
+  数据存&quot;顺时针遇到的第一个节点&quot;
+节点增减只影响环上相邻区段（取模哈希全量失效）；
+每物理节点挂 100-200 个虚拟节点解决数据倾斜
+</code></pre></div>
+<p><strong>主从复制与 binlog</strong>：<strong>binlog</strong> 是服务层逻辑日志（记录 SQL/行变更），用于复制与恢复；<strong>redo log</strong> 是引擎层物理日志，用于崩溃恢复；两者经两阶段提交保持一致。复制链路：Master 写 binlog → Slave IO 线程拉取写 relay log → SQL 线程串行重放。异步复制有延迟，半同步等至少一个 Slave 确认才返回。</p>
+<div class="highlight"><pre><span></span><code>Master ──binlog──► IO 线程 ──relay log──► SQL 线程 ──► 应用数据
+</code></pre></div>
+<p><strong>分库分表</strong>：分库按业务拆（订单库/用户库），解决连接数与 IO 瓶颈；分表在单表过亿后按<strong>分片键</strong>取模或范围拆分。代价：跨分片 JOIN 不可用、分布式事务、全局唯一 ID、扩容迁移（一致性哈希可平滑扩容）；分片键决定查询能否路由到单分片。</p>
+<p><strong>小结</strong>：分布式数据库的本质是"用一致性换扩展性"；一致性哈希解决扩缩容迁移，binlog 是复制与异构同步（如同步 ES）的基石，分库分表前先用读写分离与缓存。</p>
+<h3 id="86">8.6 缓存与数据库一致性</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>读路径</th>
+<th>写路径</th>
+<th>一致性</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cache Aside</td>
+<td>先查缓存，miss 查 DB 回填</td>
+<td>先写 DB，再删缓存</td>
+<td>最终一致（短暂窗口）</td>
+<td>通用最常用</td>
+</tr>
+<tr>
+<td>Read Through</td>
+<td>缓存组件代理回源</td>
+<td>同 Cache Aside</td>
+<td>同上</td>
+<td>有统一缓存层</td>
+</tr>
+<tr>
+<td>Write Back</td>
+<td>同 Read Through</td>
+<td>只写缓存，异步刷 DB</td>
+<td>弱一致，宕机可能丢</td>
+<td>写多读少</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：Cache Aside 写路径用"删缓存"而非"更新缓存"——并发写时更新会产生新旧交替的脏值，删除后下次读回填则天然收敛。先更 DB 再删缓存可把不一致窗口缩到最小，删缓存失败用延迟双删 + 重试补偿。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>故障</th>
+<th>底层原因</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>穿透</td>
+<td>key 在 DB 也不存在，缓存永远 miss</td>
+<td>布隆过滤器；缓存空值（短 TTL）；参数校验</td>
+</tr>
+<tr>
+<td>击穿</td>
+<td>热点 key 过期瞬间大量并发回源</td>
+<td>互斥锁重建；逻辑过期；热点永不过期</td>
+</tr>
+<tr>
+<td>雪崩</td>
+<td>大量 key 同时过期或 Redis 宕机</td>
+<td>过期时间加随机抖动；多级缓存；高可用+限流降级</td>
+</tr>
+</tbody>
+</table>
+<p><strong>小结</strong>：缓存一致性没有银弹——强一致直接读 DB；工程上以"最终一致 + 缩小窗口 + 故障兜底"为目标。穿透/击穿/雪崩的本质分别是"不存在的数据、过期的热点、集体失效"。</p>
 
 
 

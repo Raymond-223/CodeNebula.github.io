@@ -1743,6 +1743,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：实验评估的统计基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：实验评估的统计基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 单次运行的不可靠性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 置信区间：均值估计的可靠性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 算法比较的假设检验
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 多重比较与曲线聚合
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 可复现性的统计要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2790,6 +2862,78 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：实验评估的统计基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：实验评估的统计基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 单次运行的不可靠性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 置信区间：均值估计的可靠性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 算法比较的假设检验
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 多重比较与曲线聚合
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 可复现性的统计要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5422,6 +5566,129 @@ PPO 验证奖励设计，再用 RLlib 分布式放大到数百机器人规模；
 学习、多智能体与 RLHF 等前沿方向——你在这里打下的工程基础，将直接
 决定那些进阶实验能否跑得动、跑得稳。</p>
 </blockquote>
+<h2 id="_5">十、理论进阶：实验评估的统计基础</h2>
+<blockquote>
+<p>工具链解决了"怎么跑实验"，本节回答"怎么科学地读实验结果"：单次运行的奖励曲线为什么不可信？均值比较需要多少样本？答案藏在统计推断里。</p>
+</blockquote>
+<h3 id="101">10.1 单次运行的不可靠性</h3>
+<p>强化学习训练是<strong>高度随机</strong>的过程：环境转移、策略采样、回放缓冲抽样都引入噪声。单次运行的回报曲线是带噪声的过程实现，其逐点值几乎不携带信息。</p>
+<div class="highlight"><pre><span></span><code>单次运行 vs 多次运行均值（示意）
+
+回报
+ ^
+ |      ··      ··        ← 单次运行（锯齿状，噪声大）
+ |    ·  ··  ··  ··  ·
+ |   ·    ··    ·    ·· ·
+ |  ·      ···     ···   ·
+ | ·                      ·
+ +----------------------------------&gt; 训练步数
+</code></pre></div>
+<p><strong>核心思想</strong>：单次运行 = 一个样本；结论必须建立在<strong>多次运行（多个随机种子）的均值与方差</strong>上。</p>
+<h3 id="102">10.2 置信区间：均值估计的可靠性</h3>
+<p>假设用 N 个随机种子跑了 N 次实验，得到最终性能 x_1, ..., x_N，则真实均值 μ 的 (1−α) 置信区间为：</p>
+<div class="highlight"><pre><span></span><code>CI = x̄ ± t_{α/2, N-1} · s / √N
+</code></pre></div>
+<p>其中 x̄ 是样本均值，s 是样本标准差，t 是 Student-t 分布的分位数。<strong>CI 越窄，结论越可信</strong>；CI 越宽，说明实验噪声越大、需要更多种子。</p>
+<table>
+<thead>
+<tr>
+<th>种子数 N</th>
+<th>t_{0.975,N-1}</th>
+<th>CI 半宽（相对 s/√N 的倍数）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>4.303</td>
+<td>2.48 × s</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2.776</td>
+<td>1.24 × s</td>
+</tr>
+<tr>
+<td>10</td>
+<td>2.262</td>
+<td>0.72 × s</td>
+</tr>
+<tr>
+<td>30</td>
+<td>2.045</td>
+<td>0.37 × s</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：种子数从 3 加到 10，CI 缩窄约 3.4 倍——实验预算优先花在"多跑几个种子"上，而不是单次跑更长。</p>
+</blockquote>
+<h3 id="103">10.3 算法比较的假设检验</h3>
+<p>比较算法 A 与 B：不能直接比较均值大小，必须检验差异是否显著。配对设置下用配对 t 检验：</p>
+<div class="highlight"><pre><span></span><code>H0: μ_A = μ_B（两算法性能无差异）
+t = (d̄) / (s_d / √N)   其中 d_i = x_A,i − x_B,i（同种子配对差）
+</code></pre></div>
+<p><strong>p 值 &lt; 0.05</strong> 才能宣称 A 优于 B。常见误区：</p>
+<table>
+<thead>
+<tr>
+<th>误区</th>
+<th>正确做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>比单次运行曲线高低</td>
+<td>多次运行取均值±CI</td>
+</tr>
+<tr>
+<td>比最终数值大小</td>
+<td>配对 t 检验 / Mann-Whitney U</td>
+</tr>
+<tr>
+<td>训练中途截断对比</td>
+<td>固定预算（步数/交互数）再比较</td>
+</tr>
+<tr>
+<td>只报最好种子</td>
+<td>报告全部种子（含失败）的中位数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="104">10.4 多重比较与曲线聚合</h3>
+<p>多算法同时对比（A/B/C/D）时，两两 t 检验会膨胀假阳性率（family-wise error），需 Bonferroni 校正：显著水平 α/m（m 为比较次数）。</p>
+<p>曲线聚合的规范做法：<strong>每个种子一条曲线 → 逐点取均值与 CI → 画 mean±CI 阴影带</strong>。阴影带不重叠处才是可信的差异。</p>
+<blockquote>
+<p><strong>核心思想</strong>：实验报告 = 均值曲线 + CI 阴影带 + 种子数 + 显著性检验；缺任何一项都不可复现。</p>
+</blockquote>
+<h3 id="105">10.5 可复现性的统计要求</h3>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>统计作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>固定随机种子</td>
+<td>消除初始化噪声，保证可复现</td>
+</tr>
+<tr>
+<td>报告种子数 N</td>
+<td>决定 CI 宽度</td>
+</tr>
+<tr>
+<td>报告超参与环境版本</td>
+<td>消除配置漂移</td>
+</tr>
+<tr>
+<td>报告均值±std</td>
+<td>给出效应量与不确定性</td>
+</tr>
+</tbody>
+</table>
+<p><strong>小结</strong>：评估的科学性 = 多次运行 + 置信区间 + 假设检验。工具链只能保证"能跑"，统计方法才能保证"结论可信"。</p>
 
 
 

@@ -1156,6 +1156,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#git_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、底层原理：Git 对象模型与合并算法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、底层原理：Git 对象模型与合并算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 对象模型与内容寻址
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-head" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 引用与 HEAD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-three-way-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 三路合并算法（three-way merge）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-cherry-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 分支的本质：指针、快进与 cherry-pick
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-plumbing-porcelain-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Plumbing 与 Porcelain：手动创建一次 commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-gc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 对象打包与 GC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2539,6 +2622,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#git_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、底层原理：Git 对象模型与合并算法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、底层原理：Git 对象模型与合并算法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 对象模型与内容寻址
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-head" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 引用与 HEAD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-three-way-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 三路合并算法（three-way merge）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-cherry-pick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 分支的本质：指针、快进与 cherry-pick
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-plumbing-porcelain-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 Plumbing 与 Porcelain：手动创建一次 commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-gc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 对象打包与 GC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3816,6 +3982,161 @@ Closes #&lt;issue-number&gt;
 1. <strong>已推送的提交永不 reset，用 revert</strong>
 2. <strong>公共分支永不 rebase</strong>
 3. <strong>提交消息是写给未来的自己看的——认真写</strong></p>
+<h2 id="git_2">七、底层原理：Git 对象模型与合并算法</h2>
+<p>本节深入 Git 的存储与算法内核：对象模型回答"存了什么"，引用机制回答"分支是什么"，三路合并回答"冲突从哪来"。理解这三层，才能推断疑难问题：历史改写、悬空提交、仓库膨胀、诡异冲突。</p>
+<h3 id="71">7.1 对象模型与内容寻址</h3>
+<p>四种对象统一以 <code>&lt;type&gt; &lt;size&gt;\0&lt;content&gt;</code> 序列化后取 SHA-1 作为地址。<strong>对象一经写入即不可变</strong>，内容变化即产生新地址。一次 commit 在对象库中的完整对象 DAG：</p>
+<div class="highlight"><pre><span></span><code>tag &quot;v1.0.0&quot;（可选，含签名）
+     │
+     ▼
+commit C1 ──► tree T1 ──┬──► blob B1   &quot;hello.txt&quot;: &quot;hello world&quot;
+   │  parent: 无         └──► tree T2 ──► blob B2   &quot;main.go&quot;: &quot;package main&quot;
+   │  author/committer/message
+</code></pre></div>
+<p><strong>核心思想</strong>：Git 是内容寻址文件系统——<code>key = SHA-1(content)</code>，地址由内容决定而非路径，自动获得三项性质：</p>
+<table>
+<thead>
+<tr>
+<th>性质</th>
+<th>传统路径寻址 FS</th>
+<th>Git 内容寻址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定位方式</td>
+<td>路径 → 可变内容</td>
+<td>哈希 → 不可变内容</td>
+</tr>
+<tr>
+<td>相同内容</td>
+<td>重复存储</td>
+<td>共享同一对象，天然去重</td>
+</tr>
+<tr>
+<td>完整性</td>
+<td>需额外校验</td>
+<td>读取即校验，篡改必现</td>
+</tr>
+</tbody>
+</table>
+<p>验证哈希公式（对象头 <code>blob 12</code> = 类型 + 内容字节数）：</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;hello world\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>git<span class="w"> </span>hash-object<span class="w"> </span>--stdin
+3b18e512dba79e4c8300dd08aeb37f8e728b8dad
+$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;blob 12\0hello world\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha1sum
+3b18e512dba79e4c8300dd08aeb37f8e728b8dad<span class="w">  </span>-<span class="w">   </span><span class="c1"># 两式一致，公式成立</span>
+</code></pre></div>
+<p><strong>小结</strong>：commit→tree→blob/tag 构成 DAG；内容寻址带来去重、不可变与自校验，是 Git 一切能力的地基。</p>
+<h3 id="72-head">7.2 引用与 HEAD</h3>
+<p>引用（ref）是"名字 → 哈希"的映射，只是 <code>.git/refs/</code> 下的普通文本文件：</p>
+<div class="highlight"><pre><span></span><code>.git/HEAD ──────────► &quot;ref: refs/heads/main&quot;   （符号引用，间接层）
+                             │
+.git/refs/heads/main ──► 1ba064af6d12e467b8622eda06d8d291c0a816b7 ──► commit C1
+</code></pre></div>
+<ul>
+<li><strong>refs/heads/*</strong>：分支，可变指针，随提交自动前移；<strong>refs/tags/*</strong>：标签，默认不移动；<strong>HEAD</strong>：符号引用（symbolic ref），存分支名而非哈希——"检出分支"的本质是改一行文本，不复制任何文件。</li>
+</ul>
+<p><strong>detached HEAD</strong>：<code>git checkout &lt;hash&gt;</code> 后 HEAD 直接存哈希，新提交无分支承接，成为悬空提交（dangling commit）。<strong>reflog</strong>（<code>.git/logs/HEAD</code>）以追加方式记录每次 HEAD 移动（旧/新哈希、操作者、动作），是引用的操作日志与恢复的最后防线：<code>git reflog</code> 查看，<code>git reset --hard HEAD@{1}</code> 回退，条目默认 90 天过期。示例：<code>git checkout 1ba064a &amp;&amp; git commit -m "wip"</code> 后切回 main，wip 即悬空，但 reflog 中 <code>HEAD@{0}</code> 仍可找回。</p>
+<p><strong>小结</strong>：分支与标签都是"哈希的文本文件"，HEAD 是符号引用；detached HEAD 使提交脱离分支，reflog 保留引用移动轨迹，使误操作可逆。</p>
+<h3 id="73-three-way-merge">7.3 三路合并算法（three-way merge）</h3>
+<p>合并不是"比较两份代码"，而是三方比对：<strong>base</strong>（两分支最近公共祖先 merge-base）、<strong>ours</strong>（HEAD）、<strong>theirs</strong>（被合入方）。逐文件逐块决策：</p>
+<table>
+<thead>
+<tr>
+<th>base</th>
+<th>ours</th>
+<th>theirs</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>A</td>
+<td>B</td>
+<td>取 B（单方改动，自动采纳）</td>
+</tr>
+<tr>
+<td>A</td>
+<td>B</td>
+<td>A</td>
+<td>取 B（单方改动，自动采纳）</td>
+</tr>
+<tr>
+<td>A</td>
+<td>A</td>
+<td>A</td>
+<td>取 A（无变化）</td>
+</tr>
+<tr>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td><strong>冲突</strong>，写入标记，交人裁决</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心思想</strong>：三路合并比较 base 与两边的"差异"而非盲目覆盖——双方各自修改不同区域可自动合并；只有同区域都改动（base→B 且 base→C）才冲突。冲突即"合并算法无法生成唯一 tree"，中止并留下标记：</p>
+<div class="highlight"><pre><span></span><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+int max = 100;
+=======
+int max = 200;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/limit
+</code></pre></div>
+<p>合并提交 M 与普通提交无异，仅 parent 列表含两个哈希（<code>git log --graph</code> 的分叉线即由此而来）：</p>
+<div class="highlight"><pre><span></span><code>    o─── A (ours, HEAD)
+   /     \
+  o (base) M ← 合并提交，parent = [A, B]
+   \     /
+    o─── B (theirs)
+</code></pre></div>
+<p><strong>小结</strong>：三路合并以 merge-base 为锚，单方改动自动合并、双方同区改动才冲突；合并提交即双亲 commit，DAG 因此分叉交汇。</p>
+<h3 id="74-cherry-pick">7.4 分支的本质：指针、快进与 cherry-pick</h3>
+<p>分支不是副本，只是指向 commit 的可变指针。创建分支 = 复制一个 41 字节文本文件，成本 O(1)：<code>git branch feature/x</code> 等价于 <code>cp .git/refs/heads/main .git/refs/heads/feature/x</code>。</p>
+<p><strong>快进合并 vs 三方合并</strong>——由祖先关系决定，而非用户选择：</p>
+<div class="highlight"><pre><span></span><code>快进：theirs 是 ours 的后代，指针直接前移，零新对象
+  main: o──o──o ──► 合并后直接指向 feat 顶端（无合并提交）
+  feat:         └──o──o
+三方：两分支分叉，需 merge-base，产生双亲合并提交 M
+  main: o──o──o──M
+  feat:     └──o──o
+</code></pre></div>
+<p><strong>cherry-pick 对象层面</strong>：对目标 C 与其父 P 求 diff（<code>diff(P, C)</code>），把补丁应用到当前 HEAD 并生成<strong>全新提交</strong>——新哈希、新时间戳、新 parent。即"重放变更"而非"搬运提交"：<code>git cherry-pick 1ba064a</code> 的对象操作是 <code>diff(1ba064a^, 1ba064a)</code> → 应用 → 新 commit（哈希 ≠ 1ba064a）。快进合并不产生新提交（仅移指针，DAG 线性）；三方合并产生双亲提交 M（DAG 分叉交汇）；变基则重写提交使历史线性化。</p>
+<p><strong>小结</strong>：分支是 O(1) 指针操作；能否快进取决于祖先关系；cherry-pick 是"重放 diff 生成新提交"，故可跨分支移植单次变更。</p>
+<h3 id="75-plumbing-porcelain-commit">7.5 Plumbing 与 Porcelain：手动创建一次 commit</h3>
+<p><strong>porcelain</strong>（<code>commit</code>/<code>checkout</code>/<code>merge</code>）是面向人的高层封装；<strong>plumbing</strong>（<code>hash-object</code>/<code>write-tree</code>/<code>commit-tree</code>/<code>update-ref</code>）是 Git 自身与脚本使用的底层原语。一次 <code>git commit</code> 实际是四步：写 blob → 写 tree → 写 commit → 移引用。用纯 plumbing 复现（真实输出）：</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>git<span class="w"> </span>init<span class="w"> </span>demo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>demo
+$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;hello world\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>git<span class="w"> </span>hash-object<span class="w"> </span>-w<span class="w"> </span>--stdin
+3b18e512dba79e4c8300dd08aeb37f8e728b8dad
+
+$<span class="w"> </span>git<span class="w"> </span>update-index<span class="w"> </span>--add<span class="w"> </span>--cacheinfo<span class="w"> </span><span class="m">100644</span>,3b18e512dba79e4c8300dd08aeb37f8e728b8dad,hello.txt
+$<span class="w"> </span>git<span class="w"> </span>write-tree
+68aba62e560c0ebc3396e8ae9335232cd93a3f60
+
+$<span class="w"> </span>git<span class="w"> </span>commit-tree<span class="w"> </span>68aba62e560c0ebc3396e8ae9335232cd93a3f60<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;first commit&quot;</span>
+1ba064af6d12e467b8622eda06d8d291c0a816b7<span class="w">    </span><span class="c1"># commit 哈希随 author/时间戳变化，结构不变</span>
+
+$<span class="w"> </span>git<span class="w"> </span>update-ref<span class="w"> </span>refs/heads/main<span class="w"> </span>1ba064af6d12e467b8622eda06d8d291c0a816b7
+$<span class="w"> </span>git<span class="w"> </span>symbolic-ref<span class="w"> </span>HEAD<span class="w"> </span>refs/heads/main
+</code></pre></div>
+<p><strong>核心思想</strong>：porcelain 只是上述四步的编排——<code>git commit</code>、<code>git branch</code>、<code>git tag</code> 分别对应 <code>commit-tree</code>、<code>update-ref refs/heads/*</code>、<code>update-ref refs/tags/*</code>。排查"提交去哪了""引用为何移动"时，直接读 <code>.git/refs/</code> 与 <code>git cat-file -p &lt;hash&gt;</code>。</p>
+<p><strong>小结</strong>：提交 = 写三个对象 + 移一个指针；porcelain 是编排层，plumbing 是事实层，这是 Git 可脚本化、可审计的根源。</p>
+<h3 id="76-gc">7.6 对象打包与 GC</h3>
+<p>松散对象（loose object）一对象一文件，zlib 压缩。对象多了以后 inode 爆炸、传输低效。<strong>packfile</strong> 将对象拼入单个 <code>.pack</code> 文件，配 <code>.idx</code> 索引（哈希 → 包内偏移），并做 <strong>delta 压缩</strong>：相似对象（如相邻版本同一文件）排序后，后者只存"对前者的差异"，形成 delta 链，仅保留一个完整基线。</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>git<span class="w"> </span>count-objects<span class="w"> </span>-v<span class="w">          </span><span class="c1"># gc 前：3 个松散对象</span>
+count:<span class="w"> </span><span class="m">3</span>
+<span class="k">in</span>-pack:<span class="w"> </span><span class="m">0</span>
+packs:<span class="w"> </span><span class="m">0</span>
+
+$<span class="w"> </span>git<span class="w"> </span>gc<span class="w">                        </span><span class="c1"># 打包 + 清理不可达对象 + 修剪过期 reflog</span>
+$<span class="w"> </span>git<span class="w"> </span>count-objects<span class="w"> </span>-v<span class="w">          </span><span class="c1"># gc 后：全部入包，寻址方式不变，读取透明</span>
+count:<span class="w"> </span><span class="m">0</span>
+<span class="k">in</span>-pack:<span class="w"> </span><span class="m">3</span>
+packs:<span class="w"> </span><span class="m">1</span>
+size-pack:<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>注意：<code>git gc</code> 只删除<strong>不可达</strong>对象（悬空提交、孤儿 blob），被任何引用（含 reflog）可达的对象永远安全。</p>
+<p><strong>小结</strong>：packfile 以"一文件多对象 + delta 差异链"解决对象膨胀，索引保证寻址透明；GC 打包、清理、修剪三步控制仓库体积，且永不触碰可达历史。</p>
 
 
 

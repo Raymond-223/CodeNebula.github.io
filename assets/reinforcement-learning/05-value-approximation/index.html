@@ -1571,6 +1571,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：函数逼近与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：函数逼近与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 投影视角：点更新与参数更新
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 半梯度与真梯度：丢掉的那一项
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 非线性逼近：deadly triad 为何致命
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 经验回放的理论作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 目标网络的理论作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 收敛性理论小结：DQN 的保证地图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2614,6 +2697,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：函数逼近与收敛性
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：函数逼近与收敛性">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 投影视角：点更新与参数更新
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 半梯度与真梯度：丢掉的那一项
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-deadly-triad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 非线性逼近：deadly triad 为何致命
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 经验回放的理论作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 目标网络的理论作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-dqn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 收敛性理论小结：DQN 的保证地图
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4628,6 +4794,222 @@ value-based 方法有三个结构性限制：<strong>无法直接处理连续动
 Actor-Critic、TRPO 与 PPO 依次登场，其中 Actor-Critic 的价值网络
 正是本章 <span class="arithmatex">\(V_w\)</span>/<span class="arithmatex">\(Q_w\)</span> 思想的直接延续。</p>
 </blockquote>
+<h2 id="_4">十、理论进阶：函数逼近与收敛性</h2>
+<p>本节从数学上回答：参数更新在优化什么（投影视角）；半梯度与真梯度差
+在哪、代价是什么（TD 不动点与误差界）；回放与目标网络在理论层面改变
+了什么。最后给出 DQN 收敛性结论的完整地图。</p>
+<h3 id="101">10.1 投影视角：点更新与参数更新</h3>
+<p>表格更新是"点更新"，只修改一个表条目：</p>
+<div class="highlight"><pre><span></span><code>v(s) ← v(s) + α·δ,   δ = R + γ·v(s&#39;) − v(s)
+</code></pre></div>
+<p>函数逼近无法做点更新，θ 同时控制所有状态，目标变为整体拟合，最小化
+加权均方误差：</p>
+<div class="highlight"><pre><span></span><code>MSE(θ) = E_μ[(v_π(S) − v̂(S,θ))²]        （μ：状态访问分布）
+θ ← θ + α·[v_π(S) − v̂(S,θ)]·∇_θ v̂(S,θ) （v_π 视为常数）
+</code></pre></div>
+<p><strong>投影解释</strong>：把价值看成 |S| 维向量 v_π，函数逼近把搜索空间限制在
+函数族张成的低维子空间（线性即特征矩阵 Φ 的列空间）。θ<em> 使 v̂ 成为
+v_π 在该子空间上的</em><em>正交投影</em>*，残差与子空间正交。表格是特例：特征
+空间恰为 R^|S|，投影为恒等映射、误差为零。泛化与近似误差是同一硬币
+的两面：维度越低泛化越强，投影误差越大。</p>
+<blockquote>
+<p><strong>核心思想</strong>：表格更新是"逐坐标投影"，函数逼近是"整体正交投影"。
+θ* 是 v_π 在函数族子空间上的投影点——这解释了为何 TD 的收敛点
+不是"全局最优"而是"不动点"。</p>
+</blockquote>
+<p>小结：函数逼近把学习从"填表"变成"子空间投影"；线性族下投影有闭式
+解，非线性族下只能迭代逼近。</p>
+<h3 id="102">10.2 半梯度与真梯度：丢掉的那一项</h3>
+<p>监督学习标签与参数无关，是"真梯度"；RL 中 TD 目标 R + γ·v̂(S',θ)
+本身含 θ，严格求导多出一项：</p>
+<div class="highlight"><pre><span></span><code>真梯度：θ ← θ + α·[R + γ·v̂(S&#39;,θ) − v̂(S,θ)]·[∇v̂(S,θ) − γ·∇v̂(S&#39;,θ)]
+半梯度：θ ← θ + α·[R + γ·v̂(S&#39;,θ) − v̂(S,θ)]·∇v̂(S,θ)
+              目标当常数，丢掉 −γ·∇v̂(S&#39;,θ) 一项
+</code></pre></div>
+<p>丢掉的那一项正是"自举"在参数空间的体现。真梯度最小化贝尔曼误差平方
+E[(v̂ − T v̂)²]，其解一般不是 v_π 的好近似且收敛慢；半梯度钉住目标、
+只移动预测端，表格情形退化为标准 TD(0)。</p>
+<p>线性 + on-policy 下，半梯度 TD(0) 收敛到 <strong>TD 不动点</strong> θ_TD（满足
+E_μ[δ·x(S)] = 0），误差有界；设 θ* 为最佳线性逼近（Tsitsiklis &amp;
+Van Roy, 1997；S&amp;B §9.4）：</p>
+<div class="highlight"><pre><span></span><code>√VE(θ_TD) ≤ (1/(1−γ))·√VE(θ*)        （RMS 形式）
+即 VE(θ_TD) ≤ (1/(1−γ))²·VE(θ*)      （平方误差形式）
+</code></pre></div>
+<p><strong>有界但不最优</strong>，γ→1 时界发散。代码验证（随机游走 + RBF 特征，
+对比 TD 收敛点与最小二乘最优解）：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">v_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span> <span class="o">/</span> <span class="mf">6.0</span>
+<span class="n">gamma</span><span class="p">,</span> <span class="n">SIGMA</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.5</span>
+<span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rbf_features</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">centers</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">SIGMA</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rbf_features</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+<span class="n">w_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">v_true</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">ve_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">X</span> <span class="o">@</span> <span class="n">w_star</span> <span class="o">-</span> <span class="n">v_true</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20000</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">ns</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>    <span class="n">r</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">ns</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>         <span class="n">r</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="n">x_s</span> <span class="o">=</span> <span class="n">rbf_features</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">x_ns</span> <span class="o">=</span> <span class="n">rbf_features</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">x_ns</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">x_s</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">+=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">x_s</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">ns</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">break</span>
+<span class="n">ve_td</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">X</span> <span class="o">@</span> <span class="n">w</span> <span class="o">-</span> <span class="n">v_true</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VE(w_TD) = </span><span class="si">{</span><span class="n">ve_td</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VE(w*)   = </span><span class="si">{</span><span class="n">ve_star</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMS 比值  = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ve_td</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ve_star</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;界 1/(1-gamma) = </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">gamma</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>预期输出：<code>VE(w_TD)=0.0550</code>、<code>VE(w*)=0.0081</code>、<code>RMS 比值=2.60</code>、
+<code>界=10.00</code>——比值 2.60 严格落在界 10.00 之内。</p>
+<blockquote>
+<p><strong>核心思想</strong>：半梯度是"换了一个优化目标"：放弃最小化贝尔曼误差，
+换取向 TD 不动点收敛的速度与稳定，代价是误差被放大最多 1/(1−γ)
+倍。on-policy 线性下这笔交易划算，off-policy 或非线性下可能血本
+无归。</p>
+</blockquote>
+<p>小结：半梯度与真梯度只差"是否对自举目标求导"；半梯度收敛到 TD
+不动点，RMS 误差 ≤ 1/(1−γ) × 最佳逼近误差。</p>
+<h3 id="103-deadly-triad">10.3 非线性逼近：deadly triad 为何致命</h3>
+<p>函数逼近、自举、off-policy 构成 deadly triad：<strong>两两组合安全，三者
+齐备才可能发散</strong>：</p>
+<div class="highlight"><pre><span></span><code>            函数逼近
+           /        \
+          /  两两    \
+         /  组合安全  \
+     自举 ─────────── off-policy
+  （表格Q-Learning）  （线性：Baird 反例发散）
+</code></pre></div>
+<p>数学机制：线性半梯度 TD 迭代 θ ← θ + α·(Aθ + b) 中，Baird 反例的
+A = E[x(S)·(γx(S') − x(S))ᵀ] 有实部为正的特征值，无论 α 多小 θ 都
+指数放大——发散是结构性的。Baird 反例（7 状态 2 动作，S&amp;B 例 11.1）：</p>
+<div class="highlight"><pre><span></span><code>  目标策略 π：永远选虚线；行为策略 b：虚线 1/7、实线 6/7
+  s1 ──┐
+  s2 ──┤
+  s3 ──┼── 虚线 ──▶ s7 ── 虚线 ──▶ s7（自环）
+  s4 ──┤              │
+  s5 ──┤              └── 实线 ──▶ s1..s6 之一（均匀）
+  s6 ──┘
+  奖励恒 0，γ=0.99；特征 x(si)=e_i+2e_7（i=1..6）、x(s7)=2e_7；
+  初值 w=(1,1,1,1,1,1,10)ᵀ → 半梯度 off-policy TD(0) 指数发散
+</code></pre></div>
+<p>真值全为 0，但 s7 的高估经自举目标回传 s1..s6，又被行为策略 6/7 的
+采样概率反复放大。神经网络更糟：<strong>特征漂移</strong>（子空间本身在动）、
+<strong>非凸目标</strong>、<strong>误差相乘</strong>（三类误差叠加放大）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：deadly triad 的发散不是"调参不当"——半梯度更新不是
+任何目标函数的下降方向，加上特征子空间漂移，构成结构性失稳。
+Baird 反例证明线性 + 任意小步长也会发散，不存在"小步长安全"。</p>
+</blockquote>
+<p>小结：非线性 + 自举 + off-policy 无收敛保证；Baird 反例说明发散是
+结构性的；神经网络额外风险来自特征漂移与非凸性。</p>
+<h3 id="104">10.4 经验回放的理论作用</h3>
+<p>回放把在线数据流改为"存池 + 均匀采样"，三个层面改变学习：</p>
+<ol>
+<li><strong>去相关（i.i.d. 化）</strong>：在线序列 S_t 与 S_{t+1} 一步相关，SGD
+   分析以样本独立为前提；放回式均匀采样使相邻 mini-batch 近似独立；</li>
+<li><strong>样本复用</strong>：每条经验被消费多次，样本效率提升一个量级；</li>
+<li><strong>分布平滑</strong>：池中混合多个历史策略的数据，mini-batch 近似来自
+   "历史混合分布"；参数突变不再立即反馈到采样分布，更新面对
+   <strong>缓慢变化</strong>的数据集——第 7.4 节"实践上不发散"的第一机制。</li>
+</ol>
+<p>理论代价：<strong>回放使 DQN 正式成为 off-policy</strong>——行为策略是"过去所有
+策略的混合"，目标策略是当前 ε-greedy。回放缓解相关性的同时把 deadly
+triad 第三要素正式引入。DQN 的稳定是"用分布滞后换来工程上的稳"。</p>
+<blockquote>
+<p><strong>核心思想</strong>：回放的本质是"把流式数据变成近似静态数据集"，去相关、
+复用、稳定三收益同源于此；代价是踏入 off-policy 领地。</p>
+</blockquote>
+<p>小结：回放 = 去相关 + 样本复用 + 分布平滑；不消除 off-policy，以
+滞后分布换取稳定。</p>
+<h3 id="105">10.5 目标网络的理论作用</h3>
+<p>自举目标具有<strong>移动性</strong>（moving target）：每步更新后 θ 改变，TD
+目标 R + γ·max Q(s',a';θ) 随之改变——"预测在追一个自己推着跑的
+靶子"，监督学习的静态目标理论完全不适用。目标网络把目标冻结：</p>
+<div class="highlight"><pre><span></span><code>当前网络 θ：  每步更新（预测端）
+目标网络 θ⁻： 每 C 步同步 θ⁻ ← θ（目标端）
+TD 目标：y = R + γ·max_{a&#39;} Q(S&#39;,a&#39;;θ⁻)   ← 视为常数
+损失：  L(θ) = E[(y − Q(S,A;θ))²]          ← y 与 θ 无关
+</code></pre></div>
+<p>关键性质：C 步窗口内 θ⁻ 固定，y 是<strong>固定标签</strong>，L(θ) 为静态目标
+函数——更新退化为对固定数据集的监督式梯度下降，可沿用经典 SGD 收敛
+直觉。滞后同时切断"误差自我强化循环"的即时反馈（第 7.2 节）：高估
+误差要等 C 步后才经 θ⁻ 影响目标。变体：DDPG 用软更新
+θ⁻ ← τθ + (1−τ)θ⁻（τ≈0.005），连续缓慢跟踪而非周期跳变。</p>
+<blockquote>
+<p><strong>核心思想</strong>：目标网络把"移动目标"变成"分段静止目标"，在 C 步
+窗口内恢复监督学习的静态目标结构——这是它稳定训练的数学依据。
+它不是消除自举，而是给自举目标加上延迟。</p>
+</blockquote>
+<p>小结：目标网络 = 冻结目标 + 周期性同步；窗口内还原为静态目标的
+监督式下降，并切断误差自我强化的即时回路。</p>
+<h3 id="106-dqn">10.6 收敛性理论小结：DQN 的保证地图</h3>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>算法/配置</th>
+<th>理论结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表格 + on-policy</td>
+<td>TD(0)、SARSA</td>
+<td>依概率 1 收敛到 v_π</td>
+</tr>
+<tr>
+<td>表格 + off-policy</td>
+<td>Q-Learning</td>
+<td>依概率 1 收敛到 q*（GLIE）</td>
+</tr>
+<tr>
+<td>线性 + on-policy</td>
+<td>半梯度 TD(0)</td>
+<td>收敛到 TD 不动点，RMS 误差 ≤ 1/(1−γ) × 最优</td>
+</tr>
+<tr>
+<td>线性 + off-policy</td>
+<td>半梯度 TD(0)</td>
+<td><strong>可能发散</strong>（Baird 反例）</td>
+</tr>
+<tr>
+<td>非线性 + 任意</td>
+<td>原始 DQN</td>
+<td>无收敛定理（triad 三项全占）</td>
+</tr>
+<tr>
+<td>DQN（回放+目标网络）</td>
+<td>非线性 + 自举 + off-policy</td>
+<td>无形式化保证，工程上稳定</td>
+</tr>
+</tbody>
+</table>
+<p><strong>DQN 没有收敛定理</strong>——Atari 成功是经验事实而非定理推论。缓解：
+目标网络滞后 + 回放池（切断即时反馈）；奖励裁剪 |r| ≤ 1（限制 δ
+量级）；Double DQN（消除 max 正偏差）；小学习率 + 梯度裁剪 + 权重
+衰减（约束参数轨迹）；定期评估保存最佳模型（早停）。</p>
+<p>理论现状：<strong>表格与线性情形有完备定理，非线性情形只有"分解三要素"
+的设计原则与工程清单</strong>。设计新算法时先问"我同时占了几个要素、打破
+了哪一个"，比盲目调学习率更接近问题本质。</p>
+<blockquote>
+<p><strong>核心思想</strong>：DQN 家族的全部技巧可归纳为——<strong>在无法证明收敛的
+地方，用工程手段把"可能发散"变成"实际不发散"</strong>。理解 10.1~10.5
+的机制，才能在调试发散时对症下药。</p>
+</blockquote>
+<p>小结：收敛性保证随 triad 三要素齐全而消失；DQN 的稳定依赖回放、
+目标网络、裁剪等工程机制，而非定理。</p>
 
 
 

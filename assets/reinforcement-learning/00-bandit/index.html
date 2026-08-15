@@ -1420,6 +1420,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：遗憾界与算法证明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：遗憾界与算法证明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 伪遗憾：遗憾的形式化定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 探索-利用权衡的数学刻画
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-ucb1-hoeffding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 UCB1 的推导：从 Hoeffding 不等式到置信上界
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Thompson Sampling 的贝叶斯理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-lai-robbins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 遗憾下界：Lai-Robbins 与信息论直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 三种算法的遗憾对比与小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2584,6 +2667,89 @@
     <span class="md-ellipsis">
       
         8.3 本章小结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、理论进阶：遗憾界与算法证明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="九、理论进阶：遗憾界与算法证明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 伪遗憾：遗憾的形式化定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 探索-利用权衡的数学刻画
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-ucb1-hoeffding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 UCB1 的推导：从 Hoeffding 不等式到置信上界
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-thompson-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Thompson Sampling 的贝叶斯理论
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-lai-robbins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 遗憾下界：Lai-Robbins 与信息论直觉
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.6 三种算法的遗憾对比与小结
       
     </span>
   </a>
@@ -4239,6 +4405,173 @@ Contextual Bandit"。二者共享的核心结构是：<strong>在每个决策点
 <span class="arithmatex">\(V/Q\)</span> 价值函数与贝尔曼方程，把 Bandit 的"单点决策"升级为"序列决策"。
 请继续阅读 <a href="../01-mdp-foundations/">01-mdp-foundations.md</a>。</p>
 </blockquote>
+<h2 id="_4">九、理论进阶：遗憾界与算法证明</h2>
+<p>前八节回答"算法怎么跑"，本节回答三个更深的问题：如何度量"学得不好"？遗憾的极限是多少？哪些算法能达到极限？答案分别是伪遗憾、Lai-Robbins 对数下界、UCB 与 TS 的最优性。</p>
+<h3 id="91">9.1 伪遗憾：遗憾的形式化定义</h3>
+<p>1.4 节累积遗憾 R_T = T·μ* − E[Σ r_t] 中 r_t 带噪声，理论关心"决策
+失误"的损失。由 E[r_t|a_t] = μ(a_t) 展开：</p>
+<div class="highlight"><pre><span></span><code>R_T = T·μ* − Σ_t E[μ(a_t)] = Σ_a E[N_a(T)]·Δ_a
+</code></pre></div>
+<p>N_a(T) 为臂 a 前 T 回合被选次数，Δ_a = μ<em> − μ_a 为次优差距。此量称</em><em>伪遗憾（pseudo-regret）</em><em>。与之相对的是</em><em>累积遗憾</em><em> R_T^cum = Σ_t (μ</em> − r_t)：E[R_T^cum] = R_T，但累积遗憾含奖励固有噪声——即使每轮拉最优臂也有 Ω(√T) 波动，无法归零，故理论只针对伪遗憾，它剔除了"运气"，纯粹度量决策质量。</p>
+<blockquote>
+<p><strong>核心思想</strong>：伪遗憾只惩罚"选错臂"，不惩罚"选对臂但运气差"，是衡量算法而非环境噪声的标尺。</p>
+</blockquote>
+<p>小结：R_T = Σ E[N_a(T)]·Δ_a 是遗憾理论的出发点；累积遗憾的期望等于伪遗憾，但被噪声污染，不宜做理论目标。</p>
+<h3 id="92-">9.2 探索-利用权衡的数学刻画</h3>
+<p><strong>贪心线性遗憾。</strong> 设最小次优差距 Δ_min。存在坏实例：某次优臂初始
+采样偏高，样本均值长期高于 μ*，贪心以接近 1 的概率永远锁定它，每轮
+损失 Δ_min，故 R_T^greedy ≈ T·Δ_min = Ω(T)。</p>
+<p><strong>ε-greedy 下界推导。</strong> 固定 ε 时每轮以概率 ε 均匀探索、1−ε 利用：
+探索次数 ≈ εT，均匀撒到 K 臂，每臂 ≈ εT/K 次；利用次数 ≈ (1−ε)T，
+长期几乎全落在最优臂上。于是：</p>
+<div class="highlight"><pre><span></span><code>R_T ≈ Σ_{a≠a*} (εT/K)·Δ_a = εT·Δ̄      （Δ̄ 为平均次优差距）
+</code></pre></div>
+<p>遗憾随 ε 线性增长；ε_t 随 t 衰减（如 1/√t）时探索次数 ≈ √T，遗憾 O(√(KT)·Δ̄)，仍为 √T 量级。遗憾曲线对比：</p>
+<div class="highlight"><pre><span></span><code>R_T
+ │
+ │ 贪心:      ╱   （线性 O(T)）
+ │ ε-greedy:   ╱   （√T 量级）
+ │ UCB / TS:    ╱  （对数 O(ln T)）
+ └────────────────────────► T
+</code></pre></div>
+<p>小结：贪心线性遗憾；ε-greedy 以均匀探索换得 √T 遗憾；对数遗憾须让探索量随观测自适应收缩。</p>
+<h3 id="93-ucb1-hoeffding">9.3 UCB1 的推导：从 Hoeffding 不等式到置信上界</h3>
+<p>对取值 [0,1] 的奖励，<strong>Hoeffding 不等式</strong>：</p>
+<div class="highlight"><pre><span></span><code>P(X̄ − μ ≥ t) ≤ e^(−2 n t²)
+</code></pre></div>
+<p>令右侧等于衰减置信度 1/t⁴，解出 t = √(2 ln t / n)。于是 μ_a 以高概率不超过 X̄_a + √(2 ln t / n_a)，UCB1 每轮选它最大的臂：</p>
+<div class="highlight"><pre><span></span><code>ucb_a = X̄_a + √(2 ln t / n_a)      a_t = argmax_a ucb_a
+</code></pre></div>
+<p><strong>为何选上界最大的臂？</strong> 乐观原则：上界大的臂要么均值真大（值得利用），要么观测少（值得探索），两动机统一进一个分数；且若选了臂 a，则 ucb_a ≥ ucb_{a<em>} ≥ μ</em>（好事件下），选错损失可被 Hoeffding 项控制。</p>
+<p><strong>遗憾界 O(√(KT ln T)) 证明思路</strong>：分探索项与利用项。好事件 G = {∀a,∀n: μ_a ≤ X̄_{a,n} + √(2 ln T/n)} 由 Hoeffding 加并集界得 P(G) ≥ 1 − 2K/T²。</p>
+<ul>
+<li>利用项：好事件下选中的臂满足 ucb_a ≥ μ*，不会冤枉最优臂，此项为零。</li>
+<li>探索项：臂 a 第 n 次拉动仍非最优时，μ* ≤ ucb_a ≤ μ_a + 2√(2 ln T/n)，得 n ≤ 8 ln T/Δ_a²——每臂最多被拉 O(ln T/Δ_a²) 次；坏事件只贡献 O(1) 遗憾。</li>
+</ul>
+<p>代入伪遗憾：</p>
+<div class="highlight"><pre><span></span><code>R_T ≤ 8 ln T · Σ_{a≠a*} 1/Δ_a + O(1)
+</code></pre></div>
+<p>固定实例下对数遗憾；只假设 Δ_min ≥ 1/√T 时 R_T = O(√(KT ln T))。</p>
+<blockquote>
+<p><strong>核心思想</strong>：证明骨架是"好事件下每个次优臂拉动次数被 ln T/Δ_a² 封顶"。对数来自 Hoeffding 项 √(ln T/n) 与拉动次数 n 的相互制约——"越不确定越探索、越探索越确定"的定量版本。</p>
+</blockquote>
+<p>小结：Hoeffding 给出置信半径 √(2 ln t/n)；乐观原则统一探索与利用；UCB1 固定实例对数遗憾，最坏情形 O(√(KT ln T))。</p>
+<h3 id="94-thompson-sampling">9.4 Thompson Sampling 的贝叶斯理论</h3>
+<p>TS 与 UCB 相反：UCB 维护"均值 + 不确定性上界"，TS 维护均值的完整后
+验分布并从中采样。对伯努利奖励取 Beta 先验：</p>
+<div class="highlight"><pre><span></span><code>先验:   θ_a ~ Beta(α, β)，密度 f(θ) ∝ θ^(α−1) · (1−θ)^(β−1)
+</code></pre></div>
+<p>观测 s 次成功、f 次失败后，后验正比于先验乘似然 θ^s (1−θ)^f：</p>
+<div class="highlight"><pre><span></span><code>f(θ | s, f) ∝ θ^(α+s−1) · (1−θ)^(β+f−1) = Beta(α+s, β+f)
+</code></pre></div>
+<p>即 Beta 的<strong>共轭性质</strong>：后验仍在同族，更新退化为计数加法——每轮拉
+动臂 a 后：(α_a, β_a) ← (α_a + r, β_a + 1 − r)，r ∈ {0,1}。TS 每轮
+从每个臂的后验各采样一次，拉采样值最大的臂。</p>
+<p><strong>为何等价于概率匹配？</strong> 概率匹配指以"该臂是最优臂的后验概率"为概率选它：P(a_t = a) = P(θ_a = max_b θ_b | H_{t−1})。后验采样满足：</p>
+<div class="highlight"><pre><span></span><code>P(采样选中 a) = P(θ̂_a ≥ θ̂_b, ∀b | H_{t−1}) = P(θ_a 是最大者 | H_{t−1})
+</code></pre></div>
+<p>θ̂ 是后验的一次独立抽样，故采样一次即天然实现概率匹配。</p>
+<p><strong>遗憾界</strong>：伯努利奖励下 R_T = O(√(KT ln T))（Agrawal &amp; Goyal 2012），固定实例为对数级，且可达 Lai-Robbins 下界渐近常数（Kaufmann et al. 2012），即渐近最优。直觉：后验方差随观测收缩，次优臂被采到最大值的概率指数衰减。数值对比见 9.6。</p>
+<p>小结：Beta 共轭使后验更新退化为计数加法；后验采样天然实现概率匹配；TS 遗憾界与 UCB 同阶且渐近常数最优。</p>
+<h3 id="95-lai-robbins">9.5 遗憾下界：Lai-Robbins 与信息论直觉</h3>
+<p>上界回答"好算法能做到多好"，下界回答"任何算法都不可能更好"。
+Lai &amp; Robbins (1985) 对指数族奖励证明：</p>
+<div class="highlight"><pre><span></span><code>liminf_{T→∞}  R_T / ln T  ≥  Σ_{a≠a*}  Δ_a / KL(μ_a ‖ μ*)
+</code></pre></div>
+<p>等价地，每臂满足 liminf E[N_a(T)]/ln T ≥ 1/KL(μ_a‖μ*)；伯努利情形 KL(p‖q) = p·ln(p/q) + (1−p)·ln((1−p)/(1−q))。</p>
+<p><strong>为何无法突破对数下界？</strong> 信息论直觉：</p>
+<ol>
+<li>区分均值差为 Δ 的两个臂本质是假设检验，分辨所需信息量 ≈ 1/KL(μ_a‖μ*) 次独立观测——KL 散度即"每次观测带来的区分信息"。</li>
+<li>反证：若臂 a 拉动少于 (1−ε)·ln T/KL(μ_a‖μ*)，则存在替代实例（把最优臂换成 a）使该算法不能同时表现好；否则可构造违反信息论极限的判别器。矛盾。</li>
+<li>小差距时 KL ≈ Δ²/2，要求拉动次数 ≥ 2 ln T/Δ² = Ω(ln T/Δ²)。<strong>每个次优臂至少要试 Ω(1/Δ²) 次</strong>才能确认它不如最优臂——恰是 9.3"n ≤ 8 ln T/Δ_a²"的镜像：UCB 的探索量正好达到信息论下界量级。</li>
+</ol>
+<p>因此对数遗憾是固定实例族上所有算法的极限：UCB1 与 TS 均达该量级；
+ε-greedy 的 √T 遗憾与下界有不可弥合的差距。</p>
+<blockquote>
+<p><strong>核心思想</strong>：Lai-Robbins 下界是"免费午餐定理"的 bandit 版本：分辨次优臂必须付出信息代价，下限由 KL 散度决定。</p>
+</blockquote>
+<p>小结：R_T ≥ (ln T)·Σ Δ_a/KL(μ_a‖μ*) 表明对数遗憾不可逾越；UCB 与 TS 达到下界量级，是最优算法族。</p>
+<h3 id="96">9.6 三种算法的遗憾对比与小结</h3>
+<p>可运行模拟：同一实例上对比 UCB1、TS、固定 ε=0.1 的 ε-greedy 的遗憾曲线。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">arm</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arm</span><span class="p">);</span> <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">);</span> <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">);</span> <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">T</span><span class="p">);</span> <span class="n">mu</span> <span class="o">=</span> <span class="n">arm</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">algo</span> <span class="o">==</span> <span class="s1">&#39;ucb&#39;</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">));</span> <span class="n">u</span><span class="p">[</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">algo</span> <span class="o">==</span> <span class="s1">&#39;ts&#39;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">else</span> <span class="n">m</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">arm</span><span class="p">[</span><span class="n">a</span><span class="p">]);</span> <span class="n">n</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="n">r</span><span class="p">;</span> <span class="n">R</span><span class="p">[</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">arm</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100000</span>
+<span class="n">arm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>           <span class="c1"># 等间隔、无近邻并列的臂</span>
+<span class="n">R1</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">arm</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="s1">&#39;ucb&#39;</span><span class="p">);</span> <span class="n">R2</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">arm</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="s1">&#39;ts&#39;</span><span class="p">)</span>
+<span class="n">R3</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span><span class="n">arm</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># 固定 ε=0.1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T=100000 遗憾: UCB </span><span class="si">%.1f</span><span class="s2"> | TS </span><span class="si">%.1f</span><span class="s2"> | eps-greedy </span><span class="si">%.1f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">R1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">R2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">R3</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="c1"># 预期输出（固定随机种子，可复现）:</span>
+<span class="c1"># T=100000 遗憾: UCB 640.0 | TS 82.8 | eps-greedy 3580.9</span>
+</code></pre></div>
+<p>遗憾对比表：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>固定实例</th>
+<th>最坏情形</th>
+<th>探索机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贪心</td>
+<td>Ω(T)</td>
+<td>Ω(T)</td>
+<td>无</td>
+</tr>
+<tr>
+<td>ε-greedy（固定 ε）</td>
+<td>O(εT·Δ̄)</td>
+<td>O(T)</td>
+<td>均匀随机</td>
+</tr>
+<tr>
+<td>ε-greedy（ε_t ∝ 1/√t）</td>
+<td>O(√(KT)·Δ̄)</td>
+<td>O(√(KT))</td>
+<td>衰减随机</td>
+</tr>
+<tr>
+<td>UCB1</td>
+<td>O((K ln T)/Δ_min)</td>
+<td>O(√(KT ln T))</td>
+<td>置信上界</td>
+</tr>
+<tr>
+<td>Thompson Sampling</td>
+<td>O((K ln T)/Δ_min)</td>
+<td>O(√(KT ln T))</td>
+<td>后验采样</td>
+</tr>
+<tr>
+<td>Lai-Robbins 下界</td>
+<td>Ω((ln T)·Σ Δ_a/KL)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>小结：</p>
+<ul>
+<li><strong>三个量级</strong>：线性（贪心）→ √T（ε-greedy）→ ln T（UCB/TS）。从 √T 到 ln T 的跨越，本质是把"均匀撒网"换成"探索集中在有潜力的臂上"。</li>
+<li><strong>最优性</strong>：Lai-Robbins 下界证明 ln T 是极限；UCB 靠乐观原则显式构造上界，TS 靠贝叶斯后验隐式实现概率匹配，殊途同归。</li>
+<li><strong>实践建议</strong>：需可解释性、无先验时选 UCB；奖励非平稳或先验可用时选 TS；ε-greedy 仅作 baseline。</li>
+</ul>
 
 
 

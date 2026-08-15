@@ -1151,6 +1151,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、底层原理：操作系统与网络编程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十一、底层原理：操作系统与网络编程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 进程、线程与协程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 IO 模型全景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 系统调用与零拷贝
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 内存管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#115-socket-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 网络编程底层：socket 与 TCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 高并发模型总结
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2630,6 +2713,89 @@
     <span class="md-ellipsis">
       
         10.5 HTTPS 与 TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十一、底层原理：操作系统与网络编程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十一、底层原理：操作系统与网络编程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 进程、线程与协程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 IO 模型全景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 系统调用与零拷贝
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.4 内存管理
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#115-socket-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.5 网络编程底层：socket 与 TCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.6 高并发模型总结
       
     </span>
   </a>
@@ -4556,6 +4722,209 @@ Client                  Server
 <blockquote>
 <p><strong>本文是 CodeNebula 后端开发知识体系的完整章节。下一章：<a href="../03-database/">数据库与存储 →</a></strong> — 从 SQL 优化到 NoSQL 选型，构建数据层深度认知。</p>
 </blockquote>
+<h2 id="_6">十一、底层原理：操作系统与网络编程</h2>
+<blockquote>
+<p>前文讲的是框架与协议的"用法"，本节下沉到操作系统视角：进程线程如何被调度、IO 事件如何被内核感知、一次 <code>read()</code> 背后发生了什么。理解了这些，才能解释"为什么 Node 适合 IO 密集、Java 线程池昂贵、Go 能扛百万并发"。</p>
+</blockquote>
+<h3 id="111">11.1 进程、线程与协程</h3>
+<p><strong>PCB（进程控制块）</strong> 是内核描述进程的唯一结构：PID、状态、寄存器现场、内存映射、文件表。<code>fork()</code> 的本质是复制 PCB 并建立新地址空间。</p>
+<p><strong>上下文切换成本</strong>：切换要保存/恢复寄存器现场，并触发 TLB 刷新、Cache 失效。线程切换约 1~10μs，而一次系统调用仅 0.1~1μs——"线程越多越快"是常见误区。</p>
+<p><strong>线程共享内存模型</strong>：同进程线程共享地址空间、堆、全局变量与 fd，仅栈和寄存器独立。共享带来零拷贝通信，也带来数据竞争（需锁/原子操作）。</p>
+<p><strong>协程 vs 内核线程</strong>：协程调度在用户态，切换仅保存少量寄存器（~50ns），不陷入内核；但阻塞在系统调用上会卡住整线程，故 Go runtime、tokio 在阻塞点自动让出。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>进程</th>
+<th>内核线程</th>
+<th>协程</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创建成本</td>
+<td>高（复制地址空间）</td>
+<td>中（~几十μs）</td>
+<td>极低（仅分配栈）</td>
+</tr>
+<tr>
+<td>切换成本</td>
+<td>最高（TLB/Cache 全失效）</td>
+<td>高（1~10μs）</td>
+<td>极低（~50ns）</td>
+</tr>
+<tr>
+<td>内存占用</td>
+<td>独立地址空间</td>
+<td>共享地址空间+内核栈</td>
+<td>共享地址空间+独立栈</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>隔离/崩溃隔离</td>
+<td>CPU 密集、阻塞 IO</td>
+<td>高并发 IO 密集</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1">// Go: goroutine 由 runtime 调度器(M:N)映射到内核线程, 底层用 netpoller(epoll)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">wg</span><span class="w"> </span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+<span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">100000</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 10 万协程毫无压力</span>
+<span class="w">    </span><span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="k">go</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">defer</span><span class="w"> </span><span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">();</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="w"> </span><span class="p">}(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="c1">// 输出乱序</span>
+<span class="p">}</span>
+<span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span><span class="w"> </span><span class="c1">// 预期: 0~99999 乱序打印, 内存远低于 10 万线程</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：协程解决的是"等待开销"而非"计算开销"。IO 密集时协程把等待 CPU 的时间还给其他任务；CPU 密集时收益有限，仍需多线程占满多核。</p>
+</blockquote>
+<p><strong>小结</strong>：进程是资源分配单位，线程是内核调度单位，协程是用户态轻量调度单位。选型先问瓶颈是 CPU 还是 IO。</p>
+<h3 id="112-io">11.2 IO 模型全景</h3>
+<p>一次 <code>read()</code> 分两阶段：<strong>等待数据就绪</strong> 与 <strong>内核→用户态拷贝</strong>。四种模型的区别在各阶段是否阻塞、由谁通知：</p>
+<div class="highlight"><pre><span></span><code>阻塞IO:    read() ─阻塞等数据─► 就绪 ─阻塞拷贝─► 返回      1线程:1连接
+非阻塞IO:  read() ─EAGAIN,轮询─► 就绪 ─阻塞拷贝─► 返回      1线程轮询N连接(忙等)
+多路复用:  epoll_wait() 阻塞等就绪列表 ─► 逐个read         1线程监听N连接(无忙等)
+异步IO:    read() 立即返回, 内核拷贝完回调/信号通知         1线程发起N请求(零阻塞)
+</code></pre></div>
+<p><strong>select/poll/epoll 演进</strong>：select 用位图（上限 1024），每次全量拷贝+线性扫描 O(n)；poll 改链表突破上限但仍是全量扫描；epoll 在内核维护事件表，只返回就绪项，复杂度 O(就绪数)。</p>
+<p><strong>epoll 事件驱动原理</strong>：内核维护一棵<strong>红黑树</strong>存注册 fd（O(log n) 增删查），加一条<strong>就绪链表</strong> rdlist。设备驱动收到数据时，唤醒回调把对应 epitem 挂入就绪链表；<code>epoll_wait</code> 只把就绪链表拷回用户态——没有事件就没有遍历。</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">epfd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">epoll_create</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span><span class="w"> </span><span class="n">EPOLL_CTL_ADD</span><span class="p">,</span><span class="w"> </span><span class="n">listen_fd</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">epoll_event</span><span class="p">){</span>
+<span class="w">    </span><span class="p">.</span><span class="n">events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EPOLLIN</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listen_fd</span><span class="p">});</span><span class="w">  </span><span class="c1">// 注册进内核红黑树</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">epoll_event</span><span class="w"> </span><span class="n">ready</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">epoll_wait</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span><span class="w"> </span><span class="n">ready</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 只返回就绪项</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">ready</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">.</span><span class="n">fd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">listen_fd</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">accept</span><span class="p">(...)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">handle_read</span><span class="p">(</span><span class="n">ready</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span><span class="p">.</span><span class="n">fd</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>C10K 问题</strong>：单机支撑 1 万并发连接。BIO 需 1 万线程，内存与切换成本击穿机器；"epoll + 非阻塞 + 事件循环"是经典解法。C10M 时代瓶颈转向中断与拷贝，催生 DPDK、io_uring。</p>
+<blockquote>
+<p><strong>核心思想</strong>：多路复用把"每个连接各等一次"收敛为一次 <code>epoll_wait</code> 统一等。事件驱动 = 内核告诉你"谁就绪了"，你只处理就绪者。</p>
+</blockquote>
+<p><strong>小结</strong>：BIO 简单但连接数受限；epoll 适合海量低活跃连接；AIO 最理想但 Linux 生态仍在成熟。生产主流是"epoll + 事件循环"。</p>
+<h3 id="113">11.3 系统调用与零拷贝</h3>
+<p><strong>特权级与 trap</strong>：CPU 分用户态(ring3)与内核态(ring0)，用户程序不能直接操作硬件。特权操作经 <code>syscall</code> 指令<strong>陷入(trap)</strong>：保存用户现场 → 切内核栈 → 按系统调用号查表执行 → 恢复现场返回。trap 由指令同步触发，中断由硬件异步触发。</p>
+<p><strong>为什么系统调用慢</strong>：单次约 0.5~2μs，成本 = 现场保存恢复 + 特权级切换 + 内核栈切换 + TLB/Cache 失效；且每次 <code>read/write</code> 隐含数据拷贝（设备 → 内核缓冲 → 用户缓冲），高并发下被海量放大。</p>
+<p><strong>零拷贝 sendfile</strong>：传统发文件需 <code>read+write</code> 两次调用、两次 CPU 拷贝；<code>sendfile()</code> 让数据全程留在内核态，配合 DMA 与 scatter-gather 实现零 CPU 拷贝：</p>
+<div class="highlight"><pre><span></span><code>传统:   磁盘─DMA►内核缓冲─CPU拷贝►用户缓冲─CPU拷贝►socket缓冲─DMA►网卡  (2次调用)
+零拷贝: 磁盘─DMA►内核缓冲─DMA(仅传描述符)►socket缓冲─DMA►网卡         (1次调用)
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：系统调用慢的根源是"隔离"——安全要求隔离，就要付切换与拷贝的代价。零拷贝的本质是让数据尽量不跨用户态/内核态边界。</p>
+</blockquote>
+<p><strong>小结</strong>：高性能网络库（Netty、io_uring）的核心优化就是减少系统调用次数、合并读写、用 mmap/sendfile 减少拷贝。</p>
+<h3 id="114">11.4 内存管理</h3>
+<p><strong>虚拟内存</strong>：每个进程有独立虚拟地址空间，经页表映射物理内存，缺页按需调入。收益：进程隔离、超量分配、共享库只存一份。切换进程即换页表基址，这是 TLB 失效根源。</p>
+<p><strong>栈 vs 堆</strong>：栈由编译器管理，压栈/弹栈即分配/释放，纳秒级，默认 8MB 固定；堆由运行时管理，需查空闲块、处理碎片，微秒级。大对象、动态生命周期对象必须上堆。</p>
+<p><strong>内存对齐</strong>：CPU 按字(8B)访存，未对齐字段可能跨缓存行导致两次访存。编译器插入 padding，字段重排可缩小结构体：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span><span class="w"> </span><span class="nx">Bad</span><span class="w">  </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="kt">bool</span><span class="p">;</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="kt">int64</span><span class="p">;</span><span class="w"> </span><span class="nx">C</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// 24 字节(两次 padding)</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Good</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">B</span><span class="w"> </span><span class="kt">int64</span><span class="p">;</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="kt">bool</span><span class="p">;</span><span class="w"> </span><span class="nx">C</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// 16 字节(按大小降序)</span>
+</code></pre></div>
+<p><strong>GC 策略对比</strong>：引用计数（Python）回收及时、无 STW，但无法处理循环引用（需 gc 模块兜底）且计数有原子开销；标记清除（Java/Go）无循环引用问题但需 STW；分代收集利用"对象朝生夕死"规律，新生代复制、老年代标记整理。Go 用<strong>并发三色标记</strong>把 STW 压到亚毫秒；Java G1/ZGC 用分区与染色指针进一步降暂停。</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Python(引用计数)</th>
+<th>Go(并发三色)</th>
+<th>Java(G1/ZGC)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回收时机</td>
+<td>计数归零即回收</td>
+<td>标记周期延迟</td>
+<td>分代触发</td>
+</tr>
+<tr>
+<td>STW</td>
+<td>无，但计数开销线性</td>
+<td>亚毫秒级</td>
+<td>ZGC &lt;10ms</td>
+</tr>
+<tr>
+<td>循环引用</td>
+<td>需 gc 模块</td>
+<td>天然处理</td>
+<td>天然处理</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>核心思想</strong>：内存管理的本质是"隔离与复用的权衡"——虚拟内存换隔离，栈换速度，GC 换开发效率。GC 选型是"暂停时间 vs 吞吐 vs 实现复杂度"的三方博弈。</p>
+</blockquote>
+<p><strong>小结</strong>：虚拟内存解决隔离与超售，栈/堆决定分配策略，对齐决定空间效率，GC 是"暂停 vs 吞吐 vs 复杂度"的权衡。</p>
+<h3 id="115-socket-tcp">11.5 网络编程底层：socket 与 TCP</h3>
+<p><strong>socket 生命周期与 TCP 状态机</strong>：<code>socket()</code> 建 fd → 服务端 <code>bind+listen</code>，客户端 <code>connect</code> 触发三次握手；<code>accept</code> 返回新连接 fd。状态随握手/挥手迁移：</p>
+<div class="highlight"><pre><span></span><code>客户端                                服务端
+CLOSED ──SYN──► LISTEN
+SYN_SENT ◄─SYN+ACK─ SYN_RCVD
+ESTABLISHED ─ACK─► ESTABLISHED      (握手完成, 可收发)
+FIN_WAIT_1 ─FIN─► CLOSE_WAIT       (业务处理完才回 FIN)
+FIN_WAIT_2 ◄─ACK─┘ ◄─FIN─ LAST_ACK
+TIME_WAIT ─ACK─► CLOSED             (2MSL≈4分钟, 防旧包串扰)
+</code></pre></div>
+<p><code>TIME_WAIT</code> 是高频考点：主动关闭方须停留 2MSL 防旧报文污染新连接，短连接高并发下易堆积，需端口复用或长连接。</p>
+<p><strong>粘包与拆包</strong>：TCP 是字节流，不保留应用消息边界：小消息合并（粘包）、大消息拆分（拆包）。解法：定长报文、分隔符、长度前缀（最通用）。HTTP/1.1 用 <code>Content-Length</code>/chunked；Netty 提供 <code>LengthFieldBasedFrameDecoder</code>。</p>
+<p><strong>HTTP 请求在 socket 上的旅程</strong>：</p>
+<div class="highlight"><pre><span></span><code>Client      Client内核      Server内核        Server进程
+connect ─SYN─► ─SYN─► accept队列就绪 ──► accept() 返回新fd
+发请求 ──► 数据包 ──► 触发epoll EPOLLIN ──► read() → 业务处理
+◄─响应─ ◄─ 响应包 ◄─ write() 写入内核缓冲 ─┘
+close ─FIN─► ─FIN─► read()返回0 → close()
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：应用层看到"一请求一响应"，内核里是多次中断、队列、拷贝与状态迁移。backlog、TCP_NODELAY、keepalive 等调优本质都是在调内核参数。</p>
+</blockquote>
+<p><strong>小结</strong>：TCP 是可靠字节流，状态机是排障基础（<code>ss</code> 看状态）；粘包拆包须由应用协议解决；一次 HTTP 往返至少跨越 4 次用户态/内核态边界。</p>
+<h3 id="116">11.6 高并发模型总结</h3>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>核心机制</th>
+<th>优点</th>
+<th>缺点</th>
+<th>代表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线程池</td>
+<td>预创建 N 线程+任务队列</td>
+<td>编程简单、兼容阻塞代码</td>
+<td>连接数≈线程数、切换贵</td>
+<td>Tomcat、Java Executor</td>
+</tr>
+<tr>
+<td>事件驱动</td>
+<td>单/少线程+epoll+回调</td>
+<td>海量连接、低内存</td>
+<td>回调地狱、CPU 密集弱</td>
+<td>Node.js、Netty、Nginx、Redis</td>
+</tr>
+<tr>
+<td>Actor</td>
+<td>独立状态+消息传递</td>
+<td>无共享内存、易分布式</td>
+<td>编解码开销、难调试</td>
+<td>Erlang/OTP、Akka</td>
+</tr>
+</tbody>
+</table>
+<p><strong>各框架的取舍</strong>：</p>
+<ul>
+<li><strong>Tomcat</strong>：NIO 连接器——acceptor 只负责 accept，worker 线程池（默认 200）执行业务，即"事件驱动接收 + 线程池执行"。</li>
+<li><strong>Node.js</strong>：单线程事件循环 + libuv 线程池（<code>fs</code>/<code>crypto</code> 下沉到 4 线程）。IO 密集强、CPU 密集弱（需 cluster）。</li>
+<li><strong>Golang</strong>：goroutine 由 M:N 调度器映射到 GOMAXPROCS 个内核线程，配合 netpoller 实现"同步写法、异步执行"——<code>Read</code> 阻塞时协程自动让出，单机百万协程是招牌。</li>
+<li><strong>Netty/Rust</strong>：纯事件驱动 + 零拷贝（堆外内存、sendfile），追求极致吞吐。</li>
+</ul>
+<blockquote>
+<p><strong>核心思想</strong>：所有高并发模型都在回答同一问题——"10 万连接只有 100 个活跃时，如何让 CPU 不为等待买单"。线程池用线程数硬扛，事件驱动用回调让出，actor 用消息解耦，goroutine 用运行时把阻塞变成调度机会。</p>
+</blockquote>
+<p><strong>小结</strong>：重业务且熟悉阻塞编程 → 线程池（Tomcat）；IO 密集海量连接 → 事件驱动（Node/Netty）；既要并发又要简单 → Go；跨节点容错 → Actor。底层原理相通：减少等待、复用线程、把切换交给更轻的调度者。</p>
 
 
 

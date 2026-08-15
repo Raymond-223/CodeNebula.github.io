@@ -1727,6 +1727,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：博弈论与对齐的数学基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：博弈论与对齐的数学基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 博弈论基础：均衡、博弈分类与收敛
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 独立学习与非平稳性：为什么单智能体算法会震荡
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-rlhf-kl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 RLHF 的 KL 约束：从目标函数到拉格朗日对偶
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 DPO：闭式解与奖励模型的消除
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 离线 RL 的分布外问题：高估机制与保守估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结：三个方向的统一视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2702,6 +2785,89 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        十、理论进阶：博弈论与对齐的数学基础
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="十、理论进阶：博弈论与对齐的数学基础">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 博弈论基础：均衡、博弈分类与收敛
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 独立学习与非平稳性：为什么单智能体算法会震荡
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-rlhf-kl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 RLHF 的 KL 约束：从目标函数到拉格朗日对偶
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-dpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 DPO：闭式解与奖励模型的消除
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-rl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 离线 RL 的分布外问题：高估机制与保守估计
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 理论小结：三个方向的统一视角
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4482,6 +4648,265 @@ RLHF、离线学习、内在探索与各类新兴范式。但无论是经典算�
 支撑。下一章 <a href="../10-engineering-practice/">工程实践</a> 将回到工程视角：
 实验管理、分布式训练、评估协议、部署与监控，以及把本章这些前沿算法
 接上生产工具链的具体方法——理论前沿与工程实践，至此合流。</p>
+</blockquote>
+<h2 id="_5">十、理论进阶：博弈论与对齐的数学基础</h2>
+<blockquote>
+<p>本节抽出三个方向的数学骨架：多智能体（纳什均衡、minimax、势博弈）、
+对齐（KL 约束、闭式解、DPO）、离线学习（OOD 高估、CQL 保守估计）。
+共同语言是<strong>约束优化与不动点</strong>。</p>
+</blockquote>
+<h3 id="101">10.1 博弈论基础：均衡、博弈分类与收敛</h3>
+<p><strong>纳什均衡</strong>。策略组合 π = (π₁, …, π_N) 是均衡，若每个智能体在他人策略
+π₋ᵢ 固定时无单方偏离动机：</p>
+<div class="arithmatex">\[\forall i,\ \forall \pi_i': \quad V_i(\pi_i, \pi_{-i}) \ge V_i(\pi_i', \pi_{-i})\]</div>
+<p>即 πᵢ 是 π₋ᵢ 的最优响应。均衡是联合策略上的<strong>不动点</strong>而非全局最优，
+且可能有多重均衡。</p>
+<div class="highlight"><pre><span></span><code>纳什均衡示意（双人收益矩阵, 行=玩家1, 列=玩家2）
+           玩家2
+         C      D
+玩家1 C (3,3) (0,5)
+      D (5,0) (1,1)
+(D,D) 是均衡: 任一方单方改到 C 收益从 1 降到 0;
+(C,C) 不是均衡: 玩家1 单方改到 D 收益从 3 升到 5。
+</code></pre></div>
+<p><strong>博弈分类</strong>。按收益结构三分：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>收益结构</th>
+<th>均衡性质</th>
+<th>典型例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合作</td>
+<td>r₁ = … = r_N</td>
+<td>均衡 = 团队最优</td>
+<td>多机器人搬运</td>
+</tr>
+<tr>
+<td>竞争（零和）</td>
+<td>r₁ + r₂ = 0</td>
+<td>均衡 = 鞍点，价值唯一</td>
+<td>双人棋、self-play</td>
+</tr>
+<tr>
+<td>混合</td>
+<td>一般收益</td>
+<td>均衡不唯一、可能低效</td>
+<td>囚徒困境、竞价</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Minimax 定理</strong>（von Neumann 1928）。两人零和有限博弈：</p>
+<div class="arithmatex">\[\max_{\pi_1} \min_{\pi_2} V(\pi_1, \pi_2) = \min_{\pi_2} \max_{\pi_1} V(\pi_1, \pi_2) = V^*\]</div>
+<p>max/min 可交换，均衡值 V* 唯一——对抗训练收敛的基石：零和博弈的鞍点
+即纳什均衡，且不依赖收敛路径。</p>
+<p><strong>势博弈</strong>（potential game）。若存在全局势函数 Φ 使任一智能体单方改
+动作的收益变化等于 Φ 的变化：</p>
+<div class="arithmatex">\[\Phi(a_i', a_{-i}) - \Phi(a_i, a_{-i}) = r_i(a_i', a_{-i}) - r_i(a_i, a_{-i})\]</div>
+<p>则"每人做最优响应"等价于"共同最大化 Φ"，退化为单目标协同优化；Φ 有
+上界时梯度上升<strong>必然收敛到纳什均衡</strong>（合作博弈是平凡势博弈，取 Φ = r）。</p>
+<blockquote>
+<p><strong>核心思想</strong>：博弈论回答"收敛到哪"——纳什均衡；但只有特殊结构（零和、
+势博弈）才保证"能收敛"，一般混合博弈既无唯一解也无收敛保证。</p>
+</blockquote>
+<p>小结：纳什均衡是 MARL 的解概念；零和博弈靠 minimax 定理保证鞍点存在，
+势博弈靠势函数把多智能体优化还原为单目标优化。</p>
+<h3 id="102">10.2 独立学习与非平稳性：为什么单智能体算法会震荡</h3>
+<p><strong>非平稳性</strong>。智能体 i 的"环境"包含其他智能体的策略 π₋ᵢ，而它们也在
+学习，于是转移分布随 π₋ᵢ 漂移：</p>
+<div class="arithmatex">\[P(s' \mid s, a_i) = \sum_{a_{-i}} P(s' \mid s, a_i, a_{-i})\, \pi_{-i}(a_{-i} \mid s)\]</div>
+<p>经验回放假设"过去样本仍代表当前分布"、贝尔曼不动点假设"环境固定"——
+两者都被破坏，独立 Q 学习在双人博弈中甚至可能发散（有已知反例）。</p>
+<p><strong>石头剪刀布：梯度上升的极限环</strong>。双方各自对零和收益做投影梯度上升，
+绕着均匀纳什均衡转圈、永不收敛：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 独立学习在 RPS 上不收敛: 零和收益, 双方投影梯度上升</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># 行=剪刀/石头/布</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">proj</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>                        <span class="c1"># 欧氏投影到概率单纯形</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">v</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">c</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.3</span><span class="p">,</span> <span class="mf">.2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">.3</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.2</span><span class="p">])</span>
+<span class="n">D</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">proj</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">lr</span> <span class="o">*</span> <span class="p">(</span><span class="n">R</span> <span class="o">@</span> <span class="n">q</span><span class="p">))</span>      <span class="c1"># 玩家1: 梯度上升</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">proj</span><span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">p</span><span class="p">))</span>    <span class="c1"># 玩家2: 零和对偶</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">250</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">D</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;到均匀NE的距离:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="c1"># 预期输出: 到均匀NE的距离: [0.179 0.28  0.276 0.168 0.024 0.177 0.28  0.277]</span>
+</code></pre></div>
+<p>RPS 无纯策略均衡，唯一纳什均衡是均匀混合策略；但均匀点附近的收益梯度
+构成旋转场（线性化特征值模长大于 1），梯度上升被单纯形边界弹回形成
+极限环——距离不归零即不收敛。这也是 CTDE（§3.3）有效的原因：集中式
+Critic 把 π₋ᵢ 作为条件输入，吸收了非平稳性。</p>
+<blockquote>
+<p><strong>核心思想</strong>：非平稳性把"学习"变成"追逐移动目标"；没有对他人策略的
+建模或博弈结构假设，独立学习只能保证"不静止"，不能保证"收敛"。</p>
+</blockquote>
+<p>小结：多智能体的环境因他人学习而漂移；RPS 演示了梯度上升的极限环行为，
+独立学习需要结构假设或集中式信息才能收敛。</p>
+<h3 id="103-rlhf-kl">10.3 RLHF 的 KL 约束：从目标函数到拉格朗日对偶</h3>
+<p><strong>带 KL 惩罚的优化目标</strong>。在奖励模型 r_θ 上做带正则的最大化：</p>
+<div class="arithmatex">\[\max_{\pi_\phi} \; \mathbb{E}_{x \sim D,\, y \sim \pi_\phi(\cdot \mid x)}\big[ r_\theta(x, y) \big] - \beta \cdot \mathrm{KL}\big( \pi_\phi(\cdot \mid x) \,\|\, \pi_{\mathrm{ref}}(\cdot \mid x) \big)\]</div>
+<p>第一项奖励最大化，第二项惩罚偏离参考策略 π_ref（通常是 SFT 模型）。
+奖励模型是<strong>有偏的近似</strong>：纯奖励最大化会让策略钻近似误差的空子，生成
+"高分但违背人类意图"的文本（谄媚、冗长），即奖励黑客（reward hacking）；
+KL 项把策略钉在 π_ref 附近，只在"可信邻域"内优化，并保留预训练的通用
+能力。</p>
+<p><strong>受约束 RL 视角</strong>。KL 惩罚是软化的约束：严格版要求 KL(π_ϕ ‖ π_ref) ≤ ε
+（受约束 MDP）。引入拉格朗日乘子 β ≥ 0：</p>
+<div class="arithmatex">\[\mathcal{L}(\pi_\phi, \beta) = \mathbb{E}[r_\theta] - \beta\big( \mathrm{KL}(\pi_\phi \| \pi_{\mathrm{ref}}) - \epsilon \big)\]</div>
+<p>对固定 β 最大化 L 即带 KL 惩罚的 RLHF 目标；外层对 β 做对偶上升（约束
+不满足就加大 β）即 PPO-Lagrangian。故 <strong>KL 惩罚 = 约束的拉格朗日松弛</strong>：
+β 是"信任度"的价格——β 太小则奖励黑客，太大则退化为 π_ref（实践中需
+动态调节）。</p>
+<div class="highlight"><pre><span></span><code>RLHF 两阶段的理论结构
+┌──────────────────────────────────────────────┐
+│ 阶段一: 偏好 → 奖励                           │
+│   (y_w ≻ y_l) ──Bradley-Terry──► r_θ         │
+│   损失: -log σ(r_θ(x,y_w) - r_θ(x,y_l))      │
+│ 阶段二: 奖励 → 策略                           │
+│   max E[r_θ] - β·KL(π_ϕ ‖ π_ref)             │
+│   ⇕ 拉格朗日对偶 ⇔ s.t. KL(π_ϕ‖π_ref) ≤ ε   │
+└──────────────────────────────────────────────┘
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：KL 项不是工程补丁而是目标函数的必要组成——它在优化一个
+近似奖励时划定了可信区域；等价地，它是 CMDP 约束的拉格朗日对偶形式。</p>
+</blockquote>
+<p>小结：RLHF 目标 = 奖励最大化 + KL 正则；KL 正则防止奖励黑客，其本质是
+约束 KL ≤ ε 的拉格朗日松弛，β 即对偶变量。</p>
+<h3 id="104-dpo">10.4 DPO：闭式解与奖励模型的消除</h3>
+<p><strong>闭式解</strong>。对 10.3 的目标逐 x 求解，令 Z(x) = Σ_y π_ref(y|x)·e^{r_θ(x,y)/β}，
+目标可重写为 −β·KL(π_ϕ ‖ (1/Z)·π_ref·e^{r_θ/β}) + β·log Z；KL 在 π_ϕ
+等于目标分布时取零，故最优策略为</p>
+<div class="arithmatex">\[\pi^*(y \mid x) = \frac{1}{Z(x)}\, \pi_{\mathrm{ref}}(y \mid x)\, e^{r_\theta(x,y)/\beta}, \quad \text{即 } \pi^* \propto \pi_{\mathrm{ref}} \cdot e^{r/\beta}\]</div>
+<p><strong>消去奖励模型</strong>。反解 r_θ = β·log(π<em>/π_ref) + β·log Z，代入 Bradley-
+Terry 偏好概率（§4.3），同一 (x, y_w, y_l) 对中的 Z(x) 相消；用参数化
+策略 π_ϕ 替换 π</em> 并取负对数似然，即得 DPO 损失：</p>
+<div class="arithmatex">\[\mathcal{L}_{\mathrm{DPO}}(\phi) = - \mathbb{E}_{(x, y_w, y_l) \sim D}\Big[ \log \sigma\Big( \beta \log \frac{\pi_\phi(y_w \mid x)}{\pi_{\mathrm{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\phi(y_l \mid x)}{\pi_{\mathrm{ref}}(y_l \mid x)} \Big) \Big]\]</div>
+<p><strong>等价性</strong>。推导只用两个假设：① RLHF 目标为"奖励 + KL"形式；② 偏好
+服从 Bradley-Terry。两阶段 RLHF 隐式优化的正是 π<em>，DPO 以隐式奖励
+β·log(π_ϕ/π_ref) 直接拟合偏好——二者在"最优策略"意义下等价；但 DPO
+无需奖励模型、无需在线采样，把 RL 变成</em><em>偏好对上的二分类（logistic）
+问题</em>*。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># DPO 损失计算: 单条偏好对 (y_w, y_l) 上</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">logp_w</span><span class="p">,</span> <span class="n">logp_l</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span>   <span class="c1"># π_ϕ 对数概率(偏好者更高)</span>
+<span class="n">logr_w</span><span class="p">,</span> <span class="n">logr_l</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.1</span>   <span class="c1"># π_ref 对数概率(接近)</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">((</span><span class="n">logp_w</span> <span class="o">-</span> <span class="n">logr_w</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">logp_l</span> <span class="o">-</span> <span class="n">logr_l</span><span class="p">))</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">logits</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;隐式奖励差 β·Δ =&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">logits</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1"># 预期输出: 隐式奖励差 β·Δ = 0.22</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DPO 损失 =&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">loss</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1"># 预期输出: DPO 损失 = 0.5892</span>
+</code></pre></div>
+<blockquote>
+<p><strong>核心思想</strong>：DPO 的成立依赖于"RLHF 目标有闭式解"；闭式解把奖励重新
+参数化为策略比值，配分函数在偏好比较中消去，奖励模型被整体消除，
+RLHF 退化为监督式二分类。</p>
+</blockquote>
+<p>小结：从 KL 约束目标解出 π* ∝ π_ref·e^{r/β}，反解奖励代入 Bradley-Terry
+即得 DPO 损失；等价性来自"同一最优策略"这一共同不动点，DPO 免去了奖励
+模型与在线 RL 的工程开销。</p>
+<h3 id="105-rl">10.5 离线 RL 的分布外问题：高估机制与保守估计</h3>
+<p><strong>为什么 Q 会被高估</strong>。离线数据 D 只覆盖行为策略 π_β 访问过的 (s, a)，
+而 Q 学习目标含 max_{a'} Q(s', a')：argmax 很可能落在<strong>数据中没有样本
+的动作</strong>上——这些 OOD 动作的 Q 从未被真实奖励或 TD 目标监督，只能无
+约束外推（可任意大）。于是 Q 对 OOD 动作系统性高估，策略
+π(s) = argmax_a Q(s,a) 被推向数据分布之外，那里高估最严重——<strong>策略越
+优化，估计越不可靠</strong>（外推误差，Fujimoto et al. 2019）。在线 RL 中策略
+会真的访问 argmax_a Q 并收到真实反馈纠正误差；离线时永远没有纠正信号。</p>
+<p><strong>保守估计：CQL 的数学形式</strong>。CQL 在贝尔曼误差上叠加一项，压低 OOD
+动作的 Q、抬高数据内动作的 Q：</p>
+<div class="arithmatex">\[\mathcal{L}_{\mathrm{CQL}}(\theta) = \underbrace{\alpha\, \mathbb{E}_{s \sim D}\big[ \log \textstyle\sum_a e^{Q_\theta(s,a)} \big]}_{\text{压低所有动作(含 OOD)的 Q}}
+- \underbrace{\alpha\, \mathbb{E}_{(s,a) \sim D}\big[ Q_\theta(s,a) \big]}_{\text{抬高数据内动作的 Q}}
++ \underbrace{\mathbb{E}_{D}\big[ \big(Q_\theta(s,a) - (r + \gamma \max_{a'} Q_{\bar\theta})\big)^2 \big]}_{\text{标准贝尔曼误差}}\]</div>
+<p>第一项 log Σ_a e^Q 以 soft-max 形式压低全部动作（含 OOD）的 Q——正是
+max_a Q 会选中的高 Q 动作；第二项防止数据内动作被过度压低。二者使 Q
+成为<strong>数据分布内价值的保守下界</strong>（Q_θ ≤ Q*），等价于在"奖励不确定"下
+取最坏情况估计。</p>
+<p><strong>分布约束而非行为克隆</strong>。行为克隆只学数据里出现过的动作，确实不踩 OOD
+区域，但只复刻 π_β 的平均行为，丢弃了<strong>价值信息</strong>。离线 RL 的正确姿势
+是<strong>支持内利用</strong>（extrapolation within support）：在数据分布内挑选更好
+的动作（CQL 保守 Q、IQL expectile）。约束的是"对数据分布的偏离"，而非
+策略本身。</p>
+<blockquote>
+<p><strong>核心思想</strong>：离线 RL 的一切困难源于"max 操作遇到无监督的 OOD 动作"；
+解法分两派——压制 OOD 的价值（CQL）或根本不查询（IQL）。共同原则是
+分布约束：可以优化，但只能在数据覆盖的区域内优化。</p>
+</blockquote>
+<p>小结：OOD 动作的 Q 无监督导致系统性高估，策略被推向数据外；CQL 用
+soft-max 惩罚项压低未见动作的 Q 得到保守下界；离线 RL 的精髓是在数据
+分布内利用价值信息，而非行为克隆。</p>
+<h3 id="106">10.6 理论小结：三个方向的统一视角</h3>
+<p>三个方向是同一枚硬币的三面——<strong>优化目标与约束的博弈</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>MARL（博弈论）</th>
+<th>RLHF/DPO（对齐）</th>
+<th>Offline RL（离线学习）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优化对象</td>
+<td>联合策略 (π₁,…,π_N)</td>
+<td>单策略 π_ϕ</td>
+<td>单策略 π_θ</td>
+</tr>
+<tr>
+<td>目标函数</td>
+<td>各自收益 Vᵢ</td>
+<td>E[r_θ] − β·KL</td>
+<td>贝尔曼误差 + 保守项</td>
+</tr>
+<tr>
+<td>约束/正则</td>
+<td>均衡（无单方偏离动机）</td>
+<td>KL(π_ϕ‖π_ref) ≤ ε</td>
+<td>支持约束（不查询 OOD）</td>
+</tr>
+<tr>
+<td>失败模式</td>
+<td>非平稳震荡、均衡低效</td>
+<td>奖励黑客、能力遗忘</td>
+<td>OOD 外推高估</td>
+</tr>
+<tr>
+<td>核心定理</td>
+<td>minimax、势博弈收敛</td>
+<td>闭式解 π* ∝ π_ref·e^{r/β}</td>
+<td>外推误差、保守下界</td>
+</tr>
+<tr>
+<td>统一语言</td>
+<td>不动点（纳什均衡）</td>
+<td>带约束优化（拉格朗日对偶）</td>
+<td>分布偏移下的最坏情况估计</td>
+</tr>
+</tbody>
+</table>
+<p><strong>统一视角</strong>：三者的本质都是"在约束下优化"：MARL 的约束来自其他智能体
+的理性（均衡），RLHF 来自参考策略（信任区域），Offline RL 来自数据
+分布（支持区域）。约束过松出现失败模式（震荡、黑客、高估），过紧则退化
+为次优（均衡低效、克隆 π_ref、行为克隆）。数学工具的价值正在于精确定义
+"约束应该多紧"。</p>
+<blockquote>
+<p><strong>核心思想</strong>：均衡/信任区域/支持区域都是"可行域"的不同形态；理解
+约束的来源与松紧，就掌握了这三个方向的推演逻辑。</p>
 </blockquote>
 
 
